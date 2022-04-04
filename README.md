@@ -9,7 +9,7 @@ This is work in progress
 ## Licence
 
 This projects is licenced using the Open Source GPL-3 licence, please
-see the [licence](LICENCE.md) for details
+see the [licence](LICENSE.md) for details
 
 
 ## Contributing and Code of Conduct
