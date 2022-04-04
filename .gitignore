@@ -1,0 +1,26 @@
+# builds 
+inst/doc
+
+# Rproj files
+.Rproj.user
+.Rhistory
+*.Rproj
+.RData
+
+# Data/history files
+.RData
+
+# Data/history files
+.RData
+.Rhistory
+
+# vi files
+*.swp
+tags
+
+# prototype / test code
+prototype.R
+
+# data directory
+/data
+
