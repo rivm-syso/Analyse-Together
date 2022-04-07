@@ -32,12 +32,21 @@ if(!file.exists(datafile(fname_raw))) {
 
 amersfoort <- amersfoort_raw$metingen %>%
     select(kit_id, date = tijd, waarde, grootheid) %>%
-    filter(grootheid == "pm10" | grootheid == "pm25") %>%
+    filter(grootheid == "pm10_kal" | grootheid == "pm25_kal") %>%
     pivot_wider(names_from = grootheid, values_from = waarde)
 saveRDS(amersfoort, datafile("amersfoort_measurements.rds"))
 saveRDS(amersfoort_raw$sensordata, datafile("amersfoort_sensors.rds"))
 
 
+amersfoort_avg <- amersfoort %>%
+    group_by(date) %>%
+    summarise(n = n(),
+              average_pm10 = mean(pm10_kal, na.rm = TRUE),
+              average_pm25 = mean(pm25_kal, na.rm = TRUE),
+              sd_pm10 = mean(pm10_kal, na.rm = TRUE),
+              sd_pm25 = mean(pm25_kal, na.rm = TRUE)
+              )
+saveRDS(amersfoort_avg, datafile("amersfoort_averages.rds"))
 
 
 
