@@ -49,9 +49,19 @@ pool <- dbPool(
 )
 
 # Read out the database to dataframes
-cache <- tbl(pool, "cache") %>% as.data.frame()
 measurements <- tbl(pool, "measurements") %>% as.data.frame()
-meta <- tbl(pool, "meta") %>% as.data.frame()
+measurements <- measurements %>% mutate(date = lubridate::as_datetime(timestamp))
 sensor <- tbl(pool, "sensor") %>% as.data.frame()
-sqlite_sequence <- tbl(pool, "sqlite_sequence") %>% as.data.frame()
+
+# Source module for select wijk_gemeente                                   ====
+source("modules/select_date_range.R")
+
+
+######################################################################
+# TEST
+######################################################################
+
+# Temporary start and end date to test select_date_range module. 
+start_date <- min(measurements$date)
+end_date <- max(measurements$date)
 
