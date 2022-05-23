@@ -53,9 +53,11 @@ measurements <- tbl(pool, "measurements") %>% as.data.frame()
 measurements <- measurements %>% mutate(date = lubridate::as_datetime(timestamp))
 sensor <- tbl(pool, "sensor") %>% as.data.frame()
 
-# Source module for select wijk_gemeente                                   ====
+# Source module for selecting the time range                                 ====
 source("modules/select_date_range.R")
 
+# Source module for selecting component                                   ====
+source("modules/select_component.R")
 
 ######################################################################
 # TEST
