@@ -62,7 +62,12 @@ shinyUI(
 
         ),
 
+        fluidRow(
 
+          # check output communicatition module
+          column(12, wellPanel(communication_output("test_comm_output")))
+
+        ),
         fluidRow(
 
           # Highcharter should be initiated in ui.R to make sure the

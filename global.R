@@ -15,6 +15,7 @@ library(tidyverse)
 library(shiny)
 library(shinycssloaders)
 library(shinyWidgets)
+library(shinytest)
 
 # Databases (essential)
 library(RSQLite)
@@ -49,9 +50,16 @@ pool <- dbPool(
 )
 
 # Read out the database to dataframes
-cache <- tbl(pool, "cache") %>% as.data.frame()
-measurements <- tbl(pool, "measurements") %>% as.data.frame()
+measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
 meta <- tbl(pool, "meta") %>% as.data.frame()
 sensor <- tbl(pool, "sensor") %>% as.data.frame()
 sqlite_sequence <- tbl(pool, "sqlite_sequence") %>% as.data.frame()
 
+### APP SPECIFIC SETTINGS                                                   ====
+
+# Source module for the communication
+source("modules/communication_module.R")
+
+# Source modules selections
+
+# Source modules visualisation
