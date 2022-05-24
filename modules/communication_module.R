@@ -78,8 +78,6 @@ communication_server <- function(id,
                    time_selected <- get_time_selection()
                    start_time <- time_selected$start_time
                    end_time <- time_selected$end_time
-                   browser()
-
 
                    # TODO some check if time is available in data
                    # TODO check if selected sensors has data that time and component, otherwise a message?
@@ -87,7 +85,6 @@ communication_server <- function(id,
                    # Filter the measurements
                    measurements_filt <- data_measurements %>%
                      dplyr::filter(date > start_time & date < end_time & station %in% selected_stations & parameter == selected_parameter)
-                    browser()
                    return(measurements_filt)
                  })
 
