@@ -18,7 +18,7 @@ component_selection_output <- function(id) {
       label    = "Select component",
       choices  = c("PM10", "PM10 - calibrated", "PM2.5", "PM2.5 - calibrated"),
       selected = "PM10",
-      width    = 250
+      width    = 150
       )
     
   )
