@@ -50,7 +50,9 @@ pool <- dbPool(
 
 # Read out the database to dataframes
 measurements <- tbl(pool, "measurements") %>% as.data.frame()
+# Add date column that represents timestamp as datetime
 measurements <- measurements %>% mutate(date = lubridate::as_datetime(timestamp))
+
 sensor <- tbl(pool, "sensor") %>% as.data.frame()
 
 # Source module for selecting the time range                                 ====
