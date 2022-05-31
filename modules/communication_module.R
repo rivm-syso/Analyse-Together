@@ -15,8 +15,9 @@ communication_output <- function(id) {
 
   tagList(
     tableOutput(ns("test_data_select_time")),
-    tableOutput(ns("test_data_select_sensor"))
-
+    tableOutput(ns("test_data_select_sensor")),
+    tableOutput(ns("test_stations_total")),
+    tableOutput(ns("test_startendtime"))
   )
 
 }
@@ -57,9 +58,14 @@ communication_server <- function(id,
                  # We assume that each station has only 1 location. Or we plot all, we don't distinguish location time
                  # TODO create a function or reactive to make this selection which locations to use
                  get_stations_total <- reactive({
+                   # Set selected stations to TRUE
                    stations_total <- data_stations %>%
                      dplyr::mutate(selected = case_when(station %in% selected_stations ~ T,
                                                  T ~ F))
+                   # Assign colors
+                   stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload)
+
+                   return(stations_total)
                  })
 
                  # Get the start and end time from the user.
@@ -67,8 +73,16 @@ communication_server <- function(id,
                  # If not, then insert such a check here.
                  # Otherwise this reactive isnt needed
                  get_time_selection <- reactive({
-                   start_time <- selected_time$start_time
-                   end_time <- selected_time$end_time
+                   browser()
+                   start_time <- selected_time$selected_start_date()
+                   end_time <- selected_time$selected_end_date()
+                   browser()
+                   # Check if a time is selected, otherwise
+                   if(is.null(start_time)|is.null(end_time)){
+                     print("hoi")
+                     start_time <- get_time_total()$start_time
+                     end_time <- get_time_total()$end_time
+                   }
                    return(list(start_time = start_time, end_time = end_time))
                  })
 
@@ -78,10 +92,10 @@ communication_server <- function(id,
                    time_selected <- get_time_selection()
                    start_time <- time_selected$start_time
                    end_time <- time_selected$end_time
-
+                    browser()
                    # TODO some check if time is available in data
                    # TODO check if selected sensors has data that time and component, otherwise a message?
-                   # TODO for the selected stations and parameters connect with sthose selection modules
+                   # TODO for the selected stations and parameters connect with those selection modules
                    # Filter the measurements
                    measurements_filt <- data_measurements %>%
                      dplyr::filter(date > start_time & date < end_time & station %in% selected_stations & parameter == selected_parameter)
@@ -92,13 +106,22 @@ communication_server <- function(id,
                    test123 <- filter_data_measurements()
                    head(test123)
                    })
+                 output$test_stations_total <- renderTable({
+                   test123 <- get_stations_total()
+                   head(test123)
+                 })
                  output$test_data_select_sensor <- renderTable({
                    test123 <- get_stations_total() %>% filter(selected) %>%  dplyr::distinct()
+                   test123}
+                 )
+                 output$test_startendtime <- renderTable({
+                   test123 <- get_time_total()
                    test123}
                  )
 
                 return(list(
                   start_end_total = reactive({get_time_total()}),
+                  selected_time = selected_time,
                   station_locations = reactive({get_stations_total()}),
                   selected_measurements = reactive({filter_data_measurements()})
                   ))
