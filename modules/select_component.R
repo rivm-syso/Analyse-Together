@@ -11,17 +11,7 @@ component_selection_output <- function(id) {
   
   ns <- NS(id)
   
-  tagList(
-    
-    pickerInput(
-      ns("component"),
-      label    = "Select component",
-      choices  = c("PM10", "PM10 - calibrated", "PM2.5", "PM2.5 - calibrated"),
-      selected = "PM10",
-      width    = 150
-      )
-    
-  )
+  uiOutput(ns("comp_select"))
   
 }
 
@@ -30,11 +20,31 @@ component_selection_output <- function(id) {
 # Server Module
 ######################################################################
 
-component_selection_server <- function(id) {
+component_selection_server <- function(id, comp_choices) {
   
-  moduleServer(id, 
-               
-               return(selected_component = reactive({input$component}))
-               
-               )
-}
+  moduleServer(id, function(input, output, session) {
+    
+    ns <- session$ns
+    
+    output$comp_select <- renderUI({
+      
+      # Create the component picker with a list of possible choices
+      tagList(
+        
+        pickerInput(
+          ns("comp_select"),
+          label    = "Select component",
+          choices  = comp_choices,
+          selected = comp_choices[[1]],
+          width    = 150
+          )
+        )
+      })
+    
+    # Return the chosen component
+    return(selected_component = reactive({input$comp_select}))
+    
+    })
+  
+  }
+
