@@ -13,10 +13,17 @@ shinyServer(function(global, input, output, session) {
                                                 meta,
                                                 # TODO Get the selected parameter form the module XXX
                                                 selected_parameter = "pm10_kal",
-                                                # TODO Get the selected timeperiod from the module XXX
                                                 selected_time = select_date_range,
                                                 # TODO Get the selected stations form the map
-                                                selected_stations = c("SSK_LH003")
+                                                selected_stations = c("SSK_LH003"),
+                                                # Options for the colors
+                                                col_cat,
+                                                col_default,
+                                                col_overload,
+                                                # Optiions for the linetype
+                                                line_cat,
+                                                line_default,
+                                                line_overload
                                                 )
 
 
