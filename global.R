@@ -48,6 +48,9 @@ pool <- dbPool(
 
 )
 
+# Component choices
+comp_choices <- list("PM10", "PM10 - calibrated", "PM2.5", "PM2.5 - calibrated")
+
 # Read out the database to dataframes
 measurements <- tbl(pool, "measurements") %>% as.data.frame()
 # Add date column that represents timestamp as datetime
