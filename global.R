@@ -48,25 +48,32 @@ pool <- dbPool(
   dbname = datafile("database.db")
 
 )
+# Colours for the sensors
+col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
+col_default <- '#000000'
+col_overload <- '#111111'
+
+# Linetype for the reference stations
+line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
+line_default <- 'solid'
+line_overload <- 'dotted'
 
 # Read out the database to dataframes
 measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
 meta <- tbl(pool, "meta") %>% as.data.frame()
-sensor <- tbl(pool, "sensor") %>% as.data.frame() %>% mutate(selected = F, col = '#000000')
+sensor <- tbl(pool, "sensor") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
 
-# Colours for the sensors
-col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
-col_cat <- rev(col_cat) # the saturated colours first
 
 ### APP SPECIFIC SETTINGS                                                   ====
 
 # Source module for the communication
 source("modules/communication_module.R")
-source("modules/select_date_range.R")
 
 # Source modules selections
+source("modules/select_date_range.R")
 
 # Source modules visualisation
 
 # Source functions
 source("funs/assign_color_stations.R")
+source("funs/assign_linetype_stations.R")
