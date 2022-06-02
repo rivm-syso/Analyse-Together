@@ -58,12 +58,16 @@ communication_server <- function(id,
                  # We assume that each station has only 1 location. Or we plot all, we don't distinguish location time
                  # TODO create a function or reactive to make this selection which locations to use
                  get_stations_total <- reactive({
+                   browser()
                    # Set selected stations to TRUE
                    stations_total <- data_stations %>%
                      dplyr::mutate(selected = case_when(station %in% selected_stations ~ T,
                                                  T ~ F))
-                   # Assign colors
-                   stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload)
+                   # Assign colors -> sensor
+                   stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
+
+                   # Assign linetype -> reference station
+                   stations_total <- assign_linetype_stations(stations_total, line_cat, line_default, line_overload, line_station_type = "ref")
 
                    return(stations_total)
                  })
@@ -73,13 +77,11 @@ communication_server <- function(id,
                  # If not, then insert such a check here.
                  # Otherwise this reactive isnt needed
                  get_time_selection <- reactive({
-                   browser()
                    start_time <- selected_time$selected_start_date()
                    end_time <- selected_time$selected_end_date()
-                   browser()
+
                    # Check if a time is selected, otherwise
                    if(is.null(start_time)|is.null(end_time)){
-                     print("hoi")
                      start_time <- get_time_total()$start_time
                      end_time <- get_time_total()$end_time
                    }
