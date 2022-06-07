@@ -8,7 +8,7 @@ application_version <- "0.0.1"
 
 # Read in the necessary libraries                                           ====
 
-# Tidyverse (essential)
+# Tidyverse (essential) 
 library(tidyverse)
 
 # Shiny (essential)
