@@ -10,7 +10,8 @@ shinyServer(function(global, input, output, session) {
   # The pickerInput for component selection 
   select_component <- component_selection_server("select_component", comp_choices)
   
-
+  # The Map 
+  map <- show_map_server("map", sensor)
 
 
     communication_stuff <- communication_server("test_comm_output",

@@ -73,6 +73,8 @@ source("modules/communication_module.R")
 source("modules/select_date_range.R")
 # Source module for the component selection
 source("modules/select_component.R")
+# Source module for the component selection
+source("modules/show_map.R")
 
 # Source modules selections
 
