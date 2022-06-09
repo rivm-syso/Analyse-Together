@@ -32,7 +32,8 @@ show_map_server <- function(id, sensor) {
         leaflet() %>% 
           addTiles() %>%
           addCircleMarkers(data = sensor, ~lon, ~lat, 
-                           #layerId = ~Group.1, label = lapply(sensor_labels, HTML),
+                           #layerId = ~Group.1, 
+                           label = lapply(sensor$station, HTML),
                            radius = 5, 
                            color = ~col
                            ) %>%
@@ -42,7 +43,7 @@ show_map_server <- function(id, sensor) {
                     opacity = 1)
       })
     
-    # Return the chosen sensors?
+    # Return the chosen sensors/change the color/...?
     #return(map = reactive({input$map}))
     
   })
