@@ -29,9 +29,23 @@ library(plotly)          # For graphs
 # Geo
 library(sf)
 
+# logger
+library(logger)
+log_threshold(TRACE)
+
 # set data location
 library(datafile)
 datafileInit()
+
+# load  dev version samanapir
+remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
+library(samanapir)
+
+
+# load ATdatabase
+remotes::install_github("rivm-syso/ATdatabase", ref = "develop",
+                        build_opts ="")
+library(ATdatabase)
 
 # Set language and date options                                             ====
 
@@ -48,10 +62,19 @@ pool <- dbPool(
 
 )
 
+# store lists with projects and municipalities
+municipalities <- read_csv("./prepped_data/municipalities.csv")
+projects <- read_csv("./prepped_data/projects.csv")
+
+# add_doc doesn't work, see ATdatabase #8
+add_doc("application", "municipalities", municipalities, conn = pool, 
+        overwrite = TRUE)
+add_doc("application", "projects", projects, conn = pool, 
+        overwrite = TRUE)
+
+
 # Read out the database to dataframes
-cache <- tbl(pool, "cache") %>% as.data.frame()
 measurements <- tbl(pool, "measurements") %>% as.data.frame()
-meta <- tbl(pool, "meta") %>% as.data.frame()
-sensor <- tbl(pool, "sensor") %>% as.data.frame()
-sqlite_sequence <- tbl(pool, "sqlite_sequence") %>% as.data.frame()
+location <- tbl(pool, "location") %>% as.data.frame()
+
 
