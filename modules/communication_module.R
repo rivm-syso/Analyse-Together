@@ -42,7 +42,7 @@ communication_server <- function(id,
                                  col_cat,
                                  col_default,
                                  col_overload,
-                                 # Optiions for the linetype
+                                 # Options for the linetype
                                  line_cat,
                                  line_default,
                                  line_overload
@@ -65,7 +65,6 @@ communication_server <- function(id,
                  # We assume that each station has only 1 location. Or we plot all, we don't distinguish location time
                  # TODO create a function or reactive to make this selection which locations to use
                  get_stations_total <- reactive({
-                   browser()
                    # Set selected stations to TRUE
                    stations_total <- data_stations %>%
                      dplyr::mutate(selected = case_when(station %in% selected_stations ~ T,
@@ -80,9 +79,6 @@ communication_server <- function(id,
                  })
 
                  # Get the start and end time from the user.
-                 # TODO if there is no selection by the user, does the time selection module gives the total time ?
-                 # If not, then insert such a check here.
-                 # Otherwise this reactive isnt needed
                  get_time_selection <- reactive({
                    start_time <- selected_time$selected_start_date()
                    end_time <- selected_time$selected_end_date()
@@ -95,13 +91,13 @@ communication_server <- function(id,
                    return(list(start_time = start_time, end_time = end_time))
                  })
 
+
                  # Reactive for the measurements to filter on input, time, map, component
                  filter_data_measurements <- reactive({
                    # Get the start and end time to filter on
                    time_selected <- get_time_selection()
                    start_time <- time_selected$start_time
                    end_time <- time_selected$end_time
-                    browser()
                    # TODO some check if time is available in data
                    # TODO check if selected sensors has data that time and component, otherwise a message?
                    # TODO for the selected stations and parameters connect with those selection modules

@@ -10,7 +10,7 @@ shinyServer(function(global, input, output, session) {
   communication_stuff <- communication_server("test_comm_output",
                                                 measurements,
                                                 sensor,
-                                                meta,
+                                                meta, # TODO willen we hier wat mee?
                                                 # TODO Get the selected parameter form the module XXX
                                                 selected_parameter = "pm10_kal",
                                                 selected_time = select_date_range,
@@ -20,7 +20,7 @@ shinyServer(function(global, input, output, session) {
                                                 col_cat,
                                                 col_default,
                                                 col_overload,
-                                                # Optiions for the linetype
+                                                # Options for the linetype
                                                 line_cat,
                                                 line_default,
                                                 line_overload
