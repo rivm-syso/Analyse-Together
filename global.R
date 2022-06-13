@@ -8,7 +8,7 @@ application_version <- "0.0.1"
 
 # Read in the necessary libraries                                           ====
 
-# Tidyverse (essential) 
+# Tidyverse (essential)
 library(tidyverse)
 
 # Shiny (essential)
@@ -69,8 +69,8 @@ col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39
 col_cat <- rev(col_cat) # the saturated colours first
 
 # Component choices
-comp_choices <- list("PM10", "PM10 - calibrated", "PM2.5", "PM2.5 - calibrated")
-
+overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ","PM10","PM10 - gekalibreerd","PM2.5" ,"PM2.5 - gekalibreerd" ))
+comp_choices = setNames(overview_component$component, overview_component$label)
 
 
 ### APP SPECIFIC SETTINGS                                                   ====
