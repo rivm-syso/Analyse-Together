@@ -58,10 +58,13 @@ shinyUI(
                  )
 
           ),
-          
-          column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range", start_date, end_date))),
+
           
           column(12, class = "col-lg-6", wellPanel(component_selection_output("select_component"))),
+
+
+          column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range"))),
+
 
 
         ),
