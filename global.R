@@ -8,7 +8,7 @@ application_version <- "0.0.1"
 
 # Read in the necessary libraries                                           ====
 
-# Tidyverse (essential)
+# Tidyverse (essential) 
 library(tidyverse)
 
 # Shiny (essential)
@@ -64,6 +64,15 @@ meta <- tbl(pool, "meta") %>% as.data.frame()
 sensor <- tbl(pool, "sensor") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
 
 
+# Colours for the sensors
+col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
+col_cat <- rev(col_cat) # the saturated colours first
+
+# Component choices
+comp_choices <- list("PM10", "PM10 - calibrated", "PM2.5", "PM2.5 - calibrated")
+
+
+
 ### APP SPECIFIC SETTINGS                                                   ====
 
 # Source module for the communication
@@ -71,6 +80,7 @@ source("modules/communication_module.R")
 
 # Source modules selections
 source("modules/select_date_range.R")
+source("modules/select_component.R")
 
 # Source modules visualisation
 

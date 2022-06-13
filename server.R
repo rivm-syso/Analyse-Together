@@ -2,10 +2,11 @@
 # Define server logic                                                       ====
 shinyServer(function(global, input, output, session) {
 
-
+  # The pickerInput for component selection 
+  select_component <- component_selection_server("select_component", comp_choices)
+  
   # The dateRangeInput for date range selection
   select_date_range <- date_range_server("select_date_range", communication_stuff)
-
 
   communication_stuff <- communication_server("test_comm_output",
                                                 measurements,
@@ -25,6 +26,7 @@ shinyServer(function(global, input, output, session) {
                                                 line_default,
                                                 line_overload
                                                 )
+
 
 
 })
