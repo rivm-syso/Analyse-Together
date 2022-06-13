@@ -33,7 +33,6 @@ communication_server <- function(id,
                                  data_measurements,
                                  data_stations,
                                  data_meta,
-                                 # TODO Get the selected parameter form the module XXX
                                  selected_parameter ,
                                  selected_time ,
                                  # TODO Get the selected stations form the map
@@ -91,6 +90,15 @@ communication_server <- function(id,
                    return(list(start_time = start_time, end_time = end_time))
                  })
 
+                 # Get the parameter from the user
+                 get_parameter_selection <- reactive({
+                   parameter <- selected_parameter()
+                   # Check if a parameter is selected, otherwise pm2.5-calibrated
+                   if(is.null(parameter)){
+                     parameter <- "pm25_kal"
+                   }
+                   return(list(parameter = parameter))
+                 })
 
                  # Reactive for the measurements to filter on input, time, map, component
                  filter_data_measurements <- reactive({
@@ -98,6 +106,9 @@ communication_server <- function(id,
                    time_selected <- get_time_selection()
                    start_time <- time_selected$start_time
                    end_time <- time_selected$end_time
+                   # Get the chosen parameter
+                   selected_parameter <- get_parameter_selection()$parameter
+
                    # TODO some check if time is available in data
                    # TODO check if selected sensors has data that time and component, otherwise a message?
                    # TODO for the selected stations and parameters connect with those selection modules
@@ -108,6 +119,7 @@ communication_server <- function(id,
                  })
 
                  output$test_data_select_time <- renderTable({
+
                    test123 <- filter_data_measurements()
                    head(test123)
                    })
@@ -133,4 +145,3 @@ communication_server <- function(id,
 
                })
 }
-
