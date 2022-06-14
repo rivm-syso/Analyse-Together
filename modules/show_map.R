@@ -1,5 +1,5 @@
 ###############################################
-### ...Input - select sensor? ###
+### ...Input - select sensor/project/data-range? ###
 ###############################################
 
 # This is a map module
@@ -32,7 +32,6 @@ show_map_server <- function(id, sensor) {
         leaflet() %>% 
           addTiles() %>%
           addCircleMarkers(data = sensor, ~lon, ~lat, 
-                           #layerId = ~Group.1, 
                            label = lapply(sensor$station, HTML),
                            radius = 5, 
                            color = ~col
