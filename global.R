@@ -24,6 +24,7 @@ library(pool)
 # Visualisation
 library(highcharter)     # For charts
 library(leaflet)         # For maps
+library(leaflet.extras)  # For maps
 library(DT)              # For tables
 library(plotly)          # For graphs
 
