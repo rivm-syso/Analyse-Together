@@ -91,6 +91,7 @@ source("modules/select_date_range.R")
 source("modules/select_component.R")
 
 # Source modules visualisation
+source("modules/add_barplot.R")
 
 # Source functions
 source("funs/assign_color_stations.R")

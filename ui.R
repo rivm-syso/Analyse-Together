@@ -89,6 +89,13 @@ shinyUI(
           column(12, show_map_output("map"))
           
         ),
+        fluidRow(
+          
+          # Highcharter should be initiated in ui.R to make sure the
+          # right protocol for loading the library is used (bug).
+          column(12, barplot_output("barplot_plot"))
+          
+        ),
 
       )
 
