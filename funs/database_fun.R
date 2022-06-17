@@ -187,13 +187,15 @@ if(interactive()) {
 
     kits <- get_stations_from_project(project)
 
+    counter <- 1
     for(i in kits) {
-        log_debug("downloading measurements for station {i}")
+        log_debug("downloading measurements for station {i}, {counter}/{length(kits)}")
         date_range <- round_to_days(time_start, time_end)
         d <- download_data(i, Tstart = time_start, Tend = time_end,
                            fun = "download_data_samenmeten",
                            conn = pool)
         log_trace("got {nrow(d)} measurements")
+        count <- count + 1
     }
 
 }
