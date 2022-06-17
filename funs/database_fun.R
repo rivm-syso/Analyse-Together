@@ -108,6 +108,31 @@ get_stations_from_project <- function(project) {
 }
 
 
+round_to_days <- function(time_start, time_end) {
+    # the samen meten API requires time ranges in full days. This
+    # function rounds any time to the start of the day of time_start
+    # until the end of the day of time_end
+    #
+    # arguments:
+    #   time_start: string with start time
+    #   time_end: string with end time
+
+    ts <- floor_date(time_start, unit = "day")
+    te <- ceiling_date(time_end, unit = "day")
+
+    if(!te>ts) {
+        te <- te + days(1)
+    }
+
+    if(te<=ts) {
+        stop("te < ts")
+    }
+    res <- c(ts, te)
+    names(res) <- c("time_start","time_end")
+
+    return(res)
+}
+
 download_data_samenmeten <- function(x, station, conn = pool) {
 
     streams <- get_doc(type = "datastream", ref = station, conn) %>%
@@ -154,11 +179,22 @@ download_data_samenmeten <- function(x, station, conn = pool) {
 if(interactive()) {
 
     project <- "HEI"
+
+    time_start <- as_datetime("2022-01-01 00:00:00")
+    time_end <- as_datetime("2022-01-03 23:59:59")
+
     download_project(project)
 
     kits <- get_stations_from_project(project)
 
-
+    for(i in kits) {
+        log_debug("downloading measurements for station {i}")
+        date_range <- round_to_days(time_start, time_end)
+        d <- download_data(i, Tstart = time_start, Tend = time_end,
+                           fun = "download_data_samenmeten",
+                           conn = pool)
+        log_trace("got {nrow(d)} measurements")
+    }
 
 }
 

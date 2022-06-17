@@ -29,6 +29,8 @@ library(plotly)          # For graphs
 # Geo
 library(sf)
 
+library(lubridate)
+
 # logger
 library(logger)
 log_threshold(TRACE)
