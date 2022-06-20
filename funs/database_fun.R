@@ -159,7 +159,7 @@ download_data_samenmeten <- function(x, station, conn = pool) {
         } else {
             log_debug("API Error in stream {station} - {i}")
         }
-        Sys.sleep(1) # don't hammer the API
+        #Sys.sleep(1) # don't hammer the API
     }
 
     if(nrow(d)>0) {
@@ -169,7 +169,7 @@ download_data_samenmeten <- function(x, station, conn = pool) {
     } else {
         d <- NULL
     }
-    log_debug("got {nrow(d)} measurements")
+    log_debug("got {ifelse(is.null(d),'no',nrow(d))} measurements")
     return(d)
 }
 
@@ -178,7 +178,7 @@ download_data_samenmeten <- function(x, station, conn = pool) {
 # Debug
 if(interactive()) {
 
-    project <- "HEI"
+    project <- "Amersfoort"
 
     time_start <- as_datetime("2022-01-01 00:00:00")
     time_end <- as_datetime("2022-01-03 23:59:59")
@@ -195,7 +195,7 @@ if(interactive()) {
                            fun = "download_data_samenmeten",
                            conn = pool)
         log_trace("got {nrow(d)} measurements")
-        count <- count + 1
+        counter <- counter + 1
     }
 
 }
