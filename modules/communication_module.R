@@ -66,7 +66,7 @@ communication_server <- function(id,
                  get_stations_total <- reactive({
                    # Set selected stations to TRUE
                    stations_total <- data_stations %>%
-                     dplyr::mutate(selected = case_when(station %in% selected_stations ~ T,
+                     dplyr::mutate(selected = case_when(station %in% c(selected_stations$sensormap()) ~ T,
                                                  T ~ F))
                    # Assign colors -> sensor
                    stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
@@ -99,7 +99,8 @@ communication_server <- function(id,
                    }
                    return(list(parameter = parameter))
                  })
-
+                 
+                 
                  # Reactive for the measurements to filter on input, time, map, component
                  filter_data_measurements <- reactive({
                    # Get the start and end time to filter on
@@ -114,7 +115,7 @@ communication_server <- function(id,
                    # TODO for the selected stations and parameters connect with those selection modules
                    # Filter the measurements
                    measurements_filt <- data_measurements %>%
-                     dplyr::filter(date > start_time & date < end_time & station %in% selected_stations & parameter == selected_parameter)
+                     dplyr::filter(date > start_time & date < end_time & station %in% c(selected_stations$sensormap()) & parameter == selected_parameter)
                    return(measurements_filt)
                  })
 
