@@ -22,14 +22,10 @@ library(RSQLite)
 library(pool)
 
 # Visualisation
-library(highcharter)     # For charts
 library(leaflet)         # For maps
 library(leaflet.extras)  # For maps
 library(DT)              # For tables
 library(plotly)          # For graphs
-
-# Geo
-library(sf)
 
 # set data location
 library(datafile)
@@ -49,6 +45,7 @@ pool <- dbPool(
   dbname = datafile("database.db")
 
 )
+
 # Colours for the sensors
 col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
 col_default <- '#000000'
@@ -63,11 +60,6 @@ line_overload <- 'dotted'
 measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
 meta <- tbl(pool, "meta") %>% as.data.frame()
 sensor <- tbl(pool, "sensor") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
-
-
-# Colours for the sensors
-col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
-col_cat <- rev(col_cat) # the saturated colours first
 
 # Component choices
 overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ","PM10","PM10 - gekalibreerd","PM2.5" ,"PM2.5 - gekalibreerd" ))
@@ -96,3 +88,6 @@ source("modules/select_component.R")
 # Source functions
 source("funs/assign_color_stations.R")
 source("funs/assign_linetype_stations.R")
+
+### THE END                                                                 ====
+

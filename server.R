@@ -13,6 +13,7 @@ shinyServer(function(global, input, output, session) {
   # The dateRangeInput for date range selection
   select_date_range <- date_range_server("select_date_range", communication_stuff)
 
+  # The communication module
   communication_stuff <- communication_server("test_comm_output",
                                                 measurements,
                                                 sensor,
@@ -31,7 +32,5 @@ shinyServer(function(global, input, output, session) {
                                                 line_default,
                                                 line_overload
                                                 )
-
-
 
 })
