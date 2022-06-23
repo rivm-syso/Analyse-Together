@@ -7,6 +7,10 @@ shinyServer(function(global, input, output, session) {
 
   # The dateRangeInput for date range selection
   select_date_range <- date_range_server("select_date_range", communication_stuff)
+  
+  # The timeseries plot 
+  timeseries_plot <- timeseries_server("timeseries_plot", data_measurements_stations = communication_stuff, overview_component)
+  # timeseries_plot <- timeseries_server("timeseries_plot", test_measurements, test_loc_col, overview_component)
 
   communication_stuff <- communication_server("test_comm_output",
                                                 measurements,
