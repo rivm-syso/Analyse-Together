@@ -75,12 +75,20 @@ shinyUI(
           column(12, wellPanel(communication_output("test_comm_output")))
 
         ),
+        
         fluidRow(
 
+          # Render timeseries plot. 
+          column(12, timeseries_output("timeseries_plot"))
+
+        ),
+        
+        fluidRow(
+          
           # Highcharter should be initiated in ui.R to make sure the
           # right protocol for loading the library is used (bug).
           column(12, highchart(height = 50))
-
+          
         ),
 
 
