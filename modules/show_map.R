@@ -13,8 +13,9 @@ show_map_output <- function(id) {
   
   tagList(
   leafletOutput(ns('map')),
-  uiOutput(ns('sensormap'))
-  #textOutput(ns('sensormap'))
+  uiOutput(ns('sensormap')),
+  verbatimTextOutput(ns('Click_text')),
+  uiOutput(ns('pass_sensor')),
   )
   
 }
@@ -61,12 +62,12 @@ show_map_server <- function(id, com_module, sensor) {
             editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
 
           addLegend('bottomright', pal = beatCol, values = sensor$col,
-                    title = 'Sensors',
+                    title = 'Sensors locations',
                     opacity = 1) %>%
 
           addEasyButton(easyButton(
-            icon="fa-globe", title="Zoom to Level 7",
-            onClick=JS("function(btn, map){ map.setZoom(7); }"))) %>%
+            icon="fa-globe", title="Back to default view",
+            onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
           addEasyButton(easyButton(
             icon="fa-crosshairs", title="Locate Me",
             onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
@@ -85,18 +86,32 @@ show_map_server <- function(id, com_module, sensor) {
         
         pickerInput(
           ns("sensormap"),
-          label    = "Select id",
+          label    = "Select id's by click on the map",
           choices  = sensor$station
         )
       )
     })
     
+    
+    observe({
+      click <- input$map_marker_click
+
+      selected_snsr_txt <- paste0("You've selected point ", click$id)
+      selected_snsr <- click$id
+    
+      output$Click_text <- renderText({
+        selected_snsr_txt
+      })
+      output$pass_sensor <- renderUI({
+        pass_sensor <- c(selected_snsr)
+      })
+      
+    })
       
     # Return start and end date
-    return(list(sensormap = reactive({ input$sensormap })
-                #))
-                ,
-                map = map))
+    return(list(sensormap = reactive({ input$sensormap }),
+                map = map,
+                pass_sensor = reactive({ input$pass_sensor })))
       
   })
   

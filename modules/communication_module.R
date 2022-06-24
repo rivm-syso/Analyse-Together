@@ -58,7 +58,8 @@ communication_server <- function(id,
                   end_time <- data_measurements %>% select(date) %>% pull() %>% max()
                   return(list(start_time = start_time, end_time = end_time))
                 })
-
+                 
+                 
 
                  # Get the total stations and their location, if they are selected, name/label and colour
                  # We assume that each station has only 1 location. Or we plot all, we don't distinguish location time
@@ -66,8 +67,10 @@ communication_server <- function(id,
                  get_stations_total <- reactive({
                    # Set selected stations to TRUE
                    stations_total <- data_stations %>%
-                     dplyr::mutate(selected = case_when(station %in% c(selected_stations$sensormap()) ~ T,
+                     dplyr::mutate(selected = case_when(station %in% c(selected_stations$pass_sensor()) ~ T,
                                                  T ~ F))
+                   print(selected_stations$pass_sensor())
+                   print(selected_stations$sensormap())
                    # Assign colors -> sensor
                    stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
 
@@ -115,7 +118,7 @@ communication_server <- function(id,
                    # TODO for the selected stations and parameters connect with those selection modules
                    # Filter the measurements
                    measurements_filt <- data_measurements %>%
-                     dplyr::filter(date > start_time & date < end_time & station %in% c(selected_stations$sensormap()) & parameter == selected_parameter)
+                     dplyr::filter(date > start_time & date < end_time & station %in% c(selected_stations$pass_sensor()) & parameter == selected_parameter)
                    return(measurements_filt)
                  })
 
