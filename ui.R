@@ -16,7 +16,7 @@ shinyUI(
       # White header with logo
       tags$div(class = "header-white",
 
-               tags$img(src = "images/test1.png", style = "height: 101px; width: 242px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
+               tags$img(src = "images/Banner_2018.png", style = "height: 120px; width: 610px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
 
       ),
 
@@ -59,12 +59,11 @@ shinyUI(
 
           ),
 
-
+        ),
+        fluidRow(
           column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component"))),
 
-
           column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range"))),
-
 
 
         ),
@@ -100,4 +99,3 @@ shinyUI(
   )
 
 )
-

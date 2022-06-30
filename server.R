@@ -12,6 +12,7 @@ shinyServer(function(global, input, output, session) {
   timeseries_plot <- timeseries_server("timeseries_plot", data_measurements_stations = communication_stuff, overview_component)
   # timeseries_plot <- timeseries_server("timeseries_plot", test_measurements, test_loc_col, overview_component)
 
+  # The communication module
   communication_stuff <- communication_server("test_comm_output",
                                                 measurements,
                                                 sensor,
@@ -29,7 +30,5 @@ shinyServer(function(global, input, output, session) {
                                                 line_default,
                                                 line_overload
                                                 )
-
-
 
 })
