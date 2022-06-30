@@ -8,16 +8,16 @@
 ######################################################################
 
 show_map_output <- function(id) {
-  
+
   ns <- NS(id)
-  
+
   tagList(
   leafletOutput(ns('map')),
   uiOutput(ns('sensormap')),
   verbatimTextOutput(ns('Click_text')),
   uiOutput(ns('pass_sensor')),
   )
-  
+
 }
 
 
@@ -26,17 +26,25 @@ show_map_output <- function(id) {
 ######################################################################
 
 show_map_server <- function(id, com_module, sensor) {
-  
+
   moduleServer(id, function(input, output, session) {
-    
+
     ns <- session$ns
     beatCol <- colorFactor(palette = 'RdYlGn', domain = c(0,100), reverse = TRUE)
-    
+
     # Get the min and max of the dataset
     get_locations <- reactive({
-      sensorloc <- com_module$station_locations() 
+      sensorloc <- com_module$station_locations()
       return(sensorloc)})
-    
+
+    # Create an reactive to change with the obeserve, to store the clicked id
+    state_station <- reactiveValues(value = "SSK_LH003")
+
+    # Change the clicked_id stored
+    change_state <- function(id_selected){
+      state_station$value <- id_selected
+    }
+
       #Generate base map ----
       output$map <- renderLeaflet({
         ns("map")
@@ -79,41 +87,19 @@ show_map_server <- function(id, com_module, sensor) {
     # Return the chosen sensors/change the color/...? Define an output; with dataframe of clicked sensors?
     # Return this and use this in the server as input for the com_module
 
-    output$sensormap <- renderUI({
-      
-      # Create the component picker with a list of possible choices
-      tagList(
-        
-        pickerInput(
-          ns("sensormap"),
-          label    = "Select id's by click on the map",
-          choices  = sensor$station
-        )
-      )
-    })
-    
-    
+    # Observe if a sensor is clicked and store the id
     observe({
       click <- input$map_marker_click
-
-      selected_snsr_txt <- paste0("You've selected point ", click$id)
       selected_snsr <- click$id
-    
-      output$Click_text <- renderText({
-        selected_snsr_txt
-      })
-      output$pass_sensor <- renderUI({
-        pass_sensor <- c(selected_snsr)
-      })
-      
+      change_state(selected_snsr)
     })
-      
+
     # Return start and end date
-    return(list(sensormap = reactive({ input$sensormap }),
+    return(list(
                 map = map,
-                pass_sensor = reactive({ input$pass_sensor })))
-      
+                state_station = reactive({state_station$value})))
+
   })
-  
+
 }
 

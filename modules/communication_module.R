@@ -14,6 +14,8 @@ communication_output <- function(id) {
   ns <- NS(id)
 
   tagList(
+    verbatimTextOutput(ns('Click_text')),
+
     tableOutput(ns("test_data_select_time")),
     tableOutput(ns("test_data_select_sensor")),
     tableOutput(ns("test_stations_total")),
@@ -58,8 +60,12 @@ communication_server <- function(id,
                   end_time <- data_measurements %>% select(date) %>% pull() %>% max()
                   return(list(start_time = start_time, end_time = end_time))
                 })
-                 
-                 
+
+                # TODO this needs to get some administration to selecet and deselect
+                get_selected_station <- reactive({
+                  selected_station <- get_stations_total() %>% dplyr::filter(selected) %>% dplyr::select(station) %>% pull()
+                  return(selected_station)
+                })
 
                  # Get the total stations and their location, if they are selected, name/label and colour
                  # We assume that each station has only 1 location. Or we plot all, we don't distinguish location time
@@ -67,10 +73,9 @@ communication_server <- function(id,
                  get_stations_total <- reactive({
                    # Set selected stations to TRUE
                    stations_total <- data_stations %>%
-                     dplyr::mutate(selected = case_when(station %in% c(selected_stations$pass_sensor()) ~ T,
+                     dplyr::mutate(selected = case_when(station %in% c(selected_stations$state_station()) ~ T,
                                                  T ~ F))
-                   print(selected_stations$pass_sensor())
-                   print(selected_stations$sensormap())
+                   # print(selected_stations$selected_station())
                    # Assign colors -> sensor
                    stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
 
@@ -102,8 +107,8 @@ communication_server <- function(id,
                    }
                    return(list(parameter = parameter))
                  })
-                 
-                 
+
+
                  # Reactive for the measurements to filter on input, time, map, component
                  filter_data_measurements <- reactive({
                    # Get the start and end time to filter on
@@ -113,12 +118,15 @@ communication_server <- function(id,
                    # Get the chosen parameter
                    selected_parameter <- get_parameter_selection()$parameter
 
+                   # Get selected stations
+                   selected_stations <- get_selected_station()
+
                    # TODO some check if time is available in data
                    # TODO check if selected sensors has data that time and component, otherwise a message?
                    # TODO for the selected stations and parameters connect with those selection modules
                    # Filter the measurements
                    measurements_filt <- data_measurements %>%
-                     dplyr::filter(date > start_time & date < end_time & station %in% c(selected_stations$pass_sensor()) & parameter == selected_parameter)
+                     dplyr::filter(date > start_time & date < end_time & station %in% selected_stations & parameter == selected_parameter)
                    return(measurements_filt)
                  })
 
@@ -139,6 +147,9 @@ communication_server <- function(id,
                    test123 <- get_time_total()
                    test123}
                  )
+                 output$Click_text <- renderText({
+                   get_selected_station()
+                 })
 
                 return(list(
                   start_end_total = reactive({get_time_total()}),
