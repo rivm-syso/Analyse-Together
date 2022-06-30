@@ -77,16 +77,9 @@ shinyUI(
 
         fluidRow(
 
-          # Highcharter should be initiated in ui.R to make sure the
-          # right protocol for loading the library is used (bug).
-          column(12, highchart(height = 50))
 
-        ),
-        fluidRow(
-          
-     
           column(12, show_map_output("map"))
-          
+
         ),
 
 
