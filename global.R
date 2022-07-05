@@ -25,7 +25,6 @@ library(pool)
 library(leaflet)         # For maps
 library(plotly)          # For graphs
 
-
 # Geo
 library(sf)
 
@@ -87,13 +86,11 @@ add_doc("application", "projects", projects, conn = pool,
 
 # Read out the database to dataframes
 measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
-
 sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
 
 # Colours for the sensors
 col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
 col_cat <- rev(col_cat) # the saturated colours first
-
 
 # Component choices
 overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ","PM10","PM10 - gekalibreerd","PM2.5" ,"PM2.5 - gekalibreerd" ))
