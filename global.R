@@ -25,9 +25,28 @@ library(pool)
 library(leaflet)         # For maps
 library(plotly)          # For graphs
 
+# Geo
+library(sf)
+
+library(lubridate)
+
+# logger
+library(logger)
+log_threshold(TRACE)
+
 # set data location
 library(datafile)
 datafileInit()
+
+# load  dev version samanapir
+remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
+library(samanapir)
+
+
+# load ATdatabase
+remotes::install_github("rivm-syso/ATdatabase", ref = "develop",
+                        build_opts ="")
+library(ATdatabase)
 
 # Set language and date options                                             ====
 
@@ -54,10 +73,24 @@ line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
 line_default <- 'solid'
 line_overload <- 'dotted'
 
+# store lists with projects and municipalities
+municipalities <- read_csv("./prepped_data/municipalities.csv")
+projects <- read_csv("./prepped_data/projects.csv")
+
+# add_doc doesn't work, see ATdatabase #8
+add_doc("application", "municipalities", municipalities, conn = pool, 
+        overwrite = TRUE)
+add_doc("application", "projects", projects, conn = pool, 
+        overwrite = TRUE)
+
+
 # Read out the database to dataframes
 measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
-meta <- tbl(pool, "meta") %>% as.data.frame()
-sensor <- tbl(pool, "sensor") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
+sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
+
+# Colours for the sensors
+col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
+col_cat <- rev(col_cat) # the saturated colours first
 
 # Component choices
 overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ","PM10","PM10 - gekalibreerd","PM2.5" ,"PM2.5 - gekalibreerd" ))
