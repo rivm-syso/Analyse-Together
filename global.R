@@ -15,7 +15,7 @@ library(tidyverse)
 library(shiny)
 library(shinycssloaders)
 library(shinyWidgets)
-library(shinytest)
+# library(shinytest)
 
 # Databases (essential)
 library(RSQLite)
