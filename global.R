@@ -5,6 +5,7 @@
 
 # Define the version of your application                                    ====
 application_version <- "0.0.1"
+install_github <- FALSE # we run into API rate limits
 
 # Read in the necessary libraries                                           ====
 
@@ -42,13 +43,16 @@ library(datafile)
 datafileInit()
 
 # load  dev version samanapir
-remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
+if(install_github) remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
 library(samanapir)
 
 
 # load ATdatabase
-remotes::install_github("rivm-syso/ATdatabase", ref = "develop",
-                        build_opts ="")
+if(install_github) {
+    remotes::install_github("rivm-syso/ATdatabase", ref = "develop",
+                            build_opts ="")
+}
+
 library(ATdatabase)
 
 # Set language and date options                                             ====

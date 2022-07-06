@@ -92,6 +92,7 @@ show_map_server <- function(id, com_module, sensor) {
       click <- input$map_marker_click
       selected_snsr <- click$id
       change_state(selected_snsr)
+      log_trace("map module: click id {selected_snsr}")
     })
 
     # Return start and end date

@@ -14,7 +14,7 @@ communication_output <- function(id) {
   ns <- NS(id)
 
   tagList(
-    verbatimTextOutput(ns('Click_text')),
+#     verbatimTextOutput(ns('Click_text')),
 
     tableOutput(ns("test_data_select_time")),
     tableOutput(ns("test_data_select_sensor")),
@@ -58,6 +58,7 @@ communication_server <- function(id,
                  get_time_total <- reactive({
                   start_time <- data_measurements %>% select(date) %>% pull() %>% min()
                   end_time <- data_measurements %>% select(date) %>% pull() %>% max()
+                  log_trace("com module: total time range {start_time} - {end_time}")
                   return(list(start_time = start_time, end_time = end_time))
                 })
 
@@ -82,6 +83,7 @@ communication_server <- function(id,
                    # Assign linetype -> reference station
                    stations_total <- assign_linetype_stations(stations_total, line_cat, line_default, line_overload, line_station_type = "ref")
 
+                  log_trace("com module: total number of stations {nrow(stations_total)}")
                    return(stations_total)
                  })
 
@@ -95,6 +97,7 @@ communication_server <- function(id,
                      start_time <- get_time_total()$start_time
                      end_time <- get_time_total()$end_time
                    }
+                  log_trace("com module: selected time range {start_time} - {end_time}")
                    return(list(start_time = start_time, end_time = end_time))
                  })
 
@@ -105,6 +108,7 @@ communication_server <- function(id,
                    if(is.null(parameter)){
                      parameter <- "pm25_kal"
                    }
+                  log_trace("com module: selected parameter {parameter}")
                    return(list(parameter = parameter))
                  })
 
@@ -127,6 +131,9 @@ communication_server <- function(id,
                    # Filter the measurements
                    measurements_filt <- data_measurements %>%
                      dplyr::filter(date > start_time & date < end_time & station %in% selected_stations & parameter == selected_parameter)
+                  log_trace("com module: number of selected stations {length(selected_stations)}")
+                  log_trace("com module: number of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
+                  log_trace("com module: filtered measurements {nrow(measurements_filt)}")
                    return(measurements_filt)
                  })
 
@@ -147,9 +154,9 @@ communication_server <- function(id,
                    test123 <- get_time_total()
                    test123}
                  )
-                 output$Click_text <- renderText({
-                   get_selected_station()
-                 })
+#                  output$Click_text <- renderText({
+#                    get_selected_station()
+#                  })
 
                 return(list(
                   start_end_total = reactive({get_time_total()}),
