@@ -10,7 +10,7 @@ shinyServer(function(global, input, output, session) {
   map <- show_map_server("map", communication_stuff, sensor)
 
   # The Barplot
-  barplot <- barplot_server("barplot_plot", measurements)
+  barplot <- barplot_server("barplot_plot", communication_stuff)
 
   # The dateRangeInput for date range selection
   select_date_range <- date_range_server("select_date_range", communication_stuff)

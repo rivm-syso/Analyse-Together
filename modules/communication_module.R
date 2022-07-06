@@ -53,6 +53,7 @@ communication_server <- function(id,
                function(input, output, session) {
 
                  ns <- session$ns
+                
 
                 # Get the total time of the measurements, those are the limits for the time selection picker
                  get_time_total <- reactive({
