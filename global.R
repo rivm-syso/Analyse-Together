@@ -79,6 +79,8 @@ add_doc("application", "projects", projects, conn = pool,
 measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
 sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
 
+log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
+
 
 
 # Define colors, line types,choices etc.                                   ====
