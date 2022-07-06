@@ -74,7 +74,13 @@ shinyUI(
           column(12, wellPanel(communication_output("test_comm_output")))
 
         ),
+        
+        fluidRow(
 
+          # Render timeseries plot. 
+          column(12, timeseries_output("timeseries_plot"))
+
+        ),
 
       )
 

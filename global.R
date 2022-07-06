@@ -24,6 +24,7 @@ library(pool)
 # Visualisation
 library(leaflet)         # For maps
 library(plotly)          # For graphs
+library(latex2exp)       # For titles in graphs
 
 # Geo
 library(sf)
@@ -93,7 +94,7 @@ col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39
 col_cat <- rev(col_cat) # the saturated colours first
 
 # Component choices
-overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ","PM10","PM10 - gekalibreerd","PM2.5" ,"PM2.5 - gekalibreerd" ))
+overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ", "PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
 comp_choices = setNames(overview_component$component, overview_component$label)
 
 
@@ -107,6 +108,7 @@ source("modules/select_date_range.R")
 source("modules/select_component.R")
 
 # Source modules visualisation
+source("modules/plot_timeseries.R")
 
 # Source functions
 source("funs/assign_color_stations.R")
