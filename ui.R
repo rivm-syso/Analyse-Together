@@ -16,7 +16,7 @@ shinyUI(
       # White header with logo
       tags$div(class = "header-white",
 
-               tags$img(src = "images/test1.png", style = "height: 101px; width: 242px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
+               tags$img(src = "images/Banner_2018.png", style = "height: 120px; width: 610px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
 
       ),
 
@@ -59,12 +59,11 @@ shinyUI(
 
           ),
 
-
+        ),
+        fluidRow(
           column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component"))),
 
-
           column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range"))),
-
 
 
         ),
@@ -75,18 +74,18 @@ shinyUI(
           column(12, wellPanel(communication_output("test_comm_output")))
 
         ),
+        
         fluidRow(
 
-          # Highcharter should be initiated in ui.R to make sure the
-          # right protocol for loading the library is used (bug).
-          column(12, highchart(height = 50))
+          # Render timeseries plot. 
+          column(12, timeseries_output("timeseries_plot")),
 
-        ),
+
         fluidRow(
-          
-          # Highcharter should be initiated in ui.R to make sure the
-          # right protocol for loading the library is used (bug).
+
+
           column(12, show_map_output("map"))
+<<<<<<< HEAD
           
         ),
         fluidRow(
@@ -96,6 +95,12 @@ shinyUI(
           column(12, barplot_output("barplot_plot"))
           
         ),
+=======
+
+        )
+
+
+>>>>>>> master
 
       )
 
@@ -105,4 +110,4 @@ shinyUI(
   )
 
 )
-
+)

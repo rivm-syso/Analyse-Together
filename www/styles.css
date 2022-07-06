@@ -1,0 +1,125 @@
+/* Set some variables for the coloring */
+:root {
+  --donkergeel: #ffb612;
+  --donkergeel_tint_1: #ffe9b7;
+  --donkergeel_tint_2: #fff4dc;
+}
+
+@font-face {
+    font-family: RO Sans;
+    font-weight: 400;
+    font-style: normal;
+    src: url(/webfonts/RO-SansWebText-Regular.woff2) format("woff2"),
+    url(/webfonts/RO-SansWebText-Regular.woff) format("woff");
+    font-display: swap
+}
+
+@font-face {
+    font-family: RO Sans;
+    font-weight: 400;
+    font-style: italic;
+    src: url(/webfonts/RO-SansWebText-Italic.woff2) format("woff2"),
+    url(/webfonts/RO-SansWebText-Italic.woff) format("woff");
+    font-display: swap
+}
+
+@font-face {
+    font-family: RO Sans;
+    font-weight: 700;
+    font-style: normal;
+    src: url(/webfonts/RO-SansWebText-Bold.woff2) format("woff2"),
+    url(/webfonts/RO-SansWebText-Bold.woff) format("woff");
+    font-display: swap
+}
+
+body {
+    font-family: "RO Sans", Calibri, sans-serif;
+    line-height: 1.5;
+	font-size: 16px;
+}
+
+.h1, .h2, .h3, h1, h2, h3 {
+    margin-top: 0;
+}
+
+.h1 .h3, h1, h3 {
+	font-weight: bold;
+}
+
+.header-white {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.header-color {
+    background-color: var(--donkergeel);
+    padding-top: 15px;
+    padding-bottom: 15px;
+	  padding-left: 30px;
+	  padding-right: 30px;
+    color: black;
+}
+
+/* Styling of the well panels */
+.well {
+	border-width: 0px;
+	background-color: #ffffff;
+	border-radius: 5px;
+	margin: 10px;
+	padding-top: 25px;
+	padding-left: 25px;
+	padding-right: 35px;
+	padding-bottom: 15px;
+	box-shadow:
+		0px -1px 1px 0px rgb(229, 229, 229),
+		0px 1px 1px 0px rgb(229, 229, 229),
+		0px 2px 2px 0px rgb(229, 229, 229),
+		0px 4px 4px 0px rgb(229, 229, 229),
+		0px 6px 6px 0px rgb(229, 229, 229);
+}
+
+/* Styling of the navbar */
+.navbar {
+	background-color: var(--donkergeel_tint_1);
+	font-size: 16px;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .active > a:hover {
+    background-color: white;
+	text-decoration: underline;
+}
+
+.dropdown-menu > li > a:hover {
+	background-color: var(--donkergeel_tint_1);
+}
+
+.dropdown-menu > .active > a {
+	background-color: var(--donkergeel);
+}
+
+.dropdown-menu > .active > a:hover {
+	background-color: var(--donkergeel_tint_2);
+}
+
+
+/* Styling links */
+a:link {
+	color: #01689b;
+}
+
+a:hover {
+	color: #01689b;
+}
+
+a:visited {
+	color: #01689b;
+}
+
+/* Leaflet styling */
+.leaflet-container {
+	background: white;
+}
