@@ -37,7 +37,7 @@ barplot_server <- function(id, data_measurements_stations) {
 
     # Get selected stations from communication module
     data_stations <- reactive({
-      data_stations <- data_measurements_stations$station_locations()
+      data_stations <- data_measurements_stations$station_locations() %>% select(c(station, col))
       return(data_stations)
     })
     
@@ -53,6 +53,8 @@ barplot_server <- function(id, data_measurements_stations) {
       data_barplot <- data_barplot %>% group_by(parameter, station) %>% mutate(gemiddelde = round(mean(value, na.rm=TRUE), 2),
                                                                                standaarddev = sd(value, na.rm = T)) %>% 
                                                                         distinct(station, .keep_all = TRUE)
+      data_barplot <- merge(data_barplot, data_stations(), by = 'station')
+      
       theme_plots <- theme_bw(base_size = 18) + 
         theme(strip.text.x = element_text(size = 14, colour = "black"),
               axis.text.y = element_text(face = "bold",color = "black", size = 16),
@@ -67,10 +69,10 @@ barplot_server <- function(id, data_measurements_stations) {
               panel.border = element_rect(colour = "black", fill=NA, size=1))
     
       # Make a plot
-      ggplot(data = data_barplot, aes(y=gemiddelde, x=station, color=station)) +
-        geom_bar(stat="identity", fill="white") +
+      ggplot(data = data_barplot, aes(y=gemiddelde, x=station)) +
+        geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black') +
         geom_errorbar(aes(ymin=gemiddelde-standaarddev, ymax=gemiddelde+standaarddev), width=.2,
-                      position=position_dodge(.9)) +
+                      position=position_dodge(.9), color='black') +
         labs(x = "Sensor or station number", y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Component: ', parameter_label)) +
         expand_limits(y=0) + # Make sure no negative values are shown
         theme_plots +
