@@ -80,7 +80,15 @@ shinyUI(
           # Render timeseries plot. 
           column(12, timeseries_output("timeseries_plot"))
 
-        ),
+
+        fluidRow(
+
+
+          column(12, show_map_output("map"))
+
+        )
+
+
 
       )
 

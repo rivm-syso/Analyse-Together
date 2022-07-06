@@ -23,6 +23,8 @@ library(pool)
 
 # Visualisation
 library(leaflet)         # For maps
+library(leaflet.extras)  # For maps
+library(DT)              # For tables
 library(plotly)          # For graphs
 library(latex2exp)       # For titles in graphs
 
@@ -102,6 +104,14 @@ comp_choices = setNames(overview_component$component, overview_component$label)
 
 # Source module for the communication
 source("modules/communication_module.R")
+
+# Source module for the date range selection
+source("modules/select_date_range.R")
+# Source module for the component selection
+source("modules/select_component.R")
+# Source module for the component selection
+source("modules/show_map.R")
+
 
 # Source modules selections
 source("modules/select_date_range.R")

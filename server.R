@@ -5,6 +5,11 @@ shinyServer(function(global, input, output, session) {
   # The pickerInput for component selection
   select_component <- component_selection_server("select_component", comp_choices)
 
+  
+  # The Map 
+  map <- show_map_server("map", communication_stuff, sensor)
+
+
   # The dateRangeInput for date range selection
   select_date_range <- date_range_server("select_date_range", communication_stuff)
   
@@ -20,7 +25,8 @@ shinyServer(function(global, input, output, session) {
                                                 selected_parameter = select_component,
                                                 selected_time = select_date_range,
                                                 # TODO Get the selected stations form the map
-                                                selected_stations = c("SSK_LH003"),
+                                                #selected_stations = c("SSK_LH004"),
+                                                selected_stations = map,
                                                 # Options for the colors
                                                 col_cat,
                                                 col_default,
