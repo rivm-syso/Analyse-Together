@@ -42,7 +42,7 @@ show_map_server <- function(id, com_module, sensor) {
 
     # Change the clicked_id stored
     change_state <- function(id_selected){
-      state_station$value <- id_selected
+      state_station$value <- c(isolate(state_station$value), id_selected)
     }
 
       #Generate base map ----

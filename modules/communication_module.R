@@ -64,7 +64,7 @@ communication_server <- function(id,
 
                 # TODO this needs to get some administration to selecet and deselect
                 get_selected_station <- reactive({
-                  selected_station <- get_stations_total() %>% dplyr::filter(selected) %>% dplyr::select(station) %>% pull()
+                  selected_station <- get_stations_total() %>% dplyr::filter(selected == T) %>% dplyr::select(station) %>% pull()
                   return(selected_station)
                 })
 
@@ -74,8 +74,7 @@ communication_server <- function(id,
                  get_stations_total <- reactive({
                    # Set selected stations to TRUE
                    stations_total <- data_stations %>%
-                     dplyr::mutate(selected = case_when(station %in% c(selected_stations$state_station()) ~ T,
-                                                 T ~ F))
+                     dplyr::mutate(selected = ifelse(station %in% c(selected_stations$state_station()),  T, selected))
                    # print(selected_stations$selected_station())
                    # Assign colors -> sensor
                    stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
