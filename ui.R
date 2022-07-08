@@ -72,8 +72,8 @@ shinyUI(
         fluidRow(
 
           # check output communicatition module
-          column(6, wellPanel(communication_output("test_comm_output"))),
-          column(6, show_map_output("map"))
+          column(6, wellPanel(barplot_output("barplot_plot"))),
+          column(6, wellPanel(show_map_output("map")))
           
 
         ),
@@ -82,18 +82,7 @@ shinyUI(
 
           # Render timeseries plot. 
 
-          column(12, timeseries_output("timeseries_plot")),
-
-
-
-
-        fluidRow(
-          
-          # Highcharter should be initiated in ui.R to make sure the
-          # right protocol for loading the library is used (bug).
-          column(12, barplot_output("barplot_plot"))
-          
-        ),
+          column(12, wellPanel(timeseries_output("timeseries_plot"))),
 
         )
 
