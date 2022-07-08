@@ -60,13 +60,6 @@ show_map_server <- function(id, com_module, sensor) {
         leaflet() %>%
           setView(5.384214, 52.153708 , zoom = 7) %>%
           addTiles() %>%
-          addCircleMarkers(data = get_locations(), ~lon, ~lat,
-                           label = lapply(get_locations()$station, HTML),
-                           layerId = ~station,
-                           radius = 5,
-                           color = get_locations()$col
-                           ) %>%
-
           addDrawToolbar(
             targetGroup = 'Selected',
             polylineOptions = FALSE,
@@ -77,10 +70,6 @@ show_map_server <- function(id, com_module, sensor) {
                                                                                   ,color = 'black'
                                                                                   ,weight = 1.5)),
             editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
-
-          addLegend('bottomright', pal = beatCol, values = sensor$col,
-                    title = 'Sensors locations',
-                    opacity = 1) %>%
 
           addEasyButton(easyButton(
             icon="fa-globe", title="Back to default view",
@@ -109,6 +98,15 @@ show_map_server <- function(id, com_module, sensor) {
         change_state_to_selected(selected_snsr)
       }}
       else{done}
+      
+      leafletProxy("map") %>%
+        addCircleMarkers(data = get_locations(), ~lon, ~lat,
+                       label = lapply(get_locations()$station, HTML),
+                       layerId = ~station,
+                       radius = 5,
+                       color = get_locations()$col
+      )
+        
     })
 
     # Return start and end date
