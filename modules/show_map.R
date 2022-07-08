@@ -39,12 +39,21 @@ show_map_server <- function(id, com_module, sensor) {
 
     # Create an reactive to change with the obeserve, to store the clicked id
     state_station <- reactiveValues(value = "SSK_LH003")
-
+    
+    check_state <- function(id_selected){
+      selected <- id_selected %in% isolate(state_station$value)
+      return(selected)
+    }
+    
     # Change the clicked_id stored
-    change_state <- function(id_selected){
-      state_station$value <- c(isolate(state_station$value), id_selected)
+    change_state_to_deselected <- function(id_selected){
+        state_station$value <- isolate(state_station$value)[isolate(state_station$value) %in% c(id_selected) == FALSE]   
     }
 
+    change_state_to_selected <- function(id_selected){
+        state_station$value <- c(isolate(state_station$value), id_selected)
+    }
+    
       #Generate base map ----
       output$map <- renderLeaflet({
         ns("map")
@@ -91,7 +100,15 @@ show_map_server <- function(id, com_module, sensor) {
     observe({
       click <- input$map_marker_click
       selected_snsr <- click$id
-      change_state(selected_snsr)
+      if (length(selected_snsr >0)){
+      selected <- check_state(selected_snsr)
+      if (selected == T){
+        change_state_to_deselected(selected_snsr)
+      }
+      else {
+        change_state_to_selected(selected_snsr)
+      }}
+      else{done}
     })
 
     # Return start and end date
