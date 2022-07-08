@@ -89,6 +89,8 @@ show_map_server <- function(id, com_module, sensor) {
     observe({
       click <- input$map_marker_click
       selected_snsr <- click$id
+       log_trace("map module: click id {selected_snsr}")
+
       if (length(selected_snsr >0)){
       selected <- check_state(selected_snsr)
       if (selected == T){
@@ -107,6 +109,7 @@ show_map_server <- function(id, com_module, sensor) {
                        color = get_locations()$col
       )
         
+
     })
 
     # Return start and end date
