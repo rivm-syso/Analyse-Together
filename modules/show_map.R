@@ -39,25 +39,27 @@ show_map_server <- function(id, com_module, sensor) {
 
     # Create an reactive to change with the obeserve, to store the clicked id
     state_station <- reactiveValues(value = "SSK_LH003")
-
+    
+    check_state <- function(id_selected){
+      selected <- id_selected %in% isolate(state_station$value)
+      return(selected)
+    }
+    
     # Change the clicked_id stored
-    change_state <- function(id_selected){
-      state_station$value <- id_selected
+    change_state_to_deselected <- function(id_selected){
+        state_station$value <- isolate(state_station$value)[isolate(state_station$value) %in% c(id_selected) == FALSE]   
     }
 
+    change_state_to_selected <- function(id_selected){
+        state_station$value <- c(isolate(state_station$value), id_selected)
+    }
+    
       #Generate base map ----
       output$map <- renderLeaflet({
         ns("map")
         leaflet() %>%
           setView(5.384214, 52.153708 , zoom = 7) %>%
           addTiles() %>%
-          addCircleMarkers(data = get_locations(), ~lon, ~lat,
-                           label = lapply(get_locations()$station, HTML),
-                           layerId = ~station,
-                           radius = 5,
-                           color = get_locations()$col
-                           ) %>%
-
           addDrawToolbar(
             targetGroup = 'Selected',
             polylineOptions = FALSE,
@@ -68,10 +70,6 @@ show_map_server <- function(id, com_module, sensor) {
                                                                                   ,color = 'black'
                                                                                   ,weight = 1.5)),
             editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
-
-          addLegend('bottomright', pal = beatCol, values = sensor$col,
-                    title = 'Sensors locations',
-                    opacity = 1) %>%
 
           addEasyButton(easyButton(
             icon="fa-globe", title="Back to default view",
@@ -91,8 +89,27 @@ show_map_server <- function(id, com_module, sensor) {
     observe({
       click <- input$map_marker_click
       selected_snsr <- click$id
-      change_state(selected_snsr)
-      log_trace("map module: click id {selected_snsr}")
+       log_trace("map module: click id {selected_snsr}")
+
+      if (length(selected_snsr >0)){
+      selected <- check_state(selected_snsr)
+      if (selected == T){
+        change_state_to_deselected(selected_snsr)
+      }
+      else {
+        change_state_to_selected(selected_snsr)
+      }}
+      else{done}
+      
+      leafletProxy("map") %>%
+        addCircleMarkers(data = get_locations(), ~lon, ~lat,
+                       label = lapply(get_locations()$station, HTML),
+                       layerId = ~station,
+                       radius = 5,
+                       color = get_locations()$col
+      )
+        
+
     })
 
     # Return start and end date

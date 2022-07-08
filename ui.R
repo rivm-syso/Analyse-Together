@@ -64,6 +64,7 @@ shinyUI(
           column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component"))),
 
           column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range"))),
+          
 
 
         ),
@@ -71,21 +72,28 @@ shinyUI(
         fluidRow(
 
           # check output communicatition module
-          column(12, wellPanel(communication_output("test_comm_output")))
+          column(6, wellPanel(communication_output("test_comm_output"))),
+          column(6, show_map_output("map"))
+          
 
         ),
         
         fluidRow(
 
           # Render timeseries plot. 
-          column(12, timeseries_output("timeseries_plot"))
-        ),
+
+          column(12, timeseries_output("timeseries_plot")),
+
+
 
 
         fluidRow(
-
-
-          column(12, show_map_output("map"))
+          
+          # Highcharter should be initiated in ui.R to make sure the
+          # right protocol for loading the library is used (bug).
+          column(12, barplot_output("barplot_plot"))
+          
+        ),
 
         )
 
@@ -99,3 +107,4 @@ shinyUI(
   )
 
 )
+

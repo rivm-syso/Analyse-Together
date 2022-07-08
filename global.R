@@ -120,6 +120,7 @@ source("modules/select_date_range.R")
 source("modules/select_component.R")
 
 # Source modules visualisation
+source("modules/add_barplot.R")
 source("modules/plot_timeseries.R")
 
 # Source functions
