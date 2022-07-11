@@ -133,7 +133,7 @@ round_to_days <- function(time_start, time_end) {
     return(res)
 }
 
-download_data_samenmeten <- function(x, station, conn = pool) {
+download_data_samenmeten <- function(x, station, conn ) {
 
     streams <- get_doc(type = "datastream", ref = station, conn) %>%
         pull(datastream_id)
