@@ -140,11 +140,11 @@ communication_server <- function(id,
                  output$test_data_select_time <- renderTable({
 
                    test123 <- filter_data_measurements()
-                   head(test123)
+                   
                    })
                  output$test_stations_total <- renderTable({
                    test123 <- get_stations_total()
-                   head(test123)
+                   
                  })
                  output$test_data_select_sensor <- renderTable({
                    test123 <- get_stations_total() %>% filter(selected) %>%  dplyr::distinct()
