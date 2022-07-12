@@ -82,22 +82,36 @@ show_map_server <- function(id, com_module, sensor) {
 
       })
 
-    # Return the chosen sensors/change the color/...? Define an output; with dataframe of clicked sensors?
-    # Return this and use this in the server as input for the com_module
-
     # Observe if a sensor is clicked and store the id
     observe({
       click <- input$map_marker_click
+      #rectangular_sel <- input$map_draw_new_feature
+      #
+      # Zoek de sensoren in de feature
+      # found_in_bounds <- geoshaper::findLocations(shape = input$map_draw_new_feature
+      #                                  ,
+      #                                  location_coordinates = get_locations()$lat,
+      #                                  location_id_colname = "kit_id")
+
+      #print(found_in_bounds)
+      # Ga elke sensor af en voeg deze bij de selectie
+      # if (length(found_in_bounds > 0)){
+      #     for(id_select in found_in_bounds){
+      #       #check_selected_id(id_select)
+      #       print(id_select)
+      # }}
+      # else{done}
+      
       selected_snsr <- click$id
        log_trace("map module: click id {selected_snsr}")
 
       if (length(selected_snsr >0)){
-      selected <- check_state(selected_snsr)
-      if (selected == T){
-        change_state_to_deselected(selected_snsr)
-      }
-      else {
-        change_state_to_selected(selected_snsr)
+        selected <- check_state(selected_snsr)
+        if (selected == T){
+          change_state_to_deselected(selected_snsr)
+        }
+        else {
+          change_state_to_selected(selected_snsr)
       }}
       else{done}
       

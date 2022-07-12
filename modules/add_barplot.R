@@ -58,7 +58,7 @@ barplot_server <- function(id, data_measurements_stations) {
       theme_plots <- theme_bw(base_size = 18) + 
         theme(strip.text.x = element_text(size = 14, colour = "black"),
               axis.text.y = element_text(face = "bold",color = "black", size = 16),
-              axis.text.x = element_text(face = "bold",color = "black", size = 16),
+              axis.text.x = element_text(color = "black", size = 12),
               axis.title = element_text(color = "black", size = 16),
               text = element_text(family = 'serif'),
               title = element_text(face = "bold",color = "black", size = 16),
@@ -73,10 +73,10 @@ barplot_server <- function(id, data_measurements_stations) {
         geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black') +
         geom_errorbar(aes(ymin=gemiddelde-standaarddev, ymax=gemiddelde+standaarddev), width=.2,
                       position=position_dodge(.9), color='black') +
-        labs(x = "Sensor or station number", y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Component: ', parameter_label)) +
+        labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Barplot for: ', parameter_label)) +
         expand_limits(y=0) + # Make sure no negative values are shown
         theme_plots +
-        theme(axis.text.x=element_text(angle = -90, hjust = 0))
+        theme(axis.text.x=element_text(angle = 45, hjust = 1, vjust = 1))
       
     })
     
