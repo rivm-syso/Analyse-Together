@@ -40,7 +40,7 @@ show_map_server <- function(id, com_module, sensor) {
     
     
     # Create an reactive to change with the obeserve, to store the clicked id
-    state_station <- reactiveValues(value = "SSK_LH003")
+    state_station <- reactiveValues(value = "SSK_LH004")
     
     check_state <- function(id_selected){
       selected <- id_selected %in% isolate(state_station$value)
@@ -56,8 +56,8 @@ show_map_server <- function(id, com_module, sensor) {
         state_station$value <- c(isolate(state_station$value), id_selected)
     }
     
-      #Generate base map ----
-      output$map <- renderLeaflet({
+    # Generate base map ----
+    output$map <- renderLeaflet({
         ns("map")
         leaflet() %>%
           setView(5.384214, 52.153708 , zoom = 7) %>%
@@ -84,45 +84,57 @@ show_map_server <- function(id, com_module, sensor) {
 
 
       })
+    
+    add_sensors_map <- function(){ 
+      
+      # Update map with new markers to show selected 
+      proxy <- leafletProxy('map') # set up proxy map
+      leafletProxy("map") %>%
+        addCircleMarkers(data = get_locations()[[1]], ~lon, ~lat,stroke = TRUE, weight = 2,
+                         label = lapply(get_locations()[[1]]$station, HTML),
+                         layerId = ~station,
+                         radius = 5,
+                         color = get_locations()[[1]]$col
+        )}
 
     # Observe if a sensor is clicked and store the id
     observe({
       
-        rectangular_sel <- input$map_draw_new_feature
-        
-        # Zoek de sensoren in de feature
-        if (length(rectangular_sel[[1]] > 0)){
-          found_in_bounds <- geoshaper::findLocations(shape = rectangular_sel,
-                                                      location_coordinates = isolate(get_locations()[[2]]),
-                                                      location_id_colname = "station")
-          
-          for(id_select in found_in_bounds){
-            selected <- check_state(id_select)
-            if (selected == T){
-              change_state_to_deselected(id_select)
-            }
-            else {
-              change_state_to_selected(id_select)
-            }
-          }}
-       else{done} 
-        
-   
+      rectangular_desel <- input$map_draw_deleted_features
+      
+      
+      # ga dan de sensoren af en deselecteer deze een voor een
+      for(id_select in isolate(get_locations()[[2]]$station)){
+          print(id_select)
+          change_state_to_deselected(id_select)
+          }
+      isolate(add_sensors_map())  
     })
     
     observe({
-      rectangular_desel <- input$map_draw_deleted_features
       
-      for(feature in input$map_draw_deleted_features$features){
-          found_in_bounds <- findLocations(shape = feature,
-                                           location_coordinates = isolate(get_locations()[[2]]),
-                                           location_id_colname = "station")
-          
-          # ga dan de sensoren af en deselecteer deze een voor een
-          for(id_select in found_in_bounds){
-              change_state_to_deselected(id_select)
-            }
-      }
+      rectangular_sel <- input$map_draw_new_feature
+      
+      # Zoek de sensoren in de feature
+      if (length(rectangular_sel[[1]] > 0)){
+        found_in_bounds <- geoshaper::findLocations(shape = rectangular_sel,
+                                                    location_coordinates = isolate(get_locations()[[2]]),
+                                                    location_id_colname = "station")
+        
+        for(id_select in found_in_bounds){
+          selected <- check_state(id_select)
+          if (selected == T){
+            change_state_to_deselected(id_select)
+          }
+          else {
+            change_state_to_selected(id_select)
+          }
+        }}
+      else{done} 
+      
+      
+      isolate(add_sensors_map())
+      
     })
     
     observe({
@@ -140,18 +152,11 @@ show_map_server <- function(id, com_module, sensor) {
           change_state_to_selected(selected_snsr)
       }}
       else{done}
-      
-      leafletProxy("map") %>%
-        addCircleMarkers(data = get_locations()[[1]], ~lon, ~lat,
-                       label = lapply(get_locations()[[1]]$station, HTML),
-                       layerId = ~station,
-                       radius = 5,
-                       color = get_locations()[[1]]$col
-      )
-        
-
+       
+       isolate(add_sensors_map())   
     })
 
+    
     # Return start and end date
     return(list(
                 map = map,
