@@ -25,7 +25,8 @@ library(pool)
 # Visualisation
 library(leaflet)         # For maps
 library(leaflet.extras)  # For maps
-library(geoshaper)
+library(geoshaper)       # For maps
+library(sp)              # For maps     
 library(DT)              # For tables
 library(plotly)          # For graphs
 library(latex2exp)       # For titles in graphs

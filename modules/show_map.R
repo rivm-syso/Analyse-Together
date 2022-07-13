@@ -31,12 +31,14 @@ show_map_server <- function(id, com_module, sensor) {
 
     ns <- session$ns
     beatCol <- colorFactor(palette = 'RdYlGn', domain = c(0,100), reverse = TRUE)
-
+    
     # Get the min and max of the dataset
     get_locations <- reactive({
       sensorloc <- com_module$station_locations()
-      return(sensorloc)})
-
+      sensorloc_coord <- SpatialPointsDataFrame(sensorloc[,c('lon','lat')],sensorloc)
+      return(list(sensorloc, sensorloc_coord))})
+    
+    
     # Create an reactive to change with the obeserve, to store the clicked id
     state_station <- reactiveValues(value = "SSK_LH003")
     
@@ -66,6 +68,7 @@ show_map_server <- function(id, com_module, sensor) {
             markerOptions = FALSE,
             polygonOptions = FALSE,
             circleOptions = FALSE,
+            circleMarkerOptions = FALSE,
             rectangleOptions = drawRectangleOptions(shapeOptions=drawShapeOptions(fillOpacity = 0
                                                                                   ,color = 'black'
                                                                                   ,weight = 1.5)),
@@ -84,23 +87,46 @@ show_map_server <- function(id, com_module, sensor) {
 
     # Observe if a sensor is clicked and store the id
     observe({
+      
+        rectangular_sel <- input$map_draw_new_feature
+        
+        # Zoek de sensoren in de feature
+        if (length(rectangular_sel[[1]] > 0)){
+          found_in_bounds <- geoshaper::findLocations(shape = rectangular_sel,
+                                                      location_coordinates = isolate(get_locations()[[2]]),
+                                                      location_id_colname = "station")
+          
+          for(id_select in found_in_bounds){
+            selected <- check_state(id_select)
+            if (selected == T){
+              change_state_to_deselected(id_select)
+            }
+            else {
+              change_state_to_selected(id_select)
+            }
+          }}
+       else{done} 
+        
+   
+    })
+    
+    observe({
+      rectangular_desel <- input$map_draw_deleted_features
+      
+      for(feature in input$map_draw_deleted_features$features){
+          found_in_bounds <- findLocations(shape = feature,
+                                           location_coordinates = isolate(get_locations()[[2]]),
+                                           location_id_colname = "station")
+          
+          # ga dan de sensoren af en deselecteer deze een voor een
+          for(id_select in found_in_bounds){
+              change_state_to_deselected(id_select)
+            }
+      }
+    })
+    
+    observe({
       click <- input$map_marker_click
-      #rectangular_sel <- input$map_draw_new_feature
-      #
-      # Zoek de sensoren in de feature
-      # found_in_bounds <- geoshaper::findLocations(shape = input$map_draw_new_feature
-      #                                  ,
-      #                                  location_coordinates = get_locations()$lat,
-      #                                  location_id_colname = "kit_id")
-
-      #print(found_in_bounds)
-      # Ga elke sensor af en voeg deze bij de selectie
-      # if (length(found_in_bounds > 0)){
-      #     for(id_select in found_in_bounds){
-      #       #check_selected_id(id_select)
-      #       print(id_select)
-      # }}
-      # else{done}
       
       selected_snsr <- click$id
        log_trace("map module: click id {selected_snsr}")
@@ -116,11 +142,11 @@ show_map_server <- function(id, com_module, sensor) {
       else{done}
       
       leafletProxy("map") %>%
-        addCircleMarkers(data = get_locations(), ~lon, ~lat,
-                       label = lapply(get_locations()$station, HTML),
+        addCircleMarkers(data = get_locations()[[1]], ~lon, ~lat,
+                       label = lapply(get_locations()[[1]]$station, HTML),
                        layerId = ~station,
                        radius = 5,
-                       color = get_locations()$col
+                       color = get_locations()[[1]]$col
       )
         
 
