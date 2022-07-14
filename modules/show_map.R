@@ -34,7 +34,7 @@ show_map_server <- function(id, com_module, sensor) {
     
     # Get the min and max of the dataset
     get_locations <- reactive({
-      sensorloc <- com_module$station_locations()
+      sensorloc <- com_module$station_locations() %>% dplyr::distinct(station, .keep_all = T)
       sensorloc_coord <- SpatialPointsDataFrame(sensorloc[,c('lon','lat')],sensorloc)
       return(list(sensorloc, sensorloc_coord))})
     
