@@ -43,7 +43,7 @@ show_map_server <- function(id, com_module, sensor) {
     state_station <- reactiveValues(value = "SSK_LH004")
     
     check_state <- function(id_selected){
-      selected <- id_selected %in% isolate(state_station$value)
+      selected <- id_selected %in% isolate(state_station$value) 
       return(selected)
     }
     
@@ -124,7 +124,7 @@ show_map_server <- function(id, com_module, sensor) {
         for(id_select in found_in_bounds){
           selected <- check_state(id_select)
           if (selected == T){
-            change_state_to_deselected(id_select)
+            done
           }
           else {
             change_state_to_selected(id_select)

@@ -37,7 +37,7 @@ barplot_server <- function(id, data_measurements_stations) {
 
     # Get selected stations from communication module
     data_stations <- reactive({
-      data_stations <- data_measurements_stations$station_locations() %>% select(c(station, col))
+      data_stations <- data_measurements_stations$station_locations() %>% select(c(station, col)) %>% dplyr::distinct(station, .keep_all = T)
       return(data_stations)
     })
     
