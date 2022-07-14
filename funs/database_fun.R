@@ -174,6 +174,40 @@ download_data_samenmeten <- function(x, station, conn ) {
 }
 
 
+download_data_knmi <- function(x, station) {
+  
+  ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
+  te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
+  
+  log_debug("downloading data for station {station} for time range {ts_api} -  {te_api}")
+  
+  knmi_all <- samanapir::GetKNMIAPI(station, ts_api, te_api)
+  
+  knmi_measurements <- knmi_all$data %>% as.data.frame() %>% select(-c('YYYYMMDD', 'H')) %>% 
+    rename("station" = "STNS", "wd" = "DD", "ws" = "FF", "temp" = "TEMP", "rh" = "U", "timestamp" = "tijd")
+  
+  knmi_measurements$station <- paste0("KNMI_", knmi_measurements$station)
+  
+  knmi_measurements <- knmi_measurements %>% pivot_longer(cols = c("wd", "ws", "temp", "rh"), names_to = "parameter", values_to = "value") %>% 
+    drop_na() %>% mutate(aggregation = 3600)
+  
+  return(knmi_measurements)
+  
+}
+
+
+download_locations_knmi <- function(knmi_stations, time_start, time_end) {
+  
+  knmi_stations_all <- samanapir::GetKNMIAPI(knmi_stations, format(time_start, '%Y%m%d'), format(time_end, '%Y%m%d'))
+  
+  knmi_stations_locations <- knmi_stations_all$info %>% as.data.frame() %>% select(c("STNS", "LAT", "LON")) %>% 
+    rename("station" = "STNS", "lat" = "LAT", "lon" = "LON") %>% drop_na() %>% mutate(lat = as.numeric(lat)) %>%
+    mutate(lon = as.numeric(lon)) %>% mutate(station = paste0("KNMI_", station))
+  
+  return(knmi_stations_locations)
+  
+}
+
 
 # Debug
 if(interactive()) {
@@ -200,4 +234,36 @@ if(interactive()) {
 
 }
 
+# Debug
+if(interactive()) {
+  
+  time_start <- as_datetime("2022-01-01 00:00:00")
+  time_end <- as_datetime("2022-01-03 23:59:59")
+  
+  kits <- knmi_stations
+  
+  counter <- 1
+  for(i in kits) {
+    log_debug("downloading measurements for station {i}, {counter}/{length(kits)}")
+    date_range <- round_to_days(time_start, time_end)
+    d <- download_data(i, Tstart = time_start, Tend = time_end,
+                       fun = "download_data_knmi",
+                       conn = pool)
+    log_trace("got {nrow(d)} measurements")
+    counter <- counter + 1
+  }
+  
+  knmi_stations_locations <- download_locations_knmi(kits, time_start, time_end)
+
+  for (i in 1:nrow(knmi_stations_locations))
+  {
+
+    insert_location_info(station = knmi_stations_locations[i,1],
+                         lat = knmi_stations_locations[i,2],
+                         lon = knmi_stations_locations[i,3],
+                         conn = pool)
+
+  }
+
+}
 
