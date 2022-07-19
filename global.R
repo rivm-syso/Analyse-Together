@@ -39,11 +39,16 @@ library(logger)
 log_threshold(TRACE)
 
 # set data location
+# 
+if(install_github) {
+    remotes::install_github("jspijker/datafile", build_opts ="")
+}
 library(datafile)
 datafileInit()
 
-# load  dev version samanapir
-if(install_github) remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
+# load  dev version samanapir, jspijker's fork (contains more loging
+if(install_github) remotes::install_github("jspijker/samanapir", ref = "Issue_2")
+#if(install_github) remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
 library(samanapir)
 
 
