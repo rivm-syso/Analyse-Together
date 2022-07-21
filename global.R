@@ -129,7 +129,7 @@ source("modules/show_map.R")
 # Source modules selections
 source("modules/select_date_range.R")
 source("modules/select_component.R")
-source("modules/select_project.R")
+source("modules/select_mun_or_proj.R")
 source("modules/select_municipality.R")
 
 # Source modules visualisation

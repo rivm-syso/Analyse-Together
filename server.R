@@ -6,7 +6,7 @@ shinyServer(function(global, input, output, session) {
   select_component <- component_selection_server("select_component", comp_choices)
 
   # select project
-  select_project <- project_selection_server("select_project", proj_choices)
+  proj_or_mun_select <- project_or_mun_selection_server("proj_or_mun_select")
   
   # select municipality
   select_municipality <- municipality_selection_server("select_municipality", mun_choices)
@@ -32,6 +32,7 @@ shinyServer(function(global, input, output, session) {
                                                 meta, # TODO willen we hier wat mee?
                                                 selected_parameter = select_component,
                                                 selected_time = select_date_range,
+                                                select_mun_or_proj = select_mun_or_proj,
                                                 # TODO Get the selected stations form the map
                                                 #selected_stations = c("SSK_LH004"),
                                                 selected_stations = map,

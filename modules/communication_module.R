@@ -37,6 +37,7 @@ communication_server <- function(id,
                                  data_meta,
                                  selected_parameter ,
                                  selected_time ,
+                                 select_mun_or_proj,
                                  # TODO Get the selected stations form the map
                                  selected_stations,
                                  # Options for the colors

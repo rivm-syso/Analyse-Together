@@ -7,11 +7,11 @@
 # Output Module
 ######################################################################
 
-project_selection_output <- function(id) {
+project_or_mun_selection_output <- function(id) {
   
   ns <- NS(id)
   
-  uiOutput(ns("proj_select"))
+  uiOutput(ns("proj_or_mun_select"))
   
 }
 
@@ -20,27 +20,28 @@ project_selection_output <- function(id) {
 # Server Module
 ######################################################################
 
-project_selection_server <- function(id, proj_choices) {
+project_or_mun_selection_server <- function(id) {
   
   moduleServer(id, function(input, output, session) {
     
     ns <- session$ns
     
-    output$proj_select <- renderUI({
+    output$proj_or_mun_select <- renderUI({
       
       # Create the component picker with a list of possible choices
       tagList(
         
         pickerInput(
-          ns("proj_select"),
-          label    = "Select Project",
-          choices  = proj_choices
+          ns("proj_or_mun_select"),
+          label    = "Selection based on:",
+          choices  = c("Project", "Gemeente"),
+          selected = F
         )
       )
     })
     
     # Return the chosen component
-    return(selected_project = reactive({input$proj_select}))
+    return(selected_project = reactive({input$proj_or_mun_select}))
     
   })
   
