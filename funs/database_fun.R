@@ -174,7 +174,7 @@ download_data_samenmeten <- function(x, station, conn ) {
 }
 
 
-download_data_knmi <- function(x, station) {
+download_data_knmi <- function(x, station, conn) {
   
   ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
   te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
@@ -200,9 +200,14 @@ download_locations_knmi <- function(knmi_stations, time_start, time_end) {
   
   knmi_stations_all <- samanapir::GetKNMIAPI(knmi_stations, format(time_start, '%Y%m%d'), format(time_end, '%Y%m%d'))
   
-  knmi_stations_locations <- knmi_stations_all$info %>% as.data.frame() %>% select(c("STNS", "LAT", "LON")) %>% 
-    rename("station" = "STNS", "lat" = "LAT", "lon" = "LON") %>% drop_na() %>% mutate(lat = as.numeric(lat)) %>%
-    mutate(lon = as.numeric(lon)) %>% mutate(station = paste0("KNMI_", station))
+  knmi_stations_locations <- knmi_stations_all$info %>% 
+      as.data.frame() %>% 
+      select(c("STNS", "LAT", "LON")) %>% 
+      rename("station" = "STNS", "lat" = "LAT", "lon" = "LON") %>% 
+      drop_na() %>% 
+      mutate(lat = as.numeric(lat)) %>%
+      mutate(lon = as.numeric(lon)) %>% 
+      mutate(station = paste0("KNMI_", station))
   
   return(knmi_stations_locations)
   
@@ -212,10 +217,55 @@ download_locations_knmi <- function(knmi_stations, time_start, time_end) {
 # Debug
 if(interactive()) {
 
+
+    install_github <- TRUE # set to FALSE if you run into github API limits
+
+    # Read in the necessary libraries                                           ====
+
+    # Tidyverse (essential)
+    library(tidyverse)
+
+    # Databases (essential)
+    library(RSQLite)
+    library(pool)
+
+    library(lubridate)
+
+    # logger
+    library(logger)
+    log_threshold(TRACE)
+
+    # set data location
+    library(datafile)
+    datafileInit()
+
+    library(samanapir)
+    library(ATdatabase)
+
+    # We need knmi_stations, this shouldn't be here but loaded from
+    # file or database.
+knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 260, 267, 270, 273, 275, 277, 278, 279, 280, 283, 285, 286, 290, 308, 310, 312, 313, 315, 316, 319, 324, 330, 340, 343, 344, 348, 350, 356, 370, 375, 377, 380, 391)
+
+    # Set language and date options                                             ====
+
+    options(encoding = "UTF-8")                  # Standard UTF-8 encoding
+    Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
+    Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
+
+
+    # Connect with the database using pool, store data, read table              ====
+    pool <- dbPool(
+
+                   drv = SQLite(),
+                   dbname = datafile("database.db")
+
+    )
+
+    # Download Amersfoort example data using SamenMeten API                    ====
     project <- "Amersfoort"
 
     time_start <- as_datetime("2022-01-01 00:00:00")
-    time_end <- as_datetime("2022-01-03 23:59:59")
+    time_end <- as_datetime("2022-01-06 23:59:59")
 
     download_project(project)
 
@@ -232,13 +282,10 @@ if(interactive()) {
         counter <- counter + 1
     }
 
-}
 
-# Debug
-if(interactive()) {
   
-  time_start <- as_datetime("2022-01-01 00:00:00")
-  time_end <- as_datetime("2022-01-03 23:59:59")
+  # Download meteo example data using KNMI API                               ====
+    # use same time start/end as above
   
   kits <- knmi_stations
   
@@ -246,15 +293,18 @@ if(interactive()) {
   for(i in kits) {
     log_debug("downloading measurements for station {i}, {counter}/{length(kits)}")
     date_range <- round_to_days(time_start, time_end)
+
     d <- download_data(i, Tstart = time_start, Tend = time_end,
                        fun = "download_data_knmi",
                        conn = pool)
+
     log_trace("got {nrow(d)} measurements")
     counter <- counter + 1
   }
-  
+
   knmi_stations_locations <- download_locations_knmi(kits, time_start, time_end)
 
+  
   for (i in 1:nrow(knmi_stations_locations))
   {
 
