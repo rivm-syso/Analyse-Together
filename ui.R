@@ -60,6 +60,13 @@ shinyUI(
           ),
 
         ),
+        
+        fluidRow(
+          column(6, class = "col-lg-6", wellPanel(project_selection_output("select_project"))),
+          column(6, class = "col-lg-6", wellPanel(municipality_selection_output("select_municipality"))),
+          
+        ),
+        
         fluidRow(
           column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component"))),
 
@@ -68,6 +75,7 @@ shinyUI(
 
 
         ),
+        
 
         fluidRow(
 

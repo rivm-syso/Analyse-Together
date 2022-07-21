@@ -5,6 +5,12 @@ shinyServer(function(global, input, output, session) {
   # The pickerInput for component selection
   select_component <- component_selection_server("select_component", comp_choices)
 
+  # select project
+  select_project <- project_selection_server("select_project", proj_choices)
+  
+  # select municipality
+  select_municipality <- municipality_selection_server("select_municipality", mun_choices)
+  
   
   # The Map 
   map <- show_map_server("map", communication_stuff, sensor)
