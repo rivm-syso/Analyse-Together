@@ -38,6 +38,7 @@ communication_server <- function(id,
                                  selected_parameter ,
                                  selected_time ,
                                  select_mun_or_proj,
+                                 choose_mun_or_oroj,
                                  # TODO Get the selected stations form the map
                                  selected_stations,
                                  # Options for the colors
@@ -112,7 +113,12 @@ communication_server <- function(id,
                   log_trace("com module: selected parameter {parameter}")
                    return(list(parameter = parameter))
                  })
-
+                 
+                 # Get the parameter from the user
+                 choice_select <- reactive({
+                   selected <- select_mun_or_proj()
+                   return(selected)
+                 })
 
                  # Reactive for the measurements to filter on input, time, map, component
                  filter_data_measurements <- reactive({
@@ -163,7 +169,8 @@ communication_server <- function(id,
                   start_end_total = reactive({get_time_total()}),
                   selected_time = selected_time,
                   station_locations = reactive({get_stations_total()}),
-                  selected_measurements = reactive({filter_data_measurements()})
+                  selected_measurements = reactive({filter_data_measurements()}),
+                  choice_select = reactive({choice_select()})
                   ))
 
                })

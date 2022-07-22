@@ -5,12 +5,11 @@ shinyServer(function(global, input, output, session) {
   # The pickerInput for component selection
   select_component <- component_selection_server("select_component", comp_choices)
 
-  # select project
+  # select project/mun
   proj_or_mun_select <- project_or_mun_selection_server("proj_or_mun_select")
   
-  # select municipality
-  select_municipality <- municipality_selection_server("select_municipality", mun_choices)
-  
+  # choose proj/mun
+  choice_select <- choice_selection_server("choice_select", communication_stuff, mun_choices = mun_choices, proj_choices = proj_choices)
   
   # The Map 
   map <- show_map_server("map", communication_stuff, sensor)
@@ -32,7 +31,8 @@ shinyServer(function(global, input, output, session) {
                                                 meta, # TODO willen we hier wat mee?
                                                 selected_parameter = select_component,
                                                 selected_time = select_date_range,
-                                                select_mun_or_proj = select_mun_or_proj,
+                                                select_mun_or_proj = proj_or_mun_select,
+                                                choose_mun_or_oroj = choice_select,
                                                 # TODO Get the selected stations form the map
                                                 #selected_stations = c("SSK_LH004"),
                                                 selected_stations = map,

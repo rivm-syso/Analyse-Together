@@ -34,14 +34,14 @@ project_or_mun_selection_server <- function(id) {
         pickerInput(
           ns("proj_or_mun_select"),
           label    = "Selection based on:",
-          choices  = c("Project", "Gemeente"),
+          choices  = c("Project", "Municipality"),
           selected = F
         )
       )
     })
     
     # Return the chosen component
-    return(selected_project = reactive({input$proj_or_mun_select}))
+    return(selected_proj_or_mun = reactive({input$proj_or_mun_select}))
     
   })
   

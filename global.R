@@ -110,8 +110,8 @@ log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(me
 # Component choices
 overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ", "PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
 comp_choices = setNames(overview_component$component, overview_component$label)
-proj_choices = projects
-mun_choices  = municipalities$X2
+proj_choices = sort(projects$project)
+mun_choices  = sort(municipalities$X2)
 
 ### APP SPECIFIC SETTINGS                                                   ====
 
@@ -130,7 +130,7 @@ source("modules/show_map.R")
 source("modules/select_date_range.R")
 source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
-source("modules/select_municipality.R")
+source("modules/choose_mun_or_proj.R")
 
 # Source modules visualisation
 source("modules/add_barplot.R")
