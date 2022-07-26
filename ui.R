@@ -6,7 +6,7 @@ shinyUI(
 
     # For the top two headers (white and pink one)
     tags$head(
-
+      
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
 
@@ -37,7 +37,7 @@ shinyUI(
     selected    = "Test1",
 
     navbarMenu(
-
+      
       title = "Explorer",
 
       tabPanel(
@@ -62,8 +62,9 @@ shinyUI(
         ),
         
         fluidRow(
-          column(6, class = "col-lg-6", (project_or_mun_selection_output("proj_or_mun_select"))),
-          column(6, class = "col-lg-6", (choice_selection_output("choice_select"))),
+          
+          column(12, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+                                                   choice_selection_output("choice_select"),style = "z-index: 10;")),
           
         ),
         
@@ -72,7 +73,7 @@ shinyUI(
 
           column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range"))),
           
-
+    
 
         ),
         
@@ -81,7 +82,7 @@ shinyUI(
 
           # check output communicatition module
           column(6, wellPanel(barplot_output("barplot_plot"))),
-          column(6, wellPanel(show_map_output("map")))
+          column(6, wellPanel(show_map_output("map"),style = "z-index: 100000000;"))
           
 
         ),
