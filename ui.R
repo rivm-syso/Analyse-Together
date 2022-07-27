@@ -71,7 +71,7 @@ shinyUI(
         fluidRow(
           column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component"))),
 
-          column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range"))),
+          column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range"),style = "z-index: 1000;")),
           
     
 
@@ -82,7 +82,7 @@ shinyUI(
 
           # check output communicatition module
           column(6, wellPanel(barplot_output("barplot_plot"))),
-          column(6, wellPanel(show_map_output("map"),style = "z-index: 100000000;"))
+          column(6, wellPanel(show_map_output("map")))
           
 
         ),

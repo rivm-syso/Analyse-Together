@@ -34,8 +34,8 @@ project_or_mun_selection_server <- function(id) {
         pickerInput(
           ns("proj_or_mun_select"),
           label    = "Selection based on:",
-          choices  = c("Project", "Municipality"),
-          selected = F
+          choices  = c("Municipality", "Project"),
+          selected = "Municipality"
         )
       )
     })

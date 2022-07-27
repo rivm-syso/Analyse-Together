@@ -93,6 +93,8 @@ communication_server <- function(id,
                  get_time_selection <- reactive({
                    start_time <- selected_time$selected_start_date()
                    end_time <- selected_time$selected_end_date()
+                   
+                   print(start_time)
 
                    # Check if a time is selected, otherwise total time
                    if(is.null(start_time)|is.null(end_time)){
@@ -102,7 +104,7 @@ communication_server <- function(id,
                   log_trace("com module: selected time range {start_time} - {end_time}")
                    return(list(start_time = start_time, end_time = end_time))
                  })
-
+                 
                  # Get the parameter from the user
                  get_parameter_selection <- reactive({
                    parameter <- selected_parameter()
