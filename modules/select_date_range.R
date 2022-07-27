@@ -68,7 +68,7 @@ date_range_server <- function(id,
                  selected_start_date = reactive({input$date_range[1]}),
                  selected_end_date = reactive({input$date_range[2]})
                  )
-
+               
                return(res)
                })
 }

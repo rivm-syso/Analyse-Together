@@ -37,6 +37,8 @@ communication_server <- function(id,
                                  data_meta,
                                  selected_parameter ,
                                  selected_time ,
+                                 select_mun_or_proj,
+                                 choose_mun_or_oroj,
                                  # TODO Get the selected stations form the map
                                  selected_stations,
                                  # Options for the colors
@@ -91,6 +93,8 @@ communication_server <- function(id,
                  get_time_selection <- reactive({
                    start_time <- selected_time$selected_start_date()
                    end_time <- selected_time$selected_end_date()
+                   
+                   print(start_time)
 
                    # Check if a time is selected, otherwise total time
                    if(is.null(start_time)|is.null(end_time)){
@@ -100,7 +104,7 @@ communication_server <- function(id,
                   log_trace("com module: selected time range {start_time} - {end_time}")
                    return(list(start_time = start_time, end_time = end_time))
                  })
-
+                 
                  # Get the parameter from the user
                  get_parameter_selection <- reactive({
                    parameter <- selected_parameter()
@@ -111,7 +115,12 @@ communication_server <- function(id,
                   log_trace("com module: selected parameter {parameter}")
                    return(list(parameter = parameter))
                  })
-
+                 
+                 # Get the parameter from the user
+                 choice_select <- reactive({
+                   selected <- select_mun_or_proj()
+                   return(selected)
+                 })
 
                  # Reactive for the measurements to filter on input, time, map, component
                  filter_data_measurements <- reactive({
@@ -162,7 +171,8 @@ communication_server <- function(id,
                   start_end_total = reactive({get_time_total()}),
                   selected_time = selected_time,
                   station_locations = reactive({get_stations_total()}),
-                  selected_measurements = reactive({filter_data_measurements()})
+                  selected_measurements = reactive({filter_data_measurements()}),
+                  choice_select = reactive({choice_select()})
                   ))
 
                })
