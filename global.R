@@ -78,7 +78,7 @@ pool <- dbPool(
 )
 
 # store lists with projects and municipalities
-municipalities <- read_csv("./prepped_data/municipalities.csv")
+municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
 projects <- read_csv("./prepped_data/projects.csv")
 
 # add_doc doesn't work, see ATdatabase #8
@@ -108,9 +108,10 @@ sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col
 log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
 
 # Component choices
-overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ", "PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
+overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
 comp_choices = setNames(overview_component$component, overview_component$label)
-
+proj_choices = sort(projects$project)
+mun_choices  = sort(municipalities$X2)
 
 ### APP SPECIFIC SETTINGS                                                   ====
 
@@ -128,6 +129,8 @@ source("modules/show_map.R")
 # Source modules selections
 source("modules/select_date_range.R")
 source("modules/select_component.R")
+source("modules/select_mun_or_proj.R")
+source("modules/choose_mun_or_proj.R")
 
 # Source modules visualisation
 source("modules/add_barplot.R")
