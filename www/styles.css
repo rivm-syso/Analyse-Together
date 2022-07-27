@@ -125,7 +125,7 @@ a:visited {
 }
 
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
-    z-index: 10000000000 !important;
+    z-index: unset !important;
   
 }
 

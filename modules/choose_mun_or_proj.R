@@ -33,26 +33,28 @@ choice_selection_server <- function(id, com_module, mun_choices, proj_choices) {
 
     output$choice_select <- renderUI({
       
-      if (get_choice_select() == "Project"){
-      # Create the component picker with a list of possible choices
-      tagList(
-        
-        pickerInput(
-          ns("choice_select"),
-          selected = '',
-          label    = "Choose one option:",
-          choices  = proj_choices
-        )
-      )}
-      else {
-        tagList(
-    
-        pickerInput(
-          ns("choice_select"),
-          selected = '',
-          label    = "Choose one option:",
-          choices  = mun_choices
-        ))}
+      if (is.null(get_choice_select()) == FALSE){
+          
+          if (get_choice_select() == "Municipality"){
+              # Create the component picker with a list of possible choices
+              tagList(
+                
+                pickerInput(
+                  ns("choice_select"),
+                  selected = '',
+                  label    = "Choose one option:",
+                  choices  = mun_choices
+                )
+              )}
+          else{
+                tagList(
+            
+                pickerInput(
+                  ns("choice_select"),
+                  selected = '',
+                  label    = "Choose one option:",
+                  choices  = proj_choices
+                ))}}
     })
     
     # Return the chosen component

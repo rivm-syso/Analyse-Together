@@ -100,7 +100,7 @@ show_map_server <- function(id, com_module, sensor) {
     add_knmi_map <- function(){
       
       data_knmi <- get_locations()[[1]] %>% filter(., grepl("KNMI",station))
-      print(data_knmi)
+      #print(data_knmi)
       
       knmiicon <- makeIcon(
         iconUrl = "images/1555512.png",
@@ -146,7 +146,7 @@ show_map_server <- function(id, com_module, sensor) {
     
     observe({
       knmi_show <- input$show_knmi
-      print(knmi_show)
+      #print(knmi_show)
       if (isTRUE(knmi_show)){
         add_knmi_map()
       }
@@ -164,7 +164,7 @@ show_map_server <- function(id, com_module, sensor) {
       
       # ga dan de sensoren af en deselecteer deze een voor een
       for(id_select in isolate(get_locations()[[2]]$station)){
-          print(id_select)
+          #print(id_select)
           change_state_to_deselected(id_select)
           }
       isolate(add_sensors_map())  

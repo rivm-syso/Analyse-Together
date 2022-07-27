@@ -82,7 +82,7 @@ shinyUI(
 
           # check output communicatition module
           column(6, wellPanel(barplot_output("barplot_plot"))),
-          column(6, wellPanel(show_map_output("map"),style = "z-index: 100000000;"))
+          column(6, wellPanel(show_map_output("map")))
           
 
         ),
