@@ -108,7 +108,7 @@ sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col
 log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
 
 # Component choices
-overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ", "PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
+overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
 comp_choices = setNames(overview_component$component, overview_component$label)
 proj_choices = sort(projects$project)
 mun_choices  = sort(municipalities$X2)

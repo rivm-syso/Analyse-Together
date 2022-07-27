@@ -35,7 +35,9 @@ project_or_mun_selection_server <- function(id) {
           ns("proj_or_mun_select"),
           label    = "Selection based on:",
           choices  = c("Municipality", "Project"),
-          selected = "Municipality"
+          selected = NULL,
+          multiple = TRUE,
+          options = pickerOptions(maxOptions = 1)
         )
       )
     })

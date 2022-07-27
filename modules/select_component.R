@@ -34,7 +34,10 @@ component_selection_server <- function(id, comp_choices) {
         pickerInput(
           ns("comp_select"),
           label    = "Select component",
-          choices  = comp_choices
+          choices  = comp_choices,
+          selected = NULL,
+          multiple = TRUE,
+          options = pickerOptions(maxOptions = 1)
           )
         )
       })
