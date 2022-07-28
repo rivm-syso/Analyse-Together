@@ -213,6 +213,34 @@ download_locations_knmi <- function(knmi_stations, time_start, time_end) {
   
 }
 
+download_data_lml <- function(x, station, conn) {
+  
+  ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
+  te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
+  
+  log_debug("downloading data for station {station} for time range {ts_api} -  {te_api}")
+  
+  lml_data <- samanapir::GetLMLstatdataAPI(station, ts_api, te_api)
+  
+  lml_data <- lml_data %>% rename("station" = "station_number", "timestamp" = "timestamp_measured", "parameter" = "formula") %>%
+    drop_na() %>% mutate(aggregation = 3600) %>% mutate(parameter = tolower(parameter))
+  
+  return(lml_data)
+}
+
+download_locations_lml <- function(stations) {
+  
+  lml_locations <- samanapir::GetLMLstatinfoAPI(stations)
+  
+  lml_locations <- lml_locations %>%
+    select(c("station_number", "lat", "lon")) %>%
+    drop_na() %>%
+    mutate(lat = as.numeric(lat)) %>%
+    mutate(lon = as.numeric(lon))
+  
+  return(lml_locations)
+  
+}
 
 # Debug
 if(interactive()) {
@@ -303,7 +331,6 @@ knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 2
   }
 
   knmi_stations_locations <- download_locations_knmi(kits, time_start, time_end)
-
   
   for (i in 1:nrow(knmi_stations_locations))
   {
@@ -314,6 +341,44 @@ knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 2
                          conn = pool)
 
   }
+  
+  #### TEMPORARY TESTSTATIONS
+  test_lml_stations <- c("NL01494", "NL10437", "NL01491", "NL01494", "NL10444", "NL01491")
+  
+  counter <- 1
+  for(i in test_lml_stations) {
+    log_debug("downloading measurements for station {i}, {counter}/{length(test_lml_stations)}")
+    date_range <- round_to_days(time_start, time_end)
+    
+    d <- download_data(i, Tstart = time_start, Tend = time_end,
+                       fun = "download_data_lml",
+                       conn = pool)
+    
+    log_trace("got {nrow(d)} measurements")
+    counter <- counter + 1
+  }
+  
+  # lml_stations_locations <- download_locations_lml(test_lml_stations)
+  
+  df <- data.frame()
+  for (i in test_lml_stations){
+
+    lml_stations <- download_locations_lml(i)
+    lml_stations_locations <- rbind(df, lml_stations)
+    
+  }
+  
+  for (i in 1:nrow(lml_stations_locations))
+  {
+    
+    insert_location_info(station = lml_stations_locations[i,1],
+                         lat = lml_stations_locations[i,2],
+                         lon = lml_stations_locations[i,3],
+                         conn = pool)
+    
+  }
+  
 
 }
+
 
