@@ -30,6 +30,7 @@ library(sp)              # For maps
 library(DT)              # For tables
 library(plotly)          # For graphs
 library(latex2exp)       # For titles in graphs
+library(openair)         # For openair-plots
 
 # Geo
 library(sf)
@@ -135,6 +136,8 @@ source("modules/choose_mun_or_proj.R")
 # Source modules visualisation
 source("modules/add_barplot.R")
 source("modules/plot_timeseries.R")
+source("modules/add_pollutionrose.R")
+
 
 # Source functions
 source("funs/assign_color_stations.R")

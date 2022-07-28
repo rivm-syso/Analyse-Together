@@ -93,7 +93,16 @@ shinyUI(
 
           column(12, wellPanel(timeseries_output("timeseries_plot"))),
 
+        ),
+        
+        fluidRow(
+          
+          # Render pollutionrose plot. 
+          
+          column(12, wellPanel(pollrose_output("pollrose_plot"))),
+          
         )
+        
 
 
 
