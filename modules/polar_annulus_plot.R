@@ -58,7 +58,7 @@ polarann_server <- function(id, data_measurements_stations) {
       data_polarann$wd <- sample(seq(0, 359, length.out=nrow(data_polarann)))
       
       if (length(parameter_sel>0)){
-        polarAnnulus(data_polarann, period = "season",
+        polarAnnulus(data_polarann, period = "hour",
                       pollutant = "value", local.tz="Europe/Amsterdam"
                       ) 
         }
