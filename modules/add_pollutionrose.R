@@ -85,7 +85,7 @@ pollrose_server <- function(id, data_measurements_stations) {
                                    footer = '',
                                    labels = c('0 to 10', '10 to 25', 
                                               '25 to 50','50 to 100', '100 or more')),
-                        between = list(x=0.25, y = 0.25))
+                        between = list(x=0.5, y = 0.5))
       }
       else{
           verbatimTextOutput("Selecteer een sensor.")

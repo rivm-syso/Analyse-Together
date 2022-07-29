@@ -137,7 +137,7 @@ source("modules/choose_mun_or_proj.R")
 source("modules/add_barplot.R")
 source("modules/plot_timeseries.R")
 source("modules/add_pollutionrose.R")
-
+source("modules/add_timevariation_plot.R")
 
 # Source functions
 source("funs/assign_color_stations.R")

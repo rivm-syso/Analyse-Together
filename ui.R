@@ -101,6 +101,14 @@ shinyUI(
           
           column(12, wellPanel(pollrose_output("pollrose_plot"))),
           
+        ),
+        
+        fluidRow(
+          
+          # Render timevariation plot. 
+          
+          column(12, wellPanel(timevar_output("timevar_plot"))),
+          
         )
         
 
