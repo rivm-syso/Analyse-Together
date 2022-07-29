@@ -138,6 +138,7 @@ source("modules/add_barplot.R")
 source("modules/plot_timeseries.R")
 source("modules/add_pollutionrose.R")
 source("modules/add_timevariation_plot.R")
+source("modules/polar_annulus_plot.R")
 
 # Source functions
 source("funs/assign_color_stations.R")
