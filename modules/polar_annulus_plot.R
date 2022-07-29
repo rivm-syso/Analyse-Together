@@ -60,7 +60,7 @@ polarann_server <- function(id, data_measurements_stations) {
       if (length(parameter_sel>0)){
         polarAnnulus(data_polarann, period = "season",
                       pollutant = "value", local.tz="Europe/Amsterdam"
-                      )
+                      ) 
         }
       else{
           verbatimTextOutput("Selecteer een sensor.")
