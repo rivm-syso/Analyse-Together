@@ -30,6 +30,9 @@ shinyServer(function(global, input, output, session) {
   # the timevariation
   timevar_plot <- timevar_server("timevar_plot", communication_stuff)
   
+  # the timevariation
+  polarann_plot <- polarann_server("polarann_plot", communication_stuff)
+  
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
                                                 measurements,
