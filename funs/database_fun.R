@@ -213,6 +213,26 @@ download_locations_knmi <- function(knmi_stations, time_start, time_end) {
   
 }
 
+get_lmlstations_from_meta <- function(meta_data){
+  
+  meta_doc <- meta_data %>% filter(type == "station") %>% select(doc)
+  
+  station_list <- c()
+  
+  for (i in 1:nrow(meta_doc)){
+    station_list <- append(station_list, str_split(meta_doc[i, ], ","))
+  }
+  
+  station_list <- unlist(station_list)
+  station_list <- station_list[str_detect(station_list, "NL")] 
+  station_list <- gsub('[^[:alnum:] ]', '', station_list)
+  station_list <- Filter(function(x) str_length(x) < 8, station_list)
+  station_list <- unique(station_list)
+  
+  return(station_list)
+  
+}
+
 download_data_lml <- function(x, station, conn) {
   
   ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
@@ -342,12 +362,13 @@ knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 2
 
   }
   
-  #### TEMPORARY TESTSTATIONS
-  test_lml_stations <- c("NL01494", "NL10437", "NL01491", "NL01494", "NL10444", "NL01491")
+  # test_lml_stations <- c("NL01494", "NL10437", "NL01491", "NL01494", "NL10444", "NL01491")
+  meta <- tbl(pool, "meta") %>% as.data.frame()
+  lml_stations <- get_lmlstations_from_meta(meta)
   
   counter <- 1
-  for(i in test_lml_stations) {
-    log_debug("downloading measurements for station {i}, {counter}/{length(test_lml_stations)}")
+  for(i in lml_stations) {
+    log_debug("downloading measurements for station {i}, {counter}/{length(lml_stations)}")
     date_range <- round_to_days(time_start, time_end)
     
     d <- download_data(i, Tstart = time_start, Tend = time_end,
@@ -358,10 +379,9 @@ knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 2
     counter <- counter + 1
   }
   
-  # lml_stations_locations <- download_locations_lml(test_lml_stations)
   
   df <- data.frame()
-  for (i in test_lml_stations){
+  for (i in lml_stations){
 
     lml_stations <- download_locations_lml(i)
     lml_stations_locations <- rbind(df, lml_stations)
@@ -380,5 +400,4 @@ knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 2
   
 
 }
-
 
