@@ -25,7 +25,6 @@ library(pool)
 # Visualisation
 library(leaflet)         # For maps
 library(leaflet.extras)  # For maps
-library(geoshaper)       # For maps
 library(sp)              # For maps     
 library(DT)              # For tables
 library(plotly)          # For graphs
@@ -143,6 +142,7 @@ source("modules/polar_annulus_plot.R")
 # Source functions
 source("funs/assign_color_stations.R")
 source("funs/assign_linetype_stations.R")
+source("funs/geoshaper_findlocations.R")
 
 ### THE END                                                                 ====
 

@@ -176,7 +176,7 @@ show_map_server <- function(id, com_module, sensor) {
       
       # Zoek de sensoren in de feature
       if (length(rectangular_sel[[1]] > 0)){
-        found_in_bounds <- geoshaper::findLocations(shape = rectangular_sel,
+        found_in_bounds <- findLocations_sel(shape = rectangular_sel,
                                                     location_coordinates = isolate(get_locations()[[2]]),
                                                     location_id_colname = "station")
         
