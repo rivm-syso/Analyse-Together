@@ -2,17 +2,17 @@
 ### pickerInput - select component ###
 ###############################################
 
-# This is a component selection module
+# This is a project selection module
 ######################################################################
 # Output Module
 ######################################################################
 
-component_selection_output <- function(id) {
-
+project_or_mun_selection_output <- function(id) {
+  
   ns <- NS(id)
-
-  uiOutput(ns("comp_select"))
-
+  
+  uiOutput(ns("proj_or_mun_select"))
+  
 }
 
 
@@ -20,32 +20,32 @@ component_selection_output <- function(id) {
 # Server Module
 ######################################################################
 
-component_selection_server <- function(id, comp_choices) {
-
+project_or_mun_selection_server <- function(id) {
+  
   moduleServer(id, function(input, output, session) {
-
+    
     ns <- session$ns
-
-    output$comp_select <- renderUI({
-
+    
+    output$proj_or_mun_select <- renderUI({
+      
       # Create the component picker with a list of possible choices
       tagList(
-
+        
         pickerInput(
-          ns("comp_select"),
-          label    = "Select component",
-          choices  = comp_choices,
+          ns("proj_or_mun_select"),
+          label    = "Selection based on:",
+          choices  = c("Municipality", "Project"),
           selected = NULL,
           multiple = TRUE,
           options = pickerOptions(maxOptions = 1)
-          )
         )
-      })
-
-    # Return the chosen component
-    return(selected_component = reactive({input$comp_select}))
-
+      )
     })
-
-  }
+    
+    # Return the chosen component
+    return(selected_proj_or_mun = reactive({input$proj_or_mun_select}))
+    
+  })
+  
+}
 

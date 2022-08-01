@@ -49,10 +49,12 @@ barplot_server <- function(id, data_measurements_stations) {
       # Find the corresponding label
       parameter_label <- str_replace(toupper(parameter_sel[1]), '_', ' - ')
       
-      data_barplot <- data_measurements() %>% filter(parameter == parameter_sel)#%>% left_join(select(data_stations, c(station, col, linetype)), by = "station")
+      data_barplot <- data_measurements() %>% filter(parameter == parameter_sel)
       data_barplot <- data_barplot %>% group_by(parameter, station) %>% mutate(gemiddelde = round(mean(value, na.rm=TRUE), 2),
-                                                                               standaarddev = sd(value, na.rm = T)) %>% 
+                                                                               standaarddev = sd(value, na.rm = T),
+                                                                               n_obs = n()) %>% 
                                                                         distinct(station, .keep_all = TRUE)
+      
       data_barplot <- merge(data_barplot, data_stations(), by = 'station')
       
       theme_plots <- theme_bw(base_size = 18) + 
@@ -67,12 +69,13 @@ barplot_server <- function(id, data_measurements_stations) {
               legend.key.height = unit(0.5, 'cm'),
               legend.key.width = unit(1, 'cm'),
               panel.border = element_rect(colour = "black", fill=NA, size=1))
-    
+      
       # Make a plot
       ggplot(data = data_barplot, aes(y=gemiddelde, x=station)) +
         geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black') +
         geom_errorbar(aes(ymin=gemiddelde-standaarddev, ymax=gemiddelde+standaarddev), width=.2,
                       position=position_dodge(.9), color='black') +
+        geom_text(aes(y = gemiddelde-gemiddelde+1, label = n_obs), colour = 'white', size = 5-0.2*(length(unique(data_barplot$station)))) +
         labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Barplot for: ', parameter_label)) +
         expand_limits(y=0) + # Make sure no negative values are shown
         theme_plots +

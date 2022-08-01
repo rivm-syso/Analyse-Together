@@ -179,14 +179,16 @@ download_data_knmi <- function(x, station, conn) {
   ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
   te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
   
-  log_debug("downloading data for station {station} for time range {ts_api} -  {te_api}")
+  station_nr <- gsub(".*_", "", station)
   
-  knmi_all <- samanapir::GetKNMIAPI(station, ts_api, te_api)
+  log_debug("downloading data for station {station_nr} for time range {ts_api} -  {te_api}")
+  
+  knmi_all <- samanapir::GetKNMIAPI(station_nr, ts_api, te_api)
   
   knmi_measurements <- knmi_all$data %>% as.data.frame() %>% select(-c('YYYYMMDD', 'H')) %>% 
     rename("station" = "STNS", "wd" = "DD", "ws" = "FF", "temp" = "TEMP", "rh" = "U", "timestamp" = "tijd")
   
-  knmi_measurements$station <- paste0("KNMI_", knmi_measurements$station)
+  knmi_measurements$station <- paste0("KNMI_", knmi_measurements$station) 
   
   knmi_measurements <- knmi_measurements %>% pivot_longer(cols = c("wd", "ws", "temp", "rh"), names_to = "parameter", values_to = "value") %>% 
     drop_na() %>% mutate(aggregation = 3600)
@@ -198,7 +200,9 @@ download_data_knmi <- function(x, station, conn) {
 
 download_locations_knmi <- function(knmi_stations, time_start, time_end) {
   
-  knmi_stations_all <- samanapir::GetKNMIAPI(knmi_stations, format(time_start, '%Y%m%d'), format(time_end, '%Y%m%d'))
+  station_nr <- gsub(".*_", "", knmi_stations)
+  
+  knmi_stations_all <- samanapir::GetKNMIAPI(station_nr, format(time_start, '%Y%m%d'), format(time_end, '%Y%m%d'))
   
   knmi_stations_locations <- knmi_stations_all$info %>% 
       as.data.frame() %>% 
@@ -292,8 +296,13 @@ if(interactive()) {
 
     # We need knmi_stations, this shouldn't be here but loaded from
     # file or database.
-knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 260, 267, 270, 273, 275, 277, 278, 279, 280, 283, 285, 286, 290, 308, 310, 312, 313, 315, 316, 319, 324, 330, 340, 343, 344, 348, 350, 356, 370, 375, 377, 380, 391)
-
+    knmi_stations <- c("KNMI_269", "KNMI_209", "KNMI_215", "KNMI_225", "KNMI_235", "KNMI_240", "KNMI_242", "KNMI_248", 
+                       "KNMI_249", "KNMI_251", "KNMI_257", "KNMI_258", "KNMI_260", "KNMI_267", "KNMI_270", "KNMI_273", 
+                       "KNMI_275", "KNMI_277", "KNMI_278", "KNMI_279", "KNMI_280", "KNMI_283", "KNMI_285", "KNMI_286", 
+                       "KNMI_290", "KNMI_308", "KNMI_310", "KNMI_312", "KNMI_313", "KNMI_315", "KNMI_316", "KNMI_319", 
+                       "KNMI_324", "KNMI_330", "KNMI_340", "KNMI_343", "KNMI_344", "KNMI_348", "KNMI_350", "KNMI_356", 
+                       "KNMI_370", "KNMI_375", "KNMI_377", "KNMI_380", "KNMI_391")
+    
     # Set language and date options                                             ====
 
     options(encoding = "UTF-8")                  # Standard UTF-8 encoding
@@ -351,7 +360,8 @@ knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 2
   }
 
   knmi_stations_locations <- download_locations_knmi(kits, time_start, time_end)
-  
+
+
   for (i in 1:nrow(knmi_stations_locations))
   {
 

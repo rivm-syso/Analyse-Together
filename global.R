@@ -78,7 +78,7 @@ pool <- dbPool(
 )
 
 # store lists with projects and municipalities
-municipalities <- read_csv("./prepped_data/municipalities.csv")
+municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
 projects <- read_csv("./prepped_data/projects.csv")
 
 # add_doc doesn't work, see ATdatabase #8
@@ -100,7 +100,13 @@ line_default <- 'solid'
 line_overload <- 'dotted'
 
 # Codes of KNMI stations
-knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 260, 267, 270, 273, 275, 277, 278, 279, 280, 283, 285, 286, 290, 308, 310, 312, 313, 315, 316, 319, 324, 330, 340, 343, 344, 348, 350, 356, 370, 375, 377, 380, 391)
+# knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 260, 267, 270, 273, 275, 277, 278, 279, 280, 283, 285, 286, 290, 308, 310, 312, 313, 315, 316, 319, 324, 330, 340, 343, 344, 348, 350, 356, 370, 375, 377, 380, 391)
+knmi_stations <- c("KNMI_269", "KNMI_209", "KNMI_215", "KNMI_225", "KNMI_235", "KNMI_240", "KNMI_242", "KNMI_248", 
+                   "KNMI_249", "KNMI_251", "KNMI_257", "KNMI_258", "KNMI_260", "KNMI_267", "KNMI_270", "KNMI_273", 
+                   "KNMI_275", "KNMI_277", "KNMI_278", "KNMI_279", "KNMI_280", "KNMI_283", "KNMI_285", "KNMI_286", 
+                   "KNMI_290", "KNMI_308", "KNMI_310", "KNMI_312", "KNMI_313", "KNMI_315", "KNMI_316", "KNMI_319", 
+                   "KNMI_324", "KNMI_330", "KNMI_340", "KNMI_343", "KNMI_344", "KNMI_348", "KNMI_350", "KNMI_356", 
+                   "KNMI_370", "KNMI_375", "KNMI_377", "KNMI_380", "KNMI_391")
 
 measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
 sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
@@ -108,9 +114,10 @@ sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col
 log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
 
 # Component choices
-overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ", "PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
+overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
 comp_choices = setNames(overview_component$component, overview_component$label)
-
+proj_choices = sort(projects$project)
+mun_choices  = sort(municipalities$X2)
 
 ### APP SPECIFIC SETTINGS                                                   ====
 
@@ -128,6 +135,8 @@ source("modules/show_map.R")
 # Source modules selections
 source("modules/select_date_range.R")
 source("modules/select_component.R")
+source("modules/select_mun_or_proj.R")
+source("modules/choose_mun_or_proj.R")
 
 # Source modules visualisation
 source("modules/add_barplot.R")
