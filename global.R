@@ -109,7 +109,10 @@ knmi_stations <- c("KNMI_269", "KNMI_209", "KNMI_215", "KNMI_225", "KNMI_235", "
                    "KNMI_370", "KNMI_375", "KNMI_377", "KNMI_380", "KNMI_391")
 
 measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
-sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
+sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>% 
+                                                        mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>% 
+                                                        mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
+                                                               size = ifelse(station_type == "LML", 2,1))
 
 log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
 
