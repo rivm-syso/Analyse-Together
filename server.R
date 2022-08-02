@@ -24,6 +24,15 @@ shinyServer(function(global, input, output, session) {
   timeseries_plot <- timeseries_server("timeseries_plot", data_measurements_stations = communication_stuff, overview_component)
   # timeseries_plot <- timeseries_server("timeseries_plot", test_measurements, test_loc_col, overview_component)
 
+  # the pollutionrose
+  pollrose_plot <- pollrose_server("pollrose_plot", communication_stuff)
+  
+  # the timevariation
+  timevar_plot <- timevar_server("timevar_plot", communication_stuff)
+  
+  # the timevariation
+  polarann_plot <- polarann_server("polarann_plot", communication_stuff)
+  
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
                                                 measurements,
