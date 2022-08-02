@@ -73,12 +73,14 @@ timeseries_server <- function(id, data_measurements_stations, overview_component
                    
                    # Make a plot
                    ggplot(data = data_timeseries, aes(x = date, y = value, group = station)) +
-                     geom_line(aes(color = station, linetype=station_type), linewidth = data_timeseries$size/2) +
+                     geom_line(aes(color = station, linetype=station_type)) +
                      geom_ribbon(aes(y = value, ymin = value - sd, ymax = value + sd, fill = station), alpha = .2) +
                      scale_color_manual(values=c(paste0(data_timeseries$col)),
                                         breaks = c(paste0(data_timeseries$station))) +
                      scale_fill_manual(values=c(paste0(data_timeseries$col)),
                                        breaks = c(paste0(data_timeseries$station))) +
+                     scale_size_manual(values = c(paste0(data_timeseries$station_type)),
+                                       breaks = c(paste0(data_timeseries$size)), guide = 'none') +
                      labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Timeseries for: ', parameter_label)) +
                      expand_limits(y=0) +
                      theme_bw() + 
