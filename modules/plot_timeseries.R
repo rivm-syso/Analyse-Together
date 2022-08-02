@@ -73,7 +73,7 @@ timeseries_server <- function(id, data_measurements_stations, overview_component
                    
                    # Make a plot
                    ggplot(data = data_timeseries, aes(x = date, y = value, group = station)) +
-                     geom_line(aes(color = station, linetype=station_type), linewidth = data_timeseries$size/2) +
+                     geom_line(aes(color = station, linetype=station_type)) +
                      geom_ribbon(aes(y = value, ymin = value - sd, ymax = value + sd, fill = station), alpha = .2) +
                      scale_color_manual(values=c(paste0(data_timeseries$col)),
                                         breaks = c(paste0(data_timeseries$station))) +
