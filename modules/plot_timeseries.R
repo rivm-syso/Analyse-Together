@@ -47,24 +47,42 @@ timeseries_server <- function(id, data_measurements_stations, overview_component
                    
                    # Find the corresponding label
                    parameter_label <- filter(overview_component, component == parameter[1])['label']
-                   
+                   if (nrow(parameter_label) < 1){
+                     parameter_label <- " "
+                   }
                    # Ad colour and linetype to the data_measurements
-                   data_timeseries <- data_measurements() %>% left_join(select(data_stations(), c(station, col, linetype)), by = "station")
+                   data_timeseries <- data_measurements() %>% left_join(select(data_stations(), c(station, col, linetype, size, station_type)), by = "station")
                    
                    # Calculate standard deviation
                    data_timeseries <- data_timeseries %>% group_by(station) %>% mutate(sd = sd(value)) %>% ungroup()
 
+                   
+                   theme_plots <- theme_bw(base_size = 18) + 
+                     theme(strip.text.x = element_text(size = 14, colour = "black"),
+                           axis.text.y = element_text(face = "bold",color = "black", size = 16),
+                           axis.text.x = element_text(color = "black", size = 16),
+                           axis.title = element_text(color = "black", size = 16),
+                           text = element_text(family = 'serif'),
+                           title = element_text(color = "black", size = 16),
+                           legend.title = element_text(size = 16),
+                           legend.text = element_text(size = 16),
+                           legend.key.height = unit(1, 'cm'),
+                           legend.key.width = unit(1, 'cm'),
+                           panel.border = element_rect(colour = "black", fill=NA, size=1))
+                   
+                   
                    # Make a plot
                    ggplot(data = data_timeseries, aes(x = date, y = value, group = station)) +
-                     geom_line(aes(color = station, linetype=station)) +
+                     geom_line(aes(color = station, linetype=station_type), linewidth = data_timeseries$size/2) +
                      geom_ribbon(aes(y = value, ymin = value - sd, ymax = value + sd, fill = station), alpha = .2) +
                      scale_color_manual(values=c(paste0(data_timeseries$col)),
                                         breaks = c(paste0(data_timeseries$station))) +
                      scale_fill_manual(values=c(paste0(data_timeseries$col)),
                                        breaks = c(paste0(data_timeseries$station))) +
-                     labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Component: ', parameter_label)) +
+                     labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Timeseries for: ', parameter_label)) +
                      expand_limits(y=0) +
-                     theme_bw()
+                     theme_bw() + 
+                     theme_plots
                    
                  })
                  
