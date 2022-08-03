@@ -390,11 +390,11 @@ if(interactive()) {
   }
   
   
-  df <- data.frame()
+  lml_stations_locations <- data.frame()
   for (i in lml_stations){
 
-    lml_stations <- download_locations_lml(i)
-    lml_stations_locations <- rbind(df, lml_stations)
+    lml_stations_lat_lon <- download_locations_lml(i)
+    lml_stations_locations <- rbind(lml_stations_locations, lml_stations_lat_lon)
     
   }
   
