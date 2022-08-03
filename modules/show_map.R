@@ -30,6 +30,9 @@ show_map_server <- function(id, com_module, sensor) {
 
     ns <- session$ns
     beatCol <- colorFactor(palette = 'RdYlGn', domain = c(0,100), reverse = TRUE)
+    icons_stations <- iconList(
+      lml_selected = makeIcon(iconUrl = "images/lml_selected.png", iconWidth = 24, iconHeight = 16),
+      lml_deselected = makeIcon(iconUrl = "images/lml_deselected.png",  iconWidth = 24, iconHeight = 16))
     
     # Get the min and max of the dataset
     get_locations <- reactive({
@@ -98,7 +101,7 @@ show_map_server <- function(id, com_module, sensor) {
     })    
     
     add_knmi_map <- function(){
-      
+      print(get_locations()[[1]])
       data_knmi <- get_locations()[[1]] %>% filter(., grepl("KNMI",station))
       #print(data_knmi)
       
@@ -121,7 +124,7 @@ show_map_server <- function(id, com_module, sensor) {
     
     add_sensors_map <- function(){ 
       
-      data_snsrs <- get_locations()[[1]] %>% filter(., !grepl("KNMI",station))
+      data_snsrs <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
       
       # Update map with new markers to show selected 
       proxy <- leafletProxy('map') # set up proxy map
@@ -135,6 +138,40 @@ show_map_server <- function(id, com_module, sensor) {
                          group = "sensoren"
         )}
     
+    add_lmls_map <- function(){ 
+      
+      data_snsrs <- get_locations()[[1]] %>% filter(., grepl("LML",station_type))
+      
+      for (lmls in unique(data_snsrs$station)){
+        
+        print(lmls)
+        
+        if (isTRUE(data_snsrs$selected[data_snsrs$station == lmls])){
+          # Update map with new markers to show selected 
+          
+          proxy <- leafletProxy('map') # set up proxy map
+          leafletProxy("map") %>%
+            
+            addMarkers(data = data_snsrs, ~lon, ~lat, icon = icons_stations["lml_selected"],
+                             label = lapply(data_snsrs$station, HTML),
+                             layerId = ~station,
+                             #radius = 5,
+                             #color = data_snsrs$col,
+                             group = "lmls")
+        }
+        else {
+          
+          leafletProxy("map") %>%
+          
+          addMarkers(data = data_snsrs, ~lon, ~lat, icon = icons_stations["lml_deselected"],
+                     label = lapply(data_snsrs$station, HTML),
+                     layerId = ~station,
+                     #radius = 5,
+                     #color = data_snsrs$col,
+                     group = "lmls")}}
+        }
+    
+    
     remove_knmi_map <- function(){
 
       # Update map with new markers to show selected 
@@ -143,6 +180,7 @@ show_map_server <- function(id, com_module, sensor) {
         
         clearGroup(group = "knmi_stations")
     }
+    
     
     observe({
       knmi_show <- input$show_knmi
@@ -168,6 +206,7 @@ show_map_server <- function(id, com_module, sensor) {
           change_state_to_deselected(id_select)
           }
       isolate(add_sensors_map())  
+      isolate(add_lmls_map())
     })
     
     observe({
@@ -176,7 +215,7 @@ show_map_server <- function(id, com_module, sensor) {
       
       # Zoek de sensoren in de feature
       if (length(rectangular_sel[[1]] > 0)){
-        found_in_bounds <- geoshaper::findLocations(shape = rectangular_sel,
+        found_in_bounds <- findLocations_sel(shape = rectangular_sel,
                                                     location_coordinates = isolate(get_locations()[[2]]),
                                                     location_id_colname = "station")
         
@@ -191,7 +230,7 @@ show_map_server <- function(id, com_module, sensor) {
         }}
       else{done} 
       
-      
+      isolate(add_lmls_map())
       isolate(add_sensors_map())
       
     })
@@ -212,7 +251,8 @@ show_map_server <- function(id, com_module, sensor) {
       }}
       else{done}
        
-       isolate(add_sensors_map())   
+       isolate(add_sensors_map())
+       isolate(add_lmls_map())
     })
     
     # Return start and end date
