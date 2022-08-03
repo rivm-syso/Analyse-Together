@@ -78,7 +78,6 @@ communication_server <- function(id,
                    # Set selected stations to TRUE
                    stations_total <- data_stations %>%
                      dplyr::mutate(selected = ifelse(station %in% c(selected_stations$state_station()),  T, selected))
-                   # print(selected_stations$selected_station())
                    # Assign colors -> sensor
                    stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
 
@@ -94,8 +93,6 @@ communication_server <- function(id,
                    start_time <- selected_time$selected_start_date()
                    end_time <- selected_time$selected_end_date()
                    
-                   print(start_time)
-
                    # Check if a time is selected, otherwise total time
                    if(is.null(start_time)|is.null(end_time)){
                      start_time <- get_time_total()$start_time
@@ -145,34 +142,33 @@ communication_server <- function(id,
                   log_trace("com module: filtered measurements {nrow(measurements_filt)}")
                    return(measurements_filt)
                  })
-
-                 output$test_data_select_time <- renderTable({
-
-                   test123 <- filter_data_measurements()
+                 
+                 get_knmi_measurements <- reactive({
+                   # Get the start and end time to filter on
+                   time_selected <- get_time_selection()
+                   start_time <- time_selected$start_time
+                   end_time <- time_selected$end_time
                    
-                   })
-                 output$test_stations_total <- renderTable({
-                   test123 <- get_stations_total()
+                   # Get selected stations
+                   selected_stations <- get_selected_station()[grep("KNMI", get_selected_station())]
+                   print(selected_stations)
+                   # TODO some check if time is available in data
+                   # TODO check if selected sensors has data that time and component, otherwise a message?
+                   # TODO for the selected stations and parameters connect with those selection modules
+                   # Filter the measurements
+                   measurements_filt <- data_measurements %>%
+                     dplyr::filter(date > start_time & date < end_time & station %in% selected_stations)
                    
+                   return(measurements_filt)
                  })
-                 output$test_data_select_sensor <- renderTable({
-                   test123 <- get_stations_total() %>% filter(selected) %>%  dplyr::distinct()
-                   test123}
-                 )
-                 output$test_startendtime <- renderTable({
-                   test123 <- get_time_total()
-                   test123}
-                 )
-#                  output$Click_text <- renderText({
-#                    get_selected_station()
-#                  })
 
                 return(list(
                   start_end_total = reactive({get_time_total()}),
                   selected_time = selected_time,
                   station_locations = reactive({get_stations_total()}),
                   selected_measurements = reactive({filter_data_measurements()}),
-                  choice_select = reactive({choice_select()})
+                  choice_select = reactive({choice_select()}),
+                  knmi_measurements = reactive({get_knmi_measurements()})
                   ))
 
                })

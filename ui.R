@@ -109,15 +109,7 @@ shinyUI(
           
           column(12, wellPanel(timevar_output("timevar_plot"))),
           
-        ),
-        
-        fluidRow(
-          
-          # Render timevariation plot. 
-          
-          column(12, wellPanel(polarann_output("polarann_plot"))),
-          
-        ),
+        )
 
 
       )

@@ -34,11 +34,16 @@ pollrose_server <- function(id, data_measurements_stations) {
       data_measurements <- data_measurements_stations$selected_measurements()
       return(data_measurements)
     })
-
+    
     # Get selected stations from communication module
     data_stations <- reactive({
       data_stations <- data_measurements_stations$station_locations() %>% select(c(station, col)) %>% dplyr::distinct(station, .keep_all = T)
       return(data_stations)
+    })
+    
+    data_knmi <- reactive({
+      data_knmi <- data_measurements_stations$knmi_measurements()
+      return(data_knmi)
     })
     
     output$pollrose_plot <- renderPlot({
@@ -65,13 +70,17 @@ pollrose_server <- function(id, data_measurements_stations) {
               legend.key.width = unit(1, 'cm'),
               panel.border = element_rect(colour = "black", fill=NA, size=1))
       
-      # Make a plot
-      data_pollrose$ws <- sample(seq(0, 10, length.out=nrow(data_pollrose)))
-      data_pollrose$wd <- sample(seq(0, 359, length.out=nrow(data_pollrose)))
-      data_pollrose$value <- as.numeric(data_pollrose$value)
+      # Merge KNMI data with the sensordata:
+      knmidata <- data_knmi() %>%  filter(parameter == 'wd' | parameter == 'ws') %>% select(c('station', 'parameter', 'value', 'timestamp')) %>% 
+        pivot_wider(names_from = 'parameter', values_from = 'value', values_fn = mean) %>% 
+        rename(knmi_stat = station)
+     
+      data_pollrose <- left_join(data_pollrose, knmidata, by = 'timestamp', keep = T)
       
+      
+      # Make a plot
       if (length(parameter_sel>0)){
-          pollutionRose(data_pollrose,
+          try(pollutionRose(data_pollrose,
                         pollutant = "value", 
                         wd = "wd", 
                         ws = "ws", 
@@ -85,7 +94,7 @@ pollrose_server <- function(id, data_measurements_stations) {
                                    footer = '',
                                    labels = c('0 to 10', '10 to 25', 
                                               '25 to 50','50 to 100', '100 or more')),
-                        between = list(x=0.5, y = 0.5))
+                        between = list(x=0.5, y = 0.5)))
       }
       else{
           verbatimTextOutput("Selecteer een sensor.")
