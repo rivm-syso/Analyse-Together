@@ -34,6 +34,10 @@ show_map_server <- function(id, com_module, sensor) {
       lml_selected = makeIcon(iconUrl = "images/lml_selected.png", iconWidth = 24, iconHeight = 16),
       lml_deselected = makeIcon(iconUrl = "images/lml_deselected.png",  iconWidth = 24, iconHeight = 16))
     
+    icons_knmis <- iconList(
+      knmi_selected = makeIcon(iconUrl = "images/knmi_selected.png", iconWidth = 20, iconHeight = 20),
+      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected.png", iconWidth = 20, iconHeight = 20))
+      
     # Get the min and max of the dataset
     get_locations <- reactive({
       sensorloc <- com_module$station_locations() %>% dplyr::distinct(station, .keep_all = T)
@@ -101,26 +105,31 @@ show_map_server <- function(id, com_module, sensor) {
     })    
     
     add_knmi_map <- function(){
-      print(get_locations()[[1]])
+      
       data_knmi <- get_locations()[[1]] %>% filter(., grepl("KNMI",station))
-      #print(data_knmi)
       
-      knmiicon <- makeIcon(
-        iconUrl = "images/1555512.png",
-        iconWidth = 20, iconHeight = 20)
-      
-      # Update map with new markers to show selected 
-      proxy <- leafletProxy('map') # set up proxy map
-      leafletProxy("map") %>%
+      for (knmis in unique(data_knmi$station)){
         
-        addMarkers(data = data_knmi, lng = ~lon, lat = ~lat, 
-                   icon = knmiicon,
-                   label = lapply(data_knmi$station, HTML),
-                   layerId = ~station,
-                   group = "knmi_stations"
-        )
-      
-    }
+        if (isTRUE(data_knmi$selected[data_knmi$station == knmis])){
+
+          leafletProxy("map") %>%
+        
+          addMarkers(data = data_knmi[data_knmi$station == knmis,], lng = ~lon, lat = ~lat, 
+                     icon = icons_knmis["knmi_selected"],
+                     label = ~station,
+                     layerId = ~station,
+                     group = "knmi_stations")
+        }
+      else {
+        
+        leafletProxy("map") %>%
+          
+          addMarkers(data = data_knmi[data_knmi$station == knmis,], lng = ~lon, lat = ~lat, 
+                     icon = icons_knmis["knmi_deselected"],
+                     label = ~station,
+                     layerId = ~station,
+                     group = "knmi_stations")}}
+  }
     
     add_sensors_map <- function(){ 
       
@@ -144,16 +153,15 @@ show_map_server <- function(id, com_module, sensor) {
       
       for (lmls in unique(data_snsrs$station)){
         
-        print(lmls)
-        
         if (isTRUE(data_snsrs$selected[data_snsrs$station == lmls])){
           # Update map with new markers to show selected 
           
           proxy <- leafletProxy('map') # set up proxy map
           leafletProxy("map") %>%
             
-            addMarkers(data = data_snsrs, ~lon, ~lat, icon = icons_stations["lml_selected"],
-                             label = lapply(data_snsrs$station, HTML),
+            addMarkers(data = data_snsrs[data_snsrs$station == lmls,], ~lon, ~lat, 
+                             icon = icons_stations["lml_selected"],
+                             label =  ~station,
                              layerId = ~station,
                              #radius = 5,
                              #color = data_snsrs$col,
@@ -163,14 +171,13 @@ show_map_server <- function(id, com_module, sensor) {
           
           leafletProxy("map") %>%
           
-          addMarkers(data = data_snsrs, ~lon, ~lat, icon = icons_stations["lml_deselected"],
-                     label = lapply(data_snsrs$station, HTML),
+          addMarkers(data = data_snsrs[data_snsrs$station == lmls,], ~lon, ~lat, icon = icons_stations["lml_deselected"],
+                     label =  ~station,
                      layerId = ~station,
                      #radius = 5,
                      #color = data_snsrs$col,
                      group = "lmls")}}
         }
-    
     
     remove_knmi_map <- function(){
 
@@ -194,11 +201,10 @@ show_map_server <- function(id, com_module, sensor) {
     })
     
     
-    # Observe if a sensor is clicked and store the id
+    # Observe if a sensor is in de square selection
     observe({
       
       rectangular_desel <- input$map_draw_deleted_features
-      
       
       # ga dan de sensoren af en deselecteer deze een voor een
       for(id_select in isolate(get_locations()[[2]]$station)){
@@ -216,8 +222,8 @@ show_map_server <- function(id, com_module, sensor) {
       # Zoek de sensoren in de feature
       if (length(rectangular_sel[[1]] > 0)){
         found_in_bounds <- findLocations_sel(shape = rectangular_sel,
-                                                    location_coordinates = isolate(get_locations()[[2]]),
-                                                    location_id_colname = "station")
+                                                     location_coordinates = isolate(get_locations()[[2]]),
+                                                     location_id_colname = "station")
         
         for(id_select in found_in_bounds){
           selected <- check_state(id_select)
@@ -235,11 +241,12 @@ show_map_server <- function(id, com_module, sensor) {
       
     })
     
+    # Observe the clicks of an user
     observe({
       click <- input$map_marker_click
       
       selected_snsr <- click$id
-       log_trace("map module: click id {selected_snsr}")
+      log_trace("map module: click id {selected_snsr}")
 
       if (length(selected_snsr >0)){
         selected <- check_state(selected_snsr)
@@ -253,6 +260,7 @@ show_map_server <- function(id, com_module, sensor) {
        
        isolate(add_sensors_map())
        isolate(add_lmls_map())
+       isolate(add_knmi_map())
     })
     
     # Return start and end date
