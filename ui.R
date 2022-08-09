@@ -16,7 +16,7 @@ shinyUI(
       # White header with logo
       tags$div(class = "header-white",
 
-               tags$img(src = "images/Banner_2018.png", style = "height: 120px; width: 610px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
+               tags$img(src = "images/Banner_2018.png", style = "height: 180px; width: 690px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
 
       ),
 
