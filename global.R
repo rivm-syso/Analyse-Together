@@ -152,5 +152,7 @@ source("funs/assign_color_stations.R")
 source("funs/assign_linetype_stations.R")
 source("funs/geoshaper_findlocations.R")
 
+# Source layout
+source("modules/add_tabpanels.R")
 ### THE END                                                                 ====
 

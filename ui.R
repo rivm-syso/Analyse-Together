@@ -39,7 +39,11 @@ shinyUI(
     navbarMenu(
       
       title = "Explorer",
-
+      
+      # Output: Tabset voor openair plots, zie voor de inhoud het script: tabPanels.R
+      tabsetPanel(type = "tabs",
+                  tpAnalyse()
+                  ),
       tabPanel(
 
         value = "Test1",
@@ -81,7 +85,7 @@ shinyUI(
         fluidRow(
 
           # check output communicatition module
-          column(6, wellPanel(barplot_output("barplot_plot"))),
+          #column(6, wellPanel(barplot_output("barplot_plot"))),
           column(6, wellPanel(show_map_output("map")))
           
 
