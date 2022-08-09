@@ -3,17 +3,17 @@
 ## ---------------------------------------------------------
 
 tpAnalyse <- function(){
-  tp <-  shiny::tabPanel("Visualisations to analyse data",
-                         tabsetPanel(
+  tp <-  shiny::tabsetPanel(
                            tpTimeplot(),
                            tpBarplot(),
                            # tpKalender(),
-                           # tpTimevariation(),
+                           tpTimevariation(),
                            #tpPercentileRose(),
-                           #tpPollutionRose(),
-                           #tpWindRose()
+                           tpPollutionRose(),
+                           #tpWindRose(),   
+                          
                          )
-  )
+  
   
   return(tp)
 } 
@@ -21,7 +21,12 @@ tpAnalyse <- function(){
 tpTimeplot <- function(){
   tp <-  shiny::tabPanel("Timeseries",
                          helpText("Deze grafiek laat de tijdreeks van de sensor in vergelijking met het meetstation zien."),
-                         plotOutput("timeseries_plot"),
+                         fluidRow(
+                           
+                           # Render timeseries plot. 
+                           column(12, wellPanel(timeseries_output("timeseries_plot"))),
+                           
+                         ),
                          h4("Toelichting"),
                          p("Als je één of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse sensorwaarden voor de geselecteerde periode. 
                       Deze waarden kan je vergeleken met metingen van het dichtsbijzijnde meetstation van het luchtmeetnet. 
@@ -35,7 +40,12 @@ tpTimeplot <- function(){
 tpBarplot <- function(){
   tp <-  shiny::tabPanel("Barplot",
                          helpText("Graph shows ..."),
-                         plotOutput('barplot_output'),
+                         fluidRow(
+
+                             # check output communicatition module
+                             column(6, wellPanel(barplot_output("barplot_plot")))
+
+                           ),
                          h4("Information"),
                          p("If you select ...",
                            style = "font-size:12px")
@@ -62,7 +72,15 @@ tpKalender <- function(){
 tpTimevariation <- function(){
   tp <-  shiny::tabPanel("Tijdoverzicht",
                          helpText("Deze grafieken laten het gemiddelde zien voor verschillende tijdsperioden per sensor of sensorgroep."),
-                         plotOutput("timevariation"),
+                         
+                         fluidRow(
+                           
+                           # Render timevariation plot. 
+                           
+                           column(12, wellPanel(timevar_output("timevar_plot"))),
+                           
+                         ),
+                          
                          h4("Toelichting"),
                          p("Als je een sensor aanklikt, wordt de gemiddelde concentratie per tijdsperiode getoond. 
                         De bovenste grafiek laat de gemiddelde uurwaarde, uitgesplitst naar weekdag, zien.
@@ -118,7 +136,13 @@ tpPollutionRose<- function(){
                          helpText("Deze grafiek toont per windrichting de relatieve bijdrage aan de totale gemiddelde concentratie per sensor of sensorgroep."),
                          p("LET OP: als het KNMI-station geen gegevens over de wind heeft, kan er geen concentratieroos (%) worden getoond. Check of er een windroos 
                     voor dit KNMI-station is."),
-                         plotOutput("pollutionplot"),
+                         fluidRow(
+                           
+                           # Render pollutionrose plot. 
+                           
+                           column(12, wellPanel(pollrose_output("pollrose_plot"))),
+                           
+                         ),
                          h4("Toelichting"),
                          p("Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windsector het aandeel (in %) van deze 
                         sector in de totale gemiddelde concentratie. De gemiddelde concentratie per sector wordt hiervoor gewogen naar hoe vaak deze 

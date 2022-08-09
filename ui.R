@@ -6,7 +6,7 @@ shinyUI(
 
     # For the top two headers (white and pink one)
     tags$head(
-      
+
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
 
@@ -34,88 +34,44 @@ shinyUI(
 
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
-    selected    = "Test1",
+    selected    = "Home",
 
-    navbarMenu(
+    tabPanel(
       
-      title = "Explorer",
+      title = "Home"),
+    
+    tabsetPanel(
+        
+        tabPanel(
+        
+        value = "Select data",
+        title = HTML("Select data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
+        
+        
+        fluidRow(
+          
+          column(6, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+                                                  choice_selection_output("choice_select"),style = "z-index: 10;",
+                                                  date_range_output("select_date_range"),style = "z-index: 1000;")),
+          column(6, wellPanel(show_map_output("map")))
+        ),
+        
+        ),
       
-      # Output: Tabset voor openair plots, zie voor de inhoud het script: tabPanels.R
-      tabsetPanel(type = "tabs",
-                  tpAnalyse()
-                  ),
       tabPanel(
 
-        value = "Test1",
-        title = HTML("Test1 <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
-
-        # First row with 'breadcrumb'
-        fluidRow(
-
-          column(12,
-
-                 wellPanel(style = "background-color: #f3f3f3; box-shadow: none;",
-
-                           HTML("<span style = 'font-size: 25px; font-weight: bold;'> Explorer &gt Test1 </span><br>"),
-
-
-                 )
-
-          ),
-
-        ),
+        value = "Visualise data",
+        title = HTML("Visualise data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
         
         fluidRow(
-          
-          column(12, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
-                                                   choice_selection_output("choice_select"),style = "z-index: 10;")),
-          
+          column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component")))
         ),
         
-        fluidRow(
-          column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component"))),
-
-          column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range"),style = "z-index: 1000;")),
-          
-    
-
-        ),
-        
-
-        fluidRow(
-
-          # check output communicatition module
-          #column(6, wellPanel(barplot_output("barplot_plot"))),
-          column(6, wellPanel(show_map_output("map")))
-          
-
-        ),
-        
-        fluidRow(
-
-          # Render timeseries plot. 
-
-          column(12, wellPanel(timeseries_output("timeseries_plot"))),
-
-        ),
-        
-        fluidRow(
-          
-          # Render pollutionrose plot. 
-          
-          column(12, wellPanel(pollrose_output("pollrose_plot"))),
-          
-        ),
-        
-        fluidRow(
-          
-          # Render timevariation plot. 
-          
-          column(12, wellPanel(timevar_output("timevar_plot"))),
-          
+        # Output: Tabset voor openair plots, zie voor de inhoud het script: tabPanels.R
+        tabsetPanel(tpAnalyse(), id = "tabsanalyse"
         )
-
-
+        
+      
       )
 
 
