@@ -35,7 +35,12 @@ date_range_server <- function(id,
 
                })
 
-               output$date_range <- renderUI({
+               get_mun_proj_select <- reactive({
+                 mun_proj_select <- comm_date$mun_proj_select()
+                 return(mun_proj_select)})
+                 
+              output$date_range <- renderUI({
+                if (is.null(get_mun_proj_select()) == FALSE){
                  # Get the boundaries of the datepicker
                  date_total <- get_date_total()
                  log_trace("mod date_range: date total = {date_total[[1]]} - {date_total[[2]]}")
@@ -54,7 +59,7 @@ date_range_server <- function(id,
                      separator = " - "
                    )
 
-                 )
+                 )}
                })
 
                observe({ #loggin

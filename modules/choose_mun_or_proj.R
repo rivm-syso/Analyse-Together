@@ -41,9 +41,11 @@ choice_selection_server <- function(id, com_module, mun_choices, proj_choices) {
                 
                 pickerInput(
                   ns("choice_select"),
-                  selected = '',
                   label    = "Choose one option:",
-                  choices  = mun_choices
+                  choices  = mun_choices,
+                  selected = NULL,
+                  multiple = TRUE,
+                  options = pickerOptions(maxOptions = 1)
                 )
               )}
           else{
@@ -51,9 +53,11 @@ choice_selection_server <- function(id, com_module, mun_choices, proj_choices) {
             
                 pickerInput(
                   ns("choice_select"),
-                  selected = '',
                   label    = "Choose one option:",
-                  choices  = proj_choices
+                  choices  = proj_choices,
+                  selected = NULL,
+                  multiple = TRUE,
+                  options = pickerOptions(maxOptions = 1)
                 ))}}
     })
     
