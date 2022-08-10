@@ -35,7 +35,7 @@ shinyUI(
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
     selected    = "Home",
-
+    
     tabPanel(
       
       title = "Home"),
@@ -57,6 +57,19 @@ shinyUI(
         ),
         
         ),
+        
+        tabPanel(
+          
+          value = "Metadata",
+          title = HTML("Metadata <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
+          
+          
+          fluidRow(
+            
+            column(6, class = "col-lg-6", wellPanel())
+          ),
+          
+        ),
       
       tabPanel(
 
@@ -75,7 +88,11 @@ shinyUI(
       )
 
 
-    )
+    ),
+    
+    tabPanel(
+      
+      title = "Information tool")
 
   )
 

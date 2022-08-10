@@ -43,7 +43,7 @@ tpBarplot <- function(){
                          fluidRow(
 
                              # check output communicatition module
-                             column(6, wellPanel(barplot_output("barplot_plot")))
+                             column(12, wellPanel(barplot_output("barplot_plot")))
 
                            ),
                          h4("Information"),
@@ -55,14 +55,12 @@ tpBarplot <- function(){
 } 
 
 tpKalender <- function(){
-  tp <-  shiny::tabPanel("Kalender",
-                         helpText("Deze grafiek laat het gemiddelde van de (groep) sensor(en) zien per dag."),
+  tp <-  shiny::tabPanel("Calender plot",
+                         helpText("This graph shows ..."),
                          plotOutput("calendar"),
                          h4("Toelichting"),
-                         p("Als je één of meer sensoren aanklikt, wordt de gemiddelde concentratie per dag getoond in een standaard kalenderformaat. 
-                        Dit maakt het mogelijk om snel inzicht te krijgen op welke dagen de concentraties hoog (of laag) waren.
-                        Op dit moment wordt het kleurverloop gekozen op basis van een schaal van 0 tot 150 ", HTML("&mu;g/m<sup>3</sup>."),
-                           "Dit betekent dat licht gekleurde dagen gemiddeld een lage concentratie hadden; donkerpaarse dagen geven aan dat de concentratie die dag hoog was.",
+                         p("If you select ...", HTML("&mu;g/m<sup>3</sup>."),
+                           "The colors are indicating ...",
                            style = "font-size:12px")
                          
   )
@@ -70,8 +68,8 @@ tpKalender <- function(){
 } 
 
 tpTimevariation <- function(){
-  tp <-  shiny::tabPanel("Tijdoverzicht",
-                         helpText("Deze grafieken laten het gemiddelde zien voor verschillende tijdsperioden per sensor of sensorgroep."),
+  tp <-  shiny::tabPanel("Overview of measurements",
+                         helpText("This graph ..."),
                          
                          fluidRow(
                            
@@ -82,10 +80,7 @@ tpTimevariation <- function(){
                          ),
                           
                          h4("Toelichting"),
-                         p("Als je een sensor aanklikt, wordt de gemiddelde concentratie per tijdsperiode getoond. 
-                        De bovenste grafiek laat de gemiddelde uurwaarde, uitgesplitst naar weekdag, zien.
-                        Onder zie je de gemiddelde concentratie op elk uur van de dag (links), in het midden zie je de gemiddelde concentratie per maand en
-                        rechts zie je de gemiddelde concentratie per dag van de week.", 
+                         p("If you select ...", 
                            style = "font-size:12px")
   )
   

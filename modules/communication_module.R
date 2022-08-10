@@ -113,12 +113,18 @@ communication_server <- function(id,
                    return(list(parameter = parameter))
                  })
                  
-                 # Get the parameter from the user
+                 # Get the mun/proj selection from the user
                  choice_select <- reactive({
                    selected <- select_mun_or_proj()
                    return(selected)
                  })
 
+                 # Get the mun/proj selection from the user
+                 mun_proj_select <- reactive({
+                   selected <- choose_mun_or_oroj()
+                   return(selected)
+                 })
+                 
                  # Reactive for the measurements to filter on input, time, map, component
                  filter_data_measurements <- reactive({
                    # Get the start and end time to filter on
@@ -168,6 +174,7 @@ communication_server <- function(id,
                   station_locations = reactive({get_stations_total()}),
                   selected_measurements = reactive({filter_data_measurements()}),
                   choice_select = reactive({choice_select()}),
+                  mun_proj_select = reactive({mun_proj_select()}),
                   knmi_measurements = reactive({get_knmi_measurements()})
                   ))
 

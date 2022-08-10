@@ -74,16 +74,19 @@ barplot_server <- function(id, data_measurements_stations, overview_component) {
               panel.border = element_rect(colour = "black", fill=NA, size=1))
       
       # Make a plot
-      ggplot(data = data_barplot, aes(y=gemiddelde, x=station)) +
-        geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black', size = data_barplot$size/2) +
-        geom_errorbar(aes(ymin=gemiddelde-standaarddev, ymax=gemiddelde+standaarddev), size = data_barplot$size/2, width=.2,
-                      position=position_dodge(.9), color='black') +
-        geom_text(aes(y = gemiddelde-gemiddelde+1, label = n_obs), colour = 'white', size = 5-0.2*(length(unique(data_barplot$station)))) +
-        labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Barplot for: ', parameter_label)) +
-        expand_limits(y=0) + # Make sure no negative values are shown
-        theme_plots +
-        theme(axis.text.x=element_text(angle = 45, hjust = 1, vjust = 1))
+      if (length(parameter_sel>0)){
+        try(ggplot(data = data_barplot, aes(y=gemiddelde, x=station)) +
+          geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black', size = data_barplot$size/2) +
+          geom_errorbar(aes(ymin=gemiddelde-standaarddev, ymax=gemiddelde+standaarddev), size = data_barplot$size/2, width=.2,
+                        position=position_dodge(.9), color='black') +
+          geom_text(aes(y = gemiddelde-gemiddelde+1, label = n_obs), colour = 'white', size = 5-0.2*(length(unique(data_barplot$station)))) +
+          labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Barplot for: ', parameter_label)) +
+          expand_limits(y=0) + # Make sure no negative values are shown
+          theme_plots +
+          theme(axis.text.x=element_text(angle = 45, hjust = 1, vjust = 1))
       
+      )
+      }
     })
     
   })
