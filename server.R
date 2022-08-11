@@ -11,6 +11,9 @@ shinyServer(function(global, input, output, session) {
   # choose proj/mun
   choice_select <- choice_selection_server("choice_select", communication_stuff, mun_choices = mun_choices, proj_choices = proj_choices)
   
+  # Get metadata
+  meta_table <- metadata_server("meta_table", communication_stuff)
+  
   # The Map 
   map <- show_map_server("map", communication_stuff, sensor)
 

@@ -66,7 +66,7 @@ shinyUI(
           
           fluidRow(
             
-            column(6, class = "col-lg-6", wellPanel())
+            column(6, class = "col-lg-6", wellPanel(metadata_output("meta_table")))
           ),
           
         ),

@@ -141,6 +141,9 @@ source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
 
+# Source modules for metadata
+source("modules/add_metadata_tables.R")
+
 # Source modules visualisation
 source("modules/add_barplot.R")
 source("modules/plot_timeseries.R")
