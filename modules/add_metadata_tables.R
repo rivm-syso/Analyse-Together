@@ -47,7 +47,7 @@ metadata_server <- function(id, com_module) {
       if (nrow(metadata_table() > 0)){
           data_merged <- left_join(metadata_table(),data_stations, by = "station")
       }
-      else {data_merged <- data.frame("station" = '', "n_obs" = '')}
+      else {data_merged <- data.frame("station" = '', "n_obs" = '', "station_type"  = ' ')}
       return(data_merged)
     })
     
