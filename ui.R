@@ -37,8 +37,8 @@ shinyUI(
     selected    = "Home",
     
     tabPanel(
-
       title = "Home",
+
     
     tabsetPanel(
         
@@ -59,6 +59,7 @@ shinyUI(
         ),
         
         tabPanel(
+
           
           value = "Metadata",
           title = HTML("Metadata <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
@@ -67,6 +68,7 @@ shinyUI(
           fluidRow(
             
             column(12, class = "col-lg-6", wellPanel(metadata_output("meta_table")))
+
           ),
           
         ),
@@ -96,6 +98,7 @@ shinyUI(
       h4("Toelichting"),
       p("More information on the projects can be found on the samenmeten dataportaal.",
         style = "font-size:12px"))
+
 
   )
 

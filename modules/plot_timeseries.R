@@ -90,6 +90,7 @@ timeseries_server <- function(id, data_measurements_stations, overview_component
                          theme_bw() + 
                          guides(colour = guide_legend(override.aes = list(size=2)),
                                 linetype = guide_legend(override.aes = list(size = 1))) +
+
                          theme_plots)
                    }
                    
