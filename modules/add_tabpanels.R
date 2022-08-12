@@ -39,7 +39,10 @@ tpTimeplot <- function(){
 
 tpBarplot <- function(){
   tp <-  shiny::tabPanel("Barplot",
-                         helpText("Graph shows ..."),
+                         helpText("Graph shows the average of the selected stations and sensors. The average is calculated for the timerange as selected in the previous step.
+                                   The white number in each bar, displays the number of measurements within this timeperiod. If this number is very low, the statistical power of
+                                  the difference between stations/sensors is lower."),
+
                          fluidRow(
 
                              # check output communicatition module

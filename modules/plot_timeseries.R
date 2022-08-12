@@ -55,7 +55,9 @@ timeseries_server <- function(id, data_measurements_stations, overview_component
                    
                    # Calculate standard deviation
                    data_timeseries <- data_timeseries %>% group_by(station) %>% mutate(sd = sd(value)) %>% ungroup()
-
+                   n_days_in_plot <- round(as.numeric(max(data_timeseries$date) - min(data_timeseries$date)))
+                   n_stat_in_plot <- length(unique(data_timeseries$station))
+                   print(n_stat_in_plot)
                    
                    theme_plots <- theme_bw(base_size = 18) + 
                      theme(strip.text.x = element_text(size = 14, colour = "black"),
@@ -65,9 +67,9 @@ timeseries_server <- function(id, data_measurements_stations, overview_component
                            text = element_text(family = 'serif'),
                            title = element_text(color = "black", size = 16),
                            legend.title = element_text(size = 16),
-                           legend.text = element_text(size = 16),
-                           legend.key.height = unit(1, 'cm'),
-                           legend.key.width = unit(1, 'cm'),
+                           legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),
+                           legend.key.height = unit(0.5, 'cm'),
+                           legend.key.width = unit(0.5, 'cm'),
                            panel.border = element_rect(colour = "black", fill=NA, size=1))
                    
                    
@@ -82,9 +84,13 @@ timeseries_server <- function(id, data_measurements_stations, overview_component
                                            breaks = c(paste0(data_timeseries$station))) +
                          scale_size_manual(values = c(paste0(data_timeseries$station_type)),
                                            breaks = c(paste0(data_timeseries$size)), guide = 'none') +
+                         scale_x_datetime(date_breaks = paste0(as.character(round(n_days_in_plot/7))," day"), date_minor_breaks = "1 day") +
                          labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Timeseries for: ', parameter_label)) +
                          expand_limits(y=0) +
                          theme_bw() + 
+                         guides(colour = guide_legend(override.aes = list(size=2)),
+                                linetype = guide_legend(override.aes = list(size = 1))) +
+
                          theme_plots)
                    }
                    
