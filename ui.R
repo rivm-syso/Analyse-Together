@@ -37,8 +37,8 @@ shinyUI(
     selected    = "Home",
     
     tabPanel(
-      
-      title = "Home"),
+
+      title = "Home",
     
     tabsetPanel(
         
@@ -66,7 +66,7 @@ shinyUI(
           
           fluidRow(
             
-            column(6, class = "col-lg-6", wellPanel(metadata_output("meta_table")))
+            column(12, class = "col-lg-6", wellPanel(metadata_output("meta_table")))
           ),
           
         ),
@@ -88,11 +88,14 @@ shinyUI(
       )
 
 
-    ),
+    )),
     
     tabPanel(
-      
-      title = "Information tool")
+      title = "Information tool",
+      helpText("This tool was build for citizens. The code is open-source. "),
+      h4("Toelichting"),
+      p("More information on the projects can be found on the samenmeten dataportaal.",
+        style = "font-size:12px"))
 
   )
 

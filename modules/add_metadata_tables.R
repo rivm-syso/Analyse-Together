@@ -58,7 +58,7 @@ metadata_server <- function(id, com_module) {
     
     output$meta_table <- 
       try(renderDataTable({
-             datatable(data_merged(),colnames = c("Number of observations" = "n_obs"),
+             datatable(data_merged(),colnames = c("Number of observations" = "n_obs", "Type of station" = "station_type"),
                        caption = paste0("Table for ",unique(com_module$selected_measurements()$parameter),", within ", project_or_municipality()))
     }))
     
