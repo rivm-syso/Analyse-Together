@@ -12,8 +12,8 @@ timeseries_output <- function(id) {
   
   ns <- NS(id)
   
-  plotOutput(ns("timeseries_plot"))
-  
+  plotOutput(ns("timeseries_plot"), hover = hoverOpts(id ="plot_hover"))
+
 }
 
 
@@ -59,7 +59,7 @@ timeseries_server <- function(id, data_measurements_stations, overview_component
                    n_stat_in_plot <- length(unique(data_timeseries$station))
                    min_meas <- plyr::round_any(min(data_timeseries$value), 5, f = floor)
                    max_meas <- plyr::round_any(max(data_timeseries$value), 5, f = ceiling)
-                   steps <- plyr::round_any(max_meas / 15, 10, f = ceiling)) # to create interactive y-breaks
+                   steps <- plyr::round_any(max_meas / 15, 10, f = ceiling) # to create interactive y-breaks
                  
                    theme_plots <- theme_bw(base_size = 18) + 
                      theme(strip.text.x = element_text(size = 14, colour = "black"),
@@ -95,7 +95,7 @@ timeseries_server <- function(id, data_measurements_stations, overview_component
                                 linetype = guide_legend(override.aes = list(size = 1))) +
 
                          theme_plots)
-                   }
+                     }
                    
                  })
                  

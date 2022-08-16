@@ -39,6 +39,7 @@ shinyUI(
     tabPanel(
       title = "Home",
 
+    fluidRow(column(width = 10, offset = 1, show_map_output("map"))),
     
     tabsetPanel(
         
@@ -53,7 +54,7 @@ shinyUI(
           column(6, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
                                                   choice_selection_output("choice_select"),style = "z-index: 10;",
                                                   date_range_output("select_date_range"),style = "z-index: 1000;")),
-          column(6, wellPanel(show_map_output("map")))
+          
         ),
         
         ),
@@ -67,7 +68,7 @@ shinyUI(
           
           fluidRow(
             
-            column(12, class = "col-lg-6", wellPanel(metadata_output("meta_table")))
+            column(8, class = "col-lg-8", wellPanel(metadata_output("meta_table")))
 
           ),
           
@@ -94,9 +95,9 @@ shinyUI(
     
     tabPanel(
       title = "Information tool",
-      helpText("This tool was build for citizens. The code is open-source. "),
-      h4("Toelichting"),
-      p("More information on the projects can be found on the samenmeten dataportaal.",
+      helpText(HTML('&nbsp;'),"This tool was build for citizens. The code is open-source."),
+      h4(HTML('&nbsp;'),"Toelichting"),
+      p(HTML('&nbsp;'),"More information on the projects can be found on the samenmeten dataportaal.",
         style = "font-size:12px"))
 
 

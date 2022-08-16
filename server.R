@@ -24,8 +24,8 @@ shinyServer(function(global, input, output, session) {
   select_date_range <- date_range_server("select_date_range", communication_stuff)
   
   # The timeseries plot 
-  timeseries_plot <- timeseries_server("timeseries_plot", data_measurements_stations = communication_stuff, overview_component)
- 
+  timeseries_plot <- timeseries_server(id = "timeseries_plot", data_measurements_stations = communication_stuff, overview_component)
+  
   # the pollutionrose
   pollrose_plot <- pollrose_server("pollrose_plot", communication_stuff)
   

@@ -25,7 +25,7 @@ tpTimeplot <- function(){
                            
                            # Render timeseries plot. 
                            column(12, wellPanel(timeseries_output("timeseries_plot"))),
-                           
+                          
                          ),
                          h4("Toelichting"),
                          p("Als je één of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse sensorwaarden voor de geselecteerde periode. 

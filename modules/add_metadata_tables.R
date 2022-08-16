@@ -28,7 +28,6 @@ metadata_server <- function(id, com_module) {
     
     ns <- session$ns
     
-    # Determine parameter that needs to be plotted
     # Get selected measurements from communication module
     metadata_table <- reactive({
       data_measurements <- com_module$selected_measurements()
@@ -56,11 +55,29 @@ metadata_server <- function(id, com_module) {
       return(project_or_municipality)
     })
     
+   
+    
+    breaks_col <- reactive({
+      brks <- quantile(data_merged()['n_obs'], probs = seq(.05, .95, .1), na.rm = TRUE)
+      clrs <- round(seq(255, 40, length.out = length(brks) + 1), 0) %>%
+        {paste0("rgb(", ., ", 243,", ., ")")}
+
+      return(list(brks,clrs))
+    })
+    
     output$meta_table <- 
-      try(renderDataTable({
-             datatable(data_merged(),colnames = c("Number of observations" = "n_obs", "Type of station" = "station_type"),
-                       caption = paste0("Table for ",unique(com_module$selected_measurements()$parameter),", within ", project_or_municipality()))
-    }))
+      
+      renderDataTable({
+        
+        # Determine parameter that needs to be plotted
+        n_obs_sel <- metadata_table()$n_obs
+        
+        if(length(n_obs_sel>1)){
+          try(datatable(data_merged(),colnames = c("Number of observations" = "n_obs", "Type of station" = "station_type"),
+                       caption = paste0("Table for ",unique(com_module$selected_measurements()$parameter),", within ", project_or_municipality())) %>% 
+          formatStyle('Number of observations', backgroundColor = styleInterval(cuts = breaks_col()[[1]], values = breaks_col()[[2]]))
+          )
+        }})
     
     
   })
