@@ -11,19 +11,27 @@ shinyServer(function(global, input, output, session) {
   # choose proj/mun
   choice_select <- choice_selection_server("choice_select", communication_stuff, mun_choices = mun_choices, proj_choices = proj_choices)
   
+  # Get metadata
+  meta_table <- metadata_server("meta_table", communication_stuff)
+  
   # The Map 
   map <- show_map_server("map", communication_stuff, sensor)
 
   # The Barplot
-  barplot <- barplot_server("barplot_plot", communication_stuff)
+  barplot <- barplot_server("barplot_plot", communication_stuff, overview_component)
 
   # The dateRangeInput for date range selection
   select_date_range <- date_range_server("select_date_range", communication_stuff)
   
   # The timeseries plot 
-  timeseries_plot <- timeseries_server("timeseries_plot", data_measurements_stations = communication_stuff, overview_component)
-  # timeseries_plot <- timeseries_server("timeseries_plot", test_measurements, test_loc_col, overview_component)
-
+  timeseries_plot <- timeseries_server(id = "timeseries_plot", data_measurements_stations = communication_stuff, overview_component)
+  
+  # the pollutionrose
+  pollrose_plot <- pollrose_server("pollrose_plot", communication_stuff)
+  
+  # the timevariation
+  timevar_plot <- timevar_server("timevar_plot", communication_stuff)
+  
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
                                                 measurements,

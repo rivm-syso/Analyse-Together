@@ -6,7 +6,7 @@ shinyUI(
 
     # For the top two headers (white and pink one)
     tags$head(
-      
+
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
 
@@ -16,7 +16,7 @@ shinyUI(
       # White header with logo
       tags$div(class = "header-white",
 
-               tags$img(src = "images/Banner_2018.png", style = "height: 120px; width: 610px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
+               tags$img(src = "images/Banner_2018.png", style = "height: 180px; width: 690px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
 
       ),
 
@@ -34,73 +34,72 @@ shinyUI(
 
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
-    selected    = "Test1",
+    selected    = "Home",
+    
+    tabPanel(
+      title = "Home",
 
-    navbarMenu(
-      
-      title = "Explorer",
-
-      tabPanel(
-
-        value = "Test1",
-        title = HTML("Test1 <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
-
-        # First row with 'breadcrumb'
+    fluidRow(column(width = 10, offset = 1, show_map_output("map"))),
+    
+    tabsetPanel(
+        
+        tabPanel(
+        
+        value = "Select data",
+        title = HTML("Select data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
+        
+        
         fluidRow(
+          
+          column(6, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+                                                  choice_selection_output("choice_select"),style = "z-index: 10;",
+                                                  date_range_output("select_date_range"),style = "z-index: 1000;")),
+          
+        ),
+        
+        ),
+        
+        tabPanel(
 
-          column(12,
-
-                 wellPanel(style = "background-color: #f3f3f3; box-shadow: none;",
-
-                           HTML("<span style = 'font-size: 25px; font-weight: bold;'> Explorer &gt Test1 </span><br>"),
-
-
-                 )
+          
+          value = "Metadata",
+          title = HTML("Metadata <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
+          
+          
+          fluidRow(
+            
+            column(8, class = "col-lg-8", wellPanel(metadata_output("meta_table")))
 
           ),
-
-        ),
-        
-        fluidRow(
-          
-          column(12, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
-                                                   choice_selection_output("choice_select"),style = "z-index: 10;")),
           
         ),
+      
+      tabPanel(
+
+        value = "Visualise data",
+        title = HTML("Visualise data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
         
         fluidRow(
-          column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component"))),
-
-          column(6, class = "col-lg-6", wellPanel(date_range_output("select_date_range"),style = "z-index: 1000;")),
-          
-    
-
+          column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component")))
         ),
         
-
-        fluidRow(
-
-          # check output communicatition module
-          column(6, wellPanel(barplot_output("barplot_plot"))),
-          column(6, wellPanel(show_map_output("map")))
-          
-
-        ),
-        
-        fluidRow(
-
-          # Render timeseries plot. 
-
-          column(12, wellPanel(timeseries_output("timeseries_plot"))),
-
+        # Output: Tabset voor openair plots, zie voor de inhoud het script: tabPanels.R
+        tabsetPanel(tpAnalyse(), id = "tabsanalyse"
         )
-
-
-
+        
+      
       )
 
 
-    )
+    )),
+    
+    tabPanel(
+      title = "Information tool",
+      helpText(HTML('&nbsp;'),"This tool was build for citizens. The code is open-source."),
+      h4(HTML('&nbsp;'),"Toelichting"),
+      p(HTML('&nbsp;'),"More information on the projects can be found on the samenmeten dataportaal.",
+        style = "font-size:12px"))
+
 
   )
 
