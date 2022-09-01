@@ -5,6 +5,7 @@
 
 # Define the version of your application                                    ====
 application_version <- "0.0.1"
+install_github <- FALSE # we run into API rate limits
 
 # Read in the necessary libraries                                           ====
 
@@ -24,9 +25,11 @@ library(pool)
 # Visualisation
 library(leaflet)         # For maps
 library(leaflet.extras)  # For maps
+library(sp)              # For maps     
 library(DT)              # For tables
 library(plotly)          # For graphs
 library(latex2exp)       # For titles in graphs
+library(openair)         # For openair-plots
 
 # Geo
 library(sf)
@@ -38,17 +41,25 @@ library(logger)
 log_threshold(TRACE)
 
 # set data location
+# 
+if(install_github) {
+    remotes::install_github("jspijker/datafile", build_opts ="")
+}
 library(datafile)
 datafileInit()
 
-# load  dev version samanapir
-remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
+# load  dev version samanapir, jspijker's fork (contains more loging
+if(install_github) remotes::install_github("jspijker/samanapir", ref = "Issue_2")
+#if(install_github) remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
 library(samanapir)
 
 
 # load ATdatabase
-remotes::install_github("rivm-syso/ATdatabase", ref = "develop",
-                        build_opts ="")
+if(install_github) {
+    remotes::install_github("rivm-syso/ATdatabase", ref = "develop",
+                            build_opts ="")
+}
+
 library(ATdatabase)
 
 # Set language and date options                                             ====
@@ -58,7 +69,7 @@ Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
 
-# Connect with the database using pool                                      ====
+# Connect with the database using pool, store data, read table              ====
 pool <- dbPool(
 
   drv = SQLite(),
@@ -66,18 +77,8 @@ pool <- dbPool(
 
 )
 
-# Colours for the sensors
-col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
-col_default <- '#000000'
-col_overload <- '#111111'
-
-# Linetype for the reference stations
-line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
-line_default <- 'solid'
-line_overload <- 'dotted'
-
 # store lists with projects and municipalities
-municipalities <- read_csv("./prepped_data/municipalities.csv")
+municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
 projects <- read_csv("./prepped_data/projects.csv")
 
 # add_doc doesn't work, see ATdatabase #8
@@ -86,19 +87,40 @@ add_doc("application", "municipalities", municipalities, conn = pool,
 add_doc("application", "projects", projects, conn = pool, 
         overwrite = TRUE)
 
-
-# Read out the database to dataframes
-measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
-sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor")
-
+# Define colors, line types,choices etc.                                   ====
 # Colours for the sensors
 col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
 col_cat <- rev(col_cat) # the saturated colours first
+col_default <- '#000000'
+col_overload <- '#111111'
+
+# Linetype for the reference stations
+line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
+line_default <- 'solid'
+line_overload <- 'dotted'
+
+# Codes of KNMI stations
+# knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 260, 267, 270, 273, 275, 277, 278, 279, 280, 283, 285, 286, 290, 308, 310, 312, 313, 315, 316, 319, 324, 330, 340, 343, 344, 348, 350, 356, 370, 375, 377, 380, 391)
+knmi_stations <- c("KNMI_269", "KNMI_209", "KNMI_215", "KNMI_225", "KNMI_235", "KNMI_240", "KNMI_242", "KNMI_248", 
+                   "KNMI_249", "KNMI_251", "KNMI_257", "KNMI_258", "KNMI_260", "KNMI_267", "KNMI_270", "KNMI_273", 
+                   "KNMI_275", "KNMI_277", "KNMI_278", "KNMI_279", "KNMI_280", "KNMI_283", "KNMI_285", "KNMI_286", 
+                   "KNMI_290", "KNMI_308", "KNMI_310", "KNMI_312", "KNMI_313", "KNMI_315", "KNMI_316", "KNMI_319", 
+                   "KNMI_324", "KNMI_330", "KNMI_340", "KNMI_343", "KNMI_344", "KNMI_348", "KNMI_350", "KNMI_356", 
+                   "KNMI_370", "KNMI_375", "KNMI_377", "KNMI_380", "KNMI_391")
+
+measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
+sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>% 
+                                                        mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>% 
+                                                        mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
+                                                               size = ifelse(station_type == "LML", 2,1))
+
+log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
 
 # Component choices
-overview_component <- data.frame('component' = c(" ","pm10","pm10_kal","pm25","pm25_kal"), 'label'=c(" ", "PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
+overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
 comp_choices = setNames(overview_component$component, overview_component$label)
-
+proj_choices = sort(projects$project)
+mun_choices  = sort(municipalities$X2)
 
 ### APP SPECIFIC SETTINGS                                                   ====
 
@@ -116,13 +138,24 @@ source("modules/show_map.R")
 # Source modules selections
 source("modules/select_date_range.R")
 source("modules/select_component.R")
+source("modules/select_mun_or_proj.R")
+source("modules/choose_mun_or_proj.R")
+
+# Source modules for metadata
+source("modules/add_metadata_tables.R")
 
 # Source modules visualisation
+source("modules/add_barplot.R")
 source("modules/plot_timeseries.R")
+source("modules/add_pollutionrose.R")
+source("modules/add_timevariation_plot.R")
 
 # Source functions
 source("funs/assign_color_stations.R")
 source("funs/assign_linetype_stations.R")
+source("funs/geoshaper_findlocations.R")
 
+# Source layout
+source("modules/add_tabpanels.R")
 ### THE END                                                                 ====
 

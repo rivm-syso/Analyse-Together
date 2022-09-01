@@ -133,7 +133,7 @@ round_to_days <- function(time_start, time_end) {
     return(res)
 }
 
-download_data_samenmeten <- function(x, station, conn = pool) {
+download_data_samenmeten <- function(x, station, conn ) {
 
     streams <- get_doc(type = "datastream", ref = station, conn) %>%
         pull(datastream_id)
@@ -174,14 +174,165 @@ download_data_samenmeten <- function(x, station, conn = pool) {
 }
 
 
+download_data_knmi <- function(x, station, conn) {
+  
+  ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
+  te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
+  
+  station_nr <- gsub(".*_", "", station)
+  
+  log_debug("downloading data for station {station_nr} for time range {ts_api} -  {te_api}")
+  
+  knmi_all <- samanapir::GetKNMIAPI(station_nr, ts_api, te_api)
+  
+  knmi_measurements <- knmi_all$data %>% as.data.frame() %>% select(-c('YYYYMMDD', 'H')) %>% 
+    rename("station" = "STNS", "wd" = "DD", "ws" = "FF", "temp" = "TEMP", "rh" = "U", "timestamp" = "tijd")
+  
+  knmi_measurements$station <- paste0("KNMI_", knmi_measurements$station) 
+  
+  knmi_measurements <- knmi_measurements %>% pivot_longer(cols = c("wd", "ws", "temp", "rh"), names_to = "parameter", values_to = "value") %>% 
+    drop_na() %>% mutate(aggregation = 3600)
+  
+  return(knmi_measurements)
+  
+}
+
+
+download_locations_knmi <- function(knmi_stations, time_start, time_end) {
+  
+  station_nr <- gsub(".*_", "", knmi_stations)
+  
+  knmi_stations_all <- samanapir::GetKNMIAPI(station_nr, format(time_start, '%Y%m%d'), format(time_end, '%Y%m%d'))
+  
+  knmi_stations_locations <- knmi_stations_all$info %>% 
+      as.data.frame() %>% 
+      select(c("STNS", "LAT", "LON")) %>% 
+      rename("station" = "STNS", "lat" = "LAT", "lon" = "LON") %>% 
+      drop_na() %>% 
+      mutate(lat = as.numeric(lat)) %>%
+      mutate(lon = as.numeric(lon)) %>% 
+      mutate(station = paste0("KNMI_", station))
+  
+  return(knmi_stations_locations)
+  
+}
+
+get_lmlstations_from_meta <- function(meta_data){
+  
+  meta_doc <- meta_data %>% filter(type == "station") %>% select(doc)
+  
+  station_list <- c()
+  
+  for (i in 1:nrow(meta_doc)){
+    station_list <- append(station_list, str_split(meta_doc[i, ], ","))
+  }
+  
+  station_list <- unlist(station_list)
+  station_list <- station_list[str_detect(station_list, "NL")] 
+  station_list <- gsub('[^[:alnum:] ]', '', station_list)
+  station_list <- Filter(function(x) str_length(x) < 8, station_list)
+  station_list <- unique(station_list)
+  
+  return(station_list)
+  
+}
+
+download_data_lml <- function(x, station, conn) {
+  
+  ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
+  te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
+  
+  log_debug("downloading data for station {station} for time range {ts_api} -  {te_api}")
+  
+  lml_data <- samanapir::GetLMLstatdataAPI(station, ts_api, te_api)
+  
+  if (length(lml_data) == 0){
+    # Return empty dataframe if station returns no data
+    
+    lml_data <- data.frame(matrix(ncol = 5, nrow = 0))
+    colnames(lml_data) <- c("station", "value", "timestamp", "parameter", "aggregation")
+  }
+  
+  else{
+    
+    lml_data <- lml_data %>% rename("station" = "station_number", "timestamp" = "timestamp_measured", "parameter" = "formula") %>%
+      drop_na() %>% mutate(aggregation = 3600) %>% mutate(parameter = tolower(parameter))
+  }
+  
+  return(lml_data)
+}
+
+download_locations_lml <- function(stations) {
+  
+  lml_locations <- samanapir::GetLMLstatinfoAPI(stations)
+  
+  lml_locations <- lml_locations %>%
+    select(c("station_number", "lat", "lon")) %>%
+    drop_na() %>%
+    mutate(lat = as.numeric(lat)) %>%
+    mutate(lon = as.numeric(lon))
+  
+  return(lml_locations)
+  
+}
 
 # Debug
 if(interactive()) {
 
+
+    install_github <- TRUE # set to FALSE if you run into github API limits
+
+    # Read in the necessary libraries                                           ====
+
+    # Tidyverse (essential)
+    library(tidyverse)
+
+    # Databases (essential)
+    library(RSQLite)
+    library(pool)
+
+    library(lubridate)
+
+    # logger
+    library(logger)
+    log_threshold(TRACE)
+
+    # set data location
+    library(datafile)
+    datafileInit()
+
+    library(samanapir)
+    library(ATdatabase)
+
+    # We need knmi_stations, this shouldn't be here but loaded from
+    # file or database.
+    knmi_stations <- c("KNMI_269", "KNMI_209", "KNMI_215", "KNMI_225", "KNMI_235", "KNMI_240", "KNMI_242", "KNMI_248", 
+                       "KNMI_249", "KNMI_251", "KNMI_257", "KNMI_258", "KNMI_260", "KNMI_267", "KNMI_270", "KNMI_273", 
+                       "KNMI_275", "KNMI_277", "KNMI_278", "KNMI_279", "KNMI_280", "KNMI_283", "KNMI_285", "KNMI_286", 
+                       "KNMI_290", "KNMI_308", "KNMI_310", "KNMI_312", "KNMI_313", "KNMI_315", "KNMI_316", "KNMI_319", 
+                       "KNMI_324", "KNMI_330", "KNMI_340", "KNMI_343", "KNMI_344", "KNMI_348", "KNMI_350", "KNMI_356", 
+                       "KNMI_370", "KNMI_375", "KNMI_377", "KNMI_380", "KNMI_391")
+    
+    # Set language and date options                                             ====
+
+    options(encoding = "UTF-8")                  # Standard UTF-8 encoding
+    Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
+    Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
+
+
+    # Connect with the database using pool, store data, read table              ====
+    pool <- dbPool(
+
+                   drv = SQLite(),
+                   dbname = datafile("database.db")
+
+    )
+
+    # Download Amersfoort example data using SamenMeten API                    ====
     project <- "Amersfoort"
 
     time_start <- as_datetime("2022-01-01 00:00:00")
-    time_end <- as_datetime("2022-01-03 23:59:59")
+    time_end <- as_datetime("2022-01-06 23:59:59")
 
     download_project(project)
 
@@ -198,6 +349,75 @@ if(interactive()) {
         counter <- counter + 1
     }
 
-}
 
+  
+  # Download meteo example data using KNMI API                               ====
+    # use same time start/end as above
+  
+  kits <- knmi_stations
+  
+  counter <- 1
+  for(i in kits) {
+    log_debug("downloading measurements for station {i}, {counter}/{length(kits)}")
+    date_range <- round_to_days(time_start, time_end)
+
+    d <- download_data(i, Tstart = time_start, Tend = time_end,
+                       fun = "download_data_knmi",
+                       conn = pool)
+
+    log_trace("got {nrow(d)} measurements")
+    counter <- counter + 1
+  }
+
+  knmi_stations_locations <- download_locations_knmi(kits, time_start, time_end)
+
+
+  for (i in 1:nrow(knmi_stations_locations))
+  {
+
+    insert_location_info(station = knmi_stations_locations[i,1],
+                         lat = knmi_stations_locations[i,2],
+                         lon = knmi_stations_locations[i,3],
+                         conn = pool)
+
+  }
+  
+  # test_lml_stations <- c("NL01908", "NL01494", "NL10437", "NL01491", "NL01494", "NL10444", "NL01491")
+  meta <- tbl(pool, "meta") %>% as.data.frame()
+  lml_stations <- get_lmlstations_from_meta(meta)
+  
+  counter <- 1
+  for(i in lml_stations) {
+    log_debug("downloading measurements for station {i}, {counter}/{length(lml_stations)}")
+    date_range <- round_to_days(time_start, time_end)
+    
+    d <- download_data(i, Tstart = time_start, Tend = time_end,
+                       fun = "download_data_lml",
+                       conn = pool)
+    
+    log_trace("got {nrow(d)} measurements")
+    counter <- counter + 1
+  }
+  
+  
+  lml_stations_locations <- data.frame()
+  for (i in lml_stations){
+
+    lml_stations_lat_lon <- download_locations_lml(i)
+    lml_stations_locations <- rbind(lml_stations_locations, lml_stations_lat_lon)
+    
+  }
+  
+  for (i in 1:nrow(lml_stations_locations))
+  {
+    
+    insert_location_info(station = lml_stations_locations[i,1],
+                         lat = lml_stations_locations[i,2],
+                         lon = lml_stations_locations[i,3],
+                         conn = pool)
+    
+  }
+  
+
+}
 
