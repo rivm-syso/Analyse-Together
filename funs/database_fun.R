@@ -246,8 +246,18 @@ download_data_lml <- function(x, station, conn) {
   
   lml_data <- samanapir::GetLMLstatdataAPI(station, ts_api, te_api)
   
-  lml_data <- lml_data %>% rename("station" = "station_number", "timestamp" = "timestamp_measured", "parameter" = "formula") %>%
-    drop_na() %>% mutate(aggregation = 3600) %>% mutate(parameter = tolower(parameter))
+  if (length(lml_data) == 0){
+    # Return empty dataframe if station returns no data
+    
+    lml_data <- data.frame(matrix(ncol = 5, nrow = 0))
+    colnames(lml_data) <- c("station", "value", "timestamp", "parameter", "aggregation")
+  }
+  
+  else{
+    
+    lml_data <- lml_data %>% rename("station" = "station_number", "timestamp" = "timestamp_measured", "parameter" = "formula") %>%
+      drop_na() %>% mutate(aggregation = 3600) %>% mutate(parameter = tolower(parameter))
+  }
   
   return(lml_data)
 }
@@ -372,7 +382,7 @@ if(interactive()) {
 
   }
   
-  # test_lml_stations <- c("NL01494", "NL10437", "NL01491", "NL01494", "NL10444", "NL01491")
+  # test_lml_stations <- c("NL01908", "NL01494", "NL10437", "NL01491", "NL01494", "NL10444", "NL01491")
   meta <- tbl(pool, "meta") %>% as.data.frame()
   lml_stations <- get_lmlstations_from_meta(meta)
   
