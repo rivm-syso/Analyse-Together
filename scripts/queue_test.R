@@ -32,11 +32,15 @@ setwd(here())
 # source scripts
 
 source("./funs/database_fun.R")
-# NB database funs also connects to db and loads KNMI stations, if run
-# interactive
-
 source("./funs/queue_fun.R")
 
+# Connect with the database using pool, store data, read table              ====
+pool <- dbPool(
+
+               drv = SQLite(),
+               dbname = datafile("database.db")
+
+)
 
 
 get_db_tables <- function(conn) {
@@ -64,7 +68,7 @@ dl_station <- function(id, time_start, time_end) {
     library(datafile)
     datafileInit()
     library(samanapir)
-    devtools::load_all("../ATdatabase")
+    library(ATdatabase)
 
     #load functions
     source("./funs/database_fun.R")
