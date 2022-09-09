@@ -48,6 +48,24 @@ options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
+# functions
+
+station_exists <- function(station, conn) {
+
+    qry <- glue::glue_sql("select {station} from location;", .con = conn)
+    res <- dbGetQuery(conn, qry)
+
+    if(nrow(res)>=1) {
+        result <- TRUE
+    } else {
+        result <- FALSE
+    }
+
+    return(result)
+
+}
+
+
 
 # Connect with the database using pool, store data, read table              ====
 pool <- dbPool(
@@ -73,6 +91,7 @@ kits <- get_stations_from_project(project)
 
 
 # downlod sensor data
+counter <- 1
 for(i in kits) {
     log_debug("downloading measurements for station {i}, {counter}/{length(kits)}")
     date_range <- round_to_days(time_start, time_end)
@@ -119,13 +138,18 @@ for(i in kits) {
 
 # store locations KNMI stations
 knmi_stations_locations <- download_locations_knmi(unique(knmicodes), time_start, time_end)
-for (i in 1:nrow(knmi_stations_locations)) {
+for (i in unique(knmicodes)) {
 
-    log_trace("getting location for KNMI station  {knmi_stations_locations[i,1]}")
-    insert_location_info(station = knmi_stations_locations[i,1],
-                         lat = knmi_stations_locations[i,2],
-                         lon = knmi_stations_locations[i,3],
-                         conn = pool)
+    log_trace("checking location for KNMI station  {i}")
+
+    if(!station_exists(i, conn = pool)) {
+        log_trace("download and store location for KNMI station  {i}")
+        loc <- download_locations_knmi(i, time_start, time_end)
+        insert_location_info(station = loc[1,1],
+                             lat = loc[1,2],
+                             lon = loc[1,3],
+                             conn = pool)
+    } 
 
 }
 
@@ -133,14 +157,17 @@ for (i in 1:nrow(knmi_stations_locations)) {
 # store locations LML stations
 for (i in unique(lmlcodes)) {
 
-    log_trace("getting location for LML station  {i}")
+    log_trace("checking location for LML station  {i}")
 
-    loc <- download_locations_lml(i)
+    if(!station_exists(i, conn = pool)) {
+    log_trace("download an store  location for LML station  {i}")
+        loc <- download_locations_lml(i)
 
-    insert_location_info(station = loc[1, 1],
-                         lat = loc[1, 2],
-                         lon = loc[1, 3],
-                         conn = pool)
+        insert_location_info(station = loc[1, 1],
+                             lat = loc[1, 2],
+                             lon = loc[1, 3],
+                             conn = pool)
+    }
 
 }
 
