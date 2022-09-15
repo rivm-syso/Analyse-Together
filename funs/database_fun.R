@@ -304,14 +304,8 @@ if(interactive()) {
     library(samanapir)
     library(ATdatabase)
 
-    # We need knmi_stations, this shouldn't be here but loaded from
-    # file or database.
-    knmi_stations <- c("KNMI_269", "KNMI_209", "KNMI_215", "KNMI_225", "KNMI_235", "KNMI_240", "KNMI_242", "KNMI_248", 
-                       "KNMI_249", "KNMI_251", "KNMI_257", "KNMI_258", "KNMI_260", "KNMI_267", "KNMI_270", "KNMI_273", 
-                       "KNMI_275", "KNMI_277", "KNMI_278", "KNMI_279", "KNMI_280", "KNMI_283", "KNMI_285", "KNMI_286", 
-                       "KNMI_290", "KNMI_308", "KNMI_310", "KNMI_312", "KNMI_313", "KNMI_315", "KNMI_316", "KNMI_319", 
-                       "KNMI_324", "KNMI_330", "KNMI_340", "KNMI_343", "KNMI_344", "KNMI_348", "KNMI_350", "KNMI_356", 
-                       "KNMI_370", "KNMI_375", "KNMI_377", "KNMI_380", "KNMI_391")
+    # Codes of KNMI stations
+    knmi_stations <- as.vector(t(as.matrix(read.table(file = "data/knmi_stations.txt"))))
     
     # Set language and date options                                             ====
 
@@ -382,7 +376,6 @@ if(interactive()) {
 
   }
   
-  # test_lml_stations <- c("NL01908", "NL01494", "NL10437", "NL01491", "NL01494", "NL10444", "NL01491")
   meta <- tbl(pool, "meta") %>% as.data.frame()
   lml_stations <- get_lmlstations_from_meta(meta)
   
