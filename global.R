@@ -100,7 +100,7 @@ line_default <- 'solid'
 line_overload <- 'dotted'
 
 # Codes of KNMI stations
-knmi_stations <- as.vector(t(as.matrix(read.table(file = "data/knmi_stations.txt"))))
+knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
 measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
 sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>% 

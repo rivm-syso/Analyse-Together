@@ -305,7 +305,7 @@ if(interactive()) {
     library(ATdatabase)
 
     # Codes of KNMI stations
-    knmi_stations <- as.vector(t(as.matrix(read.table(file = "data/knmi_stations.txt"))))
+    knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
     
     # Set language and date options                                             ====
 
