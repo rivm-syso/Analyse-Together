@@ -35,64 +35,58 @@ shinyUI(
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
     selected    = "Home",
-    
+
     tabPanel(
       title = "Home",
 
-    fluidRow(column(width = 10, offset = 1, show_map_output("map"))),
-    
-    tabsetPanel(
-        
-        tabPanel(
-        
-        value = "Select data",
-        title = HTML("Select data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
-        
-        
-        fluidRow(
-          
-          column(6, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
-                                                  choice_selection_output("choice_select"),style = "z-index: 10;",
-                                                  date_range_output("select_date_range"),style = "z-index: 1000;")),
-          
-        ),
-        
-        ),
-        
-        tabPanel(
+    fluidRow(column(width = 6 ,
+                    tabsetPanel(
+                      tabPanel(
+                        value = "Select data",
+                        title = HTML("Select data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
 
-          
-          value = "Metadata",
-          title = HTML("Metadata <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
-          
-          
-          fluidRow(
-            
-            column(8, class = "col-lg-8", wellPanel(metadata_output("meta_table")))
+                        fluidRow(
+                          column(6, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+                                                                  choice_selection_output("choice_select"),style = "z-index: 10;",
+                                                                  date_range_output("select_date_range"),style = "z-index: 1000;")),
+                        ),
 
-          ),
-          
-        ),
-      
-      tabPanel(
+                        ),
 
-        value = "Visualise data",
-        title = HTML("Visualise data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
-        
-        fluidRow(
-          column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component")))
-        ),
-        
-        # Output: Tabset voor openair plots, zie voor de inhoud het script: tabPanels.R
-        tabsetPanel(tpAnalyse(), id = "tabsanalyse"
-        )
-        
-      
-      )
+                      tabPanel(
 
 
-    )),
-    
+                        value = "Metadata",
+                        title = HTML("Metadata <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
+
+
+                        fluidRow(
+
+                          column(8, class = "col-lg-8", wellPanel(metadata_output("meta_table")))
+
+                        ),
+
+                      ),
+
+                      tabPanel(
+
+                        value = "Visualise data",
+                        title = HTML("Visualise data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
+
+                        fluidRow(
+                          column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component")))
+                        ),
+
+                        # Output: Tabset voor openair plots, zie voor de inhoud het script: tabPanels.R
+                        tabsetPanel(tpAnalyse(), id = "tabsanalyse"
+                        )
+                      )
+                  )
+             ),
+             column(width = 6,  show_map_output("map"))
+  )
+  ),
+
     tabPanel(
       title = "Information tool",
       helpText(HTML('&nbsp;'),"This tool was build for citizens. The code is open-source."),
