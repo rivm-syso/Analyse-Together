@@ -1,5 +1,22 @@
 # misc functions to download and store data in the database
 
+station_exists <- function(station, conn) {
+    # checks if 'station' allready exists in the location table
+
+    qry <- glue::glue_sql("select {station} from location;", .con = conn)
+    res <- dbGetQuery(conn, qry)
+
+    if(nrow(res)>=1) {
+        result <- TRUE
+    } else {
+        result <- FALSE
+    }
+
+    return(result)
+
+}
+
+
 
 api_get_project_info <- function(project) {
     # gets project info from the API
