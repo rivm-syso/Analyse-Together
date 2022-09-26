@@ -62,7 +62,7 @@ pool <- dbPool(
 project <- "Amersfoort"
 
 time_start <- as_datetime("2022-01-01 00:00:00")
-time_end <- as_datetime("2022-01-10 23:59:59")
+time_end <- as_datetime("2022-01-03 23:59:59")
 
 
 #  get project info
@@ -71,7 +71,6 @@ download_project(project)
 # get which kits are part of the project
 kits <- get_stations_from_project(project)
 
-#download_kits_data(kits, time_start, time_end, pool)
 for(i in kits) {
     dl_station(i, time_start, time_end)
 }
