@@ -48,24 +48,6 @@ options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
-# functions
-
-station_exists <- function(station, conn) {
-
-    qry <- glue::glue_sql("select {station} from location;", .con = conn)
-    res <- dbGetQuery(conn, qry)
-
-    if(nrow(res)>=1) {
-        result <- TRUE
-    } else {
-        result <- FALSE
-    }
-
-    return(result)
-
-}
-
-
 
 download_kits_data <- function(kits, time_start, time_end, pool) {
     # This function download sensor, meteo and air quality reference station data.
@@ -103,7 +85,7 @@ download_kits_data <- function(kits, time_start, time_end, pool) {
         kitmeta <- get_doc(type = "station", ref = i, conn = pool)
 
         # Download meteo station data
-        log_debug("downloading measurements for station {i}, {counter}/{length(kits)}")
+        log_debug("downloading measurements for meteo station")
         date_range <- round_to_days(time_start, time_end)
         knmistation <- kitmeta %>% 
             select(knmicode)  %>%
@@ -114,12 +96,18 @@ download_kits_data <- function(kits, time_start, time_end, pool) {
                            fun = "download_data_knmi",
                            conn = pool)
         log_trace("got {nrow(d)} of KNMI measurements")
+        log_trace("checking location for KNMI station  {i}")
+        if(!station_exists(knmistation, conn = pool)) {
+            log_trace("download and store location for KNMI station  {i}")
+            loc <- download_locations_knmi(knmistationi, time_start, time_end)
+            insert_location_info(station = loc[1,1],
+                                 lat = loc[1,2],
+                                 lon = loc[1,3],
+                                 conn = pool)
+        } 
 
         # download AQ reference station data
-        #
-        # !!!!! are all parameters of the LML station downloaded?
-        # CHECK!!!!
-        #
+        log_debug("downloading measurements for AQ station")
         lmlstation <- kitmeta %>% 
             pull(pm10closecode)
         lmlcodes <- c(lmlcodes, lmlstation)
@@ -127,32 +115,10 @@ download_kits_data <- function(kits, time_start, time_end, pool) {
                            fun = "download_data_lml",
                            conn = pool)
 
-    }
-
-
-    # store locations KNMI stations
-    knmi_stations_locations <- download_locations_knmi(unique(knmicodes), 
-                                                       time_start, time_end)
-    for (i in unique(knmicodes)) {
-        log_trace("checking location for KNMI station  {i}")
-        if(!station_exists(i, conn = pool)) {
-            log_trace("download and store location for KNMI station  {i}")
-            loc <- download_locations_knmi(i, time_start, time_end)
-            insert_location_info(station = loc[1,1],
-                                 lat = loc[1,2],
-                                 lon = loc[1,3],
-                                 conn = pool)
-        } 
-
-    }
-
-
-    # store locations LML stations
-    for (i in unique(lmlcodes)) {
         log_trace("checking location for LML station  {i}")
-        if(!station_exists(i, conn = pool)) {
+        if(!station_exists(lmlstation, conn = pool)) {
             log_trace("download an store  location for LML station  {i}")
-            loc <- download_locations_lml(i)
+            loc <- download_locations_lml(lmlstation)
             insert_location_info(station = loc[1, 1],
                                  lat = loc[1, 2],
                                  lon = loc[1, 3],
@@ -160,6 +126,8 @@ download_kits_data <- function(kits, time_start, time_end, pool) {
         }
 
     }
+
+
 }
 
 # Connect with the database using pool, store data, read table              ====
@@ -174,7 +142,7 @@ pool <- dbPool(
 project <- "Amersfoort"
 
 time_start <- as_datetime("2022-01-01 00:00:00")
-time_end <- as_datetime("2022-01-07 23:59:59")
+time_end <- as_datetime("2022-01-09 23:59:59")
 
 
 #  get project info
@@ -183,7 +151,7 @@ download_project(project)
 # get which kits are part of the project
 kits <- get_stations_from_project(project)
 
-donwload_kits_data(kits, time_start, time_end, pool)
+download_kits_data(kits, time_start, time_end, pool)
 
 
 
