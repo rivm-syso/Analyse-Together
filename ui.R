@@ -46,9 +46,9 @@ shinyUI(
                         title = HTML("Select data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
 
                         fluidRow(
-                          column(6, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+                          wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
                                                                   choice_selection_output("choice_select"),style = "z-index: 10;",
-                                                                  date_range_output("select_date_range"),style = "z-index: 1000;")),
+                                                                  date_range_output("select_date_range"),style = "z-index: 1000;"),
                         ),
 
                         ),
@@ -74,7 +74,7 @@ shinyUI(
                         title = HTML("Visualise data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
 
                         fluidRow(
-                          column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component")))
+                          wellPanel(component_selection_output("select_component"))
                         ),
 
                         # Output: Tabset voor openair plots, zie voor de inhoud het script: tabPanels.R
