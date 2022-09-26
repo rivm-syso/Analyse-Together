@@ -35,69 +35,78 @@ shinyUI(
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
     selected    = "Home",
-    
+
     tabPanel(
       title = "Home",
 
-    fluidRow(column(width = 10, offset = 1, show_map_output("map"))),
-    
+      fluidRow(      column(width = 4, wellPanel(
+        shiny.i18n::usei18n(i18n),
+        selectInput('selected_language',
+                    i18n$t("sel_language"),
+                    choices = i18n$get_languages(),
+                    selected = i18n$get_key_translation()))),
+    fluidRow(
+
+      column(width = 10, offset = 1, show_map_output("map")))
+      ),
+
     tabsetPanel(
-        
+
         tabPanel(
-        
+
         value = "Select data",
-        title = HTML("Select data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
-        
-        
+        title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
+
+
         fluidRow(
-          
+
           column(6, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
                                                   choice_selection_output("choice_select"),style = "z-index: 10;",
                                                   date_range_output("select_date_range"),style = "z-index: 1000;")),
-          
+
         ),
-        
+
         ),
-        
+
         tabPanel(
 
-          
+
           value = "Metadata",
           title = HTML("Metadata <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
-          
-          
+
+
           fluidRow(
-            
+
             column(8, class = "col-lg-8", wellPanel(metadata_output("meta_table")))
 
           ),
-          
+
         ),
-      
+
       tabPanel(
 
         value = "Visualise data",
-        title = HTML("Visualise data <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
-        
+        title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
+
         fluidRow(
           column(6, class = "col-lg-6", wellPanel(component_selection_output("select_component")))
         ),
-        
+
         # Output: Tabset voor openair plots, zie voor de inhoud het script: tabPanels.R
         tabsetPanel(tpAnalyse(), id = "tabsanalyse"
         )
-        
-      
+
+
       )
 
 
     )),
-    
+
     tabPanel(
-      title = "Information tool",
-      helpText(HTML('&nbsp;'),"This tool was build for citizens. The code is open-source."),
-      h4(HTML('&nbsp;'),"Toelichting"),
-      p(HTML('&nbsp;'),"More information on the projects can be found on the samenmeten dataportaal.",
+      title = i18n$t("title_infotool"),
+      helpText(HTML('&nbsp;'),i18n$t("expl_expltool")),
+      h4(HTML('&nbsp;'),i18n$t("title_expl")),
+      p(HTML('&nbsp;'),i18n$t("expl_moreinfo"),
         style = "font-size:12px"))
 
 
