@@ -29,6 +29,27 @@ api_get_project_info <- function(project) {
     return(projectinfo)
 }
 
+api_get_municipality_info <- function(municipality, conn) {
+    # gets municipality info from the API
+    # arguments:
+    #   municipality: name of the municipality
+
+    get_doc("application", "municipalities", conn = conn) %>%
+                  rename(code = X1, name = X2)
+
+    gemid <- m %>%
+          filter(name == gemeente) %>%
+          pull(code) %>%
+          as.character()
+
+    log_debug(paste0("getting municipality info for ", municipality))
+    muni_info <- samanapir::GetSamenMetenAPIinfoMuni(gemid)
+    add_doc("municipality", municipality, muni_info,
+            conn = conn, overwrite = TRUE)
+    return(muni_info)
+}
+
+
 
 download_project <- function(project, Tstart, Tend) {
     # this function downloads a project. It gets the station id's
