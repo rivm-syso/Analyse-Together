@@ -53,7 +53,10 @@ shinyUI(
           
           column(6, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
                                                   choice_selection_output("choice_select"),style = "z-index: 10;",
-                                                  date_range_output("select_date_range"),style = "z-index: 1000;")),
+                                                  date_range_output("select_date_range"),style = "z-index: 1000;",
+                                                  download_api_button_output("dl_btn_pushed")
+                                                  
+                                                  )),
           
         ),
         
