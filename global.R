@@ -75,6 +75,19 @@ options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
+# Set theme for plots                                                       ====
+theme_plots <- theme_bw(base_size = 18) +
+  theme(strip.text.x = element_text(size = 14, colour = "black"),
+        axis.text.y = element_text(face = "bold",color = "black", size = 16),
+        axis.text.x = element_text(color = "black", size = 16, angle = 45, hjust = 1, vjust = 1),
+        axis.title = element_text(color = "black", size = 16),
+        text = element_text(family = 'sans'),
+        title = element_text(color = "black", size = 16),
+        legend.title = element_text(size = 16),
+        legend.key.height = unit(0.5, 'cm'),
+        legend.key.width = unit(0.5, 'cm'),
+        panel.border = element_rect(colour = "black", fill=NA, size=1)
+  )
 
 # Connect with the database using pool, store data, read table              ====
 pool <- dbPool(
@@ -146,9 +159,9 @@ source("modules/choose_mun_or_proj.R")
 source("modules/add_metadata_tables.R")
 
 # Source modules visualisation
-source("modules/add_barplot.R")
-source("modules/plot_timeseries.R")
-source("modules/add_pollutionrose.R")
+source("modules/add_bar_plot.R")
+source("modules/add_timeseries_plot.R")
+source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_plot.R")
 
 # Source functions
@@ -159,4 +172,3 @@ source("funs/geoshaper_findlocations.R")
 # Source layout
 source("modules/add_tabpanels.R")
 ### THE END                                                                 ====
-
