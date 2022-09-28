@@ -66,14 +66,24 @@ time_end <- as_datetime("2022-01-03 23:59:59")
 
 
 #  get project info
-download_project(project)
+download_sensor_meta(project, type = "project")
 
 # get which kits are part of the project
-kits <- get_stations_from_project(project)
+kits <- get_stations_from_selection(project, type = "project")
 
 for(i in kits) {
     dl_station(i, time_start, time_end)
 }
 
+
+if (FALSE) {
+    # This takes quite a while to donwload, there are many sensors
+    gemeente <- "Amersfoort"
+    download_sensor_meta(gemeente, type = "municipality")
+    kits <- get_stations_from_selection(project, type = "municipality")
+    for(i in kits) {
+        dl_station(i, time_start, time_end)
+    }
+}
 
 
