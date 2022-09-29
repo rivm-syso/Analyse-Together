@@ -120,7 +120,7 @@ download_sensor_meta <- function(name, type, conn = pool) {
     apply(stations, 1, FUN  = insert_location_info_vectorized, conn = conn)
 
 
-    v1 <- apply(sensors_meta, 1, FUN=store_sensor, conn=conn)
+    apply(sensors_meta, 1, FUN=store_sensor, conn=conn)
 
 
     datastreams <- projinfo$datastream_data
