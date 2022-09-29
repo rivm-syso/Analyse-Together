@@ -178,20 +178,6 @@ get_stations_from_selection <- function(name, type, conn = pool) {
     return(kits)
 }
 
-# 
-# get_stations_from_project <- function(project) {
-#     # this function gets all the stations belonging to a project. It
-#     # returns a vector with stations ids (kit_ids), this vector can
-#     # then be used to download measurement data
-# 
-#     info <- get_doc(type = "project", ref = project, conn = pool)
-#     kits <- info$sensor_data %>%
-#         pull(kit_id)
-# 
-#     return(kits)
-# }
-# 
-
 round_to_days <- function(time_start, time_end) {
     # the samen meten API requires time ranges in full days. This
     # function rounds any time to the start of the day of time_start
