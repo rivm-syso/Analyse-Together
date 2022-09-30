@@ -85,5 +85,32 @@ station_overview <- function(conn) {
 }
 
 
+simple_task_list <- function(lst = que$list_tasks()) {
+    # This function simplifies the que task list into a tibble with
+    # state, sensor en time start/end columns
+
+    get_args <- function(arg, pos) {
+        res <- arg[[pos]]
+        res <- ifelse(is.null(res), NA, res)
+        return(res)
+
+    }
+
+    t2 <- lst %>%
+        rowwise(args) %>%
+        select(state, args)  %>%
+        mutate(sensor = get_args(args, 1)) %>%
+        mutate(time_start = as_datetime(get_args(args, 2))) %>%
+        mutate(time_end = as_datetime(get_args(args, 3))) %>%
+        ungroup() %>%
+        select(-args) %>%
+        na.omit()
+
+    return(t2)
+}
+
+
+
+
 
 

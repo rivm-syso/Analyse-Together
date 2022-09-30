@@ -70,4 +70,10 @@ print(tlist)
 p <- station_overview(pool)
 print(p)
 
+t1 <- simple_task_list() %>%
+    as.data.frame()
+print(t1)
+
+
+
 
