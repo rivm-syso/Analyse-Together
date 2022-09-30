@@ -58,21 +58,27 @@ dl_station <- function(id, time_start, time_end) {
                              conn = conn)
     }
 
-    log_debug("downloading measurements for AQ station")
-    lmlstation <- kitmeta %>%
-        pull(pm10closecode)
-    d <- download_data(lmlstation, Tstart = time_start, Tend = time_end,
-                       fun = "download_data_lml",
-                       conn = conn)
+    lmlstation <- kitmeta %>% select(pm10closecode, pm25closecode) %>%
+        as.data.frame() %>% as.character()
 
-    log_trace("checking location for LML station  {lmlstation}")
-    if(!station_exists(lmlstation, conn = conn)) {
-        log_trace("download an store  location for LML station  {lmlstation}")
-        loc <- download_locations_lml(lmlstation)
-        insert_location_info(station = loc[1, 1],
-                             lat = loc[1, 2],
-                             lon = loc[1, 3],
-                             conn = conn)
+    log_trace("Downloading measurements for AQ station. pm10 station: {lmlstation[1]}, pm25 station: {lmlstation[2]}")
+    for(j in unique(lmlstation)) {
+        log_trace("downloading for LML station  {j}")
+        print(lmlstation)
+        print(unique(lmlstation))
+        d <- download_data(j, Tstart = time_start, Tend = time_end,
+                           fun = "download_data_lml",
+                           conn = conn)
+
+        log_trace("checking location for LML station  {j}")
+        if(!station_exists(j, conn = conn)) {
+            log_trace("download an store  location for LML station  {j}")
+            loc <- download_locations_lml(j)
+            insert_location_info(station = loc[1, 1],
+                                 lat = loc[1, 2],
+                                 lon = loc[1, 3],
+                                 conn = conn)
+        }
     }
 
     cat("download completed, disconnecting db\n")
