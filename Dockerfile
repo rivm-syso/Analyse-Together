@@ -33,11 +33,13 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
      latex2exp \
      openair \
      logger \
+     remotes \
      && rm -rf /tmp/downloaded_packages
 
 # install some more R pkgs (in a new layer)
 RUN install2.r --error --skipinstalled --ncpus -1 \
-     remotes \
+     plyr \
+     dbplyr \
      && rm -rf /tmp/downloaded_packages
 
 # Create folder 
