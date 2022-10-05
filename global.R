@@ -25,7 +25,7 @@ library(pool)
 # Visualisation
 library(leaflet)         # For maps
 library(leaflet.extras)  # For maps
-library(sp)              # For maps     
+library(sp)              # For maps
 library(DT)              # For tables
 library(plotly)          # For graphs
 library(latex2exp)       # For titles in graphs
@@ -41,7 +41,7 @@ library(logger)
 log_threshold(TRACE)
 
 # set data location
-# 
+#
 if(install_github) {
     remotes::install_github("jspijker/datafile", build_opts ="")
 }
@@ -68,6 +68,19 @@ options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
+# Set theme for plots                                                       ====
+theme_plots <- theme_bw(base_size = 18) +
+  theme(strip.text.x = element_text(size = 14, colour = "black"),
+        axis.text.y = element_text(face = "bold",color = "black", size = 16),
+        axis.text.x = element_text(color = "black", size = 16, angle = 45, hjust = 1, vjust = 1),
+        axis.title = element_text(color = "black", size = 16),
+        text = element_text(family = 'sans'),
+        title = element_text(color = "black", size = 16),
+        legend.title = element_text(size = 16),
+        legend.key.height = unit(0.5, 'cm'),
+        legend.key.width = unit(0.5, 'cm'),
+        panel.border = element_rect(colour = "black", fill=NA, size=1)
+  )
 
 # Connect with the database using pool, store data, read table              ====
 pool <- dbPool(
@@ -82,9 +95,9 @@ municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
 projects <- read_csv("./prepped_data/projects.csv")
 
 # add_doc doesn't work, see ATdatabase #8
-add_doc("application", "municipalities", municipalities, conn = pool, 
+add_doc("application", "municipalities", municipalities, conn = pool,
         overwrite = TRUE)
-add_doc("application", "projects", projects, conn = pool, 
+add_doc("application", "projects", projects, conn = pool,
         overwrite = TRUE)
 
 # Define colors, line types,choices etc.                                   ====
@@ -100,17 +113,11 @@ line_default <- 'solid'
 line_overload <- 'dotted'
 
 # Codes of KNMI stations
-# knmi_stations <- c(269, 209, 215, 225, 235, 240, 242, 248, 249, 251, 257, 258, 260, 267, 270, 273, 275, 277, 278, 279, 280, 283, 285, 286, 290, 308, 310, 312, 313, 315, 316, 319, 324, 330, 340, 343, 344, 348, 350, 356, 370, 375, 377, 380, 391)
-knmi_stations <- c("KNMI_269", "KNMI_209", "KNMI_215", "KNMI_225", "KNMI_235", "KNMI_240", "KNMI_242", "KNMI_248", 
-                   "KNMI_249", "KNMI_251", "KNMI_257", "KNMI_258", "KNMI_260", "KNMI_267", "KNMI_270", "KNMI_273", 
-                   "KNMI_275", "KNMI_277", "KNMI_278", "KNMI_279", "KNMI_280", "KNMI_283", "KNMI_285", "KNMI_286", 
-                   "KNMI_290", "KNMI_308", "KNMI_310", "KNMI_312", "KNMI_313", "KNMI_315", "KNMI_316", "KNMI_319", 
-                   "KNMI_324", "KNMI_330", "KNMI_340", "KNMI_343", "KNMI_344", "KNMI_348", "KNMI_350", "KNMI_356", 
-                   "KNMI_370", "KNMI_375", "KNMI_377", "KNMI_380", "KNMI_391")
+knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
 measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
-sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>% 
-                                                        mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>% 
+sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
+                                                        mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
                                                         mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
                                                                size = ifelse(station_type == "LML", 2,1))
 
@@ -146,9 +153,9 @@ source("modules/download_api_button.R")
 source("modules/add_metadata_tables.R")
 
 # Source modules visualisation
-source("modules/add_barplot.R")
-source("modules/plot_timeseries.R")
-source("modules/add_pollutionrose.R")
+source("modules/add_bar_plot.R")
+source("modules/add_timeseries_plot.R")
+source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_plot.R")
 
 # Source functions
@@ -159,5 +166,4 @@ source("funs/geoshaper_findlocations.R")
 # Source layout
 source("modules/add_tabpanels.R")
 ### THE END                                                                 ====
-
 
