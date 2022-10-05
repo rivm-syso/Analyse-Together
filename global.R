@@ -147,6 +147,7 @@ source("modules/select_date_range.R")
 source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
+source("modules/download_api_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
@@ -165,3 +166,4 @@ source("funs/geoshaper_findlocations.R")
 # Source layout
 source("modules/add_tabpanels.R")
 ### THE END                                                                 ====
+
