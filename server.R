@@ -60,4 +60,7 @@ shinyServer(function(global, input, output, session) {
                                                 line_overload
                                                 )
 
+download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range)
+
+
 })
