@@ -1,0 +1,124 @@
+{"tag" : "",
+  "cultural_date_format": "%d-%m-%Y",
+  "languages": ["tag","en", "nl"],
+  "translation": [
+
+      {"tag" : "title_infotool",
+	  "en": "Information tool",
+	  "nl": "Informatie over de tool"
+	  },
+      {"tag" : "sel_knmi",
+		"en": "Show KNMI stations",
+	  "nl": "Toon KNMI-stations"
+	  },
+      {"tag" : "title_selectdata",
+        "en": "Select data",
+        "nl": "Selecteer data"
+      },
+      {"tag" : "title_visualisedata",
+        "en": "Visualise data",
+        "nl": "Visualiseer data"
+      },
+      {"tag" : "sel_basedon",
+        "en": "Selection based on:",
+        "nl": "Selectie gebasseerd op:"
+      },
+	  {"tag" : "word_muni",
+        "en": "Municipality",
+        "nl": "Gemeente"
+      },
+      {"tag" : "sel_option",
+        "en": "Choose one option:",
+        "nl": "Maak een keuze:"
+      },
+      {"tag" : "sel_language",
+        "en": "Change language",
+        "nl": "Wijzig taal"
+      },
+	  {"tag" : "sel_date",
+        "en": "Select date range:",
+        "nl": "Selecteer een periode:"
+      },
+      {"tag" : "sel_comp",
+        "en": "Select component:",
+        "nl": "Selecteer component:"
+      },
+	  {"tag" : "title_time",
+        "en": "Timeseries",
+        "nl": "Tijdreeks"
+      },
+      {"tag" : "title_bar",
+        "en": "Barplot",
+        "nl": "Staafdiagram:"
+      },
+      {"tag" : "title_overview",
+        "en": "Overview of measurements",
+        "nl": "Overzicht van de metingen"
+      },
+	  {"tag" : "title_conc%",
+        "en": "Concentration rose (%)",
+        "nl": "Concentratieroos (%)"
+      },
+      {"tag" : "title_expl",
+        "en": "Explanation",
+        "nl": "Toelichting"
+      },
+      {"tag" : "expl_moreinfo",
+        "en": "More information on the projects can be found on the samenmeten dataportaal.",
+        "nl": "Meer informatie over de projecten kan je vinden op samenmeten.nl"
+      },
+	  {"tag" : "expl_expltool",
+        "en": "This tool was build for citizens. The code is open-source.",
+        "nl": "Deze tool is ontwikkeld voor burgers. De code is open-source."
+      },
+      {"tag" : "word_table",
+        "en": "Table for",
+        "nl": "Tabel voor"
+      },
+      {"tag" : "word_obs",
+        "en": "Number of observations",
+        "nl": "Aantal metingen"
+      },
+      {"tag" : "word_stationtype",
+        "en": "Station type",
+        "nl": "Stationstype"
+      },
+      {"tag" : "word_within",
+        "en": "within",
+        "nl": "in"
+      },
+      {"tag" : "expl_timeplot",
+        "en": "This plot show the timeseries of the sensor.",
+        "nl": "Deze grafiek laat de tijdreeks van de sensor in vergelijking met het meetstation zien."
+      },
+      {"tag" : "expl_timeplot_expl",
+        "en": "See Dutch",
+        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse sensorwaarden voor de geselecteerde periode. Deze waarden kan je vergeleken met metingen van het dichtsbijzijnde meetstation van het luchtmeetnet. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3"
+      },
+      {"tag" : "expl_barplot",
+        "en": "See Dutch",
+        "nl": "Deze grafiek laat de gemiddelde concentratie van de sensor in vergelijking met het meetstation zien."
+      },
+      {"tag" : "expl_barplot_expl",
+        "en": "Graph shows the average of the selected stations and sensors. The average is calculated for the timerange as selected in the previous step.                                   The white number in each bar, displays the number of measurements within this timeperiod. If this number is very low, the statistical power of                                  the difference between stations/sensors is lower.",
+        "nl": "Als je een sensor of groep sensoren selecteert, zie je het gemiddelde voor de geselecteerde tijdreeks. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen."
+      },
+      {"tag" : "expl_overviewplot",
+        "en": "See Dutch",
+        "nl": "Deze grafieken laten het gemiddelde zien voor verschillende tijdsperioden per sensor of sensorgroep."
+      },
+      {"tag" : "expl_overviewplot_expl",
+        "en": "See Dutch",
+        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per tijdsperiode getoond. De bovenste grafiek laat de gemiddelde uurwaarde, uitgesplitst naar weekdag, zien. Onder zie je de gemiddelde concentratie op elk uur van de dag (links), in het midden zie je de gemiddelde concentratie per maand en rechts zie je de gemiddelde concentratie per dag van de week."
+      },
+      {"tag" : "expl_concplot%",
+        "en": "See Dutch",
+        "nl": "Deze grafiek toont per windrichting de relatieve bijdrage aan de totale gemiddelde concentratie per sensor of sensorgroep."
+      },
+      {"tag" : "expl_concplot%_expl",
+        "en": "See Dutch",
+        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windsector het aandeel (in %) van deze sector in de totale gemiddelde concentratie. De gemiddelde concentratie per sector wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichtpaarse vulling en een hele kleine donkerpaarse vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichtpaarse vulling) brengt en slechts af en toe een hoge concenetratie (donkerpaarse vulling)."
+      }
+
+    ]
+}

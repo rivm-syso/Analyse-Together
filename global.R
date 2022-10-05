@@ -18,6 +18,13 @@ library(shinycssloaders)
 library(shinyWidgets)
 # library(shinytest)
 
+# For the translation
+library(shiny.i18n)
+
+# File with translations
+i18n <- Translator$new(translation_json_path = "./lang/translation.json")
+i18n$set_translation_language("nl") # here you select the default translation to display
+
 # Databases (essential)
 library(RSQLite)
 library(pool)

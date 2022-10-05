@@ -2,6 +2,12 @@
 # Define server logic                                                       ====
 shinyServer(function(global, input, output, session) {
 
+  # To change the language in the tool
+  observeEvent(input$selected_language, {
+    # Here is where we update language in session
+    shiny.i18n::update_lang(session, input$selected_language)
+  })
+
   # The pickerInput for component selection
   select_component <- component_selection_server("select_component", comp_choices)
 
@@ -26,10 +32,10 @@ shinyServer(function(global, input, output, session) {
   # The timeseries plot
   timeseries_plot <- timeseries_server(id = "timeseries_plot", data_measurements_stations = communication_stuff, overview_component, theme_plots)
 
-  # the pollutionrose plot
+  # The pollutionrose plot
   pollrose_plot <- pollrose_server("pollrose_plot", communication_stuff)
 
-  # the timevariation plot
+  # The timevariation plot
   timevar_plot <- timevar_server("timevar_plot", communication_stuff)
 
   # The communication module
