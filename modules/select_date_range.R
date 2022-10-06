@@ -38,7 +38,7 @@ date_range_server <- function(id,
                get_mun_proj_select <- reactive({
                  mun_proj_select <- comm_date$mun_proj_select()
                  return(mun_proj_select)})
-                 
+
               output$date_range <- renderUI({
                 if (is.null(get_mun_proj_select()) == FALSE){
                  # Get the boundaries of the datepicker
@@ -50,7 +50,7 @@ date_range_server <- function(id,
 
                    dateRangeInput(
                      ns("date_range"),
-                     label = "Select date range",
+                     label = i18n$t("sel_date"),
                      start = date_total$start_time,
                      end = date_total$end_time,
                      min = date_total$start_time,
@@ -73,7 +73,7 @@ date_range_server <- function(id,
                  selected_start_date = reactive({input$date_range[1]}),
                  selected_end_date = reactive({input$date_range[2]})
                  )
-               
+
                return(res)
                })
 }

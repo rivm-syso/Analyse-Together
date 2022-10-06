@@ -33,7 +33,7 @@ component_selection_server <- function(id, comp_choices) {
 
         pickerInput(
           ns("comp_select"),
-          label    = "Select component",
+          label    = i18n$t("sel_comp"),
           choices  = comp_choices,
           selected = NULL,
           multiple = TRUE,
