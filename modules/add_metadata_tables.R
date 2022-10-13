@@ -31,7 +31,9 @@ metadata_server <- function(id, com_module) {
     # Get selected measurements from communication module
     metadata_table <- reactive({
       data_measurements <- com_module$selected_measurements()
-      timerange <- difftime(com_module$start_end_total()$end_time,com_module$start_end_total()$start_time, units="hours")
+      print(com_module$selected_time$selected_start_date())
+      print(com_module$selected_time$selected_end_date())
+      timerange <- difftime(com_module$selected_time$selected_end_date(),com_module$selected_time$selected_start_date(), units="hours")
       print(timerange)
       metadata_table <- data_measurements %>%  group_by(station) %>%
                         mutate(n_obs = n(),
