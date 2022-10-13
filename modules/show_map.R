@@ -40,7 +40,7 @@ show_map_server <- function(id, com_module, sensor) {
 
     # Get the min and max of the dataset
     get_locations <- reactive({
-      sensorloc <- com_module$station_locations() %>% dplyr::distinct(station, .keep_all = T)
+      sensorloc <- com_module$station_locations() %>% dplyr::distinct(station, .keep_all = T) %>% filter(lon > 0 & lat >0)
       sensorloc_coord <- SpatialPointsDataFrame(sensorloc[,c('lon','lat')],sensorloc)
       return(list(sensorloc, sensorloc_coord))})
 
@@ -62,11 +62,13 @@ show_map_server <- function(id, com_module, sensor) {
         state_station$value <- c(isolate(state_station$value), id_selected)
     }
 
+
     # Generate base map ----
     output$map <- renderLeaflet({
         ns("map")
         leaflet() %>%
-          setView(5.384214, 52.153708 , zoom = 7) %>%
+          #setView(, 52.153708 , zoom = 7) %>%
+          fitBounds(min(get_locations()[[2]]$lon), min(get_locations()[[2]]$lat), max(get_locations()[[2]]$lon), max(get_locations()[[2]]$lat)) %>% 
           addTiles() %>%
           addDrawToolbar(
             targetGroup = 'Selected',
@@ -105,15 +107,15 @@ show_map_server <- function(id, com_module, sensor) {
     })
 
     add_knmi_map <- function(){
+      
 
       data_knmi <- get_locations()[[1]] %>% filter(., grepl("KNMI",station))
-
       for (knmis in unique(data_knmi$station)){
 
         if (isTRUE(data_knmi$selected[data_knmi$station == knmis])){
-
+          proxy <- leafletProxy('map')
           leafletProxy("map") %>%
-
+          
           addMarkers(data = data_knmi[data_knmi$station == knmis,], lng = ~lon, lat = ~lat,
                      icon = icons_knmis["knmi_selected"],
                      label = ~station,
@@ -121,7 +123,7 @@ show_map_server <- function(id, com_module, sensor) {
                      group = "knmi_stations")
         }
       else {
-
+        
         leafletProxy("map") %>%
 
           addMarkers(data = data_knmi[data_knmi$station == knmis,], lng = ~lon, lat = ~lat,
@@ -168,7 +170,7 @@ show_map_server <- function(id, com_module, sensor) {
                              group = "lmls")
         }
         else {
-
+          
           leafletProxy("map") %>%
 
           addMarkers(data = data_snsrs[data_snsrs$station == lmls,], ~lon, ~lat, icon = icons_stations["lml_deselected"],
