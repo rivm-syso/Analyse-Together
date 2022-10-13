@@ -17,6 +17,7 @@ library(shiny)
 library(shinycssloaders)
 library(shinyWidgets)
 # library(shinytest)
+library(shinyjs)
 
 # For the translation
 library(shiny.i18n)
