@@ -8,15 +8,15 @@
 ######################################################################
 
 show_map_output <- function(id) {
-
+  
   ns <- NS(id)
-
+  
   tagList(
-  leafletOutput(ns('map')),
-  uiOutput(ns('sensormap')),
-  uiOutput(ns('show_knmi'))
+    leafletOutput(ns('map')),
+    uiOutput(ns('sensormap')),
+    uiOutput(ns('show_knmi'))
   )
-
+  
 }
 
 
@@ -25,79 +25,78 @@ show_map_output <- function(id) {
 ######################################################################
 
 show_map_server <- function(id, com_module, sensor) {
-
+  
   moduleServer(id, function(input, output, session) {
-
+    
     ns <- session$ns
     beatCol <- colorFactor(palette = 'RdYlGn', domain = c(0,100), reverse = TRUE)
     icons_stations <- iconList(
       lml_selected = makeIcon(iconUrl = "images/lml_selected.png", iconWidth = 24, iconHeight = 16),
       lml_deselected = makeIcon(iconUrl = "images/lml_deselected.png",  iconWidth = 24, iconHeight = 16))
-
+    
     icons_knmis <- iconList(
       knmi_selected = makeIcon(iconUrl = "images/knmi_selected.png", iconWidth = 20, iconHeight = 20),
       knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected.png", iconWidth = 20, iconHeight = 20))
-
+    
     # Get the min and max of the dataset
     get_locations <- reactive({
       sensorloc <- com_module$station_locations() %>% dplyr::distinct(station, .keep_all = T) %>% filter(lon > 0 & lat >0)
       sensorloc_coord <- SpatialPointsDataFrame(sensorloc[,c('lon','lat')],sensorloc)
       return(list(sensorloc, sensorloc_coord))})
-
-
+    
+    
     # Create an reactive to change with the obeserve, to store the clicked id
     state_station <- reactiveValues(value = "SSK_LH004")
-
+    
     check_state <- function(id_selected){
       selected <- id_selected %in% isolate(state_station$value)
       return(selected)
     }
-
+    
     # Change the clicked_id stored
     change_state_to_deselected <- function(id_selected){
-        state_station$value <- isolate(state_station$value)[isolate(state_station$value) %in% c(id_selected) == FALSE]
+      state_station$value <- isolate(state_station$value)[isolate(state_station$value) %in% c(id_selected) == FALSE]
     }
-
+    
     change_state_to_selected <- function(id_selected){
-        state_station$value <- c(isolate(state_station$value), id_selected)
+      state_station$value <- c(isolate(state_station$value), id_selected)
     }
-
-
+    
     # Generate base map ----
     output$map <- renderLeaflet({
-        ns("map")
-        leaflet() %>%
-          #setView(, 52.153708 , zoom = 7) %>%
-          fitBounds(min(get_locations()[[2]]$lon), min(get_locations()[[2]]$lat), max(get_locations()[[2]]$lon), max(get_locations()[[2]]$lat)) %>% 
-          addTiles() %>%
-          addDrawToolbar(
-            targetGroup = 'Selected',
-            polylineOptions = FALSE,
-            markerOptions = FALSE,
-            polygonOptions = FALSE,
-            circleOptions = FALSE,
-            circleMarkerOptions = FALSE,
-            rectangleOptions = drawRectangleOptions(shapeOptions=drawShapeOptions(fillOpacity = 0
-                                                                                  ,color = 'black'
-                                                                                  ,weight = 1.5)),
-            editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
-
-          addEasyButton(easyButton(
-            icon="fa-globe", title="Back to default view",
-            onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
-          addEasyButton(easyButton(
-            icon="fa-crosshairs", title="Locate Me",
-            onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
-          addScaleBar(position = "bottomleft")
-
-
-      })
-
+      ns("map")
+      leaflet() %>%
+        #setView(5.384214, 52.153708 , zoom = 7) %>%
+        fitBounds(min(isolate(get_locations())[[2]]$lon), min(isolate(get_locations())[[2]]$lat), max(isolate(get_locations())[[2]]$lon), max(isolate(get_locations())[[2]]$lat)) %>% 
+        addTiles() %>%
+        addDrawToolbar(
+          targetGroup = 'Selected',
+          polylineOptions = FALSE,
+          markerOptions = FALSE,
+          polygonOptions = FALSE,
+          circleOptions = FALSE,
+          circleMarkerOptions = FALSE,
+          rectangleOptions = drawRectangleOptions(shapeOptions=drawShapeOptions(fillOpacity = 0
+                                                                                ,color = 'black'
+                                                                                ,weight = 1.5)),
+          editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
+        
+        addEasyButton(easyButton(
+          icon="fa-globe", title="Back to default view",
+          onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
+        addEasyButton(easyButton(
+          icon="fa-crosshairs", title="Locate Me",
+          onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
+        addScaleBar(position = "bottomleft")
+      
+      
+    })
+    
     output$show_knmi <- renderUI({
-
+      
       # Create the component picker with a list of possible choices
       tagList(
-
+        
         checkboxInput(
           ns("show_knmi"),
           label    = i18n$t("sel_knmi"),
@@ -105,42 +104,42 @@ show_map_server <- function(id, com_module, sensor) {
         )
       )
     })
-
+    
     add_knmi_map <- function(){
       
-
       data_knmi <- get_locations()[[1]] %>% filter(., grepl("KNMI",station))
+      
       for (knmis in unique(data_knmi$station)){
-
-        if (isTRUE(data_knmi$selected[data_knmi$station == knmis])){
-          proxy <- leafletProxy('map')
-          leafletProxy("map") %>%
-          
-          addMarkers(data = data_knmi[data_knmi$station == knmis,], lng = ~lon, lat = ~lat,
-                     icon = icons_knmis["knmi_selected"],
-                     label = ~station,
-                     layerId = ~station,
-                     group = "knmi_stations")
-        }
-      else {
         
-        leafletProxy("map") %>%
-
-          addMarkers(data = data_knmi[data_knmi$station == knmis,], lng = ~lon, lat = ~lat,
-                     icon = icons_knmis["knmi_deselected"],
-                     label = ~station,
-                     layerId = ~station,
-                     group = "knmi_stations")}}
-  }
-
+        if (isTRUE(data_knmi$selected[data_knmi$station == knmis])){
+          
+          leafletProxy("map") %>%
+            
+            addMarkers(data = data_knmi[data_knmi$station == knmis,], lng = ~lon, lat = ~lat,
+                       icon = icons_knmis["knmi_selected"],
+                       label = ~station,
+                       layerId = ~station,
+                       group = "knmi_stations")
+        }
+        else {
+          
+          leafletProxy("map") %>%
+            
+            addMarkers(data = data_knmi[data_knmi$station == knmis,], lng = ~lon, lat = ~lat,
+                       icon = icons_knmis["knmi_deselected"],
+                       label = ~station,
+                       layerId = ~station,
+                       group = "knmi_stations")}}
+    }
+    
     add_sensors_map <- function(){
-
+      
       data_snsrs <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
-
+      
       # Update map with new markers to show selected
       proxy <- leafletProxy('map') # set up proxy map
       leafletProxy("map") %>%
-
+        
         addCircleMarkers(data = data_snsrs, ~lon, ~lat,stroke = TRUE, weight = 2,
                          label = lapply(data_snsrs$station, HTML),
                          layerId = ~station,
@@ -148,49 +147,49 @@ show_map_server <- function(id, com_module, sensor) {
                          color = data_snsrs$col,
                          group = "sensoren"
         )}
-
+    
     add_lmls_map <- function(){
-
+      
       data_snsrs <- get_locations()[[1]] %>% filter(., grepl("LML",station_type))
-
+      
       for (lmls in unique(data_snsrs$station)){
-
+        
         if (isTRUE(data_snsrs$selected[data_snsrs$station == lmls])){
           # Update map with new markers to show selected
-
+          
           proxy <- leafletProxy('map') # set up proxy map
           leafletProxy("map") %>%
-
+            
             addMarkers(data = data_snsrs[data_snsrs$station == lmls,], ~lon, ~lat,
-                             icon = icons_stations["lml_selected"],
-                             label =  ~station,
-                             layerId = ~station,
-                             #radius = 5,
-                             #color = data_snsrs$col,
-                             group = "lmls")
+                       icon = icons_stations["lml_selected"],
+                       label =  ~station,
+                       layerId = ~station,
+                       #radius = 5,
+                       #color = data_snsrs$col,
+                       group = "lmls")
         }
         else {
           
           leafletProxy("map") %>%
-
-          addMarkers(data = data_snsrs[data_snsrs$station == lmls,], ~lon, ~lat, icon = icons_stations["lml_deselected"],
-                     label =  ~station,
-                     layerId = ~station,
-                     #radius = 5,
-                     #color = data_snsrs$col,
-                     group = "lmls")}}
-        }
-
+            
+            addMarkers(data = data_snsrs[data_snsrs$station == lmls,], ~lon, ~lat, icon = icons_stations["lml_deselected"],
+                       label =  ~station,
+                       layerId = ~station,
+                       #radius = 5,
+                       #color = data_snsrs$col,
+                       group = "lmls")}}
+    }
+    
     remove_knmi_map <- function(){
-
+      
       # Update map with new markers to show selected
       proxy <- leafletProxy('map') # set up proxy map
       leafletProxy("map") %>%
-
+        
         clearGroup(group = "knmi_stations")
     }
-
-
+    
+    
     observe({
       knmi_show <- input$show_knmi
       #print(knmi_show)
@@ -201,32 +200,32 @@ show_map_server <- function(id, com_module, sensor) {
         remove_knmi_map()
       }
     })
-
-
+    
+    
     # Observe if a sensor is in de square selection
     observe({
-
+      
       rectangular_desel <- input$map_draw_deleted_features
-
+      
       # ga dan de sensoren af en deselecteer deze een voor een
       for(id_select in isolate(get_locations()[[2]]$station)){
-          #print(id_select)
-          change_state_to_deselected(id_select)
-          }
+        #print(id_select)
+        change_state_to_deselected(id_select)
+      }
       isolate(add_sensors_map())
       isolate(add_lmls_map())
     })
-
+    
     observe({
-
+      
       rectangular_sel <- input$map_draw_new_feature
-
+      
       # Zoek de sensoren in de feature
       if (length(rectangular_sel[[1]] > 0)){
         found_in_bounds <- findLocations_sel(shape = rectangular_sel,
-                                                     location_coordinates = isolate(get_locations()[[2]]),
-                                                     location_id_colname = "station")
-
+                                             location_coordinates = isolate(get_locations()[[2]]),
+                                             location_id_colname = "station")
+        
         for(id_select in found_in_bounds){
           selected <- check_state(id_select)
           if (selected == T){
@@ -237,19 +236,19 @@ show_map_server <- function(id, com_module, sensor) {
           }
         }}
       else{done}
-
+      
       isolate(add_lmls_map())
       isolate(add_sensors_map())
-
+      
     })
-
+    
     # Observe the clicks of an user
     observe({
       click <- input$map_marker_click
-
+      
       selected_snsr <- click$id
       log_trace("map module: click id {selected_snsr}")
-
+      
       if (length(selected_snsr >0)){
         selected <- check_state(selected_snsr)
         if (selected == T){
@@ -257,21 +256,21 @@ show_map_server <- function(id, com_module, sensor) {
         }
         else {
           change_state_to_selected(selected_snsr)
-      }}
+        }}
       else{done}
-
-       isolate(add_sensors_map())
-       isolate(add_lmls_map())
-       isolate(add_knmi_map())
+      
+      isolate(add_sensors_map())
+      isolate(add_lmls_map())
+      isolate(add_knmi_map())
     })
-
+    
     # Return start and end date
     return(list(
-                map = map,
-                state_station = reactive({state_station$value}),
-                show_knmi = reactive({input$show_knmi})))
-
+      map = map,
+      state_station = reactive({state_station$value}),
+      show_knmi = reactive({input$show_knmi})))
+    
   })
-
+  
 }
 
