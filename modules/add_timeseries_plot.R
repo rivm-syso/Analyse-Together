@@ -58,11 +58,12 @@ timeseries_server <- function(id,
 
                    # Calculate standard deviation
                    data_timeseries <- data_timeseries %>% group_by(station) %>% mutate(sd = sd(value)) %>% ungroup()
-                   n_days_in_plot <- round(as.numeric(max(data_timeseries$date) - min(data_timeseries$date)))
+                   n_days_in_plot <- round(as.numeric(max(data_timeseries$date, na.rm = T) - min(data_timeseries$date, na.rm = T)))
                    n_stat_in_plot <- length(unique(data_timeseries$station))
-                   min_meas <- plyr::round_any(min(data_timeseries$value), 5, f = floor)
-                   max_meas <- plyr::round_any(max(data_timeseries$value), 5, f = ceiling)
+                   min_meas <- plyr::round_any(min(data_timeseries$value, na.rm = T), 5, f = floor)
+                   max_meas <- plyr::round_any(max(data_timeseries$value, na.rm = T), 5, f = ceiling)
                    steps <- plyr::round_any(max_meas / 15, 10, f = ceiling) # to create interactive y-breaks
+                   print(ceiling(n_days_in_plot/7))
 
                    # Make a plot
                    if (length(parameter>0)){
@@ -75,7 +76,7 @@ timeseries_server <- function(id,
                                            breaks = c(paste0(data_timeseries$station))) +
                          scale_size_manual(values = c(paste0(data_timeseries$station_type)),
                                            breaks = c(paste0(data_timeseries$size)), guide = 'none') +
-                         scale_x_datetime(date_breaks = paste0(as.character(round(n_days_in_plot/7))," day"), date_minor_breaks = "1 day") +
+                         scale_x_datetime(date_breaks = paste0(as.character(ceiling(n_days_in_plot/7))," day"), date_minor_breaks = "1 day") +
                          scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps), minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2), by = steps/2), limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
                          labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Timeseries for: ', parameter_label)) +
                          expand_limits(y=0) +
