@@ -60,6 +60,7 @@ timevar_daily_server <- function(id, data_measurements_stations) {
                       alpha = 0.1, cols = data_timevar$col, local.tz="Europe/Amsterdam",
                       ylim = c(0,NA),
                       ylab = paste0(unique(data_timevar$parameter)),
+                      xlab = "Hour of the day",
                       start.day = 1,
                       par.settings=list(fontsize=list(text=15)),
                       key = T
