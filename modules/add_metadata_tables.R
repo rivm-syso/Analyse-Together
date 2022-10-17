@@ -80,7 +80,7 @@ metadata_server <- function(id, com_module) {
 
         if(length(n_obs_sel>1)){
           try(datatable(data_merged(),colnames = c("Number of measurements" = "n_obs", "Maximum measurements" = "max_obs", "First measurements" = "first_m", "Last measurements" = "last_m", "Type" = "station_type", "Latitude" = "lat", "Longitude" = "lon"),
-                       caption = paste0(i18n$t("word_table")," ",unique(com_module$selected_measurements()$parameter),","," ", i18n$t("word_within"), project_or_municipality())) %>%
+                       caption = paste0(i18n$t("word_table")," ",unique(com_module$selected_measurements()$parameter),","," ", i18n$t("word_within"), project_or_municipality()),options = list(scrollX = TRUE)) %>%
             formatStyle("Number of measurements", backgroundColor = styleInterval(cuts = breaks_col()[[1]], values = breaks_col()[[2]]))
           )
         }})
