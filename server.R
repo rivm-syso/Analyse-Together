@@ -40,25 +40,28 @@ shinyServer(function(global, input, output, session) {
 
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
-                                                measurements,
-                                                sensor,
-                                                meta, # TODO willen we hier wat mee?
-                                                selected_parameter = select_component,
-                                                selected_time = select_date_range,
-                                                select_mun_or_proj = proj_or_mun_select,
-                                                choose_mun_or_oroj = choice_select,
-                                                # TODO Get the selected stations form the map
-                                                #selected_stations = c("SSK_LH004"),
-                                                selected_stations = map,
-                                                # Options for the colors
-                                                col_cat,
-                                                col_default,
-                                                col_overload,
-                                                # Options for the linetype
-                                                line_cat,
-                                                line_default,
-                                                line_overload
-                                                )
+                                              pool = pool,
+                                              measurements_con = measurements_con,
+                                              sensor_con = sensor_con,
+                                              # measurements,
+                                              sensor,
+                                              meta, # TODO willen we hier wat mee?
+                                              selected_parameter = select_component,
+                                              selected_time = select_date_range,
+                                              select_mun_or_proj = proj_or_mun_select,
+                                              choose_mun_or_proj = choice_select,
+                                              # TODO Get the selected stations form the map
+                                              #selected_stations = c("SSK_LH004"),
+                                              selected_stations = map,
+                                              # Options for the colors
+                                              col_cat,
+                                              col_default,
+                                              col_overload,
+                                              # Options for the linetype
+                                              line_cat,
+                                              line_default,
+                                              line_overload
+                                              )
 
 download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range)
 

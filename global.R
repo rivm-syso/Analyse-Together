@@ -122,11 +122,13 @@ line_overload <- 'dotted'
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
-measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
+# measurements <- tbl(pool, "measurements") %>% as.data.frame() %>% mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"))
 sensor <- tbl(pool, "location") %>% as.data.frame() %>% mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
-                                                        mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
-                                                        mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
-                                                               size = ifelse(station_type == "LML", 2,1))
+                                                       mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
+                                                       mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
+                                                              size = ifelse(station_type == "LML", 2,1))
+measurements_con <- tbl(pool, "measurements")
+sensor_con <- tbl(pool, "location")
 
 log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
 
@@ -148,7 +150,6 @@ source("modules/select_component.R")
 # Source module for the component selection
 source("modules/show_map.R")
 
-
 # Source modules selections
 source("modules/select_date_range.R")
 source("modules/select_component.R")
@@ -169,6 +170,7 @@ source("modules/add_timevariation_plot.R")
 source("funs/assign_color_stations.R")
 source("funs/assign_linetype_stations.R")
 source("funs/geoshaper_findlocations.R")
+source("funs/database_fun.R")
 
 # Source layout
 source("modules/add_tabpanels.R")
