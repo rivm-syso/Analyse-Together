@@ -30,7 +30,10 @@ metadata_server <- function(id, com_module) {
 
     # Get selected measurements from communication module
     metadata_table <- reactive({
+      
+      shiny::validate(need(nrow(com_module$selected_measurements()) >0, message =  "Select one or more sensors (with data)"))
       data_measurements <- com_module$selected_measurements()
+      
       timerange <- difftime(com_module$selected_time$selected_end_date(),com_module$selected_time$selected_start_date(), units="hours")
       metadata_table <- data_measurements %>%  group_by(station) %>%
                         mutate(n_obs = n(),
@@ -44,12 +47,10 @@ metadata_server <- function(id, com_module) {
 
     # Get selected stations from communication module
     data_merged <- reactive({
+      
       data_stations <- com_module$station_locations() %>% select(c(station, lat, lon, station_type)) %>% dplyr::distinct(station, .keep_all = T)
+      data_merged <- left_join(metadata_table(),data_stations, by = "station")
 
-      if (nrow(metadata_table() > 0)){
-          data_merged <- left_join(metadata_table(),data_stations, by = "station")
-      }
-      else {data_merged <- data.frame("station" = '', "n_obs" = '', "station_type"  = ' ')}
       return(data_merged)
     })
 
@@ -71,7 +72,7 @@ metadata_server <- function(id, com_module) {
     output$meta_table <-
 
       renderDataTable({
-
+        
         # Determine parameter that needs to be plotted
         n_obs_sel <- metadata_table()$n_obs
 
