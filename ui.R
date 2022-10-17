@@ -80,7 +80,7 @@ shinyUI(
 
                             fluidRow(
 
-                              column(8, class = "col-lg-8", wellPanel(metadata_output("meta_table")))
+                              column(12, class = "col-lg-12", wellPanel(metadata_output("meta_table")), inlineCSS(list("table" = "font-size: 13px")))
 
                             )
 
