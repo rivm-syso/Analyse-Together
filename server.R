@@ -36,7 +36,7 @@ shinyServer(function(global, input, output, session) {
   pollrose_plot <- pollrose_server("pollrose_plot", communication_stuff)
 
   # The timevariation plot
-  timevar_plot <- timevar_server("timevar_plot", communication_stuff)
+  timevar_plot <- timevar_server("timevar_plot_weekly", communication_stuff)
 
   # The communication module
   communication_stuff <- communication_server("test_comm_output",

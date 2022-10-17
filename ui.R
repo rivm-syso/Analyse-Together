@@ -95,7 +95,7 @@ shinyUI(
                                            wellPanel(component_selection_output("select_component"))
                                          ,
 
-                                         # Output: Tabset voor openair plots, zie voor de inhoud het script: tabPanels.R
+                                         # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
                                          tabsetPanel(tpAnalyse(), id = "tabsanalyse")
 
                             )
