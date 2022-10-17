@@ -18,13 +18,13 @@ shinyServer(function(global, input, output, session) {
   select_date_range <- date_range_server("select_date_range", communication_stuff)
 
   # choose proj/mun
-  choice_select <- choice_selection_server("choice_select", communication_stuff, mun_choices = mun_choices, proj_choices = proj_choices)
+  choice_select <- choice_selection_server("choice_select", com_module = communication_stuff, mun_choices = mun_choices, proj_choices = proj_choices)
 
   # Get metadata
   meta_table <- metadata_server("meta_table", communication_stuff)
 
   # The Map
-  map <- show_map_server("map", communication_stuff, sensor)
+  map <- show_map_server("map", communication_stuff)
 
   # The bar plot
   barplot <- barplot_server("barplot_plot", communication_stuff, overview_component, theme_plots)
@@ -42,9 +42,7 @@ shinyServer(function(global, input, output, session) {
   communication_stuff <- communication_server("test_comm_output",
                                               pool = pool,
                                               measurements_con = measurements_con,
-                                              sensor_con = sensor_con,
-                                              # measurements,
-                                              sensor,
+                                              stations_con = stations_con,
                                               meta, # TODO willen we hier wat mee?
                                               selected_parameter = select_component,
                                               selected_time = select_date_range,

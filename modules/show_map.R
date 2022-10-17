@@ -24,7 +24,7 @@ show_map_output <- function(id) {
 # Server Module
 ######################################################################
 
-show_map_server <- function(id, com_module, sensor) {
+show_map_server <- function(id, com_module) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -38,7 +38,7 @@ show_map_server <- function(id, com_module, sensor) {
       knmi_selected = makeIcon(iconUrl = "images/knmi_selected.png", iconWidth = 20, iconHeight = 20),
       knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected.png", iconWidth = 20, iconHeight = 20))
 
-    # Get the min and max of the dataset
+    # Get the locations from the stations and convert to spatialcoordinates
     get_locations <- reactive({
       sensorloc <- com_module$station_locations() %>% dplyr::distinct(station, .keep_all = T)
       sensorloc_coord <- SpatialPointsDataFrame(sensorloc[,c('lon','lat')],sensorloc)
@@ -88,7 +88,6 @@ show_map_server <- function(id, com_module, sensor) {
             onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
           addScaleBar(position = "bottomleft")
 
-
       })
 
     output$show_knmi <- renderUI({
@@ -133,6 +132,11 @@ show_map_server <- function(id, com_module, sensor) {
 
     add_sensors_map <- function(){
 
+      data_snrs <- try(get_locations(), silent = T)
+      shiny::validate(
+        need(class(data_snrs) != "try-error", "Error, no data selected.")
+      )
+
       data_snsrs <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
 
       # Update map with new markers to show selected
@@ -148,6 +152,11 @@ show_map_server <- function(id, com_module, sensor) {
         )}
 
     add_lmls_map <- function(){
+
+      data_snrs <- try(get_locations(), silent = T)
+      shiny::validate(
+        need(class(data_snrs) != "try-error", "Error, no data selected.")
+      )
 
       data_snsrs <- get_locations()[[1]] %>% filter(., grepl("LML",station_type))
 
@@ -221,6 +230,10 @@ show_map_server <- function(id, com_module, sensor) {
 
       # Zoek de sensoren in de feature
       if (length(rectangular_sel[[1]] > 0)){
+        data_snrs <- try(get_locations(), silent = T)
+        shiny::validate(
+          need(class(data_snrs) != "try-error", "Error, no data selected.")
+        )
         found_in_bounds <- findLocations_sel(shape = rectangular_sel,
                                                      location_coordinates = isolate(get_locations()[[2]]),
                                                      location_id_colname = "station")

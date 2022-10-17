@@ -34,9 +34,7 @@ communication_output <- function(id) {
 communication_server <- function(id,
                                  pool,
                                  measurements_con,
-                                 sensor_con,
-                                 # data_measurements,
-                                 data_stations,
+                                 stations_con,
                                  data_meta,
                                  selected_parameter ,
                                  selected_time ,
@@ -68,17 +66,17 @@ communication_server <- function(id,
                      need(!is_empty((type_choice)),"Please, select gemeente of project")
                    )
                    if (type_choice == "Gemeente"){
-                     print("ja anders")
                      type_choice <- "municipality"
                    }
 
-                  # Get the station names in the selected Municipality/project
-                   stations_name <- get_stations_from_selection(mun_proj_select(), type_choice, conn = pool)
-                   log_trace("com module: {lubridate::now()} Data measurements ophalen ... ")
-
+                   # Get the selected time period
                    start_time <- get_time_selection()$start_time
                    end_time <- get_time_selection()$end_time
 
+                   # Get the station names in the selected Municipality/project
+                   stations_name <- get_stations_from_selection(mun_proj_select(), type_choice, conn = pool)
+
+                   log_trace("com module: {lubridate::now()} Data measurements ophalen ... ")
                    # Get the data measurements of the selected Municipality/project
                    data_measurements <- measurements_con %>% as.data.frame() %>%
                      dplyr::mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam")) %>%
@@ -88,7 +86,8 @@ communication_server <- function(id,
 
                    log_trace("com module: {lubridate::now()} Data measurements opgehaald! ")
 
-                   data_sensors <- sensor_con %>% as.data.frame() %>%
+                   # Get the information from the sensors
+                   data_sensors <- stations_con %>% as.data.frame() %>%
                      dplyr::filter(station %in% stations_name) %>%
                      dplyr::mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
                      dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
@@ -107,6 +106,7 @@ communication_server <- function(id,
                   return(list(start_time = start_time, end_time = end_time))
                 })
 
+                 # Get a default time period
                  get_time_default <- reactive({
                    start_time <- lubridate::today() - days(10)
                    end_time <- lubridate::today()
@@ -128,7 +128,7 @@ communication_server <- function(id,
                  # TODO create a function or reactive to make this selection which locations to use
                  get_stations_total <- reactive({
                    # Set selected stations to TRUE
-                   stations_total <- data_stations %>%
+                   stations_total <- get_data()$data_sensors %>%
                      dplyr::mutate(selected = ifelse(station %in% c(selected_stations$state_station()),  T, selected))
                    # Assign colors -> sensor
                    stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
