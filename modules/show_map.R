@@ -24,8 +24,8 @@ show_map_output <- function(id) {
 # Server Module
 ######################################################################
 
-show_map_server <- function(id, com_module, sensor) {
-  
+show_map_server <- function(id, com_module) {
+
   moduleServer(id, function(input, output, session) {
     
     ns <- session$ns
@@ -37,8 +37,8 @@ show_map_server <- function(id, com_module, sensor) {
     icons_knmis <- iconList(
       knmi_selected = makeIcon(iconUrl = "images/knmi_selected.png", iconWidth = 20, iconHeight = 20),
       knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected.png", iconWidth = 20, iconHeight = 20))
-    
-    # Get the min and max of the dataset
+
+    # Get the locations from the stations and convert to spatialcoordinates
     get_locations <- reactive({
       sensorloc <- com_module$station_locations() %>% dplyr::distinct(station, .keep_all = T) %>% filter(lon > 0 & lat >0)
       sensorloc_coord <- SpatialPointsDataFrame(sensorloc[,c('lon','lat')],sensorloc)
@@ -64,34 +64,33 @@ show_map_server <- function(id, com_module, sensor) {
     
     # Generate base map ----
     output$map <- renderLeaflet({
-      ns("map")
-      leaflet() %>%
-        #setView(5.384214, 52.153708 , zoom = 7) %>%
-        fitBounds(min(isolate(get_locations())[[2]]$lon), min(isolate(get_locations())[[2]]$lat), max(isolate(get_locations())[[2]]$lon), max(isolate(get_locations())[[2]]$lat)) %>% 
-        addTiles() %>%
-        addDrawToolbar(
-          targetGroup = 'Selected',
-          polylineOptions = FALSE,
-          markerOptions = FALSE,
-          polygonOptions = FALSE,
-          circleOptions = FALSE,
-          circleMarkerOptions = FALSE,
-          rectangleOptions = drawRectangleOptions(shapeOptions=drawShapeOptions(fillOpacity = 0
-                                                                                ,color = 'black'
-                                                                                ,weight = 1.5)),
-          editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
-        
-        addEasyButton(easyButton(
-          icon="fa-globe", title="Back to default view",
-          onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
-        addEasyButton(easyButton(
-          icon="fa-crosshairs", title="Locate Me",
-          onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
-        addScaleBar(position = "bottomleft")
-      
-      
-    })
-    
+
+        ns("map")
+        leaflet() %>%
+          setView(5.384214, 52.153708 , zoom = 7) %>%
+          addTiles() %>%
+          addDrawToolbar(
+            targetGroup = 'Selected',
+            polylineOptions = FALSE,
+            markerOptions = FALSE,
+            polygonOptions = FALSE,
+            circleOptions = FALSE,
+            circleMarkerOptions = FALSE,
+            rectangleOptions = drawRectangleOptions(shapeOptions=drawShapeOptions(fillOpacity = 0
+                                                                                  ,color = 'black'
+                                                                                  ,weight = 1.5)),
+            editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
+
+          addEasyButton(easyButton(
+            icon="fa-globe", title="Back to default view",
+            onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
+          addEasyButton(easyButton(
+            icon="fa-crosshairs", title="Locate Me",
+            onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
+          addScaleBar(position = "bottomleft")
+
+      })
+
     output$show_knmi <- renderUI({
       
       # Create the component picker with a list of possible choices
@@ -133,7 +132,12 @@ show_map_server <- function(id, com_module, sensor) {
     }
     
     add_sensors_map <- function(){
-      
+      # Check if there is data
+      data_snsrs <- try(get_locations(), silent = T)
+      shiny::validate(
+        need(class(data_snsrs) != "try-error", "Error, no data selected.")
+      )
+
       data_snsrs <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
       
       # Update map with new markers to show selected
@@ -149,7 +153,12 @@ show_map_server <- function(id, com_module, sensor) {
         )}
     
     add_lmls_map <- function(){
-      
+      # Check if there is data
+      data_snsrs <- try(get_locations(), silent = T)
+      shiny::validate(
+        need(class(data_snsrs) != "try-error", "Error, no data selected.")
+      )
+
       data_snsrs <- get_locations()[[1]] %>% filter(., grepl("LML",station_type))
       
       for (lmls in unique(data_snsrs$station)){
@@ -192,7 +201,7 @@ show_map_server <- function(id, com_module, sensor) {
     
     observe({
       knmi_show <- input$show_knmi
-      #print(knmi_show)
+
       if (isTRUE(knmi_show)){
         add_knmi_map()
       }
@@ -222,6 +231,12 @@ show_map_server <- function(id, com_module, sensor) {
       
       # Zoek de sensoren in de feature
       if (length(rectangular_sel[[1]] > 0)){
+        # Check if there is data
+        data_snrs <- try(get_locations(), silent = T)
+        shiny::validate(
+          need(class(data_snrs) != "try-error", "Error, no data selected.")
+        )
+        # Find the stations insite the selected rectangle
         found_in_bounds <- findLocations_sel(shape = rectangular_sel,
                                              location_coordinates = isolate(get_locations()[[2]]),
                                              location_id_colname = "station")

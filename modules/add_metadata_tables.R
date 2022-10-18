@@ -30,23 +30,27 @@ metadata_server <- function(id, com_module) {
 
     # Get selected measurements from communication module
     metadata_table <- reactive({
+      
+      shiny::validate(need(nrow(com_module$selected_measurements()) >0, message =  "Select one or more sensors (with data)"))
       data_measurements <- com_module$selected_measurements()
+      
+      timerange <- difftime(com_module$selected_time$selected_end_date(),com_module$selected_time$selected_start_date(), units="hours")
       metadata_table <- data_measurements %>%  group_by(station) %>%
-        mutate(n_obs = n(),
-               first_m = min(timestamp),
-               last_m = max(timestamp)) %>%
-        select(station, n_obs, first_m, last_m) %>% distinct(station, .keep_all = T)
+                        mutate(n_obs = n(),
+                               max_obs = timerange,
+                               first_m = as.POSIXct(as.numeric(min(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y"),	
+                               last_m = as.POSIXct(as.numeric(max(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y")) %>%
+                        select(station, max_obs, n_obs, first_m, last_m) %>% 
+                        distinct(station, .keep_all = T)
       return(metadata_table)
     })
 
     # Get selected stations from communication module
     data_merged <- reactive({
+      
       data_stations <- com_module$station_locations() %>% select(c(station, lat, lon, station_type)) %>% dplyr::distinct(station, .keep_all = T)
+      data_merged <- left_join(metadata_table(),data_stations, by = "station")
 
-      if (nrow(metadata_table() > 0)){
-          data_merged <- left_join(metadata_table(),data_stations, by = "station")
-      }
-      else {data_merged <- data.frame("station" = '', "n_obs" = '', "station_type"  = ' ')}
       return(data_merged)
     })
 
@@ -68,14 +72,14 @@ metadata_server <- function(id, com_module) {
     output$meta_table <-
 
       renderDataTable({
-
+        
         # Determine parameter that needs to be plotted
         n_obs_sel <- metadata_table()$n_obs
 
         if(length(n_obs_sel>1)){
-          try(datatable(data_merged(),colnames = c("Number of observations" = "n_obs", "Station type" = "station_type"),
-                       caption = paste0(i18n$t("word_table")," ",unique(com_module$selected_measurements()$parameter),","," ", i18n$t("word_within"), project_or_municipality())) %>%
-          formatStyle("Number of observations", backgroundColor = styleInterval(cuts = breaks_col()[[1]], values = breaks_col()[[2]]))
+          try(datatable(data_merged(),colnames = c("Number of measurements" = "n_obs", "Maximum measurements" = "max_obs", "First measurements" = "first_m", "Last measurements" = "last_m", "Type" = "station_type", "Latitude" = "lat", "Longitude" = "lon"),
+                       caption = paste0(i18n$t("word_table")," ",unique(com_module$selected_measurements()$parameter),","," ", i18n$t("word_within"), project_or_municipality()),options = list(scrollX = TRUE)) %>%
+            formatStyle("Number of measurements", backgroundColor = styleInterval(cuts = breaks_col()[[1]], values = breaks_col()[[2]]))
           )
         }})
 
