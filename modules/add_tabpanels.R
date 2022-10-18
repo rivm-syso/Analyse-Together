@@ -90,7 +90,7 @@ tpTimevariationWeekly <- function(){
 
 tpTimevariationDaily <- function(){
   tp <-  shiny::tabPanel("Daily pattern",
-                         helpText(i18n$t("expl_overviewplot")),
+                         helpText(i18n$t("expl_overviewplot_daily")),
                          
                          fluidRow(
                            
@@ -101,7 +101,7 @@ tpTimevariationDaily <- function(){
                          ),
                          
                          h4(i18n$t("title_expl")),
-                         p(i18n$t("expl_overviewplot_expl"),
+                         p(i18n$t("expl_overviewplot_expl_daily"),
                            style = "font-size:12px")
   )
   
