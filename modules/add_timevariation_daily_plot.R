@@ -46,8 +46,13 @@ timevar_daily_server <- function(id, data_measurements_stations) {
       parameter_sel <- data_measurements()$parameter
 
       # Find the corresponding label
-      parameter_label <- str_replace(toupper(parameter_sel[1]), '_', ' - ')
-
+      
+      # Find the corresponding label
+      parameter_label <- filter(overview_component, component == parameter_sel[1])['label']
+      if (nrow(parameter_label) < 1){
+        parameter_label <- " "
+      }
+      
       data_timevar <- data_measurements() %>% filter(parameter == parameter_sel)
       data_timevar <- merge(data_timevar, data_stations(), by = 'station')
 
