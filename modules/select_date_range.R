@@ -30,9 +30,8 @@ date_range_server <- function(id,
 
                # Get the min and max of the dataset
                get_date_total <- reactive({
-                 date_total <- comm_date$start_end_total()
+                 date_total <- comm_date$selected_time()
                  return(date_total)
-
                })
 
                get_mun_proj_select <- reactive({
@@ -53,7 +52,7 @@ date_range_server <- function(id,
                      label = i18n$t("sel_date"),
                      start = date_total$start_time,
                      end = date_total$end_time,
-                     min = date_total$start_time,
+                     # min = date_total$start_time,
                      max = date_total$end_time,
                      format = "dd-mm-yyyy",
                      separator = " - "
