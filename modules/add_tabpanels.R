@@ -7,7 +7,8 @@ tpAnalyse <- function(){
                            tpTimeplot(),
                            tpBarplot(),
                            # tpKalender(),
-                           tpTimevariation(),
+                           tpTimevariationWeekly(),
+                           tpTimevariationDaily(),
                            #tpPercentileRose(),
                            tpPollutionRose(),
                            #tpWindRose(),
@@ -66,15 +67,15 @@ tpKalender <- function(){
   return(tp)
 }
 
-tpTimevariation <- function(){
-  tp <-  shiny::tabPanel("Overview of measurements",
+tpTimevariationWeekly <- function(){
+  tp <-  shiny::tabPanel("Weekly pattern",
                          helpText(i18n$t("expl_overviewplot")),
 
                          fluidRow(
 
                            # Render timevariation plot.
 
-                           column(12, wellPanel(timevar_output("timevar_plot"))),
+                           column(12, wellPanel(timevar_weekly_output("timevar_plot_weekly"))),
 
                          ),
 
@@ -83,6 +84,27 @@ tpTimevariation <- function(){
                            style = "font-size:12px")
   )
 
+  return(tp)
+}
+
+
+tpTimevariationDaily <- function(){
+  tp <-  shiny::tabPanel("Daily pattern",
+                         helpText(i18n$t("expl_overviewplot_daily")),
+                         
+                         fluidRow(
+                           
+                           # Render timevariation plot.
+                           
+                           column(12, wellPanel(timevar_daily_output("timevar_plot_daily"))),
+                           
+                         ),
+                         
+                         h4(i18n$t("title_expl")),
+                         p(i18n$t("expl_overviewplot_expl_daily"),
+                           style = "font-size:12px")
+  )
+  
   return(tp)
 }
 
