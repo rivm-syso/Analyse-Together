@@ -135,6 +135,9 @@ comp_choices = setNames(overview_component$component, overview_component$label)
 proj_choices = sort(projects$project)
 mun_choices  = sort(municipalities$X2)
 
+overview_select_choices <- data.frame('type' = c("project","municipality"), 'label'=c("project","gemeente"))
+select_choices = setNames(overview_select_choices$type, overview_select_choices$label)
+
 ### APP SPECIFIC SETTINGS                                                   ====
 
 # Source module for the communication

@@ -12,7 +12,7 @@ shinyServer(function(global, input, output, session) {
   select_component <- component_selection_server("select_component", comp_choices)
 
   # select project/mun
-  proj_or_mun_select <- project_or_mun_selection_server("proj_or_mun_select")
+  proj_or_mun_select <- project_or_mun_selection_server("proj_or_mun_select", select_choices)
 
   # The dateRangeInput for date range selection
   select_date_range <- date_range_server("select_date_range", communication_stuff)
