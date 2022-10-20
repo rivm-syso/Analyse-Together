@@ -30,24 +30,25 @@ metadata_server <- function(id, com_module) {
 
     # Get selected measurements from communication module
     metadata_table <- reactive({
-      
+      browser()
       shiny::validate(need(nrow(com_module$selected_measurements()) >0, message =  "Select one or more sensors (with data)"))
       data_measurements <- com_module$selected_measurements()
-      
-      timerange <- difftime(com_module$selected_time$selected_end_date(),com_module$selected_time$selected_start_date(), units="hours")
+
+      timerange <- difftime(com_module$selected_time()$start_time, com_module$selected_time()$end_time, units="hours")
       metadata_table <- data_measurements %>%  group_by(station) %>%
                         mutate(n_obs = n(),
                                max_obs = timerange,
-                               first_m = as.POSIXct(as.numeric(min(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y"),	
+                               first_m = as.POSIXct(as.numeric(min(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y"),
                                last_m = as.POSIXct(as.numeric(max(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y")) %>%
-                        select(station, max_obs, n_obs, first_m, last_m) %>% 
+                        select(station, max_obs, n_obs, first_m, last_m) %>%
                         distinct(station, .keep_all = T)
+      browser()
       return(metadata_table)
     })
 
     # Get selected stations from communication module
     data_merged <- reactive({
-      
+
       data_stations <- com_module$station_locations() %>% select(c(station, lat, lon, station_type)) %>% dplyr::distinct(station, .keep_all = T)
       data_merged <- left_join(metadata_table(),data_stations, by = "station")
 
@@ -72,7 +73,7 @@ metadata_server <- function(id, com_module) {
     output$meta_table <-
 
       renderDataTable({
-        
+
         # Determine parameter that needs to be plotted
         n_obs_sel <- metadata_table()$n_obs
 
