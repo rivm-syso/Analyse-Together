@@ -40,12 +40,13 @@ shinyUI(
       title = "Home",
 
       fluidRow(
-        column(width = 4, wellPanel(
+        column(width = 2, wellPanel(
         shiny.i18n::usei18n(i18n),
         selectInput('selected_language',
                     i18n$t("sel_language"),
                     choices = i18n$get_languages(),
-                    selected = i18n$get_key_translation())))),
+                    selected = i18n$get_key_translation()))),
+        column(width = 2, wellPanel(update_data_button_output("update_data")))),
 
       fluidRow(
         column(width = 6 ,
@@ -64,7 +65,7 @@ shinyUI(
                                                                       choice_selection_output("choice_select"),style = "z-index: 10;",
 
                                                                       date_range_output("select_date_range"),style = "z-index: 1000;",
-                                                                      download_api_button_output("dl_btn_pushed")
+                                                                      download_api_button_output("dl_btn_pushed"),style = "z-index: 1000;"
                                                             )
                               )
 
