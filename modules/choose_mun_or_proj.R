@@ -32,7 +32,6 @@ choice_selection_server <- function(id, com_module, mun_choices, proj_choices) {
 
 
     output$choice_select <- renderUI({
-      browser()
 
       if (is.null(get_choice_select()) == FALSE){
 
