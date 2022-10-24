@@ -1,7 +1,6 @@
 ######################################################################
 # Example download function
 ######################################################################
-
 dl_station <- function(id, time_start, time_end) {
 
     library(tidyverse)
@@ -18,7 +17,7 @@ dl_station <- function(id, time_start, time_end) {
     #load functions
     source("./funs/database_fun.R")
 
-    fname_db <- datafile("database.db") 
+    fname_db <- datafile("database.db")
     conn <- DBI::dbConnect(drv = SQLite(), dbname = fname_db)
 
     sqliteSetBusyHandler(conn, 10000) # time out in ms in case db is locked
@@ -27,7 +26,7 @@ dl_station <- function(id, time_start, time_end) {
         ", end:", as_datetime(time_end), "\n")
 
     # Download data
-    log_debug("downloading measurements for station {i}")
+    log_debug("downloading measurements for station {id}")
     date_range <- round_to_days(time_start, time_end)
     d <- download_data(id, Tstart = time_start, Tend = time_end,
                        fun = "download_data_samenmeten",
@@ -40,7 +39,7 @@ dl_station <- function(id, time_start, time_end) {
     # Download meteo station data
     log_debug("downloading measurements for meteo station")
     date_range <- round_to_days(time_start, time_end)
-    knmistation <- kitmeta %>% 
+    knmistation <- kitmeta %>%
         select(knmicode)  %>%
         mutate(knmi_id = str_replace(knmicode, "knmi_06", "KNMI_")) %>%
         pull(knmi_id)

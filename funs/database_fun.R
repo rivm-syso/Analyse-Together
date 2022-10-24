@@ -97,10 +97,10 @@ download_sensor_meta <- function(name, type, conn = pool) {
 
     switch(type,
            project = {
-               projinfo <- api_get_project_info(project, conn = conn)
+               projinfo <- api_get_project_info(name, conn = conn)
            },
            municipality = {
-               projinfo <- api_get_municipality_info(project, conn = conn)
+               projinfo <- api_get_municipality_info(name, conn = conn)
            },
            { #unknown type
                stop("download_sensor_meta: unknown type")
@@ -116,7 +116,7 @@ download_sensor_meta <- function(name, type, conn = pool) {
         select(-lat, -lon) %>%
         as_tibble()
 
-    log_debug(paste("Got", nrow(stations), "stations for project", project))
+    log_debug(paste("Got", nrow(stations), "stations for project", name))
     apply(stations, 1, FUN  = insert_location_info_vectorized, conn = conn)
 
 
