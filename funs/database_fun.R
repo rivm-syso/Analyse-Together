@@ -158,23 +158,24 @@ get_stations_from_selection <- function(name, type, conn = pool) {
     #    type: either 'project' or 'municipality'
     #    conn: db connection object
 
-
     switch(type,
            project = {
                info <- get_doc(type = "project", ref = name, conn = conn)
-               kits <- info$sensor_data %>%
-                   pull(kit_id)
            },
            municipality = {
                info <- get_doc(type = "municipality", ref = name, conn = conn)
-               kits <- info$sensor_data %>%
-                   pull(kit_id)
            },
            { #unknown type
                stop("download_sensor_meta: unknown type")
            })
 
-
+      # Check if municipality in database exists
+      if(!is.list(info)){
+        return(NULL)
+      }
+      # Get the kits
+      kits <- info$sensor_data %>%
+        pull(kit_id)
     return(kits)
 }
 
