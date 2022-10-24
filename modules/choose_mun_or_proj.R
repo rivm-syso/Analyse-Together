@@ -32,10 +32,11 @@ choice_selection_server <- function(id, com_module, mun_choices, proj_choices) {
 
 
     output$choice_select <- renderUI({
+      browser()
 
       if (is.null(get_choice_select()) == FALSE){
 
-          if (get_choice_select() == "Municipality" | get_choice_select() == "Gemeente"){
+          if (get_choice_select() == "municipality" ){
               # Create the component picker with a list of possible choices
               tagList(
 
