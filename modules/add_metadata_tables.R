@@ -31,6 +31,7 @@ metadata_server <- function(id, com_module) {
     # Get selected measurements from communication module
     metadata_table <- reactive({
 
+
       shiny::validate(need(nrow(com_module$selected_measurements()) >0, message =  "Select one or more sensors (with data)"))
       data_measurements <- com_module$selected_measurements()
 
