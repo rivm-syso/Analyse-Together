@@ -73,7 +73,6 @@ timeseries_server <- function(id,
                    min_meas <- plyr::round_any(min(data_timeseries$value, na.rm = T), 5, f = floor)
                    max_meas <- plyr::round_any(max(data_timeseries$value, na.rm = T), 5, f = ceiling)
                    steps <- plyr::round_any(max_meas / 15, 10, f = ceiling) # to create interactive y-breaks
-                   print(ceiling(n_days_in_plot/7))
 
                    # Make a plot
                    if (length(parameter>0)){
