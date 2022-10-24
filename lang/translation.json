@@ -105,11 +105,19 @@
       },
       {"tag" : "expl_overviewplot",
         "en": "See Dutch",
-        "nl": "Deze grafieken laten het gemiddelde zien voor verschillende tijdsperioden per sensor of sensorgroep."
+        "nl": "Deze grafieken laten het uurlijkse gemiddelde zien per sensor of sensorgroep. Dit is uitgerekend per weekdag. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag."
+      },
+      {"tag" : "expl_overviewplot_daily",
+        "en": "See Dutch",
+        "nl": "Deze grafieken laten het uurlijkse gemiddelde zien per sensor of sensorgroep. Dit is uitgerekend over alle dagen die u heeft geselecteerd. Dit levert een gemiddelde dagelijkse gang van de concentraties op."
       },
       {"tag" : "expl_overviewplot_expl",
         "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per tijdsperiode getoond. De bovenste grafiek laat de gemiddelde uurwaarde, uitgesplitst naar weekdag, zien. Onder zie je de gemiddelde concentratie op elk uur van de dag (links), in het midden zie je de gemiddelde concentratie per maand en rechts zie je de gemiddelde concentratie per dag van de week."
+        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplits naar alle dagen van de week."
+      },
+      {"tag" : "expl_overviewplot_expl_daily",
+        "en": "See Dutch",
+        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag."
       },
       {"tag" : "expl_concplot%",
         "en": "See Dutch",

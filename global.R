@@ -165,7 +165,8 @@ source("modules/add_metadata_tables.R")
 source("modules/add_bar_plot.R")
 source("modules/add_timeseries_plot.R")
 source("modules/add_pollutionrose_plot.R")
-source("modules/add_timevariation_plot.R")
+source("modules/add_timevariation_weekly_plot.R")
+source("modules/add_timevariation_daily_plot.R")
 
 # Source functions
 source("funs/assign_color_stations.R")
