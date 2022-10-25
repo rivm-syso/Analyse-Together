@@ -40,7 +40,7 @@ api_get_municipality_info <- function(municipality, conn) {
                   rename(code = X1, name = X2)
 
     gemid <- m %>%
-          filter(name == gemeente) %>%
+          filter(name == municipality) %>%
           pull(code) %>%
           as.character()
 
@@ -64,7 +64,7 @@ download_sensor_meta <- function(name, type, conn = pool) {
     #    conn: db connection object
 
     #############
-    # vectorized helper functions 
+    # vectorized helper functions
 
     insert_location_info_vectorized <- function(x, conn = conn) {
         kit <- x %>%
@@ -95,12 +95,12 @@ download_sensor_meta <- function(name, type, conn = pool) {
     #############
 
 
-    switch(type, 
+    switch(type,
            project = {
-               projinfo <- api_get_project_info(project, conn = conn)
-           }, 
+               projinfo <- api_get_project_info(name, conn = conn)
+           },
            municipality = {
-               projinfo <- api_get_municipality_info(project, conn = conn)
+               projinfo <- api_get_municipality_info(name, conn = conn)
            },
            { #unknown type
                stop("download_sensor_meta: unknown type")
@@ -116,7 +116,7 @@ download_sensor_meta <- function(name, type, conn = pool) {
         select(-lat, -lon) %>%
         as_tibble()
 
-    log_debug(paste("Got", nrow(stations), "stations for project", project))
+    log_debug(paste("Got", nrow(stations), "stations for project", name))
     apply(stations, 1, FUN  = insert_location_info_vectorized, conn = conn)
 
 
@@ -148,7 +148,7 @@ download_sensor_meta <- function(name, type, conn = pool) {
 
 get_stations_from_selection <- function(name, type, conn = pool) {
     # this function gets all the stations belonging to the selected
-    # project of municipality. 
+    # project of municipality.
     # It returns a vector with stations ids (kit_ids), this vector can
     # then be used to download measurement data
     # The type arguments determine if data is requested for a
@@ -158,23 +158,24 @@ get_stations_from_selection <- function(name, type, conn = pool) {
     #    type: either 'project' or 'municipality'
     #    conn: db connection object
 
-
-    switch(type, 
+    switch(type,
            project = {
                info <- get_doc(type = "project", ref = name, conn = conn)
-               kits <- info$sensor_data %>%
-                   pull(kit_id)
-           }, 
+           },
            municipality = {
                info <- get_doc(type = "municipality", ref = name, conn = conn)
-               kits <- info$sensor_data %>%
-                   pull(kit_id)
            },
            { #unknown type
                stop("download_sensor_meta: unknown type")
            })
 
-
+      # Check if municipality in database exists
+      if(!is.list(info)){
+        return(NULL)
+      }
+      # Get the kits
+      kits <- info$sensor_data %>%
+        pull(kit_id)
     return(kits)
 }
 
@@ -219,7 +220,7 @@ download_data_samenmeten <- function(x, station, conn ) {
         m <- streams_desc %>% filter(datastream_id == i) %>%
             pull(kit_id_ext)
         log_trace("getting stream {i} {m}")
-        
+
         res <- try(obs <- GetSamenMetenAPIobs(as.character(i),
                                    station, ts_api, te_api))
         if(!class(res) == "try-error") {
@@ -245,104 +246,104 @@ download_data_samenmeten <- function(x, station, conn ) {
 
 
 download_data_knmi <- function(x, station, conn) {
-  
+
   ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
   te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
-  
+
   station_nr <- gsub(".*_", "", station)
-  
+
   log_debug("downloading data for station {station_nr} for time range {ts_api} -  {te_api}")
-  
+
   knmi_all <- samanapir::GetKNMIAPI(station_nr, ts_api, te_api)
-  
-  knmi_measurements <- knmi_all$data %>% as.data.frame() %>% select(-c('YYYYMMDD', 'H')) %>% 
+
+  knmi_measurements <- knmi_all$data %>% as.data.frame() %>% select(-c('YYYYMMDD', 'H')) %>%
     rename("station" = "STNS", "wd" = "DD", "ws" = "FF", "temp" = "TEMP", "rh" = "U", "timestamp" = "tijd")
-  
-  knmi_measurements$station <- paste0("KNMI_", knmi_measurements$station) 
-  
-  knmi_measurements <- knmi_measurements %>% pivot_longer(cols = c("wd", "ws", "temp", "rh"), names_to = "parameter", values_to = "value") %>% 
+
+  knmi_measurements$station <- paste0("KNMI_", knmi_measurements$station)
+
+  knmi_measurements <- knmi_measurements %>% pivot_longer(cols = c("wd", "ws", "temp", "rh"), names_to = "parameter", values_to = "value") %>%
     drop_na() %>% mutate(aggregation = 3600)
-  
+
   return(knmi_measurements)
-  
+
 }
 
 
 download_locations_knmi <- function(knmi_stations, time_start, time_end) {
-  
+
   station_nr <- gsub(".*_", "", knmi_stations)
-  
+
   knmi_stations_all <- samanapir::GetKNMIAPI(station_nr, format(time_start, '%Y%m%d'), format(time_end, '%Y%m%d'))
-  
-  knmi_stations_locations <- knmi_stations_all$info %>% 
-      as.data.frame() %>% 
-      select(c("STNS", "LAT", "LON")) %>% 
-      rename("station" = "STNS", "lat" = "LAT", "lon" = "LON") %>% 
-      drop_na() %>% 
+
+  knmi_stations_locations <- knmi_stations_all$info %>%
+      as.data.frame() %>%
+      select(c("STNS", "LAT", "LON")) %>%
+      rename("station" = "STNS", "lat" = "LAT", "lon" = "LON") %>%
+      drop_na() %>%
       mutate(lat = as.numeric(lat)) %>%
-      mutate(lon = as.numeric(lon)) %>% 
+      mutate(lon = as.numeric(lon)) %>%
       mutate(station = paste0("KNMI_", station))
-  
+
   return(knmi_stations_locations)
-  
+
 }
 
 get_lmlstations_from_meta <- function(meta_data){
-  
+
   meta_doc <- meta_data %>% filter(type == "station") %>% select(doc)
-  
+
   station_list <- c()
-  
+
   for (i in 1:nrow(meta_doc)){
     station_list <- append(station_list, str_split(meta_doc[i, ], ","))
   }
-  
+
   station_list <- unlist(station_list)
-  station_list <- station_list[str_detect(station_list, "NL")] 
+  station_list <- station_list[str_detect(station_list, "NL")]
   station_list <- gsub('[^[:alnum:] ]', '', station_list)
   station_list <- Filter(function(x) str_length(x) < 8, station_list)
   station_list <- unique(station_list)
-  
+
   return(station_list)
-  
+
 }
 
 download_data_lml <- function(x, station, conn) {
-  
+
   ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
   te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
-  
+
   log_debug("downloading data for station {station} for time range {ts_api} -  {te_api}")
-  
+
   lml_data <- samanapir::GetLMLstatdataAPI(station, ts_api, te_api)
-  
+
   if (length(lml_data) == 0){
     # Return empty dataframe if station returns no data
-    
+
     lml_data <- data.frame(matrix(ncol = 5, nrow = 0))
     colnames(lml_data) <- c("station", "value", "timestamp", "parameter", "aggregation")
   }
-  
+
   else{
-    
+
     lml_data <- lml_data %>% rename("station" = "station_number", "timestamp" = "timestamp_measured", "parameter" = "formula") %>%
       drop_na() %>% mutate(aggregation = 3600) %>% mutate(parameter = tolower(parameter))
   }
-  
+
   return(lml_data)
 }
 
 download_locations_lml <- function(stations) {
-  
+
   lml_locations <- samanapir::GetLMLstatinfoAPI(stations)
-  
+
   lml_locations <- lml_locations %>%
     select(c("station_number", "lat", "lon")) %>%
     drop_na() %>%
     mutate(lat = as.numeric(lat)) %>%
     mutate(lon = as.numeric(lon))
-  
+
   return(lml_locations)
-  
+
 }
 
