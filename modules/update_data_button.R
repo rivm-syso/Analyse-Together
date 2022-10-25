@@ -13,7 +13,7 @@ update_data_button_server <- function(id) {
 
     ns <- session$ns
 
-    btn <- reactive(input$update_data_button)
+    btn <- eventReactive(input$update_data_button, {T})
 
 
   })

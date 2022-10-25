@@ -61,6 +61,12 @@ communication_server <- function(id,
 
 
                  get_data <- reactive({
+                   
+                   update_button <- update_data()
+                   download_button <- download_data_123()
+                   shiny::validate(
+                     need(update_button | download_button,"Klik op button update")
+                   )
 
                    # Get the selected choice
                    type_choice <- choice_select()
@@ -104,8 +110,8 @@ communication_server <- function(id,
 
                 # Get the total time of the measurements, those are the limits for the time selection picker
                  get_time_total <- reactive({
-                  start_time <- get_data()$data_measurements %>% select(date) %>% pull() %>% min()
-                  end_time <- get_data()$data_measurements %>% select(date) %>% pull() %>% max()
+                  start_time <- isolate(get_data())$data_measurements %>% select(date) %>% pull() %>% min()
+                  end_time <- isolate(get_data())$data_measurements %>% select(date) %>% pull() %>% max()
                   log_trace("com module: total time range {start_time} - {end_time}")
                   return(list(start_time = start_time, end_time = end_time))
                 })
@@ -132,7 +138,7 @@ communication_server <- function(id,
                  # TODO create a function or reactive to make this selection which locations to use
                  get_stations_total <- reactive({
                    # Set selected stations to TRUE
-                   stations_total <- get_data()$data_sensors %>%
+                   stations_total <- isolate(get_data())$data_sensors %>%
                      dplyr::mutate(selected = ifelse(station %in% c(selected_stations$state_station()),  T, selected))
                    # Assign colors -> sensor
                    stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
@@ -221,17 +227,19 @@ communication_server <- function(id,
                    # TODO check if selected sensors has data that time and component, otherwise a message?
                    # TODO for the selected stations and parameters connect with those selection modules
                    # Filter the measurements
-                   measurements_filt <- get_data()$data_measurements %>%
+                   measurements_filt <- isolate(get_data())$data_measurements %>%
                      dplyr::filter(date > start_time & date < end_time & station %in% selected_stations)
 
                    return(measurements_filt)
                  })
 
                  observeEvent(update_data(), {
+                   
                    get_data()
                    })
 
                  observeEvent(download_data_123(), {
+                   
                    get_data()
                  })
 
