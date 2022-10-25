@@ -1,51 +1,51 @@
 # Define UI
 shinyUI(
-  
+
   # We initiate the navbarpage with inputs
   navbarPage(
-    
+
     # For the top two headers (white and pink one)
     tags$head(
-      
+
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
-      
+
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
-      
+
       # White header with logo
       tags$div(class = "header-white",
-               
+
                tags$img(src = "images/Banner_2018.png", style = "height: 180px; width: 690px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
-               
+
       ),
-      
+
       # Colored header with text
       tags$div(class = "header-color",
-               
+
                tags$style(HTML("h1 {margin-bottom: -15px;")),
-               
+
                tags$h1("Samen Analyseren"),
                tags$h4(paste("Version", application_version)),
                tags$p("")
       )
-      
+
     ),
-    
+
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
     selected    = "Home",
-    
+
     tabPanel(
       title = "Home",
-      
+
       fluidRow(
         column(width = 2, wellPanel(
         shiny.i18n::usei18n(i18n),
-          radioGroupButtons('selected_language', size = 'sm',justified = T,width = '100px', 
+          radioGroupButtons('selected_language', size = 'sm',justified = T,width = '100px',
                             label = i18n$t("sel_language"),
-                          choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],    
-                          selected = i18n$get_key_translation())))),
+                          choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
+                          selected = i18n$get_key_translation()))),
         column(width = 2, wellPanel(update_data_button_output("update_data")))),
 
       fluidRow(
@@ -115,7 +115,7 @@ shinyUI(
       h4(HTML('&nbsp;'),i18n$t("title_expl")),
       p(HTML('&nbsp;'),i18n$t("expl_moreinfo"),
         style = "font-size:12px"))
-    
+
   )
-  
+
 )
