@@ -32,6 +32,8 @@ communication_output <- function(id) {
 #
 
 communication_server <- function(id,
+                                 update_data,
+                                 download_data_123,
                                  pool,
                                  measurements_con,
                                  stations_con,
@@ -57,7 +59,9 @@ communication_server <- function(id,
 
                  ns <- session$ns
 
+
                  get_data <- reactive({
+
                    # Get the selected choice
                    type_choice <- choice_select()
 
@@ -192,8 +196,9 @@ communication_server <- function(id,
                    # TODO some check if time is available in data
                    # TODO check if selected sensors has data that time and component, otherwise a message?
                    # TODO for the selected stations and parameters connect with those selection modules
+                   all_data <- isolate(get_data()$data_measurements)
                    # Filter the measurements
-                   measurements_filt <- get_data()$data_measurements %>%
+                   measurements_filt <- all_data %>%
                      dplyr::filter(date > start_time & date < end_time &
                                      station %in% selected_stations &
                                      parameter == selected_parameter)
@@ -220,6 +225,14 @@ communication_server <- function(id,
                      dplyr::filter(date > start_time & date < end_time & station %in% selected_stations)
 
                    return(measurements_filt)
+                 })
+
+                 observeEvent(update_data(), {
+                   get_data()
+                   })
+
+                 observeEvent(download_data_123(), {
+                   get_data()
                  })
 
                 return(list(

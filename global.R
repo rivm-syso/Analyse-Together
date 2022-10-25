@@ -135,6 +135,9 @@ comp_choices = setNames(overview_component$component, overview_component$label)
 proj_choices = sort(projects$project)
 mun_choices  = sort(municipalities$X2)
 
+overview_select_choices <- data.frame('type' = c("project","municipality"), 'label'=c("project","gemeente"))
+select_choices = setNames(overview_select_choices$type, overview_select_choices$label)
+
 ### APP SPECIFIC SETTINGS                                                   ====
 
 # Source module for the communication
@@ -153,6 +156,7 @@ source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
 source("modules/download_api_button.R")
+source("modules/update_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
@@ -169,6 +173,8 @@ source("funs/assign_color_stations.R")
 source("funs/assign_linetype_stations.R")
 source("funs/geoshaper_findlocations.R")
 source("funs/database_fun.R")
+source("funs/queue_fun.R")
+source("funs/download_fun.R")
 
 # Source layout
 source("modules/add_tabpanels.R")

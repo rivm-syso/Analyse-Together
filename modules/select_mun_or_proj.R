@@ -20,7 +20,7 @@ project_or_mun_selection_output <- function(id) {
 # Server Module
 ######################################################################
 
-project_or_mun_selection_server <- function(id) {
+project_or_mun_selection_server <- function(id, select_choices) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -34,7 +34,7 @@ project_or_mun_selection_server <- function(id) {
         pickerInput(
           ns("proj_or_mun_select"),
           label    = i18n$t("sel_basedon"),
-          choices  = c(i18n$t("word_muni"), "Project"),
+          choices  = select_choices,
           selected = NULL,
           multiple = TRUE,
           options = pickerOptions(maxOptions = 1)

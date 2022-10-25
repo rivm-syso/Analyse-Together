@@ -12,7 +12,7 @@ shinyServer(function(global, input, output, session) {
   select_component <- component_selection_server("select_component", comp_choices)
 
   # select project/mun
-  proj_or_mun_select <- project_or_mun_selection_server("proj_or_mun_select")
+  proj_or_mun_select <- project_or_mun_selection_server("proj_or_mun_select", select_choices)
 
   # The dateRangeInput for date range selection
   select_date_range <- date_range_server("select_date_range", communication_stuff)
@@ -41,6 +41,8 @@ shinyServer(function(global, input, output, session) {
   
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
+                                              update_data = update_data_button,
+                                              download_data = download_api_button,
                                               pool = pool,
                                               measurements_con = measurements_con,
                                               stations_con = stations_con,
@@ -62,7 +64,7 @@ shinyServer(function(global, input, output, session) {
                                               line_overload
                                               )
 
-download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range)
-
+download_api_button <- download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range, pool)
+update_data_button <- update_data_button_server("update_data")
 
 })

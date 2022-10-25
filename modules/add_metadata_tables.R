@@ -30,25 +30,25 @@ metadata_server <- function(id, com_module) {
     
     # Get selected measurements from communication module
     metadata_table <- reactive({
-      
+
       shiny::validate(need(nrow(com_module$selected_measurements()) >0, message =  "Select one or more sensors (with data)"))
       data_measurements <- com_module$selected_measurements()
-      
+
       timerange <- difftime(com_module$selected_time()$end_time, com_module$selected_time()$start_time, units="hours")
-      print(timerange)
       metadata_table <- data_measurements %>%  group_by(station) %>%
-        mutate(n_obs = n(),
-               max_obs = timerange,
-               first_m = as.POSIXct(as.numeric(min(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y"),	
-               last_m = as.POSIXct(as.numeric(max(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y")) %>%
-        select(station, max_obs, n_obs, first_m, last_m) %>% 
-        distinct(station, .keep_all = T)
+                        mutate(n_obs = n(),
+                               max_obs = timerange,
+                               first_m = as.POSIXct(as.numeric(min(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y"),
+                               last_m = as.POSIXct(as.numeric(max(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y")) %>%
+                        select(station, max_obs, n_obs, first_m, last_m) %>%
+                        distinct(station, .keep_all = T)
+
       return(metadata_table)
     })
     
     # Get selected stations from communication module
     data_merged <- reactive({
-      
+
       data_stations <- com_module$station_locations() %>% select(c(station, lat, lon, station_type)) %>% dplyr::distinct(station, .keep_all = T)
       data_merged <- left_join(metadata_table(),data_stations, by = "station")
       
@@ -73,7 +73,7 @@ metadata_server <- function(id, com_module) {
     output$meta_table <-
       
       renderDataTable({
-        
+
         # Determine parameter that needs to be plotted
         n_obs_sel <- metadata_table()$n_obs
         
@@ -82,15 +82,6 @@ metadata_server <- function(id, com_module) {
                         caption = paste0(i18n$t("word_table")," ",unique(com_module$selected_measurements()$parameter),","," ", i18n$t("word_within"), " ",project_or_municipality()),options = list(scrollX = TRUE)) %>%
                 formatStyle("Number of measurements", backgroundColor = styleInterval(cuts = breaks_col()[[1]], values = breaks_col()[[2]]))
           )
-        }})
-    
-    
-  })
-  
-  
+        }})      
+  })   
 }
-
-
-
-
-
