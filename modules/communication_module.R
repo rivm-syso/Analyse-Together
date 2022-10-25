@@ -61,11 +61,11 @@ communication_server <- function(id,
 
 
                  get_data <- reactive({
-                   
+                   browser()
                    update_button <- update_data()
-                   download_button <- download_data_123()
+                   download_button <-  download_data_123()
                    shiny::validate(
-                     need(update_button | download_button,"Klik op button update")
+                     need((update_button | download_button), "Klik op button update")
                    )
 
                    # Get the selected choice
@@ -126,6 +126,7 @@ communication_server <- function(id,
 
                 # TODO this needs to get some administration to select and deselect
                 get_selected_station <- reactive({
+                  browser()
                   selected_station <- get_stations_total() %>%
                     dplyr::filter(selected == T) %>%
                     dplyr::select(station) %>%
@@ -137,9 +138,16 @@ communication_server <- function(id,
                  # We assume that each station has only 1 location. Or we plot all, we don't distinguish location time
                  # TODO create a function or reactive to make this selection which locations to use
                  get_stations_total <- reactive({
+                   browser()
                    # Set selected stations to TRUE
+                   # stations_total <- isolate(get_data())$data_sensors %>%
+                   #   dplyr::mutate(selected = ifelse(station %in% c(selected_stations$state_station()),  T, selected))
+                   data_snsrs <- try(isolate(get_data())$data_sensors, silent = T)
+                   shiny::validate(
+                     need(class(data_snsrs) != "try-error", "Error, no data selected.")
+                   )
                    stations_total <- isolate(get_data())$data_sensors %>%
-                     dplyr::mutate(selected = ifelse(station %in% c(selected_stations$state_station()),  T, selected))
+                      dplyr::mutate(selected = ifelse(station %in% c(selected_stations$state_station()),  T, selected))
                    # Assign colors -> sensor
                    stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
 
@@ -189,6 +197,7 @@ communication_server <- function(id,
 
                  # Reactive for the measurements to filter on input, time, map, component
                  filter_data_measurements <- reactive({
+                   browser()
                    # Get the start and end time to filter on
                    time_selected <- get_time_selection()
                    start_time <- time_selected$start_time
@@ -234,7 +243,7 @@ communication_server <- function(id,
                  })
 
                  observeEvent(update_data(), {
-                   
+                   browser()
                    get_data()
                    })
 

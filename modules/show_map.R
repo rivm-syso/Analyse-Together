@@ -96,8 +96,7 @@ show_map_server <- function(id, com_module) {
           icon="fa-crosshairs", title="Locate Me",
           onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
         addScaleBar(position = "bottomleft")
-      
-      
+    
     })
     
 
@@ -142,6 +141,7 @@ show_map_server <- function(id, com_module) {
     }
     
     add_sensors_map <- function(){
+      
       # Check if there is data
       data_snsrs <- try(get_locations()[[1]], silent = T)
       shiny::validate(
