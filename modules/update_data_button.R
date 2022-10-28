@@ -14,6 +14,7 @@ update_data_button_server <- function(id) {
     ns <- session$ns
 
     btn <- eventReactive(input$update_data_button, {T})
+    return(btn)
 
 
   })

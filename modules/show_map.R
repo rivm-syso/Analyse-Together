@@ -67,6 +67,7 @@ show_map_server <- function(id, com_module) {
     output$map <- renderLeaflet({
       
       data_snsrs <- try(get_locations()[[1]], silent = T)
+      print(data_snsrs)
       shiny::validate(
 
         need(class(data_snsrs) != "try-error", "Not yet selected any data.")
@@ -141,7 +142,7 @@ show_map_server <- function(id, com_module) {
     }
     
     add_sensors_map <- function(){
-      
+
       # Check if there is data
       data_snsrs <- try(get_locations()[[1]], silent = T)
       shiny::validate(
