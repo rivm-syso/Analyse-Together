@@ -39,7 +39,6 @@ shinyUI(
     tabPanel(
       title = "Home",
 
-
       fluidRow(
         column(width = 2, wellPanel(
         shiny.i18n::usei18n(i18n),
@@ -47,6 +46,7 @@ shinyUI(
                             label = i18n$t("sel_language"),
                           choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
                           selected = i18n$get_key_translation()))),
+
         conditionalPanel(condition="input.second_order_tabs!='Select data'",
                          column(width = 2, wellPanel(update_data_button_output("update_data"))))),
 
