@@ -24,7 +24,7 @@ shinyServer(function(global, input, output, session) {
   meta_table <- metadata_server("meta_table", communication_stuff)
 
   # The Map
-  map <- show_map_server("map", communication_stuff)
+  map <- show_map_server("map", communication_stuff, update_data = update_data_button)
 
   # The bar plot
   barplot <- barplot_server("barplot_plot", communication_stuff, overview_component, theme_plots)

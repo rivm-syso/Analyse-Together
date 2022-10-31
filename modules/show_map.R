@@ -24,9 +24,10 @@ show_map_output <- function(id) {
 # Server Module
 ######################################################################
 
-show_map_server <- function(id, com_module) {
+show_map_server <- function(id, com_module, update_data) {
 
   moduleServer(id, function(input, output, session) {
+    
     
     ns <- session$ns
     beatCol <- colorFactor(palette = 'RdYlGn', domain = c(0,100), reverse = TRUE)
@@ -65,8 +66,7 @@ show_map_server <- function(id, com_module) {
     
     # Generate base map ----
     output$map <- renderLeaflet({
-      
-      browser()
+
       # data_snsrs <- try(get_locations()[[1]], silent = T) 
       # print(data_snsrs)
       # shiny::validate(
@@ -75,10 +75,10 @@ show_map_server <- function(id, com_module) {
       # )
       #
       #data_snsrs <- try(get_locations()[[1]], silent = T) %>% filter(., !grepl("KNMI|NL",station))
+      
       ns("map")
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
-        #fitBounds(min(isolate(get_locations())[[2]]$lon), min(isolate(get_locations())[[2]]$lat), max(isolate(get_locations())[[2]]$lon), max(isolate(get_locations())[[2]]$lat)) %>% 
         addTiles() %>%
         addDrawToolbar(
           targetGroup = 'Selected',
@@ -164,7 +164,7 @@ show_map_server <- function(id, com_module) {
       # Update map with new markers to show selected
       # proxy <- leafletProxy('map') # set up proxy map
       leafletProxy("map") %>%
-        
+        fitBounds(min(data_snsrs_col$lon), min(data_snsrs_col$lat), max(data_snsrs_col$lon), max(data_snsrs_col$lat)) %>% 
         addCircleMarkers(data = data_snsrs_col, ~lon, ~lat,stroke = TRUE, weight = 2,
                          label = lapply(data_snsrs_col$station, HTML),
                          layerId = ~station,
@@ -231,6 +231,13 @@ show_map_server <- function(id, com_module) {
       }
     })
     
+    observe({
+      if (isTRUE(update_data())){
+        add_sensors_map()
+      }
+    })
+    
+    
     # Observe if a sensor is in de square selection
     observe({
       
@@ -238,7 +245,6 @@ show_map_server <- function(id, com_module) {
       
       # ga dan de sensoren af en deselecteer deze een voor een
       for(id_select in isolate(get_locations()[[2]]$station)){
-        
         change_state_to_deselected(id_select)
       }
       isolate(add_sensors_map())
