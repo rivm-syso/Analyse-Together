@@ -96,7 +96,14 @@ show_map_server <- function(id, com_module) {
         addEasyButton(easyButton(
           icon="fa-crosshairs", title="Locate Me",
           onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
-        addScaleBar(position = "bottomleft")
+        addScaleBar(position = "bottomleft") %>% 
+      addCircleMarkers(data = data_snsrs, ~lon, ~lat,stroke = TRUE, weight = 2,
+                       label = lapply(data_snsrs$station, HTML),
+                       layerId = ~station,
+                       radius = 5,
+                       color = data_snsrs$col,
+                       group = "sensoren"
+      )
     
     })
     

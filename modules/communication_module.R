@@ -156,8 +156,7 @@ communication_server <- function(id,
                    # Assign linetype -> reference station
                    stations_total <- assign_linetype_stations(stations_total, line_cat, line_default, line_overload, line_station_type = "ref")
 
-                  log_trace("com module: total number of stations {nrow(stations_total)}")
-                  print(stations_total)
+                   log_trace("com module: total number of stations {nrow(stations_total)}")
                   
                    return(stations_total)
                  })
