@@ -1,24 +1,24 @@
 download_api_button_output <- function(id) {
 
   ns <- NS(id)
-  uiOutput(ns("download_api_button"))
-
+  #uiOutput(ns("download_api_button"))
+  actionButton(ns("download_api_button"), "start download")
 }
 
 
-download_api_button_server <- function(id, proj_or_mun, selection, daterange, pool) {
+download_api_button_server <- function(id, proj_or_mun, selection, daterange, pool, que) {
 
     moduleServer(id, function(input, output, session) {
 
                      ns <- session$ns
 
-                     output$download_api_button <- renderUI({
-                         actionButton(ns("download_api_button"), "start download")
+                     # output$download_api_button <- renderUI({
+                     #     actionButton(ns("download_api_button"), "start download")
+                     #
+                     # })
 
-                     })
 
-                     btn <- reactive(input$download_api_button)
-
+                     btn <- eventReactive(input$download_api_button, {T})
 
                      observeEvent(input$download_api_button, {
                                        type <- ifelse(is.null(proj_or_mun()), NA, proj_or_mun())
@@ -34,8 +34,7 @@ download_api_button_server <- function(id, proj_or_mun, selection, daterange, po
                                        } else {
                                            log_trace("mod download: create download queue")
 
-                                         # Create the queue
-                                         que <- task_q$new()
+
 
                                          # Download the metadata
                                          download_sensor_meta(name, type = type)
@@ -59,8 +58,9 @@ download_api_button_server <- function(id, proj_or_mun, selection, daterange, po
 
                                        }
                      })
-
                      return(btn)
+
+
 
 })
 }
