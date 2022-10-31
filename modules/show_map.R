@@ -67,7 +67,6 @@ show_map_server <- function(id, com_module) {
     output$map <- renderLeaflet({
       
       data_snsrs <- try(get_locations()[[1]], silent = T)
-      print(data_snsrs)
       shiny::validate(
 
         need(class(data_snsrs) != "try-error", "Not yet selected any data.")
@@ -235,7 +234,6 @@ show_map_server <- function(id, com_module) {
       
       # ga dan de sensoren af en deselecteer deze een voor een
       for(id_select in isolate(get_locations()[[2]]$station)){
-        #print(id_select)
         change_state_to_deselected(id_select)
       }
       isolate(add_sensors_map())
