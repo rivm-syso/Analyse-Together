@@ -122,11 +122,12 @@ a:visited {
 /* Leaflet styling */
 .leaflet-container {
 	background: white;
+	height: calc(100vh - 400px) !important;
 }
 
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
     z-index: unset !important;
-  
+
 }
 
 .leaflet-top, .leaflet-bottom {

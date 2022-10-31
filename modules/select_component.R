@@ -25,17 +25,18 @@ component_selection_server <- function(id, comp_choices) {
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
+    
 
     output$comp_select <- renderUI({
-
+      print(comp_choices)
       # Create the component picker with a list of possible choices
       tagList(
 
         pickerInput(
           ns("comp_select"),
-          label    = "Select component",
+          label    = i18n$t("sel_comp"),
           choices  = comp_choices,
-          selected = NULL,
+          selected = "pm25_kal",
           multiple = TRUE,
           options = pickerOptions(maxOptions = 1)
           )
