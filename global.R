@@ -98,6 +98,9 @@ pool <- dbPool(
 
 )
 
+# Create the queue
+que <- task_q$new()
+
 # store lists with projects and municipalities
 municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
 projects <- read_csv("./prepped_data/projects.csv")
