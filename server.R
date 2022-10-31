@@ -42,7 +42,7 @@ shinyServer(function(global, input, output, session) {
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
                                               update_data = update_data_button,
-                                              download_data = download_api_button,
+                                              download_data_123 = download_api_button,
                                               pool = pool,
                                               measurements_con = measurements_con,
                                               stations_con = stations_con,
@@ -64,7 +64,7 @@ shinyServer(function(global, input, output, session) {
                                               line_overload
                                               )
 
-download_api_button <- download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range, pool)
-update_data_button <- update_data_button_server("update_data")
+  download_api_button <- download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range, pool)
+  update_data_button <- update_data_button_server("update_data")
 
 })

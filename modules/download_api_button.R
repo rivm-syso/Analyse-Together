@@ -1,8 +1,8 @@
 download_api_button_output <- function(id) {
 
   ns <- NS(id)
-  uiOutput(ns("download_api_button"))
-
+  #uiOutput(ns("download_api_button"))
+  actionButton(ns("download_api_button"), "start download")
 }
 
 
@@ -12,14 +12,14 @@ download_api_button_server <- function(id, proj_or_mun, selection, daterange, po
 
                      ns <- session$ns
 
-                     output$download_api_button <- renderUI({
-                         actionButton(ns("download_api_button"), "start download")
-
-                     })
-
-                     btn <- reactive(input$download_api_button)
+                     # output$download_api_button <- renderUI({
+                     #     actionButton(ns("download_api_button"), "start download")
+                     # 
+                     # })
 
 
+                     btn <- eventReactive(input$download_api_button, {T})
+                     
                      observeEvent(input$download_api_button, {
                                        type <- ifelse(is.null(proj_or_mun()), NA, proj_or_mun())
                                        name <- ifelse(is.null(selection()), NA, selection())
@@ -59,8 +59,9 @@ download_api_button_server <- function(id, proj_or_mun, selection, daterange, po
 
                                        }
                      })
-
                      return(btn)
+
+                     
 
 })
 }
