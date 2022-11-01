@@ -6,7 +6,7 @@ shinyServer(function(global, input, output, session) {
   observeEvent(input$selected_language, {
     # Here is where we update language in session
     shiny.i18n::update_lang(session, input$selected_language)
-  })
+  }) 
 
   # The pickerInput for component selection
   select_component <- component_selection_server("select_component", comp_choices)
@@ -38,7 +38,7 @@ shinyServer(function(global, input, output, session) {
   # The timevariation plot
   timevar_plot_weekly <- timevar_weekly_server("timevar_plot_weekly", communication_stuff)
   timevar_plot_daily <- timevar_daily_server("timevar_plot_daily", communication_stuff)
-  
+
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
                                               update_data = update_data_button,
@@ -64,7 +64,15 @@ shinyServer(function(global, input, output, session) {
                                               line_overload
                                               )
 
+<<<<<<< HEAD
   download_api_button <- download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range, pool)
   update_data_button <- update_data_button_server("update_data")
+=======
+
+  download_api_button <- download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range, pool, que)
+  update_data_button <- update_data_button_server("update_data")
+
+  view_que_server("view_que", que)
+>>>>>>> develop
 
 })

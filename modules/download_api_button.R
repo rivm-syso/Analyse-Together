@@ -6,7 +6,7 @@ download_api_button_output <- function(id) {
 }
 
 
-download_api_button_server <- function(id, proj_or_mun, selection, daterange, pool) {
+download_api_button_server <- function(id, proj_or_mun, selection, daterange, pool, que) {
 
     moduleServer(id, function(input, output, session) {
 
@@ -14,7 +14,6 @@ download_api_button_server <- function(id, proj_or_mun, selection, daterange, po
 
                      # output$download_api_button <- renderUI({
                      #     actionButton(ns("download_api_button"), "start download")
-                     # 
                      # })
 
 
@@ -34,8 +33,7 @@ download_api_button_server <- function(id, proj_or_mun, selection, daterange, po
                                        } else {
                                            log_trace("mod download: create download queue")
 
-                                         # Create the queue
-                                         que <- task_q$new()
+
 
                                          # Download the metadata
                                          download_sensor_meta(name, type = type)
@@ -60,8 +58,6 @@ download_api_button_server <- function(id, proj_or_mun, selection, daterange, po
                                        }
                      })
                      return(btn)
-
-                     
 
 })
 }
