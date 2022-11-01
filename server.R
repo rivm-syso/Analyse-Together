@@ -64,7 +64,6 @@ shinyServer(function(global, input, output, session) {
                                               line_overload
                                               )
 
-
   download_api_button <- download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range, pool, que)
   update_data_button <- update_data_button_server("update_data")
 
