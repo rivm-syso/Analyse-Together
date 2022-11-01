@@ -322,8 +322,8 @@ show_map_server <- function(id, com_module, update_data) {
       else{done}
 
       isolate(add_sensors_map())
-      #isolate(add_lmls_map())
-      #isolate(add_knmi_map())
+      isolate(add_lmls_map())
+      isolate(add_knmi_map())
     })
 
     # Return start and end date
