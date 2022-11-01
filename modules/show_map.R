@@ -254,6 +254,8 @@ show_map_server <- function(id, com_module, update_data) {
 
     observeEvent(update_data(),{
         add_sensors_map_update_button()
+        add_lmls_map()
+        add_knmi_map()
     })
 
 
