@@ -158,7 +158,29 @@ show_map_server <- function(id, com_module, update_data) {
       shiny::validate(
         need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
       )
-  
+      browser()
+      data_snsrs_col <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
+      
+      # Update map with new markers to show selected
+      # proxy <- leafletProxy('map') # set up proxy map
+      leafletProxy("map") %>%
+        addCircleMarkers(data = data_snsrs_col, ~lon, ~lat,stroke = TRUE, weight = 2,
+                         label = lapply(data_snsrs_col$station, HTML),
+                         layerId = ~station,
+                         radius = 5,
+                         color = data_snsrs_col$col,
+                         group = "sensoren"
+        )}
+    
+    add_sensors_map_update_button <- function(){
+      
+      # Check if there is data
+      data_snsrs_col <- try(get_locations()[[1]], silent = T)
+      shiny::validate(
+        need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
+      )
+      
+      browser()
       data_snsrs_col <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
       
       # Update map with new markers to show selected
@@ -231,10 +253,9 @@ show_map_server <- function(id, com_module, update_data) {
       }
     })
     
-    observe({
-      if (isTRUE(update_data())){
-        add_sensors_map()
-      }
+    observeEvent(update_data(),{
+        browser()
+        add_sensors_map_update_button()
     })
     
     
