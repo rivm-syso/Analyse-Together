@@ -158,7 +158,6 @@ show_map_server <- function(id, com_module, update_data) {
       shiny::validate(
         need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
       )
-      browser()
       data_snsrs_col <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
       
       # Update map with new markers to show selected
@@ -180,7 +179,6 @@ show_map_server <- function(id, com_module, update_data) {
         need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
       )
       
-      browser()
       data_snsrs_col <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
       
       # Update map with new markers to show selected
@@ -254,7 +252,6 @@ show_map_server <- function(id, com_module, update_data) {
     })
     
     observeEvent(update_data(),{
-        browser()
         add_sensors_map_update_button()
     })
     
