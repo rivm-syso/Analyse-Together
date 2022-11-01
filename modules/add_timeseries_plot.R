@@ -63,11 +63,7 @@ timeseries_server <- function(id,
                    data_timeseries <- data_measurements() %>%
                      dplyr::left_join(select(data_stations(), c(station, col, linetype, size, station_type)), by = "station")
 
-                   # Calculate standard deviation
-                   data_timeseries <- data_timeseries %>%
-                     dplyr::group_by(station) %>%
-                     dplyr::mutate(sd = sd(value, na.rm = T)) %>%
-                     dplyr::ungroup()
+                   # Calculate stats for the axis
                    n_days_in_plot <- round(as.numeric(max(data_timeseries$date) - min(data_timeseries$date)))
                    n_stat_in_plot <- length(unique(data_timeseries$station))
                    min_meas <- plyr::round_any(min(data_timeseries$value, na.rm = T), 5, f = floor)
