@@ -173,10 +173,22 @@ get_stations_from_selection <- function(name, type, conn = pool) {
       if(!is.list(info)){
         return(NULL)
       }
-      # Get the kits
-      kits <- info$sensor_data %>%
-        pull(kit_id)
-    return(kits)
+
+      # Get the stations: first the sensors
+      sensors <- info$sensor_data %>% dplyr::pull(kit_id)
+      # Get the KNMI stations
+      knmi <- info$sensor_data %>% dplyr::pull(knmicode) %>% unique() %>% sub("knmi_06", "KNMI_",.)
+      # Get the reference stations
+      refstation <- info$sensor_data %>%
+        dplyr::select(dplyr::starts_with("pm")) %>%
+        tidyr::pivot_longer(cols = dplyr::starts_with("pm"), names_to ="stat") %>%
+        dplyr::pull(value) %>%
+        unique()
+
+      # Combine all station names
+      stations <- c(sensors, knmi, refstation)
+
+    return(stations)
 }
 
 round_to_days <- function(time_start, time_end) {
