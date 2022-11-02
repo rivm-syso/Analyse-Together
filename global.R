@@ -48,6 +48,8 @@ library(lubridate)
 library(logger)
 log_threshold(TRACE)
 
+
+
 # set data location
 #
 if(install_github) {
@@ -75,71 +77,6 @@ library(ATdatabase)
 options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
-
-# Set theme for plots                                                       ====
-theme_plots <- theme_bw(base_size = 18) +
-  theme(strip.text.x = element_text(size = 14, colour = "black"),
-        axis.text.y = element_text(face = "bold",color = "black", size = 16),
-        axis.text.x = element_text(color = "black", size = 16, angle = 45, hjust = 1, vjust = 1),
-        axis.title = element_text(color = "black", size = 16),
-        text = element_text(family = 'sans'),
-        title = element_text(color = "black", size = 16),
-        legend.title = element_text(size = 16),
-        legend.key.height = unit(0.5, 'cm'),
-        legend.key.width = unit(0.5, 'cm'),
-        panel.border = element_rect(colour = "black", fill=NA, size=1)
-  )
-
-# Connect with the database using pool, store data, read table              ====
-pool <- dbPool(
-
-  drv = SQLite(),
-  dbname = datafile("database.db")
-
-)
-
-# Create the queue
-que <- task_q$new()
-
-# store lists with projects and municipalities
-municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
-projects <- read_csv("./prepped_data/projects.csv")
-
-# add_doc doesn't work, see ATdatabase #8
-add_doc("application", "municipalities", municipalities, conn = pool,
-        overwrite = TRUE)
-add_doc("application", "projects", projects, conn = pool,
-        overwrite = TRUE)
-
-# Define colors, line types,choices etc.                                   ====
-# Colours for the sensors
-col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
-col_cat <- rev(col_cat) # the saturated colours first
-col_default <- '#000000'
-col_overload <- '#111111'
-
-# Linetype for the reference stations
-line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
-line_default <- 'solid'
-line_overload <- 'dotted'
-
-# Codes of KNMI stations
-knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
-
-# Connections with the database tables
-measurements_con <- tbl(pool, "measurements")
-stations_con <- tbl(pool, "location")
-
-log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
-
-# Component choices
-overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
-comp_choices = setNames(overview_component$component, overview_component$label)
-proj_choices = sort(projects$project)
-mun_choices  = sort(municipalities$X2)
-
-overview_select_choices <- data.frame('type' = c("project","municipality"), 'label'=c("project","gemeente"))
-select_choices = setNames(overview_select_choices$type, overview_select_choices$label)
 
 ### APP SPECIFIC SETTINGS                                                   ====
 
@@ -181,8 +118,77 @@ source("funs/download_fun.R")
 
 # Source layout
 source("modules/add_tabpanels.R")
- 
+
 # Source que display
 source("modules/view_que.R")
-### THE END                                                                 ====
 
+# Set theme for plots                                                       ====
+theme_plots <- theme_bw(base_size = 18) +
+  theme(strip.text.x = element_text(size = 14, colour = "black"),
+        axis.text.y = element_text(face = "bold",color = "black", size = 16),
+        axis.text.x = element_text(color = "black", size = 16, angle = 45, hjust = 1, vjust = 1),
+        axis.title = element_text(color = "black", size = 16),
+        text = element_text(family = 'sans'),
+        title = element_text(color = "black", size = 16),
+        legend.title = element_text(size = 16),
+        legend.key.height = unit(0.5, 'cm'),
+        legend.key.width = unit(0.5, 'cm'),
+        panel.border = element_rect(colour = "black", fill=NA, size=1)
+  )
+
+# Connect with the database using pool, store data, read table              ====
+pool <- dbPool(
+
+  drv = SQLite(),
+  dbname = datafile("database.db")
+
+)
+
+# Create the queue
+que <- task_q$new()
+
+### Initiate some variables                                                 ====
+# Default start and end time for the date picker
+default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
+
+# store lists with projects and municipalities
+municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
+projects <- read_csv("./prepped_data/projects.csv")
+
+# add_doc doesn't work, see ATdatabase #8
+add_doc("application", "municipalities", municipalities, conn = pool,
+        overwrite = TRUE)
+add_doc("application", "projects", projects, conn = pool,
+        overwrite = TRUE)
+
+# Connections with the database tables
+measurements_con <- tbl(pool, "measurements")
+stations_con <- tbl(pool, "location")
+
+log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
+
+# Define colors, line types,choices etc.                                   ====
+# Colours for the sensors
+col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
+col_cat <- rev(col_cat) # the saturated colours first
+col_default <- '#000000'
+col_overload <- '#111111'
+
+# Linetype for the reference stations
+line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
+line_default <- 'solid'
+line_overload <- 'dotted'
+
+# Codes of KNMI stations
+knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
+
+# Component choices
+overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
+comp_choices = setNames(overview_component$component, overview_component$label)
+proj_choices = sort(projects$project)
+mun_choices  = sort(municipalities$X2)
+
+overview_select_choices <- data.frame('type' = c("project","municipality"), 'label'=c("project","gemeente"))
+select_choices = setNames(overview_select_choices$type, overview_select_choices$label)
+
+### THE END                                                                 ====
