@@ -81,8 +81,8 @@ shinyUI(
 
                           tabPanel(
 
-                            value = "Metadata",
-                            title = HTML("Metadata <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>"),
+                            value = "Informatie over data",
+                            title = HTML(paste0(i18n$t("title_metadata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
 
 
                             fluidRow(
@@ -109,7 +109,7 @@ shinyUI(
                           )
                         )
                       ),
-      conditionalPanel(condition="input.second_order_tabs!='Select data'", column(width = 6,  show_map_output("map")))
+      conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map")))
 
         )
       ),
