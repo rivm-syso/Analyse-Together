@@ -38,8 +38,7 @@ shinyUI(
 
     tabPanel(
       title = "Home",
-      
-     
+
       fluidRow(
         column(width = 2, wellPanel(
         shiny.i18n::usei18n(i18n),

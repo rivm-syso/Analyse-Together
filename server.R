@@ -6,7 +6,7 @@ shinyServer(function(global, input, output, session) {
   observeEvent(input$selected_language, {
     # Here is where we update language in session
     shiny.i18n::update_lang(session, input$selected_language)
-  }) 
+  })
 
   # The pickerInput for component selection
   select_component <- component_selection_server("select_component", comp_choices)
@@ -68,6 +68,5 @@ shinyServer(function(global, input, output, session) {
   update_data_button <- update_data_button_server("update_data")
 
   view_que_server("view_que", que)
-
 
 })
