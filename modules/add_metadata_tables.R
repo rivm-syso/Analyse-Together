@@ -31,8 +31,6 @@ metadata_server <- function(id, com_module) {
     # Get selected measurements from communication module
     metadata_table <- reactive({
       
-      shiny::validate(need(nrow(com_module$all_measurements()) >0, message =  "Select one or more sensors (with data)"))
-
       data_measurements <- com_module$all_measurements()
       timerange <- difftime(com_module$selected_time()$end_time, com_module$selected_time()$start_time, units="hours")
       
@@ -90,6 +88,8 @@ metadata_server <- function(id, com_module) {
     output$meta_table <-
       
       renderDataTable({
+        
+        shiny::validate(need(nrow(com_module$all_measurements()) >0, message =  "Select one or more sensors (with data)"))
         
         # Determine parameter that needs to be plotted
         n_obs_sel <- data_merged()$station

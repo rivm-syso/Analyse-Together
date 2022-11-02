@@ -222,7 +222,7 @@ communication_server <- function(id,
                   log_trace("mod com: number of selected stations {length(selected_stations)}")
                   log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
                   log_trace("mod com: filtered measurements {nrow(measurements_filt_snsr)}")
-                   return(measurements_filt_snsr)
+                   return(list(filter_data_measurements = filter_data_measurements, all_data = all_data))
                  })
 
                  # Get knmi measurements ----
