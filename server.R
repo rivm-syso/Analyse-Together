@@ -30,7 +30,7 @@ shinyServer(function(global, input, output, session) {
   barplot <- barplot_server("barplot_plot", communication_stuff, overview_component, theme_plots)
 
   # The timeseries plot
-  timeseries_plot <- timeseries_server(id = "timeseries_plot", data_measurements_stations = communication_stuff, overview_component, theme_plots)
+  timeseries_plot <- timeseries_server(id = "timeseries_plot", com_module = communication_stuff, overview_component, theme_plots)
 
   # The pollutionrose plot
   pollrose_plot <- pollrose_server("pollrose_plot", communication_stuff)
@@ -49,6 +49,7 @@ shinyServer(function(global, input, output, session) {
                                               meta, # TODO willen we hier wat mee?
                                               selected_parameter = select_component,
                                               selected_time = select_date_range,
+                                              default_time = default_time,
                                               select_mun_or_proj = proj_or_mun_select,
                                               choose_mun_or_proj = choice_select,
                                               # TODO Get the selected stations form the map
