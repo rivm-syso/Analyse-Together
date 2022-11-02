@@ -30,7 +30,7 @@ shinyServer(function(global, input, output, session) {
   barplot <- barplot_server("barplot_plot", communication_stuff, overview_component, theme_plots)
 
   # The timeseries plot
-  timeseries_plot <- timeseries_server(id = "timeseries_plot", data_measurements_stations = communication_stuff, overview_component, theme_plots)
+  timeseries_plot <- timeseries_server(id = "timeseries_plot", com_module = communication_stuff, overview_component, theme_plots)
 
   # The pollutionrose plot
   pollrose_plot <- pollrose_server("pollrose_plot", communication_stuff)
