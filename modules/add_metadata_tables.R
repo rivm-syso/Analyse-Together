@@ -31,24 +31,26 @@ metadata_server <- function(id, com_module) {
     # Get selected measurements from communication module
     metadata_table <- reactive({
       
-      #shiny::validate(need(nrow(com_module$selected_measurements()) >0, message =  "Select one or more sensors (with data)"))
+      shiny::validate(need(nrow(com_module$all_measurements()) >0, message =  "Select one or more sensors (with data)"))
+
       data_measurements <- com_module$all_measurements()
-      
       timerange <- difftime(com_module$selected_time()$end_time, com_module$selected_time()$start_time, units="hours")
+      
       if (nrow(data_measurements)>0){
           metadata_table <- data_measurements %>%  
                             dplyr::group_by(station) %>% 
                             dplyr::mutate(first_m = as.POSIXct(as.numeric(min(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y"),
                                           last_m = as.POSIXct(as.numeric(max(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y")) %>%
                             dplyr::group_by(station, parameter) %>% 
+                            dplyr::filter((parameter != 'no') & (parameter != 'no2') &
+                                          (parameter != 'o3') & (parameter != 'nh3')) %>% 
                             dplyr::summarise(first_m = first_m,
                                              last_m = last_m,
                                              n_obs = sum(!is.na(value)),
                                              max_obs = timerange) %>%
                             dplyr::distinct(station, .keep_all = T) %>% 
                             tidyr::pivot_wider(.,values_from = n_obs, names_from = parameter, names_prefix = "Number of measurements ") 
-          }
-      
+      }
       else{
         metadata_table <- data_measurements %>% 
           dplyr::mutate(n_obs = NA,
@@ -74,8 +76,8 @@ metadata_server <- function(id, com_module) {
       project_or_municipality <- com_module$mun_proj_select()
       return(project_or_municipality)
     })
-    
   
+    # Define colour-breaks for table:
     breaks_col <- reactive({
       timerange <- difftime(com_module$selected_time()$end_time, com_module$selected_time()$start_time, units="hours")
       brks <- quantile(c(0,as.numeric(timerange)), probs = seq(.05, .95, .1), na.rm = TRUE)
@@ -88,10 +90,11 @@ metadata_server <- function(id, com_module) {
     output$meta_table <-
       
       renderDataTable({
-
+        
         # Determine parameter that needs to be plotted
         n_obs_sel <- data_merged()$station
         if(length(n_obs_sel>1)){
+          
           try(datatable(data_merged(),colnames = c("Number of measurements PM2.5" = "Number of measurements pm25", 
                                                    "Number of measurements PM2.5 - kal" = "Number of measurements pm25_kal", 
                                                    "Number of measurements PM10" = "Number of measurements pm10", 
@@ -107,7 +110,8 @@ metadata_server <- function(id, com_module) {
                                                    "Longitude" = "lon"),
                         caption = paste0(i18n$t("word_table")," ",
                                          ","," ", i18n$t("word_within"), " ",project_or_municipality()),
-                        options = list(scrollX = TRUE, pageLength = 12, lengthChange = FALSE)) %>%
+                        options = list(scrollX = TRUE, pageLength = 12, lengthChange = FALSE), class = c('row-border', 'hover'), rownames = FALSE) %>%
+                formatStyle("Number of measurements PM2.5", background = "white") %>% 
                 formatStyle(columns = c("Number of measurements PM2.5", 
                                         "Number of measurements PM2.5 - kal",
                                         "Number of measurements PM10",
