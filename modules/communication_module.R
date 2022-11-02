@@ -215,8 +215,8 @@ communication_server <- function(id,
                    # TODO some check if time is available in data
                    # TODO check if selected sensors has data that time and component, otherwise a message?
                    # TODO for the selected stations and parameters connect with those selection modules
-                   all_data <- isolate(get_data()$data_measurements) %>% 
-                                dplyr::filter(parameter == selected_parameter)
+                   all_data <- isolate(get_data()$data_measurements)
+                   
                    # Filter the measurements
                    measurements_filt_snsr <- all_data %>%
                      dplyr::filter(date > start_time & date < end_time &
@@ -226,7 +226,7 @@ communication_server <- function(id,
                   log_trace("com module: number of selected stations {length(selected_stations)}")
                   log_trace("com module: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
                   log_trace("com module: filtered measurements {nrow(measurements_filt_snsr)}")
-                   return(list(measurements_filt_snsr, all_data))
+                   return(list(measurements_filt_snsr = measurements_filt_snsr, all_data = all_data))
                  })
 
                  get_knmi_measurements <- reactive({
@@ -249,10 +249,6 @@ communication_server <- function(id,
                    return(measurements_filt)
                  })
 
-                 # observeEvent(update_data(), {
-                 #   
-                 #   })
-
                  observeEvent(download_data_123(), {
                    
                    get_data()
@@ -263,8 +259,8 @@ communication_server <- function(id,
                   start_end_total = reactive({get_time_total()}),
                   selected_time = reactive({get_time_selection()}),
                   station_locations = reactive({get_stations_total()}),
-                  selected_measurements = reactive({filter_data_measurements()[[1]]}),
-                  all_measurements = reactive({filter_data_measurements()[[2]]}),
+                  selected_measurements = reactive({filter_data_measurements()$measurements_filt_snsr}),
+                  all_measurements = reactive({filter_data_measurements()$all_data}),
                   choice_select = reactive({choice_select()}),
                   mun_proj_select = reactive({mun_proj_select()}),
                   knmi_measurements = reactive({get_knmi_measurements()})

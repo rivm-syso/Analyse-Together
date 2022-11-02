@@ -38,13 +38,17 @@ metadata_server <- function(id, com_module) {
       if (nrow(data_measurements)>0){
           metadata_table <- data_measurements %>%  
                             dplyr::group_by(station) %>% 
-                            dplyr::mutate(n_obs = n(),
-                                          max_obs = timerange,
-                                          first_m = as.POSIXct(as.numeric(min(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y"),
+                            dplyr::mutate(first_m = as.POSIXct(as.numeric(min(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y"),
                                           last_m = as.POSIXct(as.numeric(max(timestamp)), origin='1970-01-01') %>% format(., "%d %b %Y")) %>%
-                            dplyr::select(station, max_obs, n_obs, first_m, last_m) %>%
-                            dplyr::distinct(station, .keep_all = T)
-      }
+                            dplyr::group_by(station, parameter) %>% 
+                            dplyr::summarise(first_m = first_m,
+                                             last_m = last_m,
+                                             n_obs = sum(!is.na(value)),
+                                             max_obs = timerange) %>%
+                            dplyr::distinct(station, .keep_all = T) %>% 
+                            tidyr::pivot_wider(.,values_from = n_obs, names_from = parameter, names_prefix = "Number of measurements ") 
+          }
+      
       else{
         metadata_table <- data_measurements %>% 
           dplyr::mutate(n_obs = NA,
@@ -60,7 +64,6 @@ metadata_server <- function(id, com_module) {
     
     # Get selected stations from communication module
     data_merged <- reactive({
-      
       data_stations <- com_module$station_locations() %>% select(c(station, lat, lon, station_type)) %>% dplyr::distinct(station, .keep_all = T)
       data_merged <- left_join(data_stations,metadata_table(), by = "station")
       
@@ -72,11 +75,12 @@ metadata_server <- function(id, com_module) {
       return(project_or_municipality)
     })
     
-    
+  
     breaks_col <- reactive({
-      brks <- quantile(data_merged()['n_obs'], probs = seq(.05, .95, .1), na.rm = TRUE)
+      timerange <- difftime(com_module$selected_time()$end_time, com_module$selected_time()$start_time, units="hours")
+      brks <- quantile(c(0,as.numeric(timerange)), probs = seq(.05, .95, .1), na.rm = TRUE)
       clrs <- round(seq(255, 40, length.out = length(brks) + 1), 0) %>%
-        {paste0("rgb(", ., ", 243,", ., ")")}
+        {paste0("rgb(", ., ", 243,", .,", 0.4)")}
       
       return(list(brks,clrs))
     })
@@ -87,19 +91,31 @@ metadata_server <- function(id, com_module) {
 
         # Determine parameter that needs to be plotted
         n_obs_sel <- data_merged()$station
-        
         if(length(n_obs_sel>1)){
-          try(datatable(data_merged(),colnames = c("Number of measurements" = "n_obs", 
+          try(datatable(data_merged(),colnames = c("Number of measurements PM2.5" = "Number of measurements pm25", 
+                                                   "Number of measurements PM2.5 - kal" = "Number of measurements pm25_kal", 
+                                                   "Number of measurements PM10" = "Number of measurements pm10", 
+                                                   "Number of measurements PM10 - kal" = "Number of measurements pm10_kal", 
+                                                   "Number of measurements Temp" = "Number of measurements temp", 
+                                                   "Number of measurements RH" = "Number of measurements rh",
+                                                   "Number of measurements Press" = "Number of measurements pres",
                                                    "Maximum measurements" = "max_obs", 
                                                    "First measurements" = "first_m", 
                                                    "Last measurements" = "last_m", 
                                                    "Type" = "station_type", 
                                                    "Latitude" = "lat", 
                                                    "Longitude" = "lon"),
-                        caption = paste0(i18n$t("word_table")," ",unique(com_module$selected_measurements()$parameter),
+                        caption = paste0(i18n$t("word_table")," ",
                                          ","," ", i18n$t("word_within"), " ",project_or_municipality()),
-                        options = list(scrollX = TRUE, pageLength = 10, lengthChange = FALSE)) %>%
-                formatStyle("Number of measurements", backgroundColor = styleInterval(cuts = breaks_col()[[1]], values = breaks_col()[[2]]))
+                        options = list(scrollX = TRUE, pageLength = 12, lengthChange = FALSE)) %>%
+                formatStyle(columns = c("Number of measurements PM2.5", 
+                                        "Number of measurements PM2.5 - kal",
+                                        "Number of measurements PM10",
+                                        "Number of measurements PM10 - kal",
+                                        "Number of measurements Temp",
+                                        "Number of measurements RH",
+                                        "Number of measurements Press"),
+                            backgroundColor = styleInterval(cuts = breaks_col()[[1]], values = breaks_col()[[2]]))
           )
         }})      
   })   
