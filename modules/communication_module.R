@@ -224,6 +224,8 @@ communication_server <- function(id,
                  })
 
                  # Get knmi measurements ----
+                 # the knmi measurements are excluded
+                 # by the selected parameter in the measurements_filt.
                  get_knmi_measurements <- reactive({
                    # Get the start and end time to filter on
                    update_data()
@@ -239,7 +241,8 @@ communication_server <- function(id,
                    # TODO for the selected stations and parameters connect with those selection modules
                    # Filter the measurements
                    measurements_filt <- isolate(get_data())$data_measurements %>%
-                     dplyr::filter(date > start_time & date < end_time & station %in% selected_stations)
+                     dplyr::filter(date > start_time & date < end_time &
+                                     station %in% selected_stations)
 
                    return(measurements_filt)
                  })
@@ -259,7 +262,8 @@ communication_server <- function(id,
                   selected_measurements = reactive({filter_data_measurements()}),
                   choice_select = reactive({choice_selection()}),
                   mun_proj_select = reactive({mun_proj_select()}),
-                  knmi_measurements = reactive({get_knmi_measurements()})
+                  knmi_measurements = reactive({get_knmi_measurements()}),
+                  selected_parameter = reactive({get_parameter_selection()})
                   ))
 
                })
