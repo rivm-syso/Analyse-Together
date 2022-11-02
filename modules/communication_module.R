@@ -211,11 +211,13 @@ communication_server <- function(id,
                    # TODO check if selected sensors has data that time and component, otherwise a message?
                    # TODO for the selected stations and parameters connect with those selection modules
                    all_data <- isolate(get_data()$data_measurements)
+                   
                    # Filter the measurements
                    measurements_filt_snsr <- all_data %>%
                      dplyr::filter(date > start_time & date < end_time &
                                      station %in% selected_stations &
                                      parameter == selected_parameter)
+
 
                   log_trace("mod com: number of selected stations {length(selected_stations)}")
                   log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
@@ -247,9 +249,9 @@ communication_server <- function(id,
                    return(measurements_filt)
                  })
 
-                # Obvserve download data ----
-                  observeEvent(download_data_123(), {
 
+                # Observe download data ----
+                  observeEvent(download_data_123(), {
                    get_data()
 
                  })
@@ -259,8 +261,9 @@ communication_server <- function(id,
                  return(list(
                   selected_time = reactive({get_time_selection()}),
                   station_locations = reactive({get_stations_total()}),
-                  selected_measurements = reactive({filter_data_measurements()}),
                   choice_select = reactive({choice_selection()}),
+                  selected_measurements = reactive({filter_data_measurements()$measurements_filt_snsr}),
+                  all_measurements = reactive({filter_data_measurements()$all_data}),
                   mun_proj_select = reactive({mun_proj_select()}),
                   knmi_measurements = reactive({get_knmi_measurements()}),
                   selected_parameter = reactive({get_parameter_selection()})

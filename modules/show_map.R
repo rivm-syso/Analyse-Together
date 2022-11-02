@@ -13,8 +13,7 @@ show_map_output <- function(id) {
 
   tagList(
     leafletOutput(ns('map')),
-    uiOutput(ns('sensormap')),
-    uiOutput(ns('show_knmi'))
+    uiOutput(ns('sensormap'))
   )
 
 }
@@ -67,15 +66,6 @@ show_map_server <- function(id, com_module, update_data) {
     # Generate base map ----
     output$map <- renderLeaflet({
 
-      # data_snsrs <- try(get_locations()[[1]], silent = T)
-      # print(data_snsrs)
-      # shiny::validate(
-      #
-      #   need(class(data_snsrs) != "try-error", "Not yet selected any data.")
-      # )
-      #
-      #data_snsrs <- try(get_locations()[[1]], silent = T) %>% filter(., !grepl("KNMI|NL",station))
-
       ns("map")
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
@@ -99,29 +89,7 @@ show_map_server <- function(id, com_module, update_data) {
           icon="fa-crosshairs", title="Locate Me",
           onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
         addScaleBar(position = "bottomleft")
-        # %>%
-        # addCircleMarkers(data = data_snsrs, ~lon, ~lat,stroke = TRUE, weight = 2,
-        #                label = lapply(data_snsrs$station, HTML),
-        #                layerId = ~station,
-        #                radius = 5,
-        #                color = data_snsrs$col,
-        #                group = "sensoren"
-        # )
 
-    })
-
-
-    output$show_knmi <- renderUI({
-
-      # Create the component picker with a list of possible choices
-      tagList(
-
-        checkboxInput(
-          ns("show_knmi"),
-          label    = i18n$t("sel_knmi"),
-          value    = FALSE
-        )
-      )
     })
 
     add_knmi_map <- function(){
@@ -180,12 +148,13 @@ show_map_server <- function(id, com_module, update_data) {
         need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
       )
 
-      data_snsrs_col <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
+      frame_for_map <- get_locations()[[1]]
+      data_snsrs_col <- frame_for_map %>% filter(., !grepl("KNMI|NL",station))
 
       # Update map with new markers to show selected
       # proxy <- leafletProxy('map') # set up proxy map
       leafletProxy("map") %>%
-        fitBounds(min(data_snsrs_col$lon), min(data_snsrs_col$lat), max(data_snsrs_col$lon), max(data_snsrs_col$lat)) %>%
+        fitBounds(min(frame_for_map$lon), min(frame_for_map$lat), max(frame_for_map$lon), max(frame_for_map$lat)) %>%
         addCircleMarkers(data = data_snsrs_col, ~lon, ~lat,stroke = TRUE, weight = 2,
                          label = lapply(data_snsrs_col$station, HTML),
                          layerId = ~station,
@@ -241,19 +210,10 @@ show_map_server <- function(id, com_module, update_data) {
     }
 
 
-    observe({
-      knmi_show <- input$show_knmi
-
-      if (isTRUE(knmi_show)){
-        add_knmi_map()
-      }
-      else {
-        remove_knmi_map()
-      }
-    })
-
     observeEvent(update_data(),{
         add_sensors_map_update_button()
+        add_lmls_map()
+        add_knmi_map()
     })
 
 
@@ -320,15 +280,14 @@ show_map_server <- function(id, com_module, update_data) {
       else{done}
 
       isolate(add_sensors_map())
-      #isolate(add_lmls_map())
-      #isolate(add_knmi_map())
+      isolate(add_lmls_map())
+      isolate(add_knmi_map())
     })
 
     # Return start and end date
     return(list(
       map = map,
-      state_station = reactive({state_station$value}),
-      show_knmi = reactive({input$show_knmi})))
+      state_station = reactive({state_station$value})))
 
   })
 
