@@ -89,16 +89,28 @@ communication_server <- function(id,
 
                    # Get the data measurements of the selected Municipality/project
                    data_measurements <- measurements_con %>% as.data.frame() %>%
-                     dplyr::mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam"),
-                                   # Add an uncertainty to the pm-measurements
-                                   sd = dplyr::case_when(parameter == "pm25_kal" ~ 5.3,
-                                                         parameter == "pm25" ~ 5.3,
-                                                         parameter == "pm10_kal" ~ 8.5,
-                                                         parameter == "pm10" ~ 8.5,
-                                                         T ~ 0)) %>%
+                     dplyr::mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam")) %>%
                      dplyr::filter(station %in% stations_name &
                                      date > start_time &
                                      date < end_time)
+
+                   # Create a pm10_kal and pm25_kl for reference stations
+                   cols_pivot <- data_measurements %>% dplyr::pull(parameter) %>% unique()
+                   data_measurements <- data_measurements %>%
+                     tidyr::pivot_wider(names_from = parameter, values_from = value) %>%
+                     dplyr::mutate(pm10_kal = dplyr::case_when(grepl("NL", station) ~ pm10,
+                                                               T ~ pm10_kal),
+                                   pm25_kal = dplyr::case_when(grepl("NL", station) ~ pm25,
+                                                              T ~ pm25_kal)) %>%
+                     tidyr::pivot_longer(cols = cols_pivot, names_to = "parameter", values_to = "value")
+
+                   # Add uncertainty to the measurements of the sensors
+                   data_measurements <- data_measurements %>%
+                     dplyr::mutate(sd = dplyr::case_when(parameter == "pm25_kal" & !grepl("NL", station) ~ 5.3,
+                                                         parameter == "pm25" & !grepl("NL", station) ~ 5.3,
+                                                         parameter == "pm10_kal" & !grepl("NL", station) ~ 8.5,
+                                                         parameter == "pm10" & !grepl("NL", station) ~ 8.5,
+                                                         T ~ 0))
 
                    # Get the information from the sensors
                    data_sensors <- stations_con %>% as.data.frame() %>%
