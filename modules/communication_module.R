@@ -61,6 +61,7 @@ communication_server <- function(id,
 
                  # Load the data from the caching database ----
                  get_data <- reactive({
+                    browser()
                   # Check if the download and update button is pushed
                    download_button <-  download_data_123()
                    shiny::validate(
@@ -102,6 +103,7 @@ communication_server <- function(id,
 
                    # Get the information from the sensors
                    data_sensors <- stations_con %>% as.data.frame() %>%
+                     dplyr::distinct(station, .keep_all = T) %>% 
                      dplyr::filter(station %in% stations_name) %>%
                      dplyr::mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
                      dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
@@ -128,7 +130,8 @@ communication_server <- function(id,
                  # We assume that each station has only 1 location. Or we plot all, we don't distinguish location time
                  # TODO create a function or reactive to make this selection which locations to use
                  get_stations_total <- reactive({
-
+                  
+                   browser()
                    update_data()
                    # Set selected stations to TRUE
                    # stations_total <- isolate(get_data())$data_sensors %>%
