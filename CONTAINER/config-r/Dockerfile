@@ -16,6 +16,6 @@ RUN R -e "remotes::install_github('wschuc002/datafile', build_opts ='')"  && \
 
 RUN R -e "remove.packages('remotes')"
 
-RUN R -e "install.packages(c('datafile','samanapir','ATdatabase','shinycssloaders','shinyWidgets','shinyjs','shiny.i18n','RSQLite','pool','leaflet','leaflet.extras','sp','sf','DT','plotly','latex2exp','openair','lubridate'), force=FALSE, repos='https://mirror.lyrahosting.com/CRAN/')"
+RUN R -e "install.packages(c('shinycssloaders','shinyWidgets','shinyjs','shiny.i18n','RSQLite','pool','leaflet','leaflet.extras','sp','sf','DT','plotly','latex2exp','openair','lubridate'), force=FALSE, repos='https://mirror.lyrahosting.com/CRAN/')"
 
 RUN R -e "installed.packages()[,c(3:4)]"
