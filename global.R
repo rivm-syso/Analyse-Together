@@ -48,26 +48,15 @@ library(lubridate)
 library(logger)
 log_threshold(TRACE)
 
-# set data location
-#
-if(install_github) {
-    remotes::install_github("jspijker/datafile", build_opts ="")
-}
+# # set data location
+# remotes::install_github("jspijker/datafile", build_opts ="")
+# remotes::install_github("jspijker/samanapir", ref = "Issue_2")
+# # remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
+# remotes::install_github("rivm-syso/ATdatabase", ref = "develop", build_opts ="")
+
 library(datafile)
 datafileInit()
-
-# load  dev version samanapir, jspijker's fork (contains more loging
-if(install_github) remotes::install_github("jspijker/samanapir", ref = "Issue_2")
-#if(install_github) remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
 library(samanapir)
-
-
-# load ATdatabase
-if(install_github) {
-    remotes::install_github("rivm-syso/ATdatabase", ref = "develop",
-                            build_opts ="")
-}
-
 library(ATdatabase)
 
 # Set language and date options                                             ====
@@ -98,8 +87,6 @@ pool <- dbPool(
 
 )
 
-# Create the queue
-que <- task_q$new()
 
 # store lists with projects and municipalities
 municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
@@ -130,7 +117,7 @@ knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stat
 measurements_con <- tbl(pool, "measurements")
 stations_con <- tbl(pool, "location")
 
-log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
+# log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
 
 # Component choices
 overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
@@ -184,5 +171,9 @@ source("modules/add_tabpanels.R")
 
 # Source que display
 source("modules/view_que.R")
+
+# Create the queue
+que <- task_q$new()
+
 ### THE END                                                                 ====
 
