@@ -6,7 +6,8 @@ RUN R -e "installed.packages()[,c(3:4)]"
 
 ## adding R-packages
 
-RUN R -e "install.packages('remotes', force=FALSE, repos='https://mirror.lyrahosting.com/CRAN/')"
+RUN R -e "install.packages('remotes', force=FALSE, repos='https://mirror.lyrahosting.com/CRAN/')"  && \
+ R -e "library(remotes)"
 
 RUN R -e "remotes::install_github('jspijker/datafile', build_opts ='')"  && \
  R -e "remotes::install_github('jspijker/samanapir', ref = 'Issue_2')"  && \
