@@ -19,3 +19,7 @@ RUN R -e "remove.packages('remotes')"
 RUN R -e "install.packages(c('shinycssloaders','shinyWidgets','shinyjs','shiny.i18n','RSQLite','pool','leaflet','leaflet.extras','sp','sf','DT','plotly','latex2exp','openair','lubridate'), dep=TRUE, repos='https://mirror.lyrahosting.com/CRAN/')"
 
 RUN R -e "installed.packages()[,c(3:4)]"
+
+RUN R -e "install.packages(c('leaflet','leaflet.extras','sf'), dep=TRUE, repos='https://mirror.lyrahosting.com/CRAN/')"
+
+RUN R -e "installed.packages()[,c(3:4)]"
