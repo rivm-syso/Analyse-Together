@@ -94,7 +94,7 @@ theme_plots <- theme_bw(base_size = 18) +
 pool <- dbPool(
 
   drv = SQLite(),
-  dbname = datafile("database.db")
+  dbname = file.path(ANALYSETOGETHER_DATAFOLDER, "database.db")
 
 )
 
