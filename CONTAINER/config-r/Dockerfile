@@ -3,7 +3,7 @@
 FROM rivm-shinyapps-ct/analyse-together:sys
 
 RUN R -e "installed.packages()[,c(3:4)]"
-RUN R -e "install.packages(c'leaflet', dep=TRUE, repos='https://mirror.lyrahosting.com/CRAN/')"
+RUN R -e "install.packages('leaflet', dep=TRUE, repos='https://mirror.lyrahosting.com/CRAN/')"
 RUN R -e "installed.packages()[,c(3:4)]"
 
 ## adding R-packages
