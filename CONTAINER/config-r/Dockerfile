@@ -1,7 +1,9 @@
 ######################################################################
 ## base image
-FROM rivm-shinyapps-ct/smap:sys
+FROM rivm-shinyapps-ct/analyse-together:sys
 
+RUN R -e "installed.packages()[,c(3:4)]"
+RUN R -e "install.packages(c'leaflet', dep=TRUE, repos='https://mirror.lyrahosting.com/CRAN/')"
 RUN R -e "installed.packages()[,c(3:4)]"
 
 ## adding R-packages
@@ -16,6 +18,6 @@ RUN R -e "remotes::install_github('wschuc002/datafile', build_opts ='')"  && \
 
 RUN R -e "remove.packages('remotes')"
 
-RUN R -e "install.packages(c('shinycssloaders','shinyWidgets','shinyjs','shiny.i18n','RSQLite','pool','leaflet','leaflet.extras','sp','sf','DT','plotly','latex2exp','openair','lubridate'), dep=TRUE, repos='https://mirror.lyrahosting.com/CRAN/')"
+RUN R -e "install.packages(c('shinycssloaders','shinyWidgets','shinyjs','shiny.i18n','RSQLite','pool','leaflet.extras','sp','sf','DT','plotly','latex2exp','openair','lubridate'), dep=TRUE, repos='https://mirror.lyrahosting.com/CRAN/')"
 
 RUN R -e "installed.packages()[,c(3:4)]"
