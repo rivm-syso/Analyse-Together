@@ -65,6 +65,17 @@ options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
+
+if ("ANALYSETOGETHER_DATAFOLDER" %in% names(Sys.getenv()))
+{
+  ANALYSETOGETHER_DATAFOLDER <- Sys.getenv("ANALYSETOGETHER_DATAFOLDER")
+} else
+{
+  stop('ANALYSETOGETHER_DATAFOLDER not present in environment. Developers: please source dev_environment.R.
+       Container managers: add ANALYSETOGETHER_DATAFOLDER as an environmental variable in deployment(config).')
+}
+
+
 # Set theme for plots                                                       ====
 theme_plots <- theme_bw(base_size = 18) +
   theme(strip.text.x = element_text(size = 14, colour = "black"),
