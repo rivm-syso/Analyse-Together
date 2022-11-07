@@ -1,46 +1,5 @@
 # Image based on Ubuntu LTS (focal), with current R version
-FROM rocker/r-ver:4.2.1
-
-
-# Install system libraries
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    libudunits2-dev \
-    libgdal-dev \
-    gdal-bin \
-    libgeos-dev \
-    libproj-dev \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/* 
-
-
-# install R pkgs
-RUN install2.r --error --skipinstalled --ncpus -1 \
-     tidyverse \
-     lubridate \   
-     shiny \
-     shinycssloaders \
-     shinyWidgets \
-     RSQLite \
-     pool \
-     leaflet \
-     leaflet.extras \
-     sp \
-     sf \
-     DT \
-     plotly \
-     latex2exp \
-     openair \
-     logger \
-     remotes \
-     && rm -rf /tmp/downloaded_packages
-
-# install some more R pkgs (in a new layer)
-RUN install2.r --error --skipinstalled --ncpus -1 \
-     plyr \
-     dbplyr \
-     && rm -rf /tmp/downloaded_packages
+FROM rivm-shinyapps-ct/analyse-together:r
 
 # Create folder 
 # copy app

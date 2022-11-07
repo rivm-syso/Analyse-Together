@@ -24,7 +24,7 @@ shinyServer(function(global, input, output, session) {
   meta_table <- metadata_server("meta_table", communication_stuff)
 
   # The Map
-  map <- show_map_server("map", communication_stuff)
+  map <- show_map_server("map", communication_stuff, update_data = update_data_button)
 
   # The bar plot
   barplot <- barplot_server("barplot_plot", communication_stuff, overview_component, theme_plots)
@@ -64,7 +64,10 @@ shinyServer(function(global, input, output, session) {
                                               line_overload
                                               )
 
+
   download_api_button <- download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range, pool, que)
   update_data_button <- update_data_button_server("update_data")
+
+  view_que_server("view_que", que)
 
 })

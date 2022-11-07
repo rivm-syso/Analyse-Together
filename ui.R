@@ -38,8 +38,7 @@ shinyUI(
 
     tabPanel(
       title = "Home",
-      
-     
+
       fluidRow(
         column(width = 2, wellPanel(
         shiny.i18n::usei18n(i18n),
@@ -47,7 +46,8 @@ shinyUI(
                             label = i18n$t("sel_language"),
                           choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
                           selected = i18n$get_key_translation()))),
-        conditionalPanel(condition="input.second_order_tabs!='Select data'", 
+
+        conditionalPanel(condition="input.second_order_tabs!='Select data'",
                          column(width = 2, wellPanel(update_data_button_output("update_data"))))),
 
       fluidRow(
@@ -70,10 +70,13 @@ shinyUI(
                                                                       date_range_output("select_date_range"),style = "z-index: 1000;",
                                                                       download_api_button_output("dl_btn_pushed"),style = "z-index: 1000;"
                                                             )
-                              )
+                              ),
+                              column(6, class = "col-lg-6", wellPanel(
+                                view_que_output("view_que"))
 
                             )
 
+                          )
                           ),
 
                           tabPanel(
