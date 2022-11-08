@@ -32,13 +32,14 @@ timeseries_server <- function(id,
 
                  # Get selected measurements from communication module
                  data_measurements <- reactive({
-                   data_measurements <- com_module$selected_measurements()
+                   data_measurements <- com_module$selected_measurements() %>% dplyr::filter(!grepl("KNMI", station))
                    return(data_measurements)
                    })
 
                  # Get selected stations from communication module
                  data_stations <- reactive({
-                   data_stations <- com_module$station_locations()
+                   data_stations <- com_module$station_locations() %>% 
+                      dplyr::filter(!grepl("KNMI", station))
                    return(data_stations)
                    })
 
@@ -60,19 +61,24 @@ timeseries_server <- function(id,
 
                    # Add colour and linetype to the data_measurements
                    data_timeseries <- data_measurements() %>%
-                     dplyr::left_join(select(data_stations(), c(station, col, linetype, size, station_type)), by = "station")
+                     dplyr::left_join(select(data_stations(), c(station, col, linetype, size, station_type)), by = "station") %>% 
+                     dplyr::mutate(ribbon_min = value - sd,
+                                   ribbon_max = value + sd) %>% 
+                     dplyr::mutate(ribbon_min = ifelse(ribbon_min < 0, 0, ribbon_min),
+                                   ribbon_max = ifelse(ribbon_max < 0, 0, ribbon_max))
 
                    # Calculate stats for the axis
                    n_days_in_plot <- round(as.numeric(max(data_timeseries$date) - min(data_timeseries$date)))
                    n_stat_in_plot <- length(unique(data_timeseries$station))
-                   min_meas <- plyr::round_any(min(data_timeseries$value, na.rm = T), 5, f = floor)
-                   max_meas <- plyr::round_any(max(data_timeseries$value, na.rm = T), 5, f = ceiling)
+                   
+                   min_meas <- plyr::round_any(min(data_timeseries$value-data_timeseries$sd, na.rm = T), 5, f = floor)
+                   max_meas <- plyr::round_any(max(data_timeseries$value+data_timeseries$sd, na.rm = T), 5, f = ceiling)
                    steps <- plyr::round_any(max_meas / 15, 10, f = ceiling) # to create interactive y-breaks
 
                    # Make a plot ====
                    try(ggplot(data = data_timeseries, aes(x = date, y = value, group = station)) +
                          geom_line(aes(color = station, linetype=station_type)) +
-                         geom_ribbon(aes(y = value, ymin = value - sd, ymax = value + sd, fill = station), alpha = .2) +
+                         geom_ribbon(aes(y = value, ymin = ribbon_min, ymax = ribbon_max, fill = station), alpha = .2) +
                          scale_color_manual(values = c(paste0(data_timeseries$col)),
                                             breaks = c(paste0(data_timeseries$station))) +
                          scale_fill_manual(values=c(paste0(data_timeseries$col)),

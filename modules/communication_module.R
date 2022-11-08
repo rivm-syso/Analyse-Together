@@ -103,7 +103,10 @@ communication_server <- function(id,
                                                                T ~ pm10_kal),
                                    pm25_kal = dplyr::case_when(grepl("NL", station) ~ pm25,
                                                               T ~ pm25_kal)) %>%
-                     tidyr::pivot_longer(cols = cols_pivot, names_to = "parameter", values_to = "value")
+                     tidyr::pivot_longer(cols = cols_pivot, names_to = "parameter", values_to = "value") %>% 
+                     dplyr::group_by(station, date, parameter) %>% 
+                     dplyr::slice(which.max(!is.na(value))) %>% 
+                     dplyr::ungroup()
 
                    # Add uncertainty to the measurements of the sensors
                    data_measurements <- data_measurements %>%

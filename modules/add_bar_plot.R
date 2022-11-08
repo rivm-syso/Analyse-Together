@@ -34,13 +34,17 @@ barplot_server <- function(id,
         # Determine parameter that needs to be plotted
         # Get selected measurements from communication module
         data_measurements <- reactive({
-          data_measurements <- com_module$selected_measurements()
+          data_measurements <- com_module$selected_measurements() %>% dplyr::filter(!grepl("KNMI", station))
           return(data_measurements)
         })
     
         # Get selected stations from communication module
         data_stations <- reactive({
-          data_stations <- com_module$station_locations() %>% select(c(station, col, linetype, size)) %>% dplyr::distinct(station, .keep_all = T)
+          data_stations <- com_module$station_locations() %>% 
+            dplyr::select(c(station, col, linetype, size)) %>% 
+            dplyr::distinct(station, .keep_all = T) %>% 
+            dplyr::filter(!grepl("KNMI", station))
+      
           return(data_stations)
         })
     
@@ -66,9 +70,10 @@ barplot_server <- function(id,
             dplyr::mutate(gemiddelde = round(mean(value, na.rm=TRUE), 2),
                           standaarddev = sd(value, na.rm = T),
                           n_obs = n()) %>% distinct(station, .keep_all = TRUE)
-    
+
           data_barplot <- data_barplot %>%
             dplyr::left_join(data_stations(), by = "station")
+          
     
           # Make a plot
     

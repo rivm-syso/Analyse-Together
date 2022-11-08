@@ -30,13 +30,15 @@ timevar_weekly_server <- function(id, com_module) {
     # Determine parameter that needs to be plotted
     # Get selected measurements from communication module
     data_measurements <- reactive({
-      data_measurements <- com_module$selected_measurements()
+      data_measurements <- com_module$selected_measurements() %>% dplyr::filter(!grepl("KNMI", station))
       return(data_measurements)
     })
 
     # Get selected stations from communication module
     data_stations <- reactive({
-      data_stations <- com_module$station_locations() %>% select(c(station, col)) %>% dplyr::distinct(station, .keep_all = T)
+      data_stations <- com_module$station_locations() %>% select(c(station, col)) %>% 
+        dplyr::distinct(station, .keep_all = T) %>% 
+        dplyr::filter(!grepl("KNMI", station))
       return(data_stations)
     })
 

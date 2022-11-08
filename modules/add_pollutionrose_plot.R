@@ -31,7 +31,8 @@ pollrose_server <- function(id, com_module) {
     # Determine parameter that needs to be plotted
     # Get selected measurements from communication module
     data_measurements <- reactive({
-      data_measurements <- com_module$selected_measurements()
+      data_measurements <- com_module$selected_measurements() %>% 
+        dplyr::filter(!grepl("KNMI", station))
       return(data_measurements)
     })
 
