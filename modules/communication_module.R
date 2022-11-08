@@ -61,7 +61,7 @@ communication_server <- function(id,
 
                  # Load the data from the caching database ----
                  get_data <- reactive({
-                    browser()
+                    
                   # Check if the download and update button is pushed
                    download_button <-  download_data_123()
                    shiny::validate(
@@ -131,7 +131,7 @@ communication_server <- function(id,
                  # TODO create a function or reactive to make this selection which locations to use
                  get_stations_total <- reactive({
                   
-                   browser()
+                   
                    update_data()
                    # Set selected stations to TRUE
                    # stations_total <- isolate(get_data())$data_sensors %>%
