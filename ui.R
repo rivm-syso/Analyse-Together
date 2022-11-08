@@ -51,7 +51,7 @@ shinyUI(
                          column(width = 2, wellPanel(update_data_button_output("update_data"))))),
 
       fluidRow(
-        column(width = 6 ,
+        column(width = 12,
 
 
                         tabsetPanel(id = "second_order_tabs",
@@ -98,19 +98,19 @@ shinyUI(
                             value = "Visualise data",
                             title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
 
-                                         fluidRow(
-                                           wellPanel(component_selection_output("select_component"))
+                                         fluidRow(column(12, class = "col-lg-12", 
+                                           wellPanel(component_selection_output("select_component"))))
                                          ,
-
+                                         
+                                         fluidRow(
+                                           offset = 0,
+                                           column(width = 6,
                                          # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
-                                         tabsetPanel(tpAnalyse(), id = "tabsanalyse")
-
-                            )
+                                         tabsetPanel(tpAnalyse(), id = "tabsanalyse")),
+                            conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map"))))   
                           )
                         )
-                      ),
-      conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map")))
-
+               )
         )
       ),
 
