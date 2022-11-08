@@ -1,5 +1,53 @@
-# Image based on Ubuntu LTS (focal), with current R version
-FROM rivm-shinyapps-ct/analyse-together:r
+######################################################################
+## base image
+# FROM rocker/r-ver:4.2.1
+FROM rocker/shiny-verse:4.2.1
+
+ENV TZ Europe/Amsterdam
+RUN cat /etc/os-release
+
+######################################################################
+# Create layers
+
+# Adding system level libs etc. 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    libudunits2-dev \
+    libgdal-dev \
+    gdal-bin \
+    libgeos-dev \
+    libproj-dev \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# install R pkgs
+RUN install2.r --error --skipinstalled --ncpus -1 \
+     tidyverse \
+     lubridate \   
+     shiny \
+     shinycssloaders \
+     shinyWidgets \
+     RSQLite \
+     pool \
+     leaflet \
+     leaflet.extras \
+     sp \
+     sf \
+     DT \
+     plotly \
+     latex2exp \
+     openair \
+     logger \
+     remotes \
+     && rm -rf /tmp/downloaded_packages
+
+# install some more R pkgs (in a new layer)
+RUN install2.r --error --skipinstalled --ncpus -1 \
+     plyr \
+     shinyjs \
+     shiny.i18n \
+     dbplyr \
+     && rm -rf /tmp/downloaded_packages
 
 # Create folder 
 # copy app
@@ -7,6 +55,13 @@ FROM rivm-shinyapps-ct/analyse-together:r
 RUN mkdir /app
 WORKDIR /app
 COPY . .
+
+## install remotes packages
+RUN R -e "remotes::install_github('wschuc002/datafile', build_opts ='')"  && \
+ R -e "remotes::install_github('jspijker/samanapir', ref = 'Issue_2')"  && \
+# R -e "remotes::install_github('rivm-syso/samanapir', ref = 'Issue_2')"  && \
+ R -e "remotes::install_github('rivm-syso/ATdatabase', ref = 'develop', build_opts ='')"
+
 
 ## expose app
 EXPOSE 3838
