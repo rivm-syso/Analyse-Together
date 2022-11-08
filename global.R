@@ -54,10 +54,19 @@ log_threshold(TRACE)
 # # remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
 # remotes::install_github("rivm-syso/ATdatabase", ref = "develop", build_opts ="")
 
-library(datafile)
-datafileInit()
+# library(datafile)
+# datafileInit()
 library(samanapir)
 library(ATdatabase)
+
+# Source functions
+source("funs/assign_color_stations.R")
+source("funs/assign_linetype_stations.R")
+source("funs/geoshaper_findlocations.R")
+source("funs/database_fun.R")
+source("funs/queue_fun.R")
+source("funs/download_fun.R")
+
 
 # Set language and date options                                             ====
 
@@ -65,17 +74,18 @@ options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
-
-if ("ANALYSETOGETHER_DATAFOLDER" %in% names(Sys.getenv()))
-{
-  ANALYSETOGETHER_DATAFOLDER <- Sys.getenv("ANALYSETOGETHER_DATAFOLDER")
-} else
-{
-  stop('ANALYSETOGETHER_DATAFOLDER not present in environment. Developers: please source dev_environment.R.
-       Container managers: add ANALYSETOGETHER_DATAFOLDER as an environmental variable in deployment(config).')
-}
-
-
+# 
+# if ("ANALYSETOGETHER_DATAFOLDER" %in% names(Sys.getenv()))
+# {
+#   ANALYSETOGETHER_DATAFOLDER <- Sys.getenv("ANALYSETOGETHER_DATAFOLDER")
+# } else
+# {
+#   stop('ANALYSETOGETHER_DATAFOLDER not present in environment. Developers: please source dev_environment.R.
+#        Container managers: add ANALYSETOGETHER_DATAFOLDER as an environmental variable in deployment(config).')
+# }
+# 
+# ANALYSETOGETHER_DATAFOLDER <- Sys.getenv("ANALYSETOGETHER_DATAFOLDER")
+# 
 # Set theme for plots                                                       ====
 theme_plots <- theme_bw(base_size = 18) +
   theme(strip.text.x = element_text(size = 14, colour = "black"),
@@ -91,10 +101,12 @@ theme_plots <- theme_bw(base_size = 18) +
   )
 
 # Connect with the database using pool, store data, read table              ====
+db.path <- get_database_path()
+log_info("opening database {db.path}")
 pool <- dbPool(
 
   drv = SQLite(),
-  dbname = file.path(ANALYSETOGETHER_DATAFOLDER, "database.db")
+  dbname = db.path
 
 )
 
@@ -168,14 +180,6 @@ source("modules/add_timeseries_plot.R")
 source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_weekly_plot.R")
 source("modules/add_timevariation_daily_plot.R")
-
-# Source functions
-source("funs/assign_color_stations.R")
-source("funs/assign_linetype_stations.R")
-source("funs/geoshaper_findlocations.R")
-source("funs/database_fun.R")
-source("funs/queue_fun.R")
-source("funs/download_fun.R")
 
 # Source layout
 source("modules/add_tabpanels.R")
