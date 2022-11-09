@@ -48,13 +48,7 @@ shinyUI(
                             selected = i18n$get_key_translation(), direction = 'horizontal'),
                               align = "center",
                               style = "margin-bottom: 10px;",
-                              style = "margin-top: -10px;"),
-
-        conditionalPanel(condition="input.second_order_tabs!='Select data'",
-                         column(width = 2, wellPanel(update_data_button_output("update_data")               
-                                                     , align = "center"
-                                                     , style = "margin-bottom: 10px;"
-                                                     , style = "margin-top: -10px;")))),
+                              style = "margin-top: -10px;")),
 
       fluidRow(
         column(width = 12,
@@ -92,6 +86,11 @@ shinyUI(
 
 
                             fluidRow(
+                              conditionalPanel(condition="input.second_order_tabs!='Select data'",
+                                               column(width = 12, wellPanel(update_data_button_output("update_data")               
+                                                                           , align = "center"
+                                                                           , style = "margin-bottom: 5px;"
+                                                                           ))),
 
                               column(12, class = "col-lg-12", wellPanel(metadata_output("meta_table")), inlineCSS(list("table" = "font-size: 13px")))
 
@@ -104,16 +103,19 @@ shinyUI(
                             value = "Visualise data",
                             title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
 
-                                         fluidRow(column(12, class = "col-lg-12", 
-                                           wellPanel(component_selection_output("select_component"))))
-                                         ,
+                                         fluidRow(conditionalPanel(condition="input.second_order_tabs!='Select data'",
+                                                  column(width = 12, wellPanel(update_data_button_output("update_data")               
+                                                                          , align = "center"
+                                                                          , style = "margin-bottom: 5px;"))),
+                                                  column(12, class = "col-lg-12", 
+                                                  wellPanel(component_selection_output("select_component")))),
                                          
                                          fluidRow(
                                            offset = 0,
                                            column(width = 6,
                                          # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
                                          tabsetPanel(tpAnalyse(), id = "tabsanalyse")),
-                            conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map"))))   
+                            conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map"),style = "margin-top: 16px;")))   
                           )
                         )
                )
