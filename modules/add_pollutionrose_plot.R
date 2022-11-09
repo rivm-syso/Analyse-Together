@@ -2,7 +2,7 @@
 ### PollutionRose-plot Module ###
 ###############################################
 
-# Creates a bar-plot with the chosen stations, parameters and time range
+# Creates a pollution rose plot -- openair
 
 ###################################################################
 ### Output Module ####
@@ -22,7 +22,7 @@ pollrose_output <- function(id) {
 #
 #
 
-pollrose_server <- function(id, data_measurements_stations) {
+pollrose_server <- function(id, com_module) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -31,42 +31,58 @@ pollrose_server <- function(id, data_measurements_stations) {
     # Determine parameter that needs to be plotted
     # Get selected measurements from communication module
     data_measurements <- reactive({
-      data_measurements <- data_measurements_stations$selected_measurements()
+      data_measurements <- com_module$selected_measurements() %>% 
+        dplyr::filter(!grepl("KNMI", station))
       return(data_measurements)
     })
 
     # Get selected stations from communication module
     data_stations <- reactive({
-      data_stations <- data_measurements_stations$station_locations() %>% select(c(station, col)) %>% dplyr::distinct(station, .keep_all = T)
+      data_stations <- com_module$station_locations() %>%
+        dplyr::select(c(station, col)) %>%
+        dplyr::distinct(station, .keep_all = T)
       return(data_stations)
     })
 
+    # Get the KNMI data from the communication module
     data_knmi <- reactive({
-      data_knmi <- data_measurements_stations$knmi_measurements()
+      data_knmi <- com_module$knmi_measurements()
       return(data_knmi)
     })
 
     output$pollrose_plot <- renderPlot({
+      # Check if there is data to plot
+      shiny::validate(
+        need(!is_empty(data_measurements()),'Geen sensordata beschikbaar.'),
+        need(!dim(data_measurements())[1] == 0,'Geen sensordata beschikbaar.'),
+        need(!is_empty(data_knmi()),'Geen knmi-data beschikbaar.'),
+        need(!dim(data_knmi())[1] == 0,'Geen knmi-data beschikbaar.')
+      )
 
-      # Determine parameter that needs to be plotted
-      parameter_sel <- data_measurements()$parameter
+      # Determine parameter for the label in the plot
+      parameter <- com_module$selected_parameter()$parameter
 
       # Find the corresponding label
-      parameter_label <- str_replace(toupper(parameter_sel[1]), '_', ' - ')
+      parameter_label <- overview_component %>%
+        dplyr::filter(component == parameter) %>%
+        dplyr::pull(label)
 
-      data_pollrose <- data_measurements() %>% filter(parameter == parameter_sel)
+      # Get the stations data
+      data_pollrose <- data_measurements()
       data_pollrose <- merge(data_pollrose, data_stations(), by = 'station')
 
-      # Merge KNMI data with the sensordata:
-      knmidata <- data_knmi() %>%  filter(parameter == 'wd' | parameter == 'ws') %>% select(c('station', 'parameter', 'value', 'timestamp')) %>%
-        pivot_wider(names_from = 'parameter', values_from = 'value', values_fn = mean) %>%
+      # Get the KNMI data
+      knmidata <- data_knmi() %>%
+        dplyr::filter(parameter == 'wd' | parameter == 'ws') %>%
+        dplyr::select(c('station', 'parameter', 'value', 'timestamp')) %>%
+        tidyr::pivot_wider(names_from = 'parameter', values_from = 'value', values_fn = mean) %>%
         rename(knmi_stat = station)
 
-      data_pollrose <- left_join(data_pollrose, knmidata, by = 'timestamp', keep = T)
+      # Merge KNMI data with the stations data
+      data_pollrose <- dplyr::left_join(data_pollrose, knmidata, by = 'timestamp', keep = T)
 
-      # Make a plot
-      if (length(parameter_sel>0)){
-          try(pollutionRose(data_pollrose,
+      # Make a plot ====
+      try(pollutionRose(data_pollrose,
                         pollutant = "value",
                         wd = "wd",
                         ws = "ws",
@@ -76,15 +92,11 @@ pollrose_server <- function(id, data_measurements_stations) {
                         statistic = 'prop.mean',
                         breaks=c(0,10,25,50,100,200),
                         par.settings=list(fontsize=list(text=15)),
-                        key = list(header = paste0(unique(parameter_sel)),
+                        key = list(header = parameter_label,
                                    footer = '',
                                    labels = c('0 to 10', '10 to 25',
                                               '25 to 50','50 to 100', '100 or more')),
                         between = list(x=0.5, y = 0.5)))
-      }
-      else{
-          verbatimTextOutput("Selecteer een sensor.")
-      }
 
     })
 

@@ -48,10 +48,6 @@ library(lubridate)
 library(logger)
 log_threshold(TRACE)
 
-# remotes::install_github("jspijker/samanapir", ref = "Issue_2")
-# remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
-# remotes::install_github("rivm-syso/ATdatabase", ref = "develop", build_opts ="")
-
 library(samanapir)
 library(ATdatabase)
 
@@ -70,18 +66,6 @@ options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
-# 
-# if ("ANALYSETOGETHER_DATAFOLDER" %in% names(Sys.getenv()))
-# {
-#   ANALYSETOGETHER_DATAFOLDER <- Sys.getenv("ANALYSETOGETHER_DATAFOLDER")
-# } else
-# {
-#   stop('ANALYSETOGETHER_DATAFOLDER not present in environment. Developers: please source dev_environment.R.
-#        Container managers: add ANALYSETOGETHER_DATAFOLDER as an environmental variable in deployment(config).')
-# }
-# 
-# ANALYSETOGETHER_DATAFOLDER <- Sys.getenv("ANALYSETOGETHER_DATAFOLDER")
-# 
 # Set theme for plots                                                       ====
 theme_plots <- theme_bw(base_size = 18) +
   theme(strip.text.x = element_text(size = 14, colour = "black"),
@@ -107,6 +91,10 @@ pool <- dbPool(
 )
 
 
+### Initiate some variables                                                 ====
+# Default start and end time for the date picker
+default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
+
 # store lists with projects and municipalities
 municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
 projects <- read_csv("./prepped_data/projects.csv")
@@ -116,6 +104,12 @@ add_doc("application", "municipalities", municipalities, conn = pool,
         overwrite = TRUE)
 add_doc("application", "projects", projects, conn = pool,
         overwrite = TRUE)
+
+# Connections with the database tables
+measurements_con <- tbl(pool, "measurements")
+stations_con <- tbl(pool, "location")
+
+log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
 
 # Define colors, line types,choices etc.                                   ====
 # Colours for the sensors
@@ -132,11 +126,13 @@ line_overload <- 'dotted'
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
+
 # Connections with the database tables
 measurements_con <- tbl(pool, "measurements")
 stations_con <- tbl(pool, "location")
 
 # log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
+
 
 # Component choices
 overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
@@ -146,6 +142,7 @@ mun_choices  = sort(municipalities$X2)
 
 overview_select_choices <- data.frame('type' = c("project","municipality"), 'label'=c("project","gemeente"))
 select_choices = setNames(overview_select_choices$type, overview_select_choices$label)
+
 
 ### APP SPECIFIC SETTINGS                                                   ====
 
@@ -187,4 +184,3 @@ source("modules/view_que.R")
 que <- task_q$new()
 
 ### THE END                                                                 ====
-
