@@ -40,21 +40,21 @@ shinyUI(
       title = "Home",
 
       fluidRow(
-        column(width = 2, wellPanel(
+        column(width = 2, offset=10,
         shiny.i18n::usei18n(i18n),
           radioGroupButtons('selected_language', size = 'sm',justified = T,width = '100px',
                             label = i18n$t("sel_language"),
                             choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
-                            selected = i18n$get_key_translation()),
+                            selected = i18n$get_key_translation(), direction = 'horizontal'),
                               align = "center",
                               style = "margin-bottom: 10px;",
-                              style = "margin-top: -10px;")),
+                              style = "margin-top: -10px;"),
 
         conditionalPanel(condition="input.second_order_tabs!='Select data'",
-                         column(width = 2, wellPanel(update_data_button_output("update_data"),               
-                                                     align = "center",
-                                                     style = "margin-bottom: 10px;",
-                                                     style = "margin-top: -10px;")))),
+                         column(width = 2, wellPanel(update_data_button_output("update_data")               
+                                                     , align = "center"
+                                                     , style = "margin-bottom: 10px;"
+                                                     , style = "margin-top: -10px;")))),
 
       fluidRow(
         column(width = 12,
