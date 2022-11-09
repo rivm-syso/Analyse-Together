@@ -58,8 +58,8 @@ WORKDIR /app
 COPY . .
 
 ## install remotes packages
-RUN R -e "remotes::install_github('wschuc002/datafile', build_opts ='')"  && \
- R -e "remotes::install_github('jspijker/samanapir', ref = 'Issue_2')"  && \
+RUN R -e "remotes::install_github('jspijker/samanapir', ref = 'Issue_2')"  && \
+# R -e "remotes::install_github('wschuc002/datafile', build_opts ='')"  && \
 # R -e "remotes::install_github('rivm-syso/samanapir', ref = 'Issue_2')"  && \
  R -e "remotes::install_github('rivm-syso/ATdatabase', ref = 'develop', build_opts ='')"
 

@@ -48,14 +48,10 @@ library(lubridate)
 library(logger)
 log_threshold(TRACE)
 
-# # set data location
-# remotes::install_github("jspijker/datafile", build_opts ="")
 # remotes::install_github("jspijker/samanapir", ref = "Issue_2")
-# # remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
+# remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
 # remotes::install_github("rivm-syso/ATdatabase", ref = "develop", build_opts ="")
 
-# library(datafile)
-# datafileInit()
 library(samanapir)
 library(ATdatabase)
 
@@ -101,12 +97,12 @@ theme_plots <- theme_bw(base_size = 18) +
   )
 
 # Connect with the database using pool, store data, read table              ====
-db.path <- get_database_path()
-log_info("opening database {db.path}")
+db_path <- get_database_path()
+log_info("opening database {db_path}")
 pool <- dbPool(
 
   drv = SQLite(),
-  dbname = db.path
+  dbname = db_path
 
 )
 
