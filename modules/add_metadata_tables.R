@@ -95,7 +95,8 @@ metadata_server <- function(id, com_module) {
         n_obs_sel <- data_merged()$station
         if(length(n_obs_sel>1)){
           
-          try(datatable(data_merged(),colnames = c("Number of measurements PM2.5" = "Number of measurements pm25", 
+          try(datatable(data_merged(),colnames = c("Station" = "station",
+                                                   "Number of measurements PM2.5" = "Number of measurements pm25", 
                                                    "Number of measurements PM2.5 - kal" = "Number of measurements pm25_kal", 
                                                    "Number of measurements PM10" = "Number of measurements pm10", 
                                                    "Number of measurements PM10 - kal" = "Number of measurements pm10_kal", 
