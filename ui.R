@@ -40,18 +40,18 @@ shinyUI(
       title = "Home",
 
       fluidRow(
-        column(width = 2, wellPanel(
+        column(width = 2, offset=10,
         shiny.i18n::usei18n(i18n),
           radioGroupButtons('selected_language', size = 'sm',justified = T,width = '100px',
                             label = i18n$t("sel_language"),
-                          choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
-                          selected = i18n$get_key_translation()))),
-
-        conditionalPanel(condition="input.second_order_tabs!='Select data'",
-                         column(width = 2, wellPanel(update_data_button_output("update_data"))))),
+                            choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
+                            selected = i18n$get_key_translation(), direction = 'horizontal'),
+                              align = "center",
+                              style = "margin-bottom: 10px;",
+                              style = "margin-top: -10px;")),
 
       fluidRow(
-        column(width = 6 ,
+        column(width = 12,
 
 
                         tabsetPanel(id = "second_order_tabs",
@@ -70,11 +70,11 @@ shinyUI(
                                                                       date_range_output("select_date_range"),style = "z-index: 1000;",
                                                                       download_api_button_output("dl_btn_pushed"),style = "z-index: 1000;"
                                                             )
-                              ),
-                              column(6, class = "col-lg-6", wellPanel(
-                                view_que_output("view_que"))
-
-                            )
+                              )
+                              # column(6, class = "col-lg-6", wellPanel(
+                              #   view_que_output("view_que"))
+                              #
+                              #)
 
                           )
                           ),
@@ -86,6 +86,11 @@ shinyUI(
 
 
                             fluidRow(
+                              conditionalPanel(condition="input.second_order_tabs!='Select data'",
+                                               column(width = 12, wellPanel(update_data_button_output("update_data")               
+                                                                           , align = "center"
+                                                                           , style = "margin-bottom: 5px;"
+                                                                           ))),
 
                               column(12, class = "col-lg-12", wellPanel(metadata_output("meta_table")), inlineCSS(list("table" = "font-size: 13px")))
 
@@ -98,19 +103,22 @@ shinyUI(
                             value = "Visualise data",
                             title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
 
+                                         fluidRow(conditionalPanel(condition="input.second_order_tabs!='Select data'",
+                                                  column(width = 12, wellPanel(update_data_button_output("update_data")               
+                                                                          , align = "center"
+                                                                          , style = "margin-bottom: 5px;"))),
+                                                  column(12, class = "col-lg-12", 
+                                                  wellPanel(component_selection_output("select_component")))),
+                                         
                                          fluidRow(
-                                           wellPanel(component_selection_output("select_component"))
-                                         ,
-
+                                           offset = 0,
+                                           column(width = 6,
                                          # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
-                                         tabsetPanel(tpAnalyse(), id = "tabsanalyse")
-
-                            )
+                                         tabsetPanel(tpAnalyse(), id = "tabsanalyse")),
+                            conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map"),style = "margin-top: 16px;")))   
                           )
                         )
-                      ),
-      conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map")))
-
+               )
         )
       ),
 
