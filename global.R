@@ -48,65 +48,8 @@ library(lubridate)
 library(logger)
 log_threshold(TRACE)
 
-
-
-# set data location
-#
-if(install_github) {
-    remotes::install_github("jspijker/datafile", build_opts ="")
-}
-library(datafile)
-datafileInit()
-
-# load  dev version samanapir, jspijker's fork (contains more loging
-if(install_github) remotes::install_github("jspijker/samanapir", ref = "Issue_2")
-#if(install_github) remotes::install_github("rivm-syso/samanapir", ref = "Issue_2")
 library(samanapir)
-
-
-# load ATdatabase
-if(install_github) {
-    remotes::install_github("rivm-syso/ATdatabase", ref = "develop",
-                            build_opts ="")
-}
-
 library(ATdatabase)
-
-# Set language and date options                                             ====
-
-options(encoding = "UTF-8")                  # Standard UTF-8 encoding
-Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
-Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
-
-### APP SPECIFIC SETTINGS                                                   ====
-
-# Source module for the communication
-source("modules/communication_module.R")
-
-# Source module for the date range selection
-source("modules/select_date_range.R")
-# Source module for the component selection
-source("modules/select_component.R")
-# Source module for the component selection
-source("modules/show_map.R")
-
-# Source modules selections
-source("modules/select_date_range.R")
-source("modules/select_component.R")
-source("modules/select_mun_or_proj.R")
-source("modules/choose_mun_or_proj.R")
-source("modules/download_api_button.R")
-source("modules/update_data_button.R")
-
-# Source modules for metadata
-source("modules/add_metadata_tables.R")
-
-# Source modules visualisation
-source("modules/add_bar_plot.R")
-source("modules/add_timeseries_plot.R")
-source("modules/add_pollutionrose_plot.R")
-source("modules/add_timevariation_weekly_plot.R")
-source("modules/add_timevariation_daily_plot.R")
 
 # Source functions
 source("funs/assign_color_stations.R")
@@ -116,11 +59,12 @@ source("funs/database_fun.R")
 source("funs/queue_fun.R")
 source("funs/download_fun.R")
 
-# Source layout
-source("modules/add_tabpanels.R")
 
-# Source que display
-source("modules/view_que.R")
+# Set language and date options                                             ====
+
+options(encoding = "UTF-8")                  # Standard UTF-8 encoding
+Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
+Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
 # Set theme for plots                                                       ====
 theme_plots <- theme_bw(base_size = 18) +
@@ -137,15 +81,15 @@ theme_plots <- theme_bw(base_size = 18) +
   )
 
 # Connect with the database using pool, store data, read table              ====
+db_path <- get_database_path()
+log_info("opening database {db_path}")
 pool <- dbPool(
 
   drv = SQLite(),
-  dbname = datafile("database.db")
+  dbname = db_path
 
 )
 
-# Create the queue
-que <- task_q$new()
 
 ### Initiate some variables                                                 ====
 # Default start and end time for the date picker
@@ -182,6 +126,14 @@ line_overload <- 'dotted'
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
+
+# Connections with the database tables
+measurements_con <- tbl(pool, "measurements")
+stations_con <- tbl(pool, "location")
+
+# log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
+
+
 # Component choices
 overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
 comp_choices = setNames(overview_component$component, overview_component$label)
@@ -190,5 +142,45 @@ mun_choices  = sort(municipalities$X2)
 
 overview_select_choices <- data.frame('type' = c("project","municipality"), 'label'=c("project","gemeente"))
 select_choices = setNames(overview_select_choices$type, overview_select_choices$label)
+
+
+### APP SPECIFIC SETTINGS                                                   ====
+
+# Source module for the communication
+source("modules/communication_module.R")
+
+# Source module for the date range selection
+source("modules/select_date_range.R")
+# Source module for the component selection
+source("modules/select_component.R")
+# Source module for the component selection
+source("modules/show_map.R")
+
+# Source modules selections
+source("modules/select_date_range.R")
+source("modules/select_component.R")
+source("modules/select_mun_or_proj.R")
+source("modules/choose_mun_or_proj.R")
+source("modules/download_api_button.R")
+source("modules/update_data_button.R")
+
+# Source modules for metadata
+source("modules/add_metadata_tables.R")
+
+# Source modules visualisation
+source("modules/add_bar_plot.R")
+source("modules/add_timeseries_plot.R")
+source("modules/add_pollutionrose_plot.R")
+source("modules/add_timevariation_weekly_plot.R")
+source("modules/add_timevariation_daily_plot.R")
+
+# Source layout
+source("modules/add_tabpanels.R")
+
+# Source que display
+source("modules/view_que.R")
+
+# Create the queue
+que <- task_q$new()
 
 ### THE END                                                                 ====

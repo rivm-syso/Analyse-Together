@@ -9,15 +9,13 @@ dl_station <- function(id, time_start, time_end) {
     library(pool)
     library(logger)
     library(glue)
-    library(datafile)
-    datafileInit()
     library(samanapir)
     library(ATdatabase)
 
     #load functions
     source("./funs/database_fun.R")
 
-    fname_db <- datafile("database.db")
+    fname_db <- get_database_path()
     conn <- DBI::dbConnect(drv = SQLite(), dbname = fname_db)
 
     sqliteSetBusyHandler(conn, 10000) # time out in ms in case db is locked
