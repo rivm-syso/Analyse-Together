@@ -40,7 +40,7 @@ shinyUI(
       title = "Home",
       
       fluidRow(
-        column(width = 2,offset = 9,
+        column(width = 2,offset = 8,
                shiny.i18n::usei18n(i18n),
                radioGroupButtons('selected_language', size = 'sm',justified = T,width = '120px',
                                  label = i18n$t("sel_language"),
@@ -51,7 +51,7 @@ shinyUI(
                style = "margin-top: -10px;"),
         conditionalPanel(condition="input.second_order_tabs!='Select data'",
                          column(width = 1, update_data_button_output("update_data"),                
-                                align = "center;", style = "margin-left: -10px;margin-bottom: 10px;margin-top: 10px;"))
+                                align = "center", style = "margin-left: -10px;margin-bottom: 10px;margin-top: 10px;margin-right:10px;"))
         ),
       
       fluidRow(
