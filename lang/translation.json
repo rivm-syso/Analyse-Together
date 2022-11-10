@@ -91,6 +91,10 @@
         "en": "within",
         "nl": "in"
       },
+      {"tag" : "expl_metadata",
+        "en": "This is a table with information on the sensors, stations and KNMI-stations available for this project. The number of measurements are displayed for each sensor and station, and are component specific. Furthermore, this table gives insight into the timespan of the data-availability.",
+        "nl": "Dit is een tabel met informatie over de sensoren, stations en KNMI-stations beschikbaar binnen dit project. "
+      },
       {"tag" : "expl_timeplot",
         "en": "This plot show the timeseries of the sensor.",
         "nl": "Deze grafiek laat de tijdreeks van de sensor in vergelijking met het meetstation zien."

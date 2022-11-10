@@ -42,7 +42,7 @@ shinyUI(
       fluidRow(
         column(width = 2,offset = 9,
                shiny.i18n::usei18n(i18n),
-               radioGroupButtons('selected_language', size = 'sm',justified = T,width = '100px',
+               radioGroupButtons('selected_language', size = 'sm',justified = T,width = '120px',
                                  label = i18n$t("sel_language"),
                                  choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
                                  selected = i18n$get_key_translation(), direction = 'horizontal'),
@@ -51,10 +51,7 @@ shinyUI(
                style = "margin-top: -10px;"),
         conditionalPanel(condition="input.second_order_tabs!='Select data'",
                          column(width = 1, update_data_button_output("update_data"),                
-                                align = "left",
-                                style = "margin-bottom: 10px;",
-                                style = "margin-top: 10px;")
-                         )
+                                align = "center;", style = "margin-left: -10px;margin-bottom: 10px;margin-top: 10px;"))
         ),
       
       fluidRow(
@@ -71,7 +68,7 @@ shinyUI(
                              
                              fluidRow(
                                
-                               column(6, class = "col-lg-6", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+                               column(6, class = "col-lg-12", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
                                                                        choice_selection_output("choice_select"),style = "z-index: 10;",
                                                                        
                                                                        date_range_output("select_date_range"),style = "z-index: 1000;",
@@ -94,9 +91,9 @@ shinyUI(
                              
                              
                              fluidRow(
-                               column(12, class = "col-lg-12", wellPanel(metadata_output("meta_table")), inlineCSS(list("table" = "font-size: 13px")))
+                               column(12, class = "col-lg-12", wellPanel(metadata_output("meta_table")), inlineCSS(list("table" = "font-size: 13px"))),
                                
-                             )
+                             ),
                              
                            ),
                            
@@ -105,8 +102,8 @@ shinyUI(
                              value = "Visualise data",
                              title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
                              
-                             fluidRow(
-                               wellPanel(component_selection_output("select_component"))
+                             fluidRow(class = "col-lg-12",
+                               wellPanel(component_selection_output("select_component"),  style = "margin-bottom: -10px")
                                ,
                                
                                # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
@@ -116,7 +113,8 @@ shinyUI(
                            )
                )
         ),
-        conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map")))
+        conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map"))),
+        conditionalPanel(condition="input.second_order_tabs=='Informatie over data'", column(width = 6,div(br(),br(),i18n$t("expl_metadata"))))
         
       )
     ),
