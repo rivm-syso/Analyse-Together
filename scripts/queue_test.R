@@ -27,10 +27,10 @@ setwd(here::here())
 
 # source scripts
 
-source("./funs/database_fun.R")
-source("./funs/queue_fun.R")
-source("./funs/download_fun.R")
-source("./scripts/test_functions.R")
+source(here("funs","database_fun.R"))
+source(here("funs","queue_fun.R"))
+source(here("funs","download_fun.R"))
+source(here("scripts","test_functions.R"))
 
 # Connect with the database using pool, store data, read table              ====
     

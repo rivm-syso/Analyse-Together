@@ -109,7 +109,7 @@ add_doc("application", "projects", projects, conn = pool,
 measurements_con <- tbl(pool, "measurements")
 stations_con <- tbl(pool, "location")
 
-log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
+# log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
 
 # Define colors, line types,choices etc.                                   ====
 # Colours for the sensors

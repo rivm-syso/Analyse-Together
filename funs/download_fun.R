@@ -13,7 +13,7 @@ dl_station <- function(id, time_start, time_end) {
     library(ATdatabase)
 
     #load functions
-    source("./funs/database_fun.R")
+    source(here("funs","database_fun.R"))
 
     fname_db <- get_database_path()
     conn <- DBI::dbConnect(drv = SQLite(), dbname = fname_db)
