@@ -1,9 +1,15 @@
-# Image based on Ubuntu LTS (focal), with current R version
-FROM rocker/r-ver:4.2.1
+######################################################################
+## base image
+# FROM rocker/r-ver:4.2.1
+FROM rocker/shiny-verse:4.2.1
 
+ENV TZ Europe/Amsterdam
+RUN cat /etc/os-release
 
-# Install system libraries
+######################################################################
+# Create layers
 
+# Adding system level libs etc. 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     libudunits2-dev \
@@ -12,8 +18,7 @@ RUN apt-get update \
     libgeos-dev \
     libproj-dev \
     libssl-dev \
-    && rm -rf /var/lib/apt/lists/* 
-
+    && rm -rf /var/lib/apt/lists/*
 
 # install R pkgs
 RUN install2.r --error --skipinstalled --ncpus -1 \
@@ -39,7 +44,10 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
 # install some more R pkgs (in a new layer)
 RUN install2.r --error --skipinstalled --ncpus -1 \
      plyr \
+     shinyjs \
+     shiny.i18n \
      dbplyr \
+     here \
      && rm -rf /tmp/downloaded_packages
 
 # Create folder 
@@ -48,6 +56,13 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
 RUN mkdir /app
 WORKDIR /app
 COPY . .
+
+## install remotes packages
+RUN R -e "remotes::install_github('jspijker/samanapir', ref = 'Issue_2')"  && \
+# R -e "remotes::install_github('wschuc002/datafile', build_opts ='')"  && \
+# R -e "remotes::install_github('rivm-syso/samanapir', ref = 'Issue_2')"  && \
+ R -e "remotes::install_github('rivm-syso/ATdatabase', ref = 'develop', build_opts ='')"
+
 
 ## expose app
 EXPOSE 3838

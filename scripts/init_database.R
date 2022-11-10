@@ -8,18 +8,19 @@
 library(RSQLite)
 library(pool)
 library(ATdatabase)
-library(datafile)
+source(here::here("funs","database_fun.R"))
 
-datafileInit()
 
-if(file.exists(datafile("database.db"))) {
-    unlink(datafile("database.db"))
+db.path <- get_database_path()
+
+if(file.exists(db.path)) {
+    unlink(db.path)
 }
 
 pool <- dbPool(
 
                drv = SQLite(),
-               dbname = datafile("database.db")
+               dbname = db.path
 
 )
 

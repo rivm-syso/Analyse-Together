@@ -19,28 +19,26 @@ library(lubridate)
 library(logger)
 log_threshold(TRACE)
 
-# set data location
-library(datafile)
-datafileInit()
-
 library(samanapir)
 library(ATdatabase)
 
 # set working directory to root of repo
-setwd(here())
+setwd(here::here())
 
 # source scripts
 
-source("./funs/database_fun.R")
-source("./funs/queue_fun.R")
-source("./funs/download_fun.R")
-source("./scripts/test_functions.R")
+source(here("funs","database_fun.R"))
+source(here("funs","queue_fun.R"))
+source(here("funs","download_fun.R"))
+source(here("scripts","test_functions.R"))
 
 # Connect with the database using pool, store data, read table              ====
+    
+fname_db <- get_database_path()
 pool <- dbPool(
 
                drv = SQLite(),
-               dbname = datafile("database.db")
+               dbname = fname_db
 
 )
 
