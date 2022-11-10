@@ -2,7 +2,7 @@ update_data_button_output <- function(id) {
 
   ns <- NS(id)
   tagList(
-  actionButton(ns("update_data_button"), "Update data")
+  actionButton(ns("update_data_button"), "Update data", style="background-color: #ffe9b7")
   )
 }
 
