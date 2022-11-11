@@ -5,10 +5,12 @@
 # this script removes an old database if it exists
 ######################################################################
 
+library(tidyverse)
 library(RSQLite)
 library(pool)
 library(ATdatabase)
-source(here::here("funs","database_fun.R"))
+library(here)
+source(here("funs","database_fun.R"))
 
 
 db.path <- get_database_path()
@@ -25,6 +27,17 @@ pool <- dbPool(
 )
 
 create_database_tables(pool)
+
+municipalities <- read_csv(here("prepped_data", "municipalities.csv"), 
+                           col_names = F)
+projects <- read_csv(here("prepped_data", "projects.csv"), 
+                           col_names = F)
+
+add_doc("application", "municipalities", municipalities, conn = pool,
+        overwrite = TRUE)
+add_doc("application", "projects", projects, conn = pool,
+        overwrite = TRUE)
+
 
 poolClose(pool)
 
