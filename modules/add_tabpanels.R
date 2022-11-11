@@ -21,7 +21,7 @@ tpAnalyse <- function(){
 
 tpTimeplot <- function(){
   tp <-  shiny::tabPanel("Timeseries",
-                         helpText(i18n$t("expl_timeplot"), style = "margin-left: 10px"),
+                         helpText(i18n$t("expl_timeplot"), style = "margin-left: 10px; margin-right: 10px"),
                          fluidRow(
 
                            # Render timeseries plot.
@@ -38,7 +38,7 @@ tpTimeplot <- function(){
 
 tpBarplot <- function(){
   tp <-  shiny::tabPanel("Barplot",
-                         helpText(i18n$t("expl_barplot"),style = "margin-left: 10px"),
+                         helpText(i18n$t("expl_barplot"),style = "margin-left: 10px;margin-right: 10px"),
 
                          fluidRow(
 
@@ -69,7 +69,7 @@ tpKalender <- function(){
 
 tpTimevariationWeekly <- function(){
   tp <-  shiny::tabPanel("Weekly pattern",
-                         helpText(i18n$t("expl_overviewplot"), style = "margin-left: 10px"),
+                         helpText(i18n$t("expl_overviewplot"), style = "margin-left: 10px;margin-right: 10px"),
 
                          fluidRow(
 
@@ -89,7 +89,7 @@ tpTimevariationWeekly <- function(){
 
 tpTimevariationDaily <- function(){
   tp <-  shiny::tabPanel("Daily pattern",
-                         helpText(i18n$t("expl_overviewplot_daily"), style = "margin-left: 10px"),
+                         helpText(i18n$t("expl_overviewplot_daily"), style = "margin-left: 10px;margin-right: 10px"),
                          
                          fluidRow(
                            
@@ -148,7 +148,7 @@ tpPercentileRose<- function(){
 
 tpPollutionRose<- function(){
   tp <-  shiny::tabPanel("Concentratieroos (%)",
-                         helpText(i18n$t("expl_concplot%"), style = "margin-left: 10px"),
+                         helpText(i18n$t("expl_concplot%"), style = "margin-left: 10px;margin-right: 10px"),
                          p("LET OP: als het KNMI-station geen gegevens over de wind heeft, kan er geen concentratieroos (%) worden getoond. Check of er een windroos
                     voor dit KNMI-station is."),
                          fluidRow(

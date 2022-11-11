@@ -16,7 +16,7 @@ shinyUI(
       # White header with logo
       tags$div(class = "header-white",
                
-               tags$img(src = "images/Banner_2018.png", style = "height: 180px; width: 690px; margin-bottom: 10px;margin-top: 10px; margin-right: 10px")
+               tags$img(src = "images/Banner_2018.png", style = "height: 120px; width: 450px; margin-bottom: 0px;margin-top: 10px; margin-right: 10px")
                
       ),
       
@@ -68,11 +68,11 @@ shinyUI(
                              
                              fluidRow(
                                
-                               column(6, class = "col-lg-12", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+                               column(12, class = "col-lg-12", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
                                                                        choice_selection_output("choice_select"),style = "z-index: 10;",
                                                                        
-                                                                       date_range_output("select_date_range"),style = "z-index: 1000;",
-                                                                       download_api_button_output("dl_btn_pushed"),style = "z-index: 1000;"
+                                                                       date_range_output("select_date_range"),style = "z-index: 11;",
+                                                                       download_api_button_output("dl_btn_pushed"),style = "z-index: 11;"
                                )
                                )
                                # ,
@@ -103,7 +103,7 @@ shinyUI(
                              title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
                              
                              fluidRow(class = "col-lg-12",
-                               wellPanel(component_selection_output("select_component"),  style = "margin-bottom: -10px")
+                               wellPanel(component_selection_output("select_component"), style = "margin-bottom: -10px")
                                ,
                                
                                # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
@@ -113,18 +113,23 @@ shinyUI(
                            )
                )
         ),
+        # Add all text:
+        conditionalPanel(condition="input.second_order_tabs=='Select data'", column(width = 6,div(br(),br(),h3(i18n$t("tool_welcome")),
+                                                                                                  p(i18n$t("tool_welcome_expl")),
+                                                                                                  p(i18n$t("link_to_samenmeten"), a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
+                                                                                                    br(),i18n$t("link_to_LML"), a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
+                                                                                                    br(),i18n$t("link_to_projecten"), a("samenmeten.nl", href ='https://samenmeten.nl/projecten', target = 'blank'), style = "font-size:13px"), style='text-align: left;'))),
+        conditionalPanel(condition="input.second_order_tabs=='Informatie over data'", column(width = 6,div(br(),br(),i18n$t("expl_metadata")))),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map"))),
-        conditionalPanel(condition="input.second_order_tabs=='Informatie over data'", column(width = 6,div(br(),br(),i18n$t("expl_metadata"))))
         
       )
     ),
     
     tabPanel(
       title = i18n$t("title_infotool"),
-      helpText(HTML('&nbsp;'),i18n$t("expl_expltool")),
-      h4(HTML('&nbsp;'),i18n$t("title_expl")),
-      p(HTML('&nbsp;'),i18n$t("expl_moreinfo"),
-        style = "font-size:12px"))
+      h4(i18n$t("title_expl")),
+      p(i18n$t("tool_intro"),
+        style = "font-size:13px"))
     
   )
   
