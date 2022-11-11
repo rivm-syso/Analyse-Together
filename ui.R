@@ -40,16 +40,16 @@ shinyUI(
       title = "Home",
       
       fluidRow(column(width = 1, offset=10,
-             shiny.i18n::usei18n(i18n),
-             radioGroupButtons('selected_language', size = 'sm',justified = T,width = '80px',
-                               label = NULL,
-                               choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
-                               selected = i18n$get_key_translation(), direction = 'horizontal'),
-             align = "left",
-             style = "margin-bottom: -10px;",
-             style = "margin-right: 20px;",
-             style = "margin-top: -10px;")),
-    
+                      shiny.i18n::usei18n(i18n),
+                      radioGroupButtons('selected_language', size = 'sm',justified = T,width = '80px',
+                                        label = NULL,
+                                        choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
+                                        selected = i18n$get_key_translation(), direction = 'horizontal'),
+                      align = "left",
+                      style = "margin-bottom: -10px;",
+                      style = "margin-right: 20px;",
+                      style = "margin-top: -10px;")),
+      
       fluidRow(
         column(width = 6,
                
@@ -65,10 +65,10 @@ shinyUI(
                              fluidRow(
                                
                                column(12, class = "col-lg-12", wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
-                                                                       choice_selection_output("choice_select"),
-                                                                       
-                                                                       date_range_output("select_date_range"),
-                                                                       download_api_button_output("dl_btn_pushed")
+                                                                         choice_selection_output("choice_select"),
+                                                                         
+                                                                         date_range_output("select_date_range"),
+                                                                         download_api_button_output("dl_btn_pushed")
                                )
                                )
                                # ,
@@ -99,19 +99,19 @@ shinyUI(
                              title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
                              
                              fluidRow(class = "col-lg-12",
-                               wellPanel(component_selection_output("select_component"), style = "margin-bottom: -10px")
-                               ,
-                               
-                               # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
-                               tabsetPanel(tpAnalyse(), id = "tabsanalyse")
-                               
+                                      wellPanel(component_selection_output("select_component"), style = "margin-bottom: -10px")
+                                      ,
+                                      
+                                      # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
+                                      tabsetPanel(tpAnalyse(), id = "tabsanalyse")
+                                      
                              )
                            )
                )
         ),
-
+        
         # Add all text:
-    
+        
         conditionalPanel(condition="input.second_order_tabs!='Select data'",
                          column(width = 1, update_data_button_output("update_data"),                
                                 align = "center", style = "margin-left: -10px;margin-top: -10px; margin-bottom: -10px; margin-right:-10px;")),
@@ -122,9 +122,9 @@ shinyUI(
                                                                                                     br(),i18n$t("link_to_projecten"), a("samenmeten.nl", href ='https://samenmeten.nl/projecten', target = 'blank'), style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
         conditionalPanel(condition="input.second_order_tabs=='Informatie over data'", column(width = 6,div(br(),i18n$t("expl_metadata")))),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'", column(width = 6,  show_map_output("map"),style = "margin-top: 30px;")),
-          
-        )
-      ),
+        
+      )
+    ),
     
     tabPanel(
       title = i18n$t("title_infotool"),

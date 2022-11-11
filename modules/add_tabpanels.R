@@ -20,7 +20,7 @@ tpAnalyse <- function(){
 }
 
 tpTimeplot <- function(){
-  tp <-  shiny::tabPanel("Timeseries",
+  tp <-  shiny::tabPanel(i18n$t("Timeseries"),
                          helpText(i18n$t("expl_timeplot"), style = "margin-left: 10px; "),
                          fluidRow(
 
@@ -37,7 +37,7 @@ tpTimeplot <- function(){
 }
 
 tpBarplot <- function(){
-  tp <-  shiny::tabPanel("Barplot",
+  tp <-  shiny::tabPanel(i18n$t("Barplot"),
                          helpText(i18n$t("expl_barplot"),style = "margin-left: 10px;"),
 
                          fluidRow(
@@ -68,7 +68,7 @@ tpKalender <- function(){
 }
 
 tpTimevariationWeekly <- function(){
-  tp <-  shiny::tabPanel("Weekly pattern",
+  tp <-  shiny::tabPanel(i18n$t("weekpattern"),
                          helpText(i18n$t("expl_overviewplot"), style = "margin-left: 10px;"),
 
                          fluidRow(
@@ -88,7 +88,7 @@ tpTimevariationWeekly <- function(){
 }
 
 tpTimevariationDaily <- function(){
-  tp <-  shiny::tabPanel("Daily pattern",
+  tp <-  shiny::tabPanel(i18n$t("daypattern"),
                          helpText(i18n$t("expl_overviewplot_daily"), style = "margin-left: 10px;"),
                          
                          fluidRow(
@@ -123,7 +123,7 @@ tpWindRose<- function(){
                         bekijk je de kleur van de blokken. Hoe donkerder de kleur, hoe harder de wind.",
                            style = "font-size:12px")
   )
-
+  
   return(tp)
 }
 
@@ -133,35 +133,35 @@ tpPercentileRose<- function(){
                          p("LET OP: als het KNMI-station geen gegevens over de wind of de sensor alleen 0 ug/m3 gemeten heeft,
                     is deze concentratieroos vreemd. Check of er een windroos voor dit KNMI-station is. Check in de tijdreeks of
                     de sensor metingen boven de 0 ug/m3 heeft."),
-                         plotOutput("percentileplot"),
-                         h4("Toelichting"),
-                         p("Als je een sensor aanklikt, wordt een concentratieroos getoond. Deze toont per windsector het gemiddelde
+                    plotOutput("percentileplot"),
+                    h4("Toelichting"),
+                    p("Als je een sensor aanklikt, wordt een concentratieroos getoond. Deze toont per windsector het gemiddelde
                         van de sensormetingen wanneer de wind uit die richting waaide. Voorbeeld: als aan de rechterbovenzijde
                         van de grafiek de grijze lijntjes op de streep voor 20 ug/m3 ligt en aan de linkerbovenzijde op 10 ", HTML("&mu;g/m<sup>3</sup>."),
-                           "dan betekent dit dat bij wind van het noordoosten de concentraties hoger zijn dan bij wind vanuit het noordwesten.",
-                           style = "font-size:12px"
-                         )
+                      "dan betekent dit dat bij wind van het noordoosten de concentraties hoger zijn dan bij wind vanuit het noordwesten.",
+                      style = "font-size:12px"
+                    )
   )
-
+  
   return(tp)
 }
 
 tpPollutionRose<- function(){
-  tp <-  shiny::tabPanel("Concentratieroos (%)",
+  tp <-  shiny::tabPanel(i18n$t("conc_rose"),
                          helpText(i18n$t("expl_concplot%"), style = "margin-left: 10px;"),
                          p("LET OP: als het KNMI-station geen gegevens over de wind heeft, kan er geen concentratieroos (%) worden getoond. Check of er een windroos
                     voor dit KNMI-station is."),
-                         fluidRow(
-
-                           # Render pollutionrose plot.
-
-                           column(12, wellPanel(pollrose_output("pollrose_plot"))),
-
-                         ),
-                         h4(i18n$t("title_expl")),
-                         p(i18n$t("expl_concplot%_expl"),
-                           style = "font-size:12px")
+                    fluidRow(
+                      
+                      # Render pollutionrose plot.
+                      
+                      column(12, wellPanel(pollrose_output("pollrose_plot"))),
+                      
+                    ),
+                    h4(i18n$t("title_expl")),
+                    p(i18n$t("expl_concplot%_expl"),
+                      style = "font-size:12px")
   )
-
+  
   return(tp)
 }
