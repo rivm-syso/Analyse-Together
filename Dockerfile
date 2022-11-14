@@ -18,6 +18,7 @@ RUN apt-get update \
     libgeos-dev \
     libproj-dev \
     libssl-dev \
+    rsync \
     && rm -rf /var/lib/apt/lists/*
 
 # install R pkgs
