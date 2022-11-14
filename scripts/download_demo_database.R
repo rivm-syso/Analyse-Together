@@ -23,10 +23,6 @@ library(lubridate)
 library(logger)
 log_threshold(TRACE)
 
-# set data location
-library(datafile)
-datafileInit()
-
 library(samanapir)
 
 if(install_github) {
@@ -51,10 +47,12 @@ Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 
 
 # Connect with the database using pool, store data, read table              ====
+    
+fname_db <- get_database_path()
 pool <- dbPool(
 
                drv = SQLite(),
-               dbname = datafile("database.db")
+               dbname = fname_db
 
 )
 
@@ -62,7 +60,7 @@ pool <- dbPool(
 project <- "Amersfoort"
 
 time_start <- as_datetime("2022-01-01 00:00:00")
-time_end <- as_datetime("2022-01-03 23:59:59")
+time_end <- as_datetime("2022-01-08 23:59:59")
 
 
 #  get project info
@@ -78,9 +76,10 @@ for(i in kits) {
 
 if (FALSE) {
     # This takes quite a while to donwload, there are many sensors
+    cat("Running extra code\n")
     gemeente <- "Amersfoort"
     download_sensor_meta(gemeente, type = "municipality")
-    kits <- get_stations_from_selection(project, type = "municipality")
+    kits <- get_stations_from_selection(gemeente, type = "municipality")
     for(i in kits) {
         dl_station(i, time_start, time_end)
     }

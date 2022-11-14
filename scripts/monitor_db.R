@@ -1,8 +1,7 @@
 ######################################################################
-# script to test download queue functions
+# Database monitoring script
 ######################################################################
-# This script must be run interactive
-######################################################################
+
 
 # Read in the necessary libraries                                           ====
 
@@ -21,6 +20,7 @@ log_threshold(TRACE)
 
 library(samanapir)
 library(ATdatabase)
+library(here)
 
 # set working directory to root of repo
 setwd(here::here())
@@ -43,35 +43,22 @@ pool <- dbPool(
 )
 
 
-# now let's start the queue
-que <- task_q$new()
+# Connections with the database tables
+measurements_con <- tbl(pool, "measurements")
+stations_con <- tbl(pool, "location")
+cache_con <- tbl(pool, "cache")
 
-# and push some jobs to the queue
-dbtables <- get_db_tables(pool)
-for (i in 1:10) {
-    rnd_station <- get_rnd_station(dbtables)
-    qid <- que$push(dl_station, list(rnd_station$station,
-                                     rnd_station$time_start,
-                                     rnd_station$time_end), 
-                    id = rnd_station$station)
-    log_trace("pushed job {qid} to the queue")
+repeat{
+
+    n_m <- nrow(measurements_con%>%collect())
+    n_s <- nrow(stations_con%>%collect())
+    n_c <- nrow(cache_con%>%collect())
+    print(now())
+    cat("Measurements:\t", n_m, "\n")
+    cat("Stations:\t", n_s, "\n")
+    cat("Cache:\t\t", n_c, "\n")
+    cat("\n\n")
+    Sys.sleep(5)
+
 
 }
-
-# start queue
-que$poll()
-
-# see what's on the queue
-tlist <- que$list_tasks()
-print(tlist)
-
-p <- station_overview(pool)
-print(p)
-
-t1 <- simple_task_list() %>%
-    as.data.frame()
-print(t1)
-
-
-
-

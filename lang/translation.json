@@ -14,6 +14,10 @@
       {"tag" : "title_selectdata",
         "en": "Select data",
         "nl": "Selecteer data"
+    },
+      {"tag" : "title_metadata",
+        "en": "Information on the data",
+        "nl": "Informatie over de data"
       },
       {"tag" : "title_visualisedata",
         "en": "Visualise data",

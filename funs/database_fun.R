@@ -1,5 +1,44 @@
 # misc functions to download and store data in the database
 
+
+get_database_dirname <- function() {
+    # function to determine database dirname This returns either the
+    # database path as set in ANALYSETOGETHER_DATAFOLDER environment
+    # variable, or returns default path (./data) if environment
+    # variable is not present
+
+
+    if ("ANALYSETOGETHER_DATAFOLDER" %in% names(Sys.getenv())) {
+        namedir <- Sys.getenv("ANALYSETOGETHER_DATAFOLDER")
+    } else {
+        namedir <- file.path(here::here(), "data")
+    }
+
+    if(!file.exists(namedir)) {
+        stop("ERROR: get_database_dirname: path to dirname not found")
+    }
+    return(namedir)
+}
+
+get_database_path <- function(db = "database.db") {
+    # see function get_database_dirname. This function returns the
+    # full path to the database
+    # arguments:
+    #  db: name of database file (sqlite database file)
+    dirname <- get_database_dirname()
+    db_path <- file.path(dirname, db)
+
+    if(!file.exists(db_path)) {
+        log_warn("WARNING: no database found, new database created at {db_path}")
+        pool <- dbPool( drv = SQLite(), dbname = db_path)
+        create_database_tables(pool)
+    }
+
+        
+    return(db_path)
+}
+
+
 station_exists <- function(station, conn) {
     # checks if 'station' allready exists in the location table
 
@@ -173,10 +212,22 @@ get_stations_from_selection <- function(name, type, conn = pool) {
       if(!is.list(info)){
         return(NULL)
       }
-      # Get the kits
-      kits <- info$sensor_data %>%
-        pull(kit_id)
-    return(kits)
+
+      # Get the stations: first the sensors
+      sensors <- info$sensor_data %>% dplyr::pull(kit_id)
+      # Get the KNMI stations
+      knmi <- info$sensor_data %>% dplyr::pull(knmicode) %>% unique() %>% sub("knmi_06", "KNMI_",.)
+      # Get the reference stations
+      refstation <- info$sensor_data %>%
+        dplyr::select(dplyr::starts_with("pm")) %>%
+        tidyr::pivot_longer(cols = dplyr::starts_with("pm"), names_to ="stat") %>%
+        dplyr::pull(value) %>%
+        unique()
+
+      # Combine all station names
+      stations <- c(sensors, knmi, refstation)
+
+    return(stations)
 }
 
 round_to_days <- function(time_start, time_end) {
