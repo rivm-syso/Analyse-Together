@@ -4,12 +4,40 @@
   "translation": [
 
       {"tag" : "title_infotool",
-	  "en": "Information tool",
-	  "nl": "Informatie over de tool"
+	      "en": "Information tool",
+	      "nl": "Informatie over de tool"
+	  },
+	    {"tag" : "tool_title",
+	      "en": "Information tool",
+	      "nl": "Informatie over de tool"
+	  },
+	   {"tag" : "link_to_samenmeten",
+	      "en": "Real-time measurements of the sensors are available on the Measure Together Dataportal:",
+	      "nl": "Real-time metingen van de sensoren kunt u vinden op het Samen Meten Dataportaal:"
+	  },
+	  {"tag" : "link_to_LML",
+	      "en": "Real-time measurements of the stations are available on the National Air Monitoring Network website:",
+	      "nl": "Real-time metingen van de stations kunt u vinden op de Landelijk Luchtmeetnet website:"
+	  },
+	  {"tag" : "link_to_projecten",
+	      "en": "For more information on the projects itself, see our website:",
+	      "nl": "Voor meer informatie over de projecten zelf, zie onze website:"
+	  },
+	    {"tag" : "tool_intro",
+	      "en": "The Analyse Together Tool (AT-tool) was developed by RIVM for downloading and analysing sensordata. In addition, with this tool you can easily combine the sensordata with official measurement data from the National Air Monitoring Network and with the weather data from the KNMI. The tool uses the R package openair and is offered completely open source.",
+	      "nl": "De Samen Analyseren Tool is door het RIVM ontwikkeld voor het downloaden en analyseren van sensordata. Daarnaast kun je met deze tool de sensordata  eenvoudig combineren met officiële meetdata van het Landelijk Luchtmeetnet en met de weergegevens van het KNMI. De tool maakt gebruik van het R package openair en wordt geheel open source aangeboden."
+	  },
+	    {"tag" : "tool_welcome",
+	      "en": "Welcome to the Analyse Together tool",
+	      "nl": "Welkom bij de Samen Analyseren tool"
+	  },
+	  {"tag" : "tool_welcome_expl",
+	      "en": "With this tool you can compare the sensordata of a project or municipality with official measurement data from the National Air Monitoring Network, or, for example, compare your municipality with a municipality nearby. You do this by first making a choice from the menu on the left side of the screen. When you choose 'municipality', you can then select a municipality of your choice. Then, select a time period and click on 'start download'. The data you are interested in, will be retrieved from the database for you. This may take a while, but if you have used this specific data-set before, the data is already in the tool for you. Click on one of the other two tabs to start your analysis.",
+	      "nl": "Met deze tool kunt u de sensordata van een project of gemeente vergelijken met officiële meetdata van het Landelijk Luchtmeetnet, of bijvoorbeeld uw gemeente vergelijken met een gemeente in de buurt. Dat doet u door hier eerst een keuze te maken uit het keuzemenu links in beeld. Wanneer u kiest voor 'gemeente', dan kunt u daarna een gemeente naar keuze selecteren. Vervolgens selecteert u een tijdsperiode en klikt u op 'start download'. De data waar u in bent geïnteresseerd, zal voor u uit de database worden opgehaald. Dat kan even duren, maar als u deze dataset al eens eerder heeft gebruikt, staat de data al voor u in de tool. Klik op een van de twee andere tabbladen voor de start van uw analyse."
 	  },
       {"tag" : "sel_knmi",
-		"en": "Show KNMI stations",
-	  "nl": "Toon KNMI-stations"
+	    	"en": "Show KNMI stations",
+	      "nl": "Toon KNMI-stations"
 	  },
       {"tag" : "title_selectdata",
         "en": "Select data",
@@ -17,7 +45,7 @@
     },
       {"tag" : "title_metadata",
         "en": "Information on the data",
-        "nl": "Informatie over de data"
+        "nl": "Info over de data"
       },
       {"tag" : "title_visualisedata",
         "en": "Visualise data",
@@ -25,7 +53,7 @@
       },
       {"tag" : "sel_basedon",
         "en": "Selection based on:",
-        "nl": "Selectie gebasseerd op:"
+        "nl": "Selectie gebaseerd op:"
       },
 	  {"tag" : "word_muni",
         "en": "Municipality",
@@ -91,6 +119,14 @@
         "en": "within",
         "nl": "in"
       },
+      {"tag" : "expl_metadata",
+        "en": "This is a table with information on the sensors, stations and KNMI-stations available for this project. The number of measurements are displayed for each sensor and station, and are component specific. Furthermore, this table gives insight into the timespan of the data-availability.",
+        "nl": "Dit is een tabel met informatie over de sensoren, stations en KNMI-stations beschikbaar binnen dit project. "
+      },
+      {"tag" : "Timeseries",
+        "en": "Timeseries",
+        "nl": "Tijdserie"
+      },
       {"tag" : "expl_timeplot",
         "en": "This plot show the timeseries of the sensor.",
         "nl": "Deze grafiek laat de tijdreeks van de sensor in vergelijking met het meetstation zien."
@@ -98,6 +134,10 @@
       {"tag" : "expl_timeplot_expl",
         "en": "See Dutch",
         "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse sensorwaarden voor de geselecteerde periode. Deze waarden kan je vergeleken met metingen van het dichtsbijzijnde meetstation van het luchtmeetnet. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3"
+      },
+      {"tag" : "Barplot",
+        "en": "Barplot",
+        "nl": "Barplot"
       },
       {"tag" : "expl_barplot",
         "en": "See Dutch",
@@ -107,9 +147,17 @@
         "en": "Graph shows the average of the selected stations and sensors. The average is calculated for the timerange as selected in the previous step.                                   The white number in each bar, displays the number of measurements within this timeperiod. If this number is very low, the statistical power of                                  the difference between stations/sensors is lower.",
         "nl": "Als je een sensor of groep sensoren selecteert, zie je het gemiddelde voor de geselecteerde tijdreeks. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen."
       },
+      {"tag" : "weekpattern",
+        "en": "Weekly pattern",
+        "nl": "Wekelijks patroon"
+      },
       {"tag" : "expl_overviewplot",
         "en": "See Dutch",
         "nl": "Deze grafieken laten het uurlijkse gemiddelde zien per sensor of sensorgroep. Dit is uitgerekend per weekdag. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag."
+      },
+      {"tag" : "daypattern",
+        "en": "Daily pattern",
+        "nl": "Dagelijks patroon"
       },
       {"tag" : "expl_overviewplot_daily",
         "en": "See Dutch",
@@ -122,6 +170,10 @@
       {"tag" : "expl_overviewplot_expl_daily",
         "en": "See Dutch",
         "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag."
+      },
+      {"tag" : "conc_rose",
+        "en": "Concentration rose (%)",
+        "nl": "Concentratieroos (%)"
       },
       {"tag" : "expl_concplot%",
         "en": "See Dutch",
