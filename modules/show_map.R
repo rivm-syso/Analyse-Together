@@ -140,7 +140,7 @@ show_map_server <- function(id, com_module, update_data) {
                          group = "sensoren"
                          
         )
-      print(data_snsrs_col$col)}
+    }
 
     add_sensors_map_update_button <- function(){
 
@@ -226,7 +226,6 @@ show_map_server <- function(id, com_module, update_data) {
     
       # ga dan de sensoren af en deselecteer deze een voor een
       for (id_select in isolate(get_locations()[[2]]$station)){
-        print(id_select)
         change_state_to_deselected(id_select)
       }
       isolate(add_sensors_map())
