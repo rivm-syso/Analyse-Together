@@ -20,35 +20,35 @@ tpAnalyse <- function(){
 }
 
 tpTimeplot <- function(){
-  tp <-  shiny::tabPanel("Timeseries",
-                         helpText(i18n$t("expl_timeplot")),
+  tp <-  shiny::tabPanel(i18n$t("Timeseries"),
+                         helpText(i18n$t("expl_timeplot"), style = "margin-left: 20px; "),
                          fluidRow(
 
                            # Render timeseries plot.
-                           column(12, wellPanel(timeseries_output("timeseries_plot"))),
+                           column(12,class = "col-lg-12",wellPanel(timeseries_output("timeseries_plot"))),
 
                          ),
-                         h4(i18n$t("title_expl")),
+                         h4(i18n$t("title_expl"), style = "margin-left: 20px"),
                          p(i18n$t("expl_timeplot_expl"),
-                           style = "font-size:12px")
+                           style = "font-size:12px; margin-left: 20px")
   )
 
   return(tp)
 }
 
 tpBarplot <- function(){
-  tp <-  shiny::tabPanel("Barplot",
-                         helpText(i18n$t("expl_barplot")),
+  tp <-  shiny::tabPanel(i18n$t("Barplot"),
+                         helpText(i18n$t("expl_barplot"),style = "margin-left: 20px;"),
 
                          fluidRow(
 
                              # check output communicatition module
-                             column(12, wellPanel(barplot_output("barplot_plot")))
+                             column(12, class = "col-lg-12",wellPanel(barplot_output("barplot_plot")))
 
                            ),
-                         h4(i18n$t("title_expl")),
+                         h4(i18n$t("title_expl"), style = "margin-left: 20px"),
                          p(i18n$t("expl_barplot_expl"),
-                           style = "font-size:12px")
+                           style = "font-size:12px;margin-left: 20px")
   )
 
   return(tp)
@@ -68,41 +68,40 @@ tpKalender <- function(){
 }
 
 tpTimevariationWeekly <- function(){
-  tp <-  shiny::tabPanel("Weekly pattern",
-                         helpText(i18n$t("expl_overviewplot")),
+  tp <-  shiny::tabPanel(i18n$t("weekpattern"),
+                         helpText(i18n$t("expl_overviewplot"), style = "margin-left: 20px;"),
 
                          fluidRow(
 
                            # Render timevariation plot.
 
-                           column(12, wellPanel(timevar_weekly_output("timevar_plot_weekly"))),
+                           column(12, class = "col-lg-12", wellPanel(timevar_weekly_output("timevar_plot_weekly"))),
 
                          ),
 
-                         h4(i18n$t("title_expl")),
+                         h4(i18n$t("title_expl"), style = "margin-left: 20px"),
                          p(i18n$t("expl_overviewplot_expl"),
-                           style = "font-size:12px")
+                           style = "font-size:12px;margin-left: 20px")
   )
 
   return(tp)
 }
 
-
 tpTimevariationDaily <- function(){
-  tp <-  shiny::tabPanel("Daily pattern",
-                         helpText(i18n$t("expl_overviewplot_daily")),
+  tp <-  shiny::tabPanel(i18n$t("daypattern"),
+                         helpText(i18n$t("expl_overviewplot_daily"), style = "margin-left: 20px;"),
                          
                          fluidRow(
                            
                            # Render timevariation plot.
                            
-                           column(12, wellPanel(timevar_daily_output("timevar_plot_daily"))),
+                           column(12,class = "col-lg-12", wellPanel(timevar_daily_output("timevar_plot_daily"))),
                            
                          ),
                          
-                         h4(i18n$t("title_expl")),
+                         h4(i18n$t("title_expl"), style = "margin-left: 20px"),
                          p(i18n$t("expl_overviewplot_expl_daily"),
-                           style = "font-size:12px")
+                           style = "font-size:12px;margin-left: 20px")
   )
   
   return(tp)
@@ -124,7 +123,7 @@ tpWindRose<- function(){
                         bekijk je de kleur van de blokken. Hoe donkerder de kleur, hoe harder de wind.",
                            style = "font-size:12px")
   )
-
+  
   return(tp)
 }
 
@@ -134,35 +133,34 @@ tpPercentileRose<- function(){
                          p("LET OP: als het KNMI-station geen gegevens over de wind of de sensor alleen 0 ug/m3 gemeten heeft,
                     is deze concentratieroos vreemd. Check of er een windroos voor dit KNMI-station is. Check in de tijdreeks of
                     de sensor metingen boven de 0 ug/m3 heeft."),
-                         plotOutput("percentileplot"),
-                         h4("Toelichting"),
-                         p("Als je een sensor aanklikt, wordt een concentratieroos getoond. Deze toont per windsector het gemiddelde
+                    plotOutput("percentileplot"),
+                    h4("Toelichting"),
+                    p("Als je een sensor aanklikt, wordt een concentratieroos getoond. Deze toont per windsector het gemiddelde
                         van de sensormetingen wanneer de wind uit die richting waaide. Voorbeeld: als aan de rechterbovenzijde
                         van de grafiek de grijze lijntjes op de streep voor 20 ug/m3 ligt en aan de linkerbovenzijde op 10 ", HTML("&mu;g/m<sup>3</sup>."),
-                           "dan betekent dit dat bij wind van het noordoosten de concentraties hoger zijn dan bij wind vanuit het noordwesten.",
-                           style = "font-size:12px"
-                         )
+                      "dan betekent dit dat bij wind van het noordoosten de concentraties hoger zijn dan bij wind vanuit het noordwesten.",
+                      style = "font-size:12px"
+                    )
   )
-
+  
   return(tp)
 }
 
 tpPollutionRose<- function(){
-  tp <-  shiny::tabPanel("Concentratieroos (%)",
-                         helpText(i18n$t("expl_concplot%")),
-                         p("LET OP: als het KNMI-station geen gegevens over de wind heeft, kan er geen concentratieroos (%) worden getoond. Check of er een windroos
-                    voor dit KNMI-station is."),
-                         fluidRow(
-
-                           # Render pollutionrose plot.
-
-                           column(12, wellPanel(pollrose_output("pollrose_plot"))),
-
-                         ),
-                         h4(i18n$t("title_expl")),
-                         p(i18n$t("expl_concplot%_expl"),
-                           style = "font-size:12px")
+  tp <-  shiny::tabPanel(i18n$t("conc_rose"),
+                         helpText(i18n$t("expl_concplot%"), style = "margin-left: 20px;"),
+                    
+                    fluidRow(
+                      
+                      # Render pollutionrose plot.
+                      
+                      column(12, class = "col-lg-12",wellPanel(pollrose_output("pollrose_plot"))),
+                      
+                    ),
+                    h4(i18n$t("title_expl"), style = "margin-left: 20px"),
+                    p(i18n$t("expl_concplot%_expl"),
+                      style = "font-size:12px; margin-left: 20px")
   )
-
+  
   return(tp)
 }

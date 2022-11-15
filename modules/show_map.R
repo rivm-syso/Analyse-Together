@@ -40,6 +40,7 @@ show_map_server <- function(id, com_module, update_data) {
 
     # Get the locations from the stations and convert to spatialcoordinates
     get_locations <- reactive({
+      
       sensorloc <- com_module$station_locations() %>% dplyr::distinct(station, .keep_all = T) %>% filter(lon > 0 & lat >0)
       sensorloc_coord <- SpatialPointsDataFrame(sensorloc[,c('lon','lat')],sensorloc)
 
@@ -94,7 +95,7 @@ show_map_server <- function(id, com_module, update_data) {
 
     add_knmi_map <- function(){
 
-      data_knmi <- get_locations()[[1]] %>% filter(., grepl("KNMI",station))
+      data_knmi <- isolate(get_locations)()[[1]] %>% filter(., grepl("KNMI",station))
 
       for (knmis in unique(data_knmi$station)){
 
@@ -120,17 +121,16 @@ show_map_server <- function(id, com_module, update_data) {
     }
 
     add_sensors_map <- function(){
-
+      
       # Check if there is data
-      data_snsrs_col <- try(get_locations()[[1]], silent = T)
+      data_snsrs_col <- try(isolate(get_locations()[[1]]))
       shiny::validate(
         need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
       )
-      data_snsrs_col <- get_locations()[[1]] %>% filter(., !grepl("KNMI|NL",station))
+      data_snsrs_col <- isolate(get_locations)()[[1]] %>% filter(., !grepl("KNMI|NL",station))
 
       # Update map with new markers to show selected
-      # proxy <- leafletProxy('map') # set up proxy map
-
+      proxy <- leafletProxy('map') # set up proxy map
       leafletProxy("map") %>%
         addCircleMarkers(data = data_snsrs_col, ~lon, ~lat,stroke = TRUE, weight = 2,
                          label = lapply(data_snsrs_col$station, HTML),
@@ -138,7 +138,9 @@ show_map_server <- function(id, com_module, update_data) {
                          radius = 5,
                          color = data_snsrs_col$col,
                          group = "sensoren"
-        )}
+                         
+        )
+    }
 
     add_sensors_map_update_button <- function(){
 
@@ -165,12 +167,12 @@ show_map_server <- function(id, com_module, update_data) {
 
     add_lmls_map <- function(){
       # Check if there is data
-      data_snsrs <- try(get_locations()[[1]], silent = T)
+      data_snsrs <- try(isolate(get_locations)()[[1]], silent = T)
       shiny::validate(
         need(class(data_snsrs) != "try-error", "Not yet selected any data.")
       )
 
-      data_snsrs <- get_locations()[[1]] %>% filter(., grepl("LML",station_type))
+      data_snsrs <- isolate(get_locations)()[[1]] %>% filter(., grepl("LML",station_type))
 
       for (lmls in unique(data_snsrs$station)){
 
@@ -219,25 +221,27 @@ show_map_server <- function(id, com_module, update_data) {
 
     # Observe if a sensor is in de square selection
     observe({
-
+      
       rectangular_desel <- input$map_draw_deleted_features
-
+    
       # ga dan de sensoren af en deselecteer deze een voor een
-      for(id_select in isolate(get_locations()[[2]]$station)){
+      for (id_select in isolate(get_locations()[[2]]$station)){
         change_state_to_deselected(id_select)
       }
       isolate(add_sensors_map())
       isolate(add_lmls_map())
+      isolate(add_knmi_map())
     })
 
     observe({
-
+     
+      
       rectangular_sel <- input$map_draw_new_feature
 
       # Zoek de sensoren in de feature
       if (length(rectangular_sel[[1]] > 0)){
         # Check if there is data
-        data_snrs <- try(get_locations(), silent = T)
+        data_snrs <- try(isolate(get_locations()), silent = T)
         shiny::validate(
           need(class(data_snrs) != "try-error", "Error, no data selected.")
         )
@@ -259,11 +263,13 @@ show_map_server <- function(id, com_module, update_data) {
 
       isolate(add_lmls_map())
       isolate(add_sensors_map())
+      isolate(add_knmi_map())
 
     })
 
     # Observe the clicks of an user
     observe({
+      
       click <- input$map_marker_click
 
       selected_snsr <- click$id
