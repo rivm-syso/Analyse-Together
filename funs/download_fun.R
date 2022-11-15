@@ -16,6 +16,9 @@ dl_station <- function(id, time_start, time_end) {
     #load functions
     source(here("funs","database_fun.R"))
 
+
+    log_threshold(TRACE)
+
     fname_db <- get_database_path()
     conn <- DBI::dbConnect(drv = SQLite(), dbname = fname_db)
 
@@ -60,14 +63,15 @@ dl_station <- function(id, time_start, time_end) {
         as.data.frame() %>% as.character()
 
     log_trace("Downloading measurements for AQ station. pm10 station: {lmlstation[1]}, pm25 station: {lmlstation[2]}")
+        
     for(j in unique(lmlstation)) {
         log_trace("downloading for LML station  {j}")
-        print(lmlstation)
-        print(unique(lmlstation))
         d <- download_data(j, Tstart = time_start, Tend = time_end,
                            fun = "download_data_lml",
                            conn = conn)
 
+    
+        log_trace("got {nrow(d)} of LML measurements")
         log_trace("checking location for LML station  {j}")
         if(!station_exists(j, conn = conn)) {
             log_trace("download an store  location for LML station  {j}")

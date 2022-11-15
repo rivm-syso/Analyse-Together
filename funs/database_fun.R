@@ -42,7 +42,11 @@ get_database_path <- function(db = "database.db") {
 station_exists <- function(station, conn) {
     # checks if 'station' allready exists in the location table
 
-    qry <- glue::glue_sql("select {station} from location;", .con = conn)
+    if(length(station) != 1) {
+        stop("ERROR station_exists, length(station)!=1")
+    }
+
+    qry <- glue::glue_sql("select station from location where station = {station};", .con = conn)
     res <- dbGetQuery(conn, qry)
 
     if(nrow(res)>=1) {
