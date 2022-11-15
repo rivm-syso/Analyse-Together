@@ -102,7 +102,6 @@ metadata_server <- function(id, com_module) {
                                                    "Number of measurements PM10 - kal" = "Number of measurements pm10_kal", 
                                                    "Number of measurements Temp" = "Number of measurements temp", 
                                                    "Number of measurements RH" = "Number of measurements rh",
-                                                   "Number of measurements Press" = "Number of measurements pres",
                                                    "Maximum measurements" = "max_obs", 
                                                    "First measurements" = "first_m", 
                                                    "Last measurements" = "last_m", 
@@ -118,8 +117,7 @@ metadata_server <- function(id, com_module) {
                                         "Number of measurements PM10",
                                         "Number of measurements PM10 - kal",
                                         "Number of measurements Temp",
-                                        "Number of measurements RH",
-                                        "Number of measurements Press"),
+                                        "Number of measurements RH"),
                             backgroundColor = styleInterval(cuts = breaks_col()[[1]], values = breaks_col()[[2]]))
           )
         }})      
