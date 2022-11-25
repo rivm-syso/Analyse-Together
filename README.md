@@ -28,7 +28,7 @@ branch will contain the production ready version.
 # Running the tool yourself
 
 This is for experts only ;-).  For running this
-tool you have two options, run it in you own [RStudio}(https://posit.co/products/open-source/rstudio/) environment,
+tool you have two options, run it in you own [RStudio](https://posit.co/products/open-source/rstudio/) environment,
 or run a container with the app using [Docker](https://www.docker.com/).
 
 To run the tool, you must also create a database, see below.
