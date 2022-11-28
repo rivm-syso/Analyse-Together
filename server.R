@@ -66,7 +66,12 @@ shinyServer(function(global, input, output, session) {
                                               )
 
   download_api_button <- download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range, pool, que)
-  update_data_button <- update_data_button_server("update_data")
+  update_data_button <- update_data_button_server("update_data",
+                                                  select_mun_or_proj = proj_or_mun_select,
+                                                  choose_mun_or_proj = choice_select,
+                                                  pool = pool,
+                                                  measurements_con = measurements_con,
+                                                  stations_con = stations_con)
 
   view_que_server("view_que", que)
 
