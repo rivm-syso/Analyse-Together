@@ -1,15 +1,28 @@
-update_data_button_output <- function(id) {
+###############################################
+### Get data button ###
+###############################################
+
+# This is a module which get the data from the database
+######################################################################
+# Output Module
+######################################################################
+
+get_data_button_output <- function(id) {
 
   ns <- NS(id)
   tagList(
-  actionButton(ns("update_data_button"), "Update data", style="background-color: #ffe9b7")
+  actionButton(ns("get_data_button"), "Check data availability", style="background-color: #ffe9b7")
   )
 }
 
+######################################################################
+# Server Module
+######################################################################
 
-update_data_button_server <- function(id,
+get_data_button_server <- function(id,
                                       select_mun_or_proj,
                                       choose_mun_or_proj,
+                                      select_time,
                                       pool,
                                       measurements_con,
                                       stations_con
@@ -19,9 +32,9 @@ update_data_button_server <- function(id,
 
     ns <- session$ns
 
-    btn <- eventReactive(input$update_data_button, {T})
+    btn <- eventReactive(input$get_data_button, {T})
 
-    observeEvent(input$update_data_button, {
+    observeEvent(input$get_data_button, {
 
         # Check if there is user input ----
         # Get the selected choice
@@ -36,27 +49,24 @@ update_data_button_server <- function(id,
         )
 
         # Get the selected time period
-        start_time <- selected_time$selected_start_date()
-        end_time <- selected_time$selected_end_date()
-
-        # TODO check of dit nodig is
-        # Check if a time is selected, otherwise total time
-        # if(is.null(start_time)|is.null(end_time)){
-        #   start_time <- default_time$start_time
-        #   end_time <- default_time$end_time
-        # }
+        start_time <- select_time$selected_start_date()
+        end_time <- select_time$selected_end_date()
 
         # Load the data from the caching database ----
         # Get the station names in the selected Municipality/project
         stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
 
-        log_trace("mod checkdata: {lubridate::now()} Get data from caching database ... ")
+        log_trace("mod get_data: {lubridate::now()} Get data from caching database ... ")
 
         # Get the data measurements of the selected Municipality/project
-        data_measurements <- measurements_con %>% as.data.frame() %>%
+        data_measurements <- measurements_con %>%
+          dplyr::filter(station %in% stations_name) %>%
+          as.data.frame()
+
+        # Filter the measurements on time
+        data_measurements <- data_measurements %>%
           dplyr::mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam")) %>%
-          dplyr::filter(station %in% stations_name &
-                          date > start_time &
+          dplyr::filter(date > start_time &
                           date < end_time)
 
         # Create a pm10_kal and pm25_kl for reference stations
@@ -81,15 +91,20 @@ update_data_button_server <- function(id,
                                               T ~ 0))
 
         # Get the information from the sensors
-        data_sensors <- stations_con %>% as.data.frame() %>%
-          dplyr::distinct(station, .keep_all = T) %>%
+        data_sensors <- stations_con %>%
           dplyr::filter(station %in% stations_name) %>%
+          as.data.frame()
+
+        # Take for each sensor 1 location
+        data_sensors <- data_sensors %>%
+          dplyr::distinct(station, .keep_all = T) %>%
+          # Add some specific info for the tool
           dplyr::mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
           dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
           dplyr::mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
                         size = ifelse(station_type == "LML", 2,1))
 
-        log_trace("mod checkdata: {lubridate::now()} Data available in tool. ")
+        log_trace("mod get_data: {lubridate::now()} Data available in tool. ")
 
         return(list(data_measurements = data_measurements, data_sensors = data_sensors))
       })
