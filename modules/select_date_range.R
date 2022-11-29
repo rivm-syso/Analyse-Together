@@ -30,17 +30,12 @@ date_range_server <- function(id,
 
                # Get the min and max of the dataset
                get_date_total <- reactive({
-                 date_total <- comm_date$start_end_total()
+                 date_total <- comm_date$selected_time()
                  return(date_total)
-
                })
 
-               get_mun_proj_select <- reactive({
-                 mun_proj_select <- comm_date$mun_proj_select()
-                 return(mun_proj_select)})
-                 
               output$date_range <- renderUI({
-                if (is.null(get_mun_proj_select()) == FALSE){
+                
                  # Get the boundaries of the datepicker
                  date_total <- get_date_total()
                  log_trace("mod date_range: date total = {date_total[[1]]} - {date_total[[2]]}")
@@ -50,17 +45,17 @@ date_range_server <- function(id,
 
                    dateRangeInput(
                      ns("date_range"),
-                     label = "Select date range",
+                     label = i18n$t("sel_date"),
                      start = date_total$start_time,
                      end = date_total$end_time,
-                     min = date_total$start_time,
+                     # min = date_total$start_time,
                      max = date_total$end_time,
                      format = "dd-mm-yyyy",
                      separator = " - "
                    )
 
-                 )}
-               })
+              )})
+               
 
                observe({ #loggin
                    x1 <- input$date_range[1]
@@ -73,7 +68,7 @@ date_range_server <- function(id,
                  selected_start_date = reactive({input$date_range[1]}),
                  selected_end_date = reactive({input$date_range[2]})
                  )
-               
+
                return(res)
                })
 }
