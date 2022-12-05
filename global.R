@@ -44,6 +44,10 @@ library(sf)
 
 library(lubridate)
 
+library(future)
+library(promises)
+plan(multiprocess)
+
 # logger
 library(logger)
 log_threshold(TRACE)
@@ -58,6 +62,7 @@ source("funs/geoshaper_findlocations.R")
 source("funs/database_fun.R")
 source("funs/queue_fun.R")
 source("funs/download_fun.R")
+source("funs/data_to_tool_fun.R")
 
 
 # Set language and date options                                             ====
@@ -94,6 +99,7 @@ pool <- dbPool(
 ### Initiate some variables                                                 ====
 # Default start and end time for the date picker
 default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
+default_time <- list(start_time = as.POSIXct("2022-09-01"), end_time = as.POSIXct("2022-09-30"))
 
 # store lists with projects and municipalities
 municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
@@ -166,6 +172,7 @@ source("modules/update_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
+source("modules/add_show_availability.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")
