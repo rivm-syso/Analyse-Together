@@ -70,7 +70,7 @@ shinyUI(
                                                                          date_range_output("select_date_range"),
                                                                          # get_data_button_output("get_data"),
                                                                          actionButton("get_data_button", "Check data availability", style="background-color: #ffe9b7"),
-                                                                         br(),
+                                                                         single_text_output("text_data_available"),
                                                                          show_availability_output("show_availability")
                                )
                                )

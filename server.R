@@ -11,6 +11,7 @@ shinyServer(function(global, input, output, session) {
   # ReactiveValues to store the data
   data_measurements <- reactiveValues()
   data_stations <- reactiveValues()
+  message_data <- reactiveValues()
 
   # The pickerInput for component selection
   select_component <- component_selection_server("select_component",
@@ -86,6 +87,8 @@ shinyServer(function(global, input, output, session) {
                                                   # stations_con = stations_con)
   show_availability_server("show_availability", data_measurements)
 
+  single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
+
   observeEvent(input$get_data_button, {
     # Check if there is user input ----
     # Get the selected choice
@@ -109,27 +112,33 @@ shinyServer(function(global, input, output, session) {
 
     log_trace("{lubridate::now()} Get data from caching database ... ")
 
-      # Get the data measurements of the selected Municipality/project in the period
-      data_measurements$data <- get_measurements(measurements_con, stations_name, start_time, end_time)
-      shiny::validate(need(nrow(data_measurements$data) > 0, "No data in municipality"))
+    # Get the data measurements of the selected Municipality/project in the period
+    data_measurements$data <- get_measurements(measurements_con, stations_name, start_time, end_time)
 
-      # Create a pm10_kal and pm25_kl for reference stations
-      data_measurements$data <- add_ref_kal(data_measurements$data)
+    # Check if there is data in de caching, otherwise stop and give message
+    if(nrow(data_measurements$data) == 0){
+      message_data$data_in_dbs <- c(paste0("No data in ", type_choice, " ", name_choice))
+      shiny::validate(need(F,message = paste0("No data in ", type_choice, " ", name_choice)))
+    }
+    message_data$data_in_dbs <- c(paste0("Data available in ", type_choice, " ", name_choice))
 
-      # Add uncertainty to the measurements of the sensors
-      data_measurements$data <- add_uncertainty_sensor(data_measurements$data)
+    # Create a pm10_kal and pm25_kl for reference stations
+    data_measurements$data <- add_ref_kal(data_measurements$data)
 
-      # Get the information from the stations
-      data_stations$data <- get_locations(stations_con, stations_name)
+    # Add uncertainty to the measurements of the sensors
+    data_measurements$data <- add_uncertainty_sensor(data_measurements$data)
 
-      # Take for each sensor 1 location
-      data_stations$data <- data_stations$data %>%
-        dplyr::distinct(station, .keep_all = T) %>%
-        # Add some specific info for the tool
-        dplyr::mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
-        dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
-        dplyr::mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
-                      size = ifelse(station_type == "LML", 2,1))
+    # Get the information from the stations
+    data_stations$data <- get_locations(stations_con, stations_name)
+
+    # Take for each sensor 1 location
+    data_stations$data <- data_stations$data %>%
+      dplyr::distinct(station, .keep_all = T) %>%
+      # Add some specific info for the tool
+      dplyr::mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
+      dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
+      dplyr::mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
+                    size = ifelse(station_type == "LML", 2,1))
 
     log_trace("{lubridate::now()} Data available in tool. ")
 

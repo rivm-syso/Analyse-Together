@@ -173,6 +173,7 @@ source("modules/update_data_button.R")
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
 source("modules/add_show_availability.R")
+source("modules/single_text_message.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")
