@@ -49,20 +49,24 @@ add_ref_kal <- function(data_measurements){
   #                     columns (parameter, value, station, date)
   # return: same dataframs as data_measurements
 
-  # Create a pm10_kal and pm25_kl for reference stations
-  cols_pivot <- data_measurements %>% dplyr::pull(parameter) %>% unique()
-  data_measurements <- data_measurements %>%
-    tidyr::pivot_wider(names_from = parameter, values_from = value) %>%
-    dplyr::mutate(pm10_kal = dplyr::case_when(grepl("NL", station) ~ pm10,
-                                              T ~ pm10_kal),
-                  pm25_kal = dplyr::case_when(grepl("NL", station) ~ pm25,
-                                              T ~ pm25_kal)) %>%
-    tidyr::pivot_longer(cols = cols_pivot, names_to = "parameter", values_to = "value") %>%
-    dplyr::group_by(station, date, parameter) %>%
-    dplyr::slice(which.max(!is.na(value))) %>%
-    dplyr::ungroup()
+  # Get the data from the reference stations
+  data_measurements_pm25 <- data_measurements %>%
+    dplyr::filter(substr(station, 1,2) == "NL" & parameter == "pm25")
 
-  #retrun
+  data_measurements_pm10 <- data_measurements %>%
+    dplyr::filter(substr(station, 1,2) == "NL" & parameter == "pm10")
+
+  # Rename the parameter pm -> pm_kal
+  data_measurements_pm25_kal <- data_measurements_pm25 %>%
+    dplyr::mutate(parameter = "pm25_kal")
+  data_measurements_pm10_kal <- data_measurements_pm10 %>%
+    dplyr::mutate(parameter = "pm10_kal")
+
+  # Add the pm_kal to the data_measurements
+  data_measurements <- dplyr::bind_rows(data_measurements,
+                                        data_measurements_pm10_kal,
+                                        data_measurements_pm25_kal)
+
   return(data_measurements)
 }
 
