@@ -18,6 +18,7 @@ library(shinycssloaders)
 library(shinyWidgets)
 # library(shinytest)
 library(shinyjs)
+library(shinyalert)
 
 # For the translation
 library(shiny.i18n)
@@ -173,7 +174,7 @@ source("modules/update_data_button.R")
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
 source("modules/add_show_availability.R")
-source("modules/single_text_message.R")
+source("modules/add_single_text_message.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")

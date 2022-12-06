@@ -1,16 +1,22 @@
 download_api_button_output <- function(id) {
-
+  useShinyalert()
   ns <- NS(id)
   #uiOutput(ns("download_api_button"))
-  actionButton(ns("download_api_button"), "start download")
+  actionButton(ns("download_api_button"), "Get the data from external source")
 }
 
 
-download_api_button_server <- function(id, proj_or_mun, selection, daterange, pool, que) {
+download_api_button_server <- function(id,
+                                       proj_or_mun,
+                                       selection,
+                                       daterange,
+                                       pool,
+                                       que) {
 
     moduleServer(id, function(input, output, session) {
 
                      ns <- session$ns
+
 
                      btn <- eventReactive(input$download_api_button, {T})
 
@@ -23,12 +29,14 @@ download_api_button_server <- function(id, proj_or_mun, selection, daterange, po
                                        time_end <- daterange$selected_end_date() %>%  as.POSIXct()
                                        log_trace("mod download: Download pushed with paremeters Type: {type}; name: {name}; time_start: {tstart}; time_end: {tend}")
 
+
                                        if(any(is.na(c(type, name, tstart, tend)))) {
                                            log_trace("mod download: Download not started, missing parameters")
                                        } else {
                                            log_trace("mod download: create download queue")
 
-
+                                         # Add message pop up to the user
+                                         shinyalert("Be patient!", "Data will be gathered, this can take some time. Please check the other button if data is available for usage.", type = "info")
 
                                          # Download the metadata
                                          download_sensor_meta(name, type = type)

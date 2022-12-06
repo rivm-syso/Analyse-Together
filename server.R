@@ -77,7 +77,12 @@ shinyServer(function(global, input, output, session) {
   #                                             line_overload
   #                                             )
 
-  # download_api_button <- download_api_button_server("dl_btn_pushed", proj_or_mun_select , choice_select, select_date_range, pool, que)
+  download_api_button <- download_api_button_server("dl_btn_pushed",
+                                                    proj_or_mun_select ,
+                                                    choice_select,
+                                                    select_date_range,
+                                                    pool,
+                                                    que)
   # get_data_button <- get_data_button_server("get_data",
                                                   # select_mun_or_proj = proj_or_mun_select,
                                                   # choose_mun_or_proj = choice_select,
@@ -85,7 +90,10 @@ shinyServer(function(global, input, output, session) {
                                                   # pool = pool,
                                                   # measurements_con = measurements_con,
                                                   # stations_con = stations_con)
-  show_availability_server("show_availability", data_measurements)
+  show_availability_server("show_availability",
+                           data_to_show = data_measurements,
+                           data_stations = data_stations,
+                           time_period = select_date_range)
 
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
 
@@ -114,7 +122,7 @@ shinyServer(function(global, input, output, session) {
 
     # Get the data measurements of the selected Municipality/project in the period
     data_measurements$data <- get_measurements(measurements_con, stations_name, start_time, end_time)
-
+    browser()
     # Check if there is data in de caching, otherwise stop and give message
     if(nrow(data_measurements$data) == 0){
       message_data$data_in_dbs <- c(paste0("No data in ", type_choice, " ", name_choice))

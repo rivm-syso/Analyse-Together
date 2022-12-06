@@ -12,6 +12,7 @@ show_availability_output <- function(id) {
   ns <- NS(id)
   tagList(
     tableOutput(ns("show_stations")),
+    textOutput(ns("show_stations_text")),
     dataTableOutput(ns("show_available_data_table")),
     plotOutput(ns("show_available_data"))
   )
@@ -31,16 +32,44 @@ show_availability_server <- function(id,
 
     ns <- session$ns
 
+    # Show data availability in Calenderplot
+    # output$show_available_data <- renderPlot({
+    #   shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
+    #
+    #   data_to_plot <- data_to_show$data %>% dplyr::filter(parameter == "pm25_kal")
+    #
+    #   calendarPlot(data_to_show$data, pollutant = "value", breaks = c(0, 1000),
+    #                labels = c("Data available"), cols = "darkgreen", remove.empty = F)
+    #
+    # })
+
     output$show_available_data <- renderPlot({
       shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
 
-      data_to_plot <- data_to_show$data %>% dplyr::filter(parameter == "pm25_kal")
+      data_to_plot <- data_to_show$data %>%
+        dplyr::filter(parameter == "pm25") %>%
+        dplyr::select(station, parameter, date) %>%
+        dplyr::mutate(timestamp_table = date %>% format("%Y-%m-%d") %>% as.POSIXct(format ="%Y-%m-%d")) %>%
+        dplyr::select(-date) %>%
+        unique() %>%
+        group_by(timestamp_table, parameter) %>%
+        dplyr::mutate(number_a_day = n()) %>%
+        ungroup() %>%
+        # Needed for the openair plot
+        dplyr::mutate(date = timestamp_table)
 
-      calendarPlot(data_to_show$data, pollutant = "value", breaks = c(0, 1000),
-                   labels = c("Data available"), cols = "darkgreen", remove.empty = F)
+      browser()
+      max_stations <- data_stations$data %>% nrow()
+
+
+      calendarPlot(data_to_plot, pollutant = "number_a_day", limits = c(0, max_stations), main = "Aantal sensoren per dag")
+                   #
+                   # , breaks = c(0, 0.25*max_stations, 0.5*max_stations, 75*max_stations),
+                   # labels = c("geen sensoren", "25%", "50%","75%", "100%"), cols = c("grey","yellow","green","darkgreen","black"), remove.empty = F)
 
     })
 
+    # Show number of stations in table
     output$show_stations <- renderTable({
       shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
       data_to_plot <- data_to_show$data %>%
@@ -49,10 +78,29 @@ show_availability_server <- function(id,
         unique() %>%
         count()
 
-      data_to_plot <- data.frame("aantal stations PM2.5" = data_to_plot$n)
+      data_total <- data_stations$data %>% nrow()
+
+      data_to_plot <- data.frame("aantal stations PM2.5" = data_to_plot$n,
+                                 "totaal aantal stations" = data_total)
 
     })
 
+    # Show number of stations in text
+    output$show_stations_text <- renderText({
+      shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
+      data_to_plot <- data_to_show$data %>%
+        dplyr::filter(parameter == "pm25_kal") %>%
+        dplyr::select(station) %>%
+        unique() %>%
+        count()
+
+      data_total <- data_stations$data %>% nrow()
+
+      paste0("Er is data beschikbaar van ", data_to_plot$n, " van de ", data_total, " stations.")
+
+    })
+
+    # Show data availability in table (per station)
     output$show_available_data_table <- renderDataTable({
       # Check if data available to show
       shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
