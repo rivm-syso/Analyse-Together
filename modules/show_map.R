@@ -1,10 +1,10 @@
 ###############################################
-### ...Input - select sensor/project/data-range? ###
+#### Module for the map ####
 ###############################################
 
-# This is a map module
+# This is a map module, including selection and deselection
 ######################################################################
-# Output Module
+# Output Module ----
 ######################################################################
 
 show_map_output <- function(id) {
@@ -20,48 +20,113 @@ show_map_output <- function(id) {
 
 
 ######################################################################
-# Server Module
+# Server Module ----
 ######################################################################
 
-show_map_server <- function(id, com_module, update_data) {
+show_map_server <- function(id,
+                            data_stations,
+                            # Options for the colors
+                            col_cat,
+                            col_default,
+                            col_overload,
+                            # Options for the linetype
+                            line_cat,
+                            line_default,
+                            line_overload
+                            ) {
 
   moduleServer(id, function(input, output, session) {
 
-
     ns <- session$ns
+
+    # redundant?
     beatCol <- colorFactor(palette = 'RdYlGn', domain = c(0,100), reverse = TRUE)
+
+    # Icons for the reference stations
     icons_stations <- iconList(
       lml_selected = makeIcon(iconUrl = "images/lml_selected.png", iconWidth = 24, iconHeight = 16),
       lml_deselected = makeIcon(iconUrl = "images/lml_deselected.png",  iconWidth = 24, iconHeight = 16))
 
+    # Icons for the knmi stations
     icons_knmis <- iconList(
       knmi_selected = makeIcon(iconUrl = "images/knmi_selected.png", iconWidth = 20, iconHeight = 20),
       knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected.png", iconWidth = 20, iconHeight = 20))
 
-    # Get the locations from the stations and convert to spatialcoordinates
+    # Get the locations from the stations and convert to spatialcoordinates ----
     get_locations <- reactive({
-      
-      sensorloc <- com_module$station_locations() %>% dplyr::distinct(station, .keep_all = T) %>% filter(lon > 0 & lat >0)
-      sensorloc_coord <- SpatialPointsDataFrame(sensorloc[,c('lon','lat')],sensorloc)
 
-      return(list(sensorloc, sensorloc_coord))})
+      # Check if there is data
+      shiny::validate(need(!is.null(data_stations$data), "Error, no data yet."))
 
+      # Get the location of the stations
+      station_loc <- data_stations$data %>%
+        dplyr::distinct(station, .keep_all = T) %>%
+        dplyr::filter(lon > 0 & lat >0)
+
+      # Convert to spatialploints
+      station_loc_coord <- SpatialPointsDataFrame(station_loc[,c('lon','lat')],station_loc)
+
+      return(list(station_loc = station_loc, station_loc_coord = station_loc_coord))
+
+      })
 
     # Create an reactive to change with the observe, to store the clicked id
     state_station <- reactiveValues(value = "")
 
+    # Check the state of the station (selected or not)
     check_state <- function(id_selected){
-      selected <- id_selected %in% isolate(state_station$value)
+      browser()
+      selected <- data_stations$data %>%
+        dplyr::filter(station == id_selected) %>%
+        dplyr::select(selected) %>%
+        pull()
+      # selected <- id_selected %in% isolate(state_station$value)
       return(selected)
     }
 
     # Change the clicked_id stored
     change_state_to_deselected <- function(id_selected){
-      state_station$value <- isolate(state_station$value)[isolate(state_station$value) %in% c(id_selected) == FALSE]
+      # # Set the state to the Bookkeeper as F
+      # state_station$value <- isolate(state_station$value)[isolate(state_station$value) %in%
+      #                                                       c(id_selected) == FALSE]
+
+      # Get the data from the stations
+      data_stns <- data_stations$data
+
+      # Set the deselected station to select == F
+      data_stns <- data_stns %>%
+        dplyr::mutate(selected = ifelse(station == id_selected, F, selected),
+                      # Change the color to the default
+                      col = ifelse(station == id_selected, col_default, col),
+                      # Change the linetype to the default
+                      linetype = ifelse(station == id_selected, line_default, linetype))
+
+      # Set the updated data from the stations in the reactiveValues
+      data_stations$data <- data_stns
     }
 
     change_state_to_selected <- function(id_selected){
-      state_station$value <- c(isolate(state_station$value), id_selected)
+      browser()
+      # Set the state to the Bookkeeper as T
+      # state_station$value <- c(isolate(state_station$value), id_selected)
+
+      # Get the data from the stations
+      data_stns <- data_stations$data
+
+      # Set the selected station to select == T
+      data_stns <- data_stns %>%
+        dplyr::mutate(selected = ifelse(station == id_selected, T, selected))
+
+      # Assign colors -> sensor
+      data_stns <- assign_color_stations(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
+
+      # Assign linetype -> reference station
+      data_stns <- assign_linetype_stations(data_stns, line_cat, line_default, line_overload, line_station_type = "ref")
+
+      # Set the updated data from the stations in the reactiveValues
+      data_stations$data <- data_stns
+
+
     }
 
     # Generate base map ----
@@ -93,9 +158,11 @@ show_map_server <- function(id, com_module, update_data) {
 
     })
 
+    # Add knmi stations to the map
     add_knmi_map <- function(){
 
-      data_knmi <- isolate(get_locations)()[[1]] %>% filter(., grepl("KNMI",station))
+      data_knmi <- isolate(get_locations()$station_loc) %>%
+        dplyr::filter(., grepl("KNMI",station))
 
       for (knmis in unique(data_knmi$station)){
 
@@ -120,14 +187,15 @@ show_map_server <- function(id, com_module, update_data) {
                        group = "knmi_stations")}}
     }
 
+    # Add the sensors to the map
     add_sensors_map <- function(){
-      
+
       # Check if there is data
-      data_snsrs_col <- try(isolate(get_locations()[[1]]))
+      data_snsrs_col <- try(isolate(get_locations()$station_loc))
       shiny::validate(
         need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
       )
-      data_snsrs_col <- isolate(get_locations)()[[1]] %>% filter(., !grepl("KNMI|NL",station))
+      data_snsrs_col <- isolate(get_locations()$station_loc) %>% filter(., !grepl("KNMI|NL",station))
 
       # Update map with new markers to show selected
       proxy <- leafletProxy('map') # set up proxy map
@@ -138,19 +206,20 @@ show_map_server <- function(id, com_module, update_data) {
                          radius = 5,
                          color = data_snsrs_col$col,
                          group = "sensoren"
-                         
+
         )
     }
 
+    # Redundant?
     add_sensors_map_update_button <- function(){
 
       # Check if there is data
-      data_snsrs_col <- try(get_locations()[[1]], silent = T)
+      data_snsrs_col <- try(isolate(get_locations()$station_loc), silent = T)
       shiny::validate(
         need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
       )
 
-      frame_for_map <- get_locations()[[1]]
+      frame_for_map <- get_locations()$station_loc
       data_snsrs_col <- frame_for_map %>% filter(., !grepl("KNMI|NL",station))
 
       # Update map with new markers to show selected
@@ -165,14 +234,15 @@ show_map_server <- function(id, com_module, update_data) {
                          group = "sensoren"
         )}
 
+    # Add reference stations to the map
     add_lmls_map <- function(){
       # Check if there is data
-      data_snsrs <- try(isolate(get_locations)()[[1]], silent = T)
+      data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
       shiny::validate(
         need(class(data_snsrs) != "try-error", "Not yet selected any data.")
       )
 
-      data_snsrs <- isolate(get_locations)()[[1]] %>% filter(., grepl("LML",station_type))
+      data_snsrs <- isolate(get_locations()$station_loc) %>% filter(., grepl("LML",station_type))
 
       for (lmls in unique(data_snsrs$station)){
 
@@ -211,19 +281,11 @@ show_map_server <- function(id, com_module, update_data) {
         clearGroup(group = "knmi_stations")
     }
 
-
-    observeEvent(update_data(),{
-        add_sensors_map_update_button()
-        add_lmls_map()
-        add_knmi_map()
-    })
-
-
     # Observe if a sensor is in de square selection
     observe({
-      
+
       rectangular_desel <- input$map_draw_deleted_features
-    
+
       # ga dan de sensoren af en deselecteer deze een voor een
       for (id_select in isolate(get_locations()[[2]]$station)){
         change_state_to_deselected(id_select)
@@ -234,8 +296,8 @@ show_map_server <- function(id, com_module, update_data) {
     })
 
     observe({
-     
-      
+
+
       rectangular_sel <- input$map_draw_new_feature
 
       # Zoek de sensoren in de feature
@@ -268,14 +330,15 @@ show_map_server <- function(id, com_module, update_data) {
     })
 
     # Observe the clicks of an user
-    observe({
-      
-      click <- input$map_marker_click
+    observeEvent({input$map_marker_click$id}, {
 
-      selected_snsr <- click$id
+      click <- input$map_marker_click
+      browser()
+      selected_snsr <- input$map_marker_click$id
       log_trace("map module: click id {selected_snsr}")
 
-      if (length(selected_snsr >0)){
+      # Check if there is clicked
+      if (!is.null(click)){
         selected <- check_state(selected_snsr)
         if (selected == T){
           change_state_to_deselected(selected_snsr)
@@ -290,7 +353,7 @@ show_map_server <- function(id, com_module, update_data) {
       isolate(add_knmi_map())
     })
 
-    # Return start and end date
+    # Return ----
     return(list(
       map = map,
       state_station = reactive({state_station$value})))
