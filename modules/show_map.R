@@ -39,9 +39,7 @@ show_map_server <- function(id,
 
     ns <- session$ns
 
-    # redundant?
-    beatCol <- colorFactor(palette = 'RdYlGn', domain = c(0,100), reverse = TRUE)
-
+    # Initialisation icons ----
     # Icons for the reference stations
     icons_stations <- iconList(
       lml_selected = makeIcon(iconUrl = "images/lml_selected.png", iconWidth = 24, iconHeight = 16),
@@ -70,68 +68,10 @@ show_map_server <- function(id,
 
       })
 
-    # Create an reactive to change with the observe, to store the clicked id
-    state_station <- reactiveValues(value = "")
-
-    # Check the state of the station (selected or not)
-    check_state <- function(id_selected){
-      browser()
-      selected <- data_stations$data %>%
-        dplyr::filter(station == id_selected) %>%
-        dplyr::select(selected) %>%
-        pull()
-      # selected <- id_selected %in% isolate(state_station$value)
-      return(selected)
-    }
-
-    # Change the clicked_id stored
-    change_state_to_deselected <- function(id_selected){
-      # # Set the state to the Bookkeeper as F
-      # state_station$value <- isolate(state_station$value)[isolate(state_station$value) %in%
-      #                                                       c(id_selected) == FALSE]
-
-      # Get the data from the stations
-      data_stns <- data_stations$data
-
-      # Set the deselected station to select == F
-      data_stns <- data_stns %>%
-        dplyr::mutate(selected = ifelse(station == id_selected, F, selected),
-                      # Change the color to the default
-                      col = ifelse(station == id_selected, col_default, col),
-                      # Change the linetype to the default
-                      linetype = ifelse(station == id_selected, line_default, linetype))
-
-      # Set the updated data from the stations in the reactiveValues
-      data_stations$data <- data_stns
-    }
-
-    change_state_to_selected <- function(id_selected){
-      browser()
-      # Set the state to the Bookkeeper as T
-      # state_station$value <- c(isolate(state_station$value), id_selected)
-
-      # Get the data from the stations
-      data_stns <- data_stations$data
-
-      # Set the selected station to select == T
-      data_stns <- data_stns %>%
-        dplyr::mutate(selected = ifelse(station == id_selected, T, selected))
-
-      # Assign colors -> sensor
-      data_stns <- assign_color_stations(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
-
-      # Assign linetype -> reference station
-      data_stns <- assign_linetype_stations(data_stns, line_cat, line_default, line_overload, line_station_type = "ref")
-
-      # Set the updated data from the stations in the reactiveValues
-      data_stations$data <- data_stns
-
-
-    }
-
     # Generate base map ----
     output$map <- renderLeaflet({
 
+      browser()
       ns("map")
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
@@ -155,8 +95,55 @@ show_map_server <- function(id,
           icon="fa-crosshairs", title="Locate Me",
           onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
         addScaleBar(position = "bottomleft")
-
     })
+
+    # Functions ----
+    # Check the state of the station (selected or not)
+    check_state <- function(id_selected){
+      browser()
+      selected <- data_stations$data %>%
+        dplyr::filter(station == id_selected) %>%
+        dplyr::select(selected) %>%
+        pull()
+      return(selected)
+    }
+
+    # Change the clicked_id stored - deselect and select
+    change_state_to_deselected <- function(id_selected){
+      # Get the data from the stations
+      data_stns <- data_stations$data
+
+      # Set the deselected station to select == F
+      data_stns <- data_stns %>%
+        dplyr::mutate(selected = ifelse(station == id_selected, F, selected),
+                      # Change the color to the default
+                      col = ifelse(station == id_selected, col_default, col),
+                      # Change the linetype to the default
+                      linetype = ifelse(station == id_selected, line_default, linetype))
+
+      # Set the updated data from the stations in the reactiveValues
+      data_stations$data <- data_stns
+    }
+
+    change_state_to_selected <- function(id_selected){
+      browser()
+
+      # Get the data from the stations
+      data_stns <- data_stations$data
+
+      # Set the selected station to select == T
+      data_stns <- data_stns %>%
+        dplyr::mutate(selected = ifelse(station == id_selected, T, selected))
+
+      # Assign colors -> sensor
+      data_stns <- assign_color_stations(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
+
+      # Assign linetype -> reference station
+      data_stns <- assign_linetype_stations(data_stns, line_cat, line_default, line_overload, line_station_type = "ref")
+
+      # Set the updated data from the stations in the reactiveValues
+      data_stations$data <- data_stns
+    }
 
     # Add knmi stations to the map
     add_knmi_map <- function(){
@@ -210,30 +197,6 @@ show_map_server <- function(id,
         )
     }
 
-    # Redundant?
-    add_sensors_map_update_button <- function(){
-
-      # Check if there is data
-      data_snsrs_col <- try(isolate(get_locations()$station_loc), silent = T)
-      shiny::validate(
-        need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
-      )
-
-      frame_for_map <- get_locations()$station_loc
-      data_snsrs_col <- frame_for_map %>% filter(., !grepl("KNMI|NL",station))
-
-      # Update map with new markers to show selected
-      # proxy <- leafletProxy('map') # set up proxy map
-      leafletProxy("map") %>%
-        fitBounds(min(frame_for_map$lon), min(frame_for_map$lat), max(frame_for_map$lon), max(frame_for_map$lat)) %>%
-        addCircleMarkers(data = data_snsrs_col, ~lon, ~lat,stroke = TRUE, weight = 2,
-                         label = lapply(data_snsrs_col$station, HTML),
-                         layerId = ~station,
-                         radius = 5,
-                         color = data_snsrs_col$col,
-                         group = "sensoren"
-        )}
-
     # Add reference stations to the map
     add_lmls_map <- function(){
       # Check if there is data
@@ -272,46 +235,67 @@ show_map_server <- function(id,
                        group = "lmls")}}
     }
 
-    remove_knmi_map <- function(){
+    # Observers and ObserveEvents ----
 
-      # Update map with new markers to show selected
-      #proxy <- leafletProxy('map') # set up proxy map
-      leafletProxy("map") %>%
-
-        clearGroup(group = "knmi_stations")
-    }
-
-    # Observe if a sensor is in de square selection
-    observe({
+    # Observe if a sensor is in de square selection -> deselect
+    observeEvent({input$map_draw_deleted_features},{
+      browser()
 
       rectangular_desel <- input$map_draw_deleted_features
 
-      # ga dan de sensoren af en deselecteer deze een voor een
-      for (id_select in isolate(get_locations()[[2]]$station)){
-        change_state_to_deselected(id_select)
-      }
-      isolate(add_sensors_map())
+      # Zoek de sensoren in de feature
+      if (!is.null(rectangular_desel)){
+        # Check if there is data
+        data_snsrs <- get_locations()$station_loc_coord
+
+        shiny::validate(
+          need(!is.null(data_snsrs), "Error, no data selected.")
+        )
+
+        # Find the stations insite the selected rectangle
+        found_in_bounds <- findLocations_sel(shape = rectangular_desel,
+                                             location_coordinates = data_snsrs,
+                                             location_id_colname = "station")
+
+        # Set selected == F for all stations within rectangle
+        for(id_select in found_in_bounds){
+          selected <- check_state(id_select)
+          if (selected == F){
+            done
+          }
+          else {
+            change_state_to_deselected(id_select)
+          }
+        }}
+      else{done}
+
+      # Add the new situation to the map
       isolate(add_lmls_map())
+      isolate(add_sensors_map())
       isolate(add_knmi_map())
     })
 
-    observe({
-
+    # Observe if a sensor is in de square selection -> select
+    observeEvent({input$map_draw_new_feature},{
+      browser()
 
       rectangular_sel <- input$map_draw_new_feature
 
       # Zoek de sensoren in de feature
-      if (length(rectangular_sel[[1]] > 0)){
+      if (!is.null(rectangular_sel)){
         # Check if there is data
-        data_snrs <- try(isolate(get_locations()), silent = T)
+        data_snsrs <- get_locations()$station_loc_coord
+
         shiny::validate(
-          need(class(data_snrs) != "try-error", "Error, no data selected.")
+          need(!is.null(data_snsrs), "Error, no data selected.")
         )
+
         # Find the stations insite the selected rectangle
         found_in_bounds <- findLocations_sel(shape = rectangular_sel,
-                                             location_coordinates = isolate(get_locations()[[2]]),
+                                             location_coordinates = data_snsrs,
                                              location_id_colname = "station")
 
+        # Set selected == T for all stations within rectangle
         for(id_select in found_in_bounds){
           selected <- check_state(id_select)
           if (selected == T){
@@ -323,6 +307,7 @@ show_map_server <- function(id,
         }}
       else{done}
 
+      # Add the new situation to the map
       isolate(add_lmls_map())
       isolate(add_sensors_map())
       isolate(add_knmi_map())
@@ -340,10 +325,11 @@ show_map_server <- function(id,
       # Check if there is clicked
       if (!is.null(click)){
         selected <- check_state(selected_snsr)
+        # If stations is already selected -> deselect
         if (selected == T){
           change_state_to_deselected(selected_snsr)
         }
-        else {
+        else { # If not yet selected -> select
           change_state_to_selected(selected_snsr)
         }}
       else{done}
@@ -354,11 +340,10 @@ show_map_server <- function(id,
     })
 
     # Return ----
-    return(list(
-      map = map,
-      state_station = reactive({state_station$value})))
+    return(list(map = map,
+                data_stations = reactive({data_stations$data}))
+           )
 
   })
 
 }
-
