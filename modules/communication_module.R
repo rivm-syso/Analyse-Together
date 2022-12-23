@@ -1,5 +1,5 @@
 ###############################################
-### Communication Module ###
+### Communication Module ####
 ###############################################
 
 #The communication module covers all the communication between selection and
@@ -14,7 +14,7 @@ communication_output <- function(id) {
   ns <- NS(id)
 
   tagList(
-#     verbatimTextOutput(ns('Click_text')),
+    #     verbatimTextOutput(ns('Click_text')),
 
     tableOutput(ns("test_data_select_time")),
     tableOutput(ns("test_data_select_sensor")),
@@ -26,17 +26,14 @@ communication_output <- function(id) {
 
 
 ######################################################################
-# Server Module
+### Server Module #####
 ######################################################################
 #
 #
 
 communication_server <- function(id,
-                                 update_data,
-                                 download_data_123,
-                                 pool,
-                                 measurements_con,
-                                 stations_con,
+                                 data_measurements,
+                                 data_stations,
                                  data_meta,
                                  selected_parameter,
                                  selected_time,
@@ -52,121 +49,54 @@ communication_server <- function(id,
                                  line_cat,
                                  line_default,
                                  line_overload
-                                 ) {
+) {
 
   moduleServer(id,
                function(input, output, session) {
 
                  ns <- session$ns
 
-                 # Load the data from the caching database ----
-                 get_data <- reactive({
-                    
-                  # Check if the download and update button is pushed
-                   download_button <-  download_data_123()
-                   shiny::validate(
-                     need(( update_data() | download_button), "Klik op button update")
-                   )
-
-                   # Get the selected choice
-                   type_choice <- choice_selection()
-
-                   # Check if there is selected project/municipality
-                   shiny::validate(
-                     need(!is_empty((type_choice)),"Please, select gemeente of project")
-                   )
-                   if (type_choice == "Gemeente"){
-                     type_choice <- "municipality"
-                   }
-
-                   # Get the selected time period
-                   start_time <- get_time_selection()$start_time
-                   end_time <- get_time_selection()$end_time
-
-                   # Get the station names in the selected Municipality/project
-                   stations_name <- get_stations_from_selection(mun_proj_select(), type_choice, conn = pool)
-
-                   log_trace("mod comm: {lubridate::now()} Get data from caching database ... ")
-
-                   # Get the data measurements of the selected Municipality/project
-                   data_measurements <- measurements_con %>% as.data.frame() %>%
-                     dplyr::mutate(date = lubridate::as_datetime(timestamp, tz = "Europe/Amsterdam")) %>%
-                     dplyr::filter(station %in% stations_name &
-                                     date > start_time &
-                                     date < end_time)
-
-                   # Create a pm10_kal and pm25_kl for reference stations
-                   cols_pivot <- data_measurements %>% dplyr::pull(parameter) %>% unique()
-                   data_measurements <- data_measurements %>%
-                     tidyr::pivot_wider(names_from = parameter, values_from = value) %>%
-                     dplyr::mutate(pm10_kal = dplyr::case_when(grepl("NL", station) ~ pm10,
-                                                               T ~ pm10_kal),
-                                   pm25_kal = dplyr::case_when(grepl("NL", station) ~ pm25,
-                                                              T ~ pm25_kal)) %>%
-                     tidyr::pivot_longer(cols = cols_pivot, names_to = "parameter", values_to = "value") %>% 
-                     dplyr::group_by(station, date, parameter) %>% 
-                     dplyr::slice(which.max(!is.na(value))) %>% 
-                     dplyr::ungroup()
-
-                   # Add uncertainty to the measurements of the sensors
-                   data_measurements <- data_measurements %>%
-                     dplyr::mutate(sd = dplyr::case_when(parameter == "pm25_kal" & !grepl("NL", station) ~ 5.3,
-                                                         parameter == "pm25" & !grepl("NL", station) ~ 5.3,
-                                                         parameter == "pm10_kal" & !grepl("NL", station) ~ 8.5,
-                                                         parameter == "pm10" & !grepl("NL", station) ~ 8.5,
-                                                         T ~ 0))
-
-                   # Get the information from the sensors
-                   data_sensors <- stations_con %>% as.data.frame() %>%
-                     dplyr::distinct(station, .keep_all = T) %>% 
-                     dplyr::filter(station %in% stations_name) %>%
-                     dplyr::mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
-                     dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
-                     dplyr::mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
-                            size = ifelse(station_type == "LML", 2,1))
-
-                   log_trace("mod com: {lubridate::now()} Data available in tool. ")
-
-                   return(list(data_measurements = data_measurements, data_sensors = data_sensors))
-                 })
-
-                # Get selected stations ----
-                # TODO this needs to get some administration to select and deselect
-                get_selected_station <- reactive({
-                  selected_station <- get_stations_total() %>%
-                    dplyr::filter(selected == T) %>%
-                    dplyr::select(station) %>%
-                    pull()
-                  return(selected_station)
-                })
-
-                # Get total stations ----
+                 # Get total stations ----
                  # Get the total stations and their location, if they are selected, name/label and colour
                  # We assume that each station has only 1 location. Or we plot all, we don't distinguish location time
                  # TODO create a function or reactive to make this selection which locations to use
                  get_stations_total <- reactive({
-                  
-                   
-                   update_data()
-                   # Set selected stations to TRUE
-                   # stations_total <- isolate(get_data())$data_sensors %>%
-                   #   dplyr::mutate(selected = ifelse(station %in% c(selected_stations$state_station()),  T, selected))
-                   data_snsrs <- try(isolate(get_data())$data_sensors, silent = T)
+
+                   browser()
+
+                   # Get the location and colours etc from the stations
+                   data_stns <- data_stations$data
+
+                   # Check if the data is available
                    shiny::validate(
-                     need(class(data_snsrs) != "try-error", "Error, no data selected.")
+                     need(!is.null(data_stns), "Error, no data selected.")
                    )
 
-                   stations_total <- isolate(get_data())$data_sensors %>%
-                      dplyr::mutate(selected = ifelse(station %in% c(selected_stations$state_station()),  T, selected))
+                   # Get new selected stations
+                   new_selected <- selected_stations$state_station()
+
+                   # Set those to selected in the dataframe
+                   data_stns <- data_stns %>%
+                     dplyr::mutate(selected = ifelse(station %in% new_selected,  T, selected))
                    # Assign colors -> sensor
-                   stations_total <- assign_color_stations(stations_total, col_cat, col_default, col_overload, col_station_type = "sensor")
+                   data_stns <- assign_color_stations(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
 
                    # Assign linetype -> reference station
-                   stations_total <- assign_linetype_stations(stations_total, line_cat, line_default, line_overload, line_station_type = "ref")
+                   data_stns <- assign_linetype_stations(data_stns, line_cat, line_default, line_overload, line_station_type = "ref")
 
-                   log_trace("mod com: total number of stations {nrow(stations_total)}")
+                   log_trace("mod com: total number of stations {nrow(data_stns)}")
 
-                   return(stations_total)
+                   return(data_stns)
+                 })
+
+                 # Get selected stations ----
+                 get_selected_station <- reactive({
+                   browser()
+                   selected_station <- get_stations_total() %>%
+                     dplyr::filter(selected == T) %>%
+                     dplyr::select(station) %>%
+                     pull()
+                   return(selected_station)
                  })
 
                  # Get time selection ----
@@ -175,12 +105,7 @@ communication_server <- function(id,
                    start_time <- selected_time$selected_start_date()
                    end_time <- selected_time$selected_end_date()
 
-                   # Check if a time is selected, otherwise total time
-                   if(is.null(start_time)|is.null(end_time)){
-                     start_time <- default_time$start_time
-                     end_time <- default_time$end_time
-                   }
-                  log_trace("mod com: selected time range {start_time} - {end_time}")
+                   log_trace("mod com: selected time range {start_time} - {end_time}")
                    return(list(start_time = start_time, end_time = end_time))
                  })
 
@@ -192,7 +117,7 @@ communication_server <- function(id,
                    if(is.null(parameter)){
                      parameter <- "pm25_kal"
                    }
-                  log_trace("mod com: selected parameter {parameter}")
+                   log_trace("mod com: selected parameter {parameter}")
                    return(list(parameter = parameter))
                  })
 
@@ -210,82 +135,88 @@ communication_server <- function(id,
                    return(selected)
                  })
 
-                 # Fitler data measurements ----
+                 # Filter data measurements ----
                  # Reactive for the measurements to filter on input, time, map, component
                  filter_data_measurements <- reactive({
-
-                   update_data()
+                   browser()
                    # Get the start and end time to filter on
-                   time_selected <- get_time_selection()
-                   start_time <- time_selected$start_time
-                   end_time <- time_selected$end_time
+                   start_time <- selected_time$selected_start_date()
+                   end_time <- selected_time$selected_end_date()
+
                    # Get the chosen parameter
                    selected_parameter <- get_parameter_selection()$parameter
 
                    # Get selected stations
                    selected_stations <- get_selected_station()
 
-                   # TODO some check if time is available in data
-                   # TODO check if selected sensors has data that time and component, otherwise a message?
-                   # TODO for the selected stations and parameters connect with those selection modules
-                   all_data <- isolate(get_data()$data_measurements)
-                   
+                   # Get the data
+                   data_all <- data_measurements$data_all
+
+                   # Check if everything is available for the selection
+                   shiny::validate(need(!is.null(start_time) &
+                                          !is.null(end_time) &
+                                          !is.null(selected_parameter) &
+                                          !is.null(data_all) &
+                                          !purrr::is_empty(selected_stations),
+                                        "Not yet data selected" ) )
+
                    # Filter the measurements
-                   measurements_filt_snsr <- all_data %>%
+                   measurements_filt_stns <- data_all %>%
                      dplyr::filter(date > start_time & date < end_time &
                                      station %in% selected_stations &
                                      parameter == selected_parameter)
 
-
-                  log_trace("mod com: number of selected stations {length(selected_stations)}")
-                  log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
-                  log_trace("mod com: filtered measurements {nrow(measurements_filt_snsr)}")
-                   return(list(measurements_filt_snsr = measurements_filt_snsr, all_data = all_data))
+                   # log_trace("mod com: number of selected stations {length(selected_stations)}")
+                   # log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
+                   log_trace("mod com: filtered measurements {nrow(measurements_filt_stns)}")
+                   return(measurements_filt_stns)
                  })
 
                  # Get knmi measurements ----
                  # the knmi measurements are excluded
-                 # by the selected parameter in the measurements_filt.
+                 # by the selected parameter in the measurements_filt_stns
                  get_knmi_measurements <- reactive({
+                   browser()
                    # Get the start and end time to filter on
-                   update_data()
-                   time_selected <- get_time_selection()
-                   start_time <- time_selected$start_time
-                   end_time <- time_selected$end_time
+                   start_time <- selected_time$selected_start_date()
+                   end_time <- selected_time$selected_end_date()
 
                    # Get selected stations
-                   selected_stations <- get_selected_station()[grep("KNMI", get_selected_station())]
+                   # selected_stations <- get_selected_station()[grep("KNMI", get_selected_station())]
 
-                   # TODO some check if time is available in data
-                   # TODO check if selected sensors has data that time and component, otherwise a message?
-                   # TODO for the selected stations and parameters connect with those selection modules
+                   # Get the data
+                   data_all <- data_measurements$data_all
+
+                   # Check if everything is available for the selection
+                   shiny::validate(need(!is.null(start_time) &
+                                          !is.null(end_time) &
+                                          !is.null(data_all),
+                                        "Not yet data selected" ) )
+
                    # Filter the measurements
-                   measurements_filt <- isolate(get_data())$data_measurements %>%
-                     dplyr::filter(date > start_time & date < end_time &
-                                     station %in% selected_stations)
+                   measurements_filt_knmi <- data_all %>%
+                     dplyr::filter(date > start_time & date < end_time #&
+                                   # station %in% selected_stations
+                     )
 
-                   return(measurements_filt)
+                   # log_trace("mod com: number of selected stations {length(selected_stations)}")
+                   # log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
+                   log_trace("mod com: filtered measurements KNMI {nrow(measurements_filt_knmi)}")
+
+                   return(measurements_filt_knmi)
                  })
 
 
-                # Observe download data ----
-                  observeEvent(download_data_123(), {
-                   get_data()
-
-                 })
-
-
-                # Return ----
+                 # Return ----
                  return(list(
-                  selected_time = reactive({get_time_selection()}),
-                  station_locations = reactive({get_stations_total()}),
-                  choice_select = reactive({choice_selection()}),
-                  selected_measurements = reactive({filter_data_measurements()$measurements_filt_snsr}),
-                  all_measurements = reactive({filter_data_measurements()$all_data}),
-                  mun_proj_select = reactive({mun_proj_select()}),
-                  knmi_measurements = reactive({get_knmi_measurements()}),
-                  selected_parameter = reactive({get_parameter_selection()})
-                  ))
+                   selected_time = reactive({get_time_selection()}),
+                   station_locations = reactive({get_stations_total()}),
+                   choice_select = reactive({choice_selection()}),
+                   selected_measurements = reactive({filter_data_measurements()}),
+                   # mun_proj_select = reactive({mun_proj_select()}),
+                   knmi_measurements = reactive({get_knmi_measurements()}),
+                   selected_parameter = reactive({get_parameter_selection()})
+                 ))
 
                })
 }
