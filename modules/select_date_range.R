@@ -41,7 +41,6 @@ date_range_server <- function(id,
                      label = i18n$t("sel_date"),
                      start = date_total$start_time,
                      end = date_total$end_time,
-                     max = date_total$end_time,
                      format = "dd-mm-yyyy",
                      separator = " - "
                    )
