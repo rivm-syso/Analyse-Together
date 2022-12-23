@@ -71,7 +71,6 @@ show_map_server <- function(id,
     # Generate base map ----
     output$map <- renderLeaflet({
 
-      browser()
       ns("map")
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
@@ -100,7 +99,6 @@ show_map_server <- function(id,
     # Functions ----
     # Check the state of the station (selected or not)
     check_state <- function(id_selected){
-      browser()
       selected <- data_stations$data %>%
         dplyr::filter(station == id_selected) %>%
         dplyr::select(selected) %>%
@@ -126,7 +124,6 @@ show_map_server <- function(id,
     }
 
     change_state_to_selected <- function(id_selected){
-      browser()
 
       # Get the data from the stations
       data_stns <- data_stations$data
@@ -199,13 +196,14 @@ show_map_server <- function(id,
 
     # Add reference stations to the map
     add_lmls_map <- function(){
+
       # Check if there is data
       data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
       shiny::validate(
         need(class(data_snsrs) != "try-error", "Not yet selected any data.")
       )
 
-      data_snsrs <- isolate(get_locations()$station_loc) %>% filter(., grepl("LML",station_type))
+      data_snsrs <- isolate(get_locations()$station_loc) %>% filter(., grepl("ref",station_type))
 
       for (lmls in unique(data_snsrs$station)){
 
@@ -239,9 +237,9 @@ show_map_server <- function(id,
 
     # Observe if a sensor is in de square selection -> deselect
     observeEvent({input$map_draw_deleted_features},{
-      browser()
 
-      rectangular_desel <- input$map_draw_deleted_features
+      # Get the polygon: be carefull different then the selection
+      rectangular_desel <- input$map_draw_deleted_features$features
 
       # Zoek de sensoren in de feature
       if (!is.null(rectangular_desel)){
@@ -252,21 +250,25 @@ show_map_server <- function(id,
           need(!is.null(data_snsrs), "Error, no data selected.")
         )
 
-        # Find the stations insite the selected rectangle
-        found_in_bounds <- findLocations_sel(shape = rectangular_desel,
-                                             location_coordinates = data_snsrs,
-                                             location_id_colname = "station")
+        # There can be multiple features be deleted at the same time
+        for(feature in rectangular_desel){
+          # Find the stations inside the selected rectangle
+          found_in_bounds <- findLocations_sel(shape = feature,
+                                               location_coordinates = data_snsrs,
+                                               location_id_colname = "station")
 
-        # Set selected == F for all stations within rectangle
-        for(id_select in found_in_bounds){
-          selected <- check_state(id_select)
-          if (selected == F){
-            done
+          # Set selected == F for all stations within rectangle
+          for(id_select in found_in_bounds){
+            selected <- check_state(id_select)
+            if (selected == F){
+              done
+            }
+            else {
+              change_state_to_deselected(id_select)
+            }
           }
-          else {
-            change_state_to_deselected(id_select)
-          }
-        }}
+        }
+      }
       else{done}
 
       # Add the new situation to the map
@@ -277,8 +279,8 @@ show_map_server <- function(id,
 
     # Observe if a sensor is in de square selection -> select
     observeEvent({input$map_draw_new_feature},{
-      browser()
 
+      # Get the rectangle feature
       rectangular_sel <- input$map_draw_new_feature
 
       # Zoek de sensoren in de feature
@@ -317,8 +319,7 @@ show_map_server <- function(id,
     # Observe the clicks of an user
     observeEvent({input$map_marker_click$id}, {
 
-      click <- input$map_marker_click
-      browser()
+      # Get the id of the selected marker
       selected_snsr <- input$map_marker_click$id
       log_trace("map module: click id {selected_snsr}")
 
@@ -334,6 +335,7 @@ show_map_server <- function(id,
         }}
       else{done}
 
+      # add the updated markers on the map
       isolate(add_sensors_map())
       isolate(add_lmls_map())
       isolate(add_knmi_map())

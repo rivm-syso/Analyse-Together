@@ -43,7 +43,17 @@ shinyServer(function(global, input, output, session) {
   #meta_table <- metadata_server("meta_table", communication_stuff)
 
   # The Map
-  map <- show_map_server("map", data_stations)
+  map <- show_map_server("map",
+                         data_stations,
+                         # Options for the colors
+                         col_cat,
+                         col_default,
+                         col_overload,
+                         # Options for the linetype
+                         line_cat,
+                         line_default,
+                         line_overload
+                         )
 
   # The bar plot
   barplot <- barplot_server("barplot_plot",
@@ -72,16 +82,7 @@ shinyServer(function(global, input, output, session) {
                                               selected_time = select_date_range,
                                               default_time = default_time,
                                               select_mun_or_proj = proj_or_mun_select,
-                                              choose_mun_or_proj = choice_select,
-                                              selected_stations = map,
-                                              # Options for the colors
-                                              col_cat,
-                                              col_default,
-                                              col_overload,
-                                              # Options for the linetype
-                                              line_cat,
-                                              line_default,
-                                              line_overload
+                                              choose_mun_or_proj = choice_select
                                               )
 
   # Download data from external source to database
@@ -149,14 +150,13 @@ shinyServer(function(global, input, output, session) {
       dplyr::distinct(station, .keep_all = T) %>%
       # Add some specific info for the tool
       dplyr::mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
-      dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "LML", station_type))) %>%
-      dplyr::mutate(linetype = ifelse(station_type == "LML", line_overload, linetype),
-                    size = ifelse(station_type == "LML", 2,1))
+      dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "ref", station_type))) %>%
+      dplyr::mutate(linetype = ifelse(station_type == "ref", line_overload, linetype),
+                    size = ifelse(station_type == "ref", 2,1))
 
     log_trace("{lubridate::now()} Data available in tool. ")
 
   })
-
 
     # Observe filtered data from stations ----
     observe({
@@ -170,19 +170,19 @@ shinyServer(function(global, input, output, session) {
       data_measurements$data_filtered_knmi <- data_filtered_knmi
     })
 
-    # Observe if the station locations changes (colour) ----
-    # TODO something with deselect from te map
-    observe({
-      data_stations_adjust <- communication_stuff$station_locations()
-      data_stations$data <- data_stations_adjust
-    })
-
     # Observe the parameter ----
     observe({
       shiny::validate(need(!is.null(select_component()), "No parameter yet."))
       parameter <- select_component()
       data_other$parameter <- parameter
     })
+
+    # Observe if the station locations changes (colour) ----
+    observe({
+      data_stations_adjust <- map$data_stations()
+      data_stations$data <- data_stations_adjust
+    })
+
 
   ################# overig ##################
   #view_que_server("view_que", que)

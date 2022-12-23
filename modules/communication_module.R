@@ -102,7 +102,6 @@ communication_server <- function(id,
                  # Filter data measurements ----
                  # Reactive for the measurements to filter on input, time, stations, component
                  filter_data_measurements <- reactive({
-                   browser()
                    # Get the start and end time to filter on
                    start_time <- selected_time$selected_start_date()
                    end_time <- selected_time$selected_end_date()
@@ -150,7 +149,6 @@ communication_server <- function(id,
 
                    # Get the data
                    data_all <- data_measurements$data_all
-                   browser()
 
                    # Check if everything is available for the selection
                    shiny::validate(need(!is.null(start_time) &
