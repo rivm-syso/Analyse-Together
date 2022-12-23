@@ -34,19 +34,19 @@ show_availability_server <- function(id,
 
     # Show data availability in Calenderplot
     # output$show_available_data <- renderPlot({
-    #   shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
+    #   shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
     #
-    #   data_to_plot <- data_to_show$data %>% dplyr::filter(parameter == "pm25_kal")
+    #   data_to_plot <- data_to_show$data_all %>% dplyr::filter(parameter == "pm25_kal")
     #
-    #   calendarPlot(data_to_show$data, pollutant = "value", breaks = c(0, 1000),
+    #   calendarPlot(data_to_show$data_all, pollutant = "value", breaks = c(0, 1000),
     #                labels = c("Data available"), cols = "darkgreen", remove.empty = F)
     #
     # })
 
     output$show_available_data <- renderPlot({
-      shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
+      shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
 
-      data_to_plot <- data_to_show$data %>%
+      data_to_plot <- data_to_show$data_all %>%
         dplyr::filter(parameter == "pm25") %>%
         dplyr::select(station, parameter, date) %>%
         dplyr::mutate(timestamp_table = date %>% format("%Y-%m-%d") %>% as.POSIXct(format ="%Y-%m-%d")) %>%
@@ -58,7 +58,6 @@ show_availability_server <- function(id,
         # Needed for the openair plot
         dplyr::mutate(date = timestamp_table)
 
-      browser()
       max_stations <- data_stations$data %>% nrow()
 
 
@@ -71,8 +70,8 @@ show_availability_server <- function(id,
 
     # Show number of stations in table
     output$show_stations <- renderTable({
-      shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
-      data_to_plot <- data_to_show$data %>%
+      shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
+      data_to_plot <- data_to_show$data_all %>%
         dplyr::filter(parameter == "pm25_kal") %>%
         dplyr::select(station) %>%
         unique() %>%
@@ -87,8 +86,8 @@ show_availability_server <- function(id,
 
     # Show number of stations in text
     output$show_stations_text <- renderText({
-      shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
-      data_to_plot <- data_to_show$data %>%
+      shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
+      data_to_plot <- data_to_show$data_all %>%
         dplyr::filter(parameter == "pm25_kal") %>%
         dplyr::select(station) %>%
         unique() %>%
@@ -103,10 +102,10 @@ show_availability_server <- function(id,
     # Show data availability in table (per station)
     output$show_available_data_table <- renderDataTable({
       # Check if data available to show
-      shiny::validate(need((nrow(data_to_show$data)>0), message = "No data available."))
+      shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
 
       # Get the data measurements
-      data_measurements <- data_to_show$data
+      data_measurements <- data_to_show$data_all
 
       # Get the selected time period and the number of days
       start_time <- time_period$selected_start_date()
@@ -175,4 +174,3 @@ show_availability_server <- function(id,
   })
 
 }
-

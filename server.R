@@ -1,4 +1,3 @@
-
 # Define server logic                                                       ====
 shinyServer(function(global, input, output, session) {
 
@@ -8,11 +7,18 @@ shinyServer(function(global, input, output, session) {
     shiny.i18n::update_lang(session, input$selected_language)
   })
 
+  ############### ReactiveValues #############
   # ReactiveValues to store the data
+  # Store the data points (all and filtered)
   data_measurements <- reactiveValues()
+  # Store the station locations and plotcolor etc
   data_stations <- reactiveValues()
+  # Store other information
+  data_other <- reactiveValues()
+  # Store messages to communicate with user
   message_data <- reactiveValues()
 
+  ########### Modules ################
   # The pickerInput for component selection
   select_component <- component_selection_server("select_component",
                                                  comp_choices)
@@ -23,8 +29,9 @@ shinyServer(function(global, input, output, session) {
 
   # The dateRangeInput for date range selection
   select_date_range <- date_range_server("select_date_range",
-                                         list(start_time = default_time$start_time, end_time = default_time$end_time))
-                                         #communication_stuff$selected_time())
+                                         list(start_time = default_time$start_time,
+                                              end_time = default_time$end_time))
+  #communication_stuff$selected_time())
 
   # choose proj/mun
   choice_select <- choice_selection_server("choice_select",
@@ -36,10 +43,15 @@ shinyServer(function(global, input, output, session) {
   #meta_table <- metadata_server("meta_table", communication_stuff)
 
   # The Map
-  #map <- show_map_server("map", communication_stuff, update_data = update_data_button)
+  map <- show_map_server("map", data_stations)
 
   # The bar plot
-  #barplot <- barplot_server("barplot_plot", communication_stuff, overview_component, theme_plots)
+  barplot <- barplot_server("barplot_plot",
+                            data_measurements = data_measurements,
+                            data_stations = data_stations,
+                            data_other = data_other,
+                            overview_component,
+                            theme_plots)
 
   # The timeseries plot
   #timeseries_plot <- timeseries_server(id = "timeseries_plot", com_module = communication_stuff, overview_component, theme_plots)
@@ -52,44 +64,36 @@ shinyServer(function(global, input, output, session) {
   #timevar_plot_daily <- timevar_daily_server("timevar_plot_daily", communication_stuff)
 
   # The communication module
-  # communication_stuff <- communication_server("test_comm_output",
-  #                                             update_data = update_data_button,
-  #                                             download_data_123 = download_api_button,
-  #                                             pool = pool,
-  #                                             measurements_con = measurements_con,
-  #                                             stations_con = stations_con,
-  #                                             meta, # TODO willen we hier wat mee?
-  #                                             selected_parameter = select_component,
-  #                                             selected_time = select_date_range,
-  #                                             default_time = default_time,
-  #                                             select_mun_or_proj = proj_or_mun_select,
-  #                                             choose_mun_or_proj = choice_select,
-  #                                             # TODO Get the selected stations form the map
-  #                                             #selected_stations = c("SSK_LH004"),
-  #                                             selected_stations = map,
-  #                                             # Options for the colors
-  #                                             col_cat,
-  #                                             col_default,
-  #                                             col_overload,
-  #                                             # Options for the linetype
-  #                                             line_cat,
-  #                                             line_default,
-  #                                             line_overload
-  #                                             )
+  communication_stuff <- communication_server("test_comm_output",
+                                              data_measurements = data_measurements,
+                                              data_stations = data_stations,
+                                              meta, # TODO willen we hier wat mee?
+                                              selected_parameter = select_component,
+                                              selected_time = select_date_range,
+                                              default_time = default_time,
+                                              select_mun_or_proj = proj_or_mun_select,
+                                              choose_mun_or_proj = choice_select,
+                                              selected_stations = map,
+                                              # Options for the colors
+                                              col_cat,
+                                              col_default,
+                                              col_overload,
+                                              # Options for the linetype
+                                              line_cat,
+                                              line_default,
+                                              line_overload
+                                              )
 
+  # Download data from external source to database
   download_api_button <- download_api_button_server("dl_btn_pushed",
                                                     proj_or_mun_select ,
                                                     choice_select,
                                                     select_date_range,
                                                     pool,
                                                     que)
-  # get_data_button <- get_data_button_server("get_data",
-                                                  # select_mun_or_proj = proj_or_mun_select,
-                                                  # choose_mun_or_proj = choice_select,
-                                                  # select_time = select_date_range,
-                                                  # pool = pool,
-                                                  # measurements_con = measurements_con,
-                                                  # stations_con = stations_con)
+
+
+  # To give some indication of the data available in dbs
   show_availability_server("show_availability",
                            data_to_show = data_measurements,
                            data_stations = data_stations,
@@ -97,11 +101,12 @@ shinyServer(function(global, input, output, session) {
 
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
 
+  ############ Observers ##############
+  # Observe if the get_data_button is clicked ----
   observeEvent(input$get_data_button, {
-    # Check if there is user input ----
     # Get the selected choice
     type_choice <- proj_or_mun_select()
-    # Name of municipality/porject
+    # Name of municipality/project
     name_choice <- choice_select()
 
     # Check if there is selected project/municipality
@@ -114,32 +119,32 @@ shinyServer(function(global, input, output, session) {
     start_time <- select_date_range$selected_start_date()
     end_time <- select_date_range$selected_end_date()
 
-    # Load the data from the caching database ----
+    # Load the data from the caching database
     # Get the station names in the selected Municipality/project
     stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
 
     log_trace("{lubridate::now()} Get data from caching database ... ")
 
     # Get the data measurements of the selected Municipality/project in the period
-    data_measurements$data <- get_measurements(measurements_con, stations_name, start_time, end_time)
-    browser()
+    data_measurements$data_all <- get_measurements(measurements_con, stations_name, start_time, end_time)
+
     # Check if there is data in de caching, otherwise stop and give message
-    if(nrow(data_measurements$data) == 0){
+    if(nrow(data_measurements$data_all) == 0){
       message_data$data_in_dbs <- c(paste0("No data in ", type_choice, " ", name_choice))
       shiny::validate(need(F,message = paste0("No data in ", type_choice, " ", name_choice)))
     }
     message_data$data_in_dbs <- c(paste0("Data available in ", type_choice, " ", name_choice))
 
     # Create a pm10_kal and pm25_kl for reference stations
-    data_measurements$data <- add_ref_kal(data_measurements$data)
+    data_measurements$data_all <- add_ref_kal(data_measurements$data_all)
 
     # Add uncertainty to the measurements of the sensors
-    data_measurements$data <- add_uncertainty_sensor(data_measurements$data)
+    data_measurements$data_all <- add_uncertainty_sensor(data_measurements$data_all)
 
     # Get the information from the stations
     data_stations$data <- get_locations(stations_con, stations_name)
 
-    # Take for each sensor 1 location
+    # Take for each sensor 1 location and add the plot-colours etc.
     data_stations$data <- data_stations$data %>%
       dplyr::distinct(station, .keep_all = T) %>%
       # Add some specific info for the tool
@@ -153,7 +158,33 @@ shinyServer(function(global, input, output, session) {
   })
 
 
+    # Observe filtered data from stations ----
+    observe({
+      data_filtered <- communication_stuff$selected_measurements()
+      data_measurements$data_filtered <- data_filtered
+    })
 
+    # Observe filtered data from knmi ----
+    observe({
+      data_filtered_knmi <- communication_stuff$knmi_measurements()
+      data_measurements$data_filtered_knmi <- data_filtered_knmi
+    })
+
+    # Observe if the station locations changes (colour) ----
+    # TODO something with deselect from te map
+    observe({
+      data_stations_adjust <- communication_stuff$station_locations()
+      data_stations$data <- data_stations_adjust
+    })
+
+    # Observe the parameter ----
+    observe({
+      shiny::validate(need(!is.null(select_component()), "No parameter yet."))
+      parameter <- select_component()
+      data_other$parameter <- parameter
+    })
+
+  ################# overig ##################
   #view_que_server("view_que", que)
 
 })
