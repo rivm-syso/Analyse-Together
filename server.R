@@ -40,7 +40,11 @@ shinyServer(function(global, input, output, session) {
                                            proj_choices = proj_choices)
 
   # Get metadata
-  #meta_table <- metadata_server("meta_table", communication_stuff)
+  meta_table <- metadata_server("meta_table",
+                                data_measurements = data_measurements,
+                                data_stations = data_stations,
+                                time_period = select_date_range,
+                                name_munproj = choice_select)
 
   # The Map
   map <- show_map_server("map",
@@ -64,14 +68,30 @@ shinyServer(function(global, input, output, session) {
                             theme_plots)
 
   # The timeseries plot
-  #timeseries_plot <- timeseries_server(id = "timeseries_plot", com_module = communication_stuff, overview_component, theme_plots)
-
+  timeseries_plot <- timeseries_server(id = "timeseries_plot",
+                                       data_measurements = data_measurements,
+                                       data_stations = data_stations,
+                                       data_other = data_other,
+                                       overview_component,
+                                       theme_plots)
   # The pollutionrose plot
-  #pollrose_plot <- pollrose_server("pollrose_plot", communication_stuff)
+  pollrose_plot <- pollrose_server("pollrose_plot",
+                                   data_measurements = data_measurements,
+                                   data_stations = data_stations,
+                                   data_other = data_other,
+                                   overview_component)
 
   # The timevariation plot
-  #timevar_plot_weekly <- timevar_weekly_server("timevar_plot_weekly", communication_stuff)
-  #timevar_plot_daily <- timevar_daily_server("timevar_plot_daily", communication_stuff)
+  timevar_plot_weekly <- timevar_weekly_server("timevar_plot_weekly",
+                                               data_measurements = data_measurements,
+                                               data_stations = data_stations,
+                                               data_other = data_other,
+                                               overview_component)
+  timevar_plot_daily <- timevar_daily_server("timevar_plot_daily",
+                                             data_measurements = data_measurements,
+                                             data_stations = data_stations,
+                                             data_other = data_other,
+                                             overview_component)
 
   # The communication module
   communication_stuff <- communication_server("test_comm_output",

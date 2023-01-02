@@ -7,6 +7,7 @@
 ###################################################################
 ### Output Module ####
 #################################################################
+
 pollrose_output <- function(id) {
 
   ns <- NS(id)
@@ -19,48 +20,41 @@ pollrose_output <- function(id) {
 ######################################################################
 # Server Module
 ######################################################################
-#
-#
 
-pollrose_server <- function(id, com_module) {
+pollrose_server <- function(id,
+                            data_measurements,
+                            data_stations,
+                            data_other,
+                            overview_component) {
 
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 
-    # Determine parameter that needs to be plotted
-    # Get selected measurements from communication module
-    data_measurements <- reactive({
-      data_measurements <- com_module$selected_measurements() %>% 
-        dplyr::filter(!grepl("KNMI", station))
-      return(data_measurements)
-    })
-
-    # Get selected stations from communication module
-    data_stations <- reactive({
-      data_stations <- com_module$station_locations() %>%
-        dplyr::select(c(station, col)) %>%
-        dplyr::distinct(station, .keep_all = T)
-      return(data_stations)
-    })
-
-    # Get the KNMI data from the communication module
-    data_knmi <- reactive({
-      data_knmi <- com_module$knmi_measurements()
-      return(data_knmi)
-    })
-
     output$pollrose_plot <- renderPlot({
+      # Get the data to plot - stations
+      data_plot <- data_measurements$data_filtered
+
+      # Get the data to plot - KNMI wind data
+      data_plot_wind <- data_measurements$data_filtered_knmi
+
+      # Get the colours for the stations
+      data_stations <- data_stations$data %>%
+        dplyr::select(c(station, col, linetype, size)) %>%
+        dplyr::distinct(station, .keep_all = T) %>%
+        dplyr::filter(!grepl("KNMI", station))
+
+
       # Check if there is data to plot
       shiny::validate(
-        need(!is_empty(data_measurements()),'Geen sensordata beschikbaar.'),
-        need(!dim(data_measurements())[1] == 0,'Geen sensordata beschikbaar.'),
-        need(!is_empty(data_knmi()),'Geen knmi-data beschikbaar.'),
-        need(!dim(data_knmi())[1] == 0,'Geen knmi-data beschikbaar.')
+        need(!is_empty(data_plot),'Geen sensordata beschikbaar.'),
+        need(!dim(data_plot)[1] == 0,'Geen sensordata beschikbaar.'),
+        need(!is_empty(data_plot_wind),'Geen knmi-data beschikbaar.'),
+        need(!dim(data_plot_wind)[1] == 0,'Geen knmi-data beschikbaar.')
       )
 
       # Determine parameter for the label in the plot
-      parameter <- com_module$selected_parameter()$parameter
+      parameter <- data_other$parameter
 
       # Find the corresponding label
       parameter_label <- overview_component %>%
@@ -68,11 +62,12 @@ pollrose_server <- function(id, com_module) {
         dplyr::pull(label)
 
       # Get the stations data
-      data_pollrose <- data_measurements()
-      data_pollrose <- merge(data_pollrose, data_stations(), by = 'station')
+      data_pollrose <- data_plot
+      data_pollrose <- data_plot %>%
+        dplyr::left_join(data_stations, by = "station")
 
       # Get the KNMI data
-      knmidata <- data_knmi() %>%
+      knmidata <- data_plot_wind %>%
         dplyr::filter(parameter == 'wd' | parameter == 'ws') %>%
         dplyr::select(c('station', 'parameter', 'value', 'timestamp')) %>%
         tidyr::pivot_wider(names_from = 'parameter', values_from = 'value', values_fn = mean) %>%
@@ -87,11 +82,11 @@ pollrose_server <- function(id, com_module) {
                         wd = "wd",
                         ws = "ws",
                         type = 'station',
-                        local.tz="Europe/Amsterdam",
+                        local.tz = "Europe/Amsterdam",
                         cols = "Oranges",
                         statistic = 'prop.mean',
-                        breaks=c(0,10,25,50,100,200),
-                        par.settings=list(fontsize=list(text=15)),
+                        breaks = c(0,10,25,50,100,200),
+                        par.settings = list(fontsize=list(text=15)),
                         key = list(header = parameter_label,
                                    footer = '',
                                    labels = c('0 to 10', '10 to 25',

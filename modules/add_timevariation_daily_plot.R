@@ -19,41 +19,35 @@ timevar_daily_output <- function(id) {
 ######################################################################
 # Server Module
 ######################################################################
-#
-#
 
-timevar_daily_server <- function(id, com_module) {
+timevar_daily_server <- function(id,
+                                 data_measurements,
+                                 data_stations,
+                                 data_other,
+                                 overview_component) {
 
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 
-    # Determine parameter that needs to be plotted
-    # Get selected measurements from communication module
-    data_measurements <- reactive({
-      data_measurements <- com_module$selected_measurements() %>% dplyr::filter(!grepl("KNMI", station))
-      return(data_measurements)
-    })
-
-    # Get selected stations from communication module
-    data_stations <- reactive({
-      data_stations <- com_module$station_locations() %>% 
-        dplyr::select(c(station, col)) %>% 
-        dplyr::distinct(station, .keep_all = T) %>% 
-        dplyr::filter(!grepl("KNMI", station))
-      return(data_stations)
-    })
-
     output$timevar_plot_daily <- renderPlot({
+      # Get the data to plot
+      data_plot <- data_measurements$data_filtered
+
+      # Get the colours for the stations
+      data_stations <- data_stations$data %>%
+        dplyr::select(c(station, col, linetype, size)) %>%
+        dplyr::distinct(station, .keep_all = T) %>%
+        dplyr::filter(!grepl("KNMI", station))
 
       # Check if there is data to plot
       shiny::validate(
-        need(!is_empty(data_measurements()),'Geen sensordata beschikbaar.'),
-        need(!dim(data_measurements())[1] == 0,'Geen sensordata beschikbaar.')
+        need(!is_empty(data_plot),'Geen sensordata beschikbaar.'),
+        need(!dim(data_plot)[1] == 0,'Geen sensordata beschikbaar.')
       )
 
       # Determine parameter for the label in the plot
-      parameter <- com_module$selected_parameter()$parameter
+      parameter <- data_other$parameter
 
       # Find the corresponding label
       parameter_label <- overview_component %>%
@@ -61,8 +55,9 @@ timevar_daily_server <- function(id, com_module) {
         dplyr::pull(label)
 
       # Get measurements stations
-      data_timevar <- data_measurements()
-      data_timevar <- merge(data_timevar, data_stations(), by = 'station')
+      data_timevar <- data_plot
+      data_timevar <- data_plot %>%
+        dplyr::left_join(data_stations, by = "station")
 
       # Make a plot
       data_timevar$value <- as.numeric(data_timevar$value)
