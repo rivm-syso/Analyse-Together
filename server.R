@@ -31,7 +31,6 @@ shinyServer(function(global, input, output, session) {
   select_date_range <- date_range_server("select_date_range",
                                          list(start_time = default_time$start_time,
                                               end_time = default_time$end_time))
-  #communication_stuff$selected_time())
 
   # choose proj/mun
   choice_select <- choice_selection_server("choice_select",

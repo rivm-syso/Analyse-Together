@@ -100,7 +100,6 @@ pool <- dbPool(
 ### Initiate some variables                                                 ====
 # Default start and end time for the date picker
 default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
-default_time <- list(start_time = as.POSIXct("2022-09-01"), end_time = as.POSIXct("2022-09-30"))
 
 # store lists with projects and municipalities
 municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
