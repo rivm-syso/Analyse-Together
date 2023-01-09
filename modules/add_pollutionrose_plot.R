@@ -38,20 +38,19 @@ pollrose_server <- function(id,
       # Get the data to plot - KNMI wind data
       data_plot_wind <- data_measurements$data_filtered_knmi
 
+      # Check if there is data to plot
+      shiny::validate(
+        need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
+             'Geen sensordata beschikbaar.'),
+        need(!is_empty(data_plot_wind) | !dim(data_plot_wind)[1] == 0,
+             'Geen knmi-data beschikbaar.'),
+      )
+
       # Get the colours for the stations
       data_stations <- data_stations$data %>%
         dplyr::select(c(station, col, linetype, size)) %>%
         dplyr::distinct(station, .keep_all = T) %>%
         dplyr::filter(!grepl("KNMI", station))
-
-
-      # Check if there is data to plot
-      shiny::validate(
-        need(!is_empty(data_plot),'Geen sensordata beschikbaar.'),
-        need(!dim(data_plot)[1] == 0,'Geen sensordata beschikbaar.'),
-        need(!is_empty(data_plot_wind),'Geen knmi-data beschikbaar.'),
-        need(!dim(data_plot_wind)[1] == 0,'Geen knmi-data beschikbaar.')
-      )
 
       # Determine parameter for the label in the plot
       parameter <- data_other$parameter

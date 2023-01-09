@@ -35,19 +35,19 @@ barplot_server <- function(id,
         output$barplot_plot <- renderPlot({
 
           # Get the data to plot
-          data_barplot <- data_measurements$data_filtered
+          data_plot <- data_measurements$data_filtered
+
+          # Check if there is data to plot
+          shiny::validate(
+            need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
+                 'Geen sensordata beschikbaar.')
+          )
 
           # Get the colours for the stations
           data_stations <- data_stations$data %>%
             dplyr::select(c(station, col, linetype, size)) %>%
             dplyr::distinct(station, .keep_all = T) %>%
             dplyr::filter(!grepl("KNMI", station))
-
-          # Check if there is data to plot
-          shiny::validate(
-            need(!is_empty(data_barplot),'Geen sensordata beschikbaar.'),
-            need(!dim(data_barplot)[1] == 0,'Geen sensordata beschikbaar.')
-          )
 
           # Determine parameter for the label in the plot
           parameter <- data_other$parameter
@@ -58,7 +58,7 @@ barplot_server <- function(id,
             dplyr::pull(label)
 
           # Calculate the mean and standard deviation
-          data_barplot <- data_barplot %>%
+          data_barplot <- data_plot %>%
             dplyr::group_by(parameter, station) %>%
             dplyr::mutate(gemiddelde = round(mean(value, na.rm=TRUE), 2),
                           standaarddev = sd(value, na.rm = T),
