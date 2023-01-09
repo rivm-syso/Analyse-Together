@@ -31,23 +31,25 @@ timeseries_server <- function(id,
   moduleServer(id, function(input, output, session) {
 
          ns <- session$ns
+         browser()
 
          # Create time plot with ggplot
          output$timeseries_plot <- renderPlot({
+           browser()
            # Get the data to plot
            data_plot <- data_measurements$data_filtered
+
+         # Check if there is data to plot
+         shiny::validate(
+           need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
+                'Geen sensordata beschikbaar.')
+           )
 
          # Get the colours for the stations
          data_stations <- data_stations$data %>%
            dplyr::select(c(station, col, linetype, size, station_type)) %>%
            dplyr::distinct(station, .keep_all = T) %>%
            dplyr::filter(!grepl("KNMI", station))
-
-         # Check if there is data to plot
-         shiny::validate(
-           need(!is_empty(data_plot),'Geen sensordata beschikbaar.'),
-           need(!dim(data_plot)[1] == 0,'Geen sensordata beschikbaar.')
-           )
 
          # Determine parameter for the label in the plot
          parameter <- data_other$parameter
