@@ -31,11 +31,10 @@ timeseries_server <- function(id,
   moduleServer(id, function(input, output, session) {
 
          ns <- session$ns
-         browser()
 
          # Create time plot with ggplot
          output$timeseries_plot <- renderPlot({
-           browser()
+           
            # Get the data to plot
            data_plot <- data_measurements$data_filtered
 
