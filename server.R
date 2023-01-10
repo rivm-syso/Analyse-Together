@@ -48,6 +48,7 @@ shinyServer(function(global, input, output, session) {
   # The Map
   map <- show_map_server("map",
                          data_stations,
+                         data_other,
                          # Options for the colors
                          col_cat,
                          col_default,
@@ -176,6 +177,11 @@ shinyServer(function(global, input, output, session) {
     log_trace("{lubridate::now()} Data available in tool. ")
 
   })
+
+   # Observe if you change tab and store the tabname ----
+    observeEvent(input$second_order_tabs,{
+      data_other$tab_choice <- input$second_order_tabs
+    })
 
     # Observe filtered data from stations ----
     observe({
