@@ -32,17 +32,6 @@ show_availability_server <- function(id,
 
     ns <- session$ns
 
-    # Show data availability in Calenderplot
-    # output$show_available_data <- renderPlot({
-    #   shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
-    #
-    #   data_to_plot <- data_to_show$data_all %>% dplyr::filter(parameter == "pm25_kal")
-    #
-    #   calendarPlot(data_to_show$data_all, pollutant = "value", breaks = c(0, 1000),
-    #                labels = c("Data available"), cols = "darkgreen", remove.empty = F)
-    #
-    # })
-
     output$show_available_data <- renderPlot({
       shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
 
@@ -62,9 +51,6 @@ show_availability_server <- function(id,
 
 
       calendarPlot(data_to_plot, pollutant = "number_a_day", limits = c(0, max_stations), main = "Aantal sensoren per dag")
-                   #
-                   # , breaks = c(0, 0.25*max_stations, 0.5*max_stations, 75*max_stations),
-                   # labels = c("geen sensoren", "25%", "50%","75%", "100%"), cols = c("grey","yellow","green","darkgreen","black"), remove.empty = F)
 
     })
 
