@@ -7,6 +7,7 @@
 ###################################################################
 ### Output Module ####
 #################################################################
+
 barplot_output <- function(id) {
 
   ns <- NS(id)
@@ -17,66 +18,63 @@ barplot_output <- function(id) {
 
 
 ######################################################################
-# Server Module
+# Server Module ####
 ######################################################################
-#
-#
 
 barplot_server <- function(id,
-                           com_module,
+                           data_measurements,
+                           data_stations,
+                           data_other,
                            overview_component,
                            theme_plots) {
 
   moduleServer(id, function(input, output, session) {
 
         ns <- session$ns
-    
-        # Determine parameter that needs to be plotted
-        # Get selected measurements from communication module
-        data_measurements <- reactive({
-          data_measurements <- com_module$selected_measurements() %>% dplyr::filter(!grepl("KNMI", station))
-          return(data_measurements)
-        })
-    
-        # Get selected stations from communication module
-        data_stations <- reactive({
-          data_stations <- com_module$station_locations() %>% 
-            dplyr::select(c(station, col, linetype, size)) %>% 
-            dplyr::distinct(station, .keep_all = T) %>% 
-            dplyr::filter(!grepl("KNMI", station))
-      
-          return(data_stations)
-        })
-    
+
         output$barplot_plot <- renderPlot({
-    
+
+          # Get the data to plot
+          data_plot <- data_measurements$data_filtered
+
           # Check if there is data to plot
           shiny::validate(
-            need(!is_empty(data_measurements()),'Geen sensordata beschikbaar.'),
-            need(!dim(data_measurements())[1] == 0,'Geen sensordata beschikbaar.')
+            need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
+                 'Geen sensordata beschikbaar.')
           )
-    
+
+          # Check if there is data to plot
+          shiny::validate(
+            need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
+                 'Geen sensordata beschikbaar.')
+          )
+
+          # Get the colours for the stations
+          data_stations <- data_stations$data %>%
+            dplyr::select(c(station, col, linetype, size)) %>%
+            dplyr::distinct(station, .keep_all = T) %>%
+            dplyr::filter(!grepl("KNMI", station))
+
           # Determine parameter for the label in the plot
-          parameter <- com_module$selected_parameter()$parameter
-    
+          parameter <- data_other$parameter
+
           # Find the corresponding label
           parameter_label <- overview_component %>%
             dplyr::filter(component == parameter) %>%
             dplyr::pull(label)
-    
-          # Get the stations measurements
-          data_barplot <- data_measurements()
-          data_barplot <- data_barplot %>% dplyr::group_by(parameter, station) %>%
+
+          # Calculate the mean and standard deviation
+          data_barplot <- data_plot %>%
+            dplyr::group_by(parameter, station) %>%
             dplyr::mutate(gemiddelde = round(mean(value, na.rm=TRUE), 2),
                           standaarddev = sd(value, na.rm = T),
-                          n_obs = n()) %>% distinct(station, .keep_all = TRUE)
+                          n_obs = n()) %>%
+            distinct(station, .keep_all = TRUE)
 
           data_barplot <- data_barplot %>%
-            dplyr::left_join(data_stations(), by = "station")
-          
-    
+            dplyr::left_join(data_stations, by = "station")
+
           # Make a plot
-    
           try(ggplot(data = data_barplot, aes(y=gemiddelde, x=station)) +
             geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black', size = data_barplot$size/2) +
             geom_errorbar(aes(ymin=gemiddelde-standaarddev, ymax=gemiddelde+standaarddev), size = data_barplot$size/2, width=.2,
