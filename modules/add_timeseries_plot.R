@@ -34,6 +34,7 @@ timeseries_server <- function(id,
 
          # Create time plot with ggplot
          output$timeseries_plot <- renderPlot({
+           
            # Get the data to plot
            data_plot <- data_measurements$data_filtered
 

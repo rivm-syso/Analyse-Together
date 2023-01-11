@@ -43,6 +43,12 @@ barplot_server <- function(id,
                  'Geen sensordata beschikbaar.')
           )
 
+          # Check if there is data to plot
+          shiny::validate(
+            need(!is_empty(data_barplot) | !dim(data_barplot)[1] == 0,
+                 'Geen sensordata beschikbaar.')
+          )
+
           # Get the colours for the stations
           data_stations <- data_stations$data %>%
             dplyr::select(c(station, col, linetype, size)) %>%
