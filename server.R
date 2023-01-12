@@ -104,11 +104,10 @@ shinyServer(function(global, input, output, session) {
 
   # Download data from external source to database
   download_api_button <- download_api_button_server("dl_btn_pushed",
-                                                    proj_or_mun_select ,
-                                                    choice_select,
-                                                    select_date_range,
-                                                    pool,
-                                                    que)
+                                                    proj_or_mun = proj_or_mun_select ,
+                                                    name_munproj = choice_select,
+                                                    daterange = select_date_range,
+                                                    que = que)
 
 
   # To give some indication of the data available in dbs
