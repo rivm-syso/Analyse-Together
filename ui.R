@@ -76,10 +76,8 @@ shinyUI(
                           wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
                                    choice_selection_output("choice_select"),
                                    date_range_output("select_date_range"),
-                                   column(6, actionButton("get_data_button", "Check data availability", style="background-color: #ffe9b7")
-                                          ),
-                                   column(6, download_api_button_output("dl_btn_pushed")
-                                          ),
+                                   column(6, get_data_button_output("get_btn_pushed")),
+                                   column(6, download_api_button_output("dl_btn_pushed")),
                                    single_text_output("text_data_available"),
                                    show_availability_output("show_availability"),
                                    download_api_button_output("dl_btn_pushed")

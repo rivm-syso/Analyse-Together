@@ -132,7 +132,6 @@ line_overload <- 'dotted'
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
-
 # Connections with the database tables
 measurements_con <- tbl(pool, "measurements")
 stations_con <- tbl(pool, "location")
@@ -168,7 +167,7 @@ source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
 source("modules/download_api_button.R")
-source("modules/update_data_button.R")
+source("modules/get_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_tables.R")

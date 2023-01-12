@@ -109,6 +109,27 @@ shinyServer(function(global, input, output, session) {
                                                     daterange = select_date_range,
                                                     que = que)
 
+  # get the data from the database
+  get_data_button <- get_data_button_server("get_btn_pushed",
+                                            data_measurements = data_measurements,
+                                            data_stations = data_stations,
+                                            message_data = message_data,
+                                            proj_or_mun = proj_or_mun_select ,
+                                            name_munproj = choice_select,
+                                            select_date_range = select_date_range,
+                                            pool = pool,
+                                            measurements_con = measurements_con,
+                                            stations_con = stations_con,
+                                            # Options for the colors
+                                            col_cat,
+                                            col_default,
+                                            col_overload,
+                                            # Options for the linetype
+                                            line_cat,
+                                            line_default,
+                                            line_overload
+                                            )
+
 
   # To give some indication of the data available in dbs
   show_availability_server("show_availability",
@@ -119,64 +140,27 @@ shinyServer(function(global, input, output, session) {
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
 
   ############ Observers ##############
-  # Observe if the get_data_button is clicked ----
-  observeEvent(input$get_data_button, {
-    # Get the selected choice
-    type_choice <- proj_or_mun_select()
-    # Name of municipality/project
-    name_choice <- choice_select()
 
-    # Check if there is selected project/municipality
-    shiny::validate(
-      need(!is_empty((type_choice)),"Please, select gemeente of project"),
-      need(!is_empty((name_choice)),"Please, select gemeente of project")
-    )
-
-    # Get the selected time period
-    start_time <- select_date_range$selected_start_date()
-    end_time <- select_date_range$selected_end_date()
-
-    # Load the data from the caching database
-    # Get the station names in the selected Municipality/project
-    stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
-
-    log_trace("{lubridate::now()} Get data from caching database ... ")
-
-    # Get the data measurements of the selected Municipality/project in the period
-    data_measurements$data_all <- get_measurements(measurements_con, stations_name, start_time, end_time)
-
-    # Check if there is data in de caching, otherwise stop and give message
-    if(nrow(data_measurements$data_all) == 0){
-      message_data$data_in_dbs <- c(paste0("No data in ", type_choice, " ", name_choice))
-      shiny::validate(need(F,message = paste0("No data in ", type_choice, " ", name_choice)))
-    }
-    message_data$data_in_dbs <- c(paste0("Data available in ", type_choice, " ", name_choice))
-
-    # Create a pm10_kal and pm25_kl for reference stations
-    data_measurements$data_all <- add_ref_kal(data_measurements$data_all)
-
-    # Add uncertainty to the measurements of the sensors
-    data_measurements$data_all <- add_uncertainty_sensor(data_measurements$data_all)
-
-    # Get the information from the stations
-    data_stations$data <- get_locations(stations_con, stations_name)
-
-    # Take for each sensor 1 location and add the plot-colours etc.
-    data_stations$data <- data_stations$data %>%
-      dplyr::distinct(station, .keep_all = T) %>%
-      # Add some specific info for the tool
-      dplyr::mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
-      dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "ref", station_type))) %>%
-      dplyr::mutate(linetype = ifelse(station_type == "ref", line_overload, linetype),
-                    size = ifelse(station_type == "ref", 2,1))
-
-    log_trace("{lubridate::now()} Data available in tool. ")
-
-  })
 
    # Observe if you change tab and store the tabname ----
     observeEvent(input$second_order_tabs,{
       data_other$tab_choice <- input$second_order_tabs
+    })
+
+    # Observe get data button is pushed ----
+    observe({
+      # Get the measurements and store them
+      data_measumerements_new <- get_data_button$data_measurements()
+      data_measurements$data_all <- data_measumerements_new
+
+      # Get the station info and store them
+      data_stations_new <- get_data_button$data_stations()
+      data_stations$data <- data_stations_new
+
+      # Get the message and store them
+      message_data_new <- get_data_button$message_data()
+      message_data$data_in_dbs <- message_data_new
+
     })
 
     # Observe filtered data from stations ----
