@@ -99,10 +99,7 @@ shinyServer(function(global, input, output, session) {
                                               data_stations = data_stations,
                                               meta, # TODO willen we hier wat mee?
                                               selected_parameter = select_component,
-                                              selected_time = select_date_range,
-                                              default_time = default_time,
-                                              select_mun_or_proj = proj_or_mun_select,
-                                              choose_mun_or_proj = choice_select
+                                              selected_time = select_date_range
                                               )
 
   # Download data from external source to database

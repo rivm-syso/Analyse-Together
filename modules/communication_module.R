@@ -36,10 +36,7 @@ communication_server <- function(id,
                                  data_stations,
                                  data_meta,
                                  selected_parameter,
-                                 selected_time,
-                                 default_time,
-                                 select_mun_or_proj,
-                                 choose_mun_or_proj
+                                 selected_time
 ) {
 
   moduleServer(id,
@@ -60,17 +57,6 @@ communication_server <- function(id,
                    return(selected_station)
                  })
 
-                 # Get time selection ----
-                 # Get the start and end time from the user.
-                 get_time_selection <- reactive({
-                   start_time <- selected_time$selected_start_date()
-                   end_time <- selected_time$selected_end_date()
-
-                   log_trace("mod com: selected time range {start_time} - {end_time}")
-
-                   return(list(start_time = start_time, end_time = end_time))
-                 })
-
                  # Get parameter selection ----
                  # Get the parameter from the user
                  get_parameter_selection <- reactive({
@@ -83,20 +69,6 @@ communication_server <- function(id,
                    log_trace("mod com: selected parameter {parameter}")
 
                    return(list(parameter = parameter))
-                 })
-
-                 # Get choice selection ----
-                 # Get the type mun/proj selection from the user
-                 choice_selection <- reactive({
-                   selected <- select_mun_or_proj()
-                   return(selected)
-                 })
-
-                 # Get name project/municipality ----
-                 # Get the name of the mun/proj selection from the user
-                 mun_proj_select <- reactive({
-                   selected <- choose_mun_or_proj()
-                   return(selected)
                  })
 
                  # Filter data measurements ----
@@ -173,11 +145,8 @@ communication_server <- function(id,
 
                  # Return ----
                  return(list(
-                   selected_time = reactive({get_time_selection()}),
-                   choice_select = reactive({choice_selection()}),
                    selected_measurements = reactive({filter_data_measurements()}),
-                   knmi_measurements = reactive({get_knmi_measurements()}),
-                   selected_parameter = reactive({get_parameter_selection()})
+                   knmi_measurements = reactive({get_knmi_measurements()})
                  ))
 
                })
