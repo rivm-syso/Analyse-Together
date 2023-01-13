@@ -18,6 +18,7 @@ library(shinycssloaders)
 library(shinyWidgets)
 # library(shinytest)
 library(shinyjs)
+library(shinyalert)
 
 # For the translation
 library(shiny.i18n)
@@ -44,6 +45,10 @@ library(sf)
 
 library(lubridate)
 
+library(future)
+library(promises)
+plan(multiprocess)
+
 # logger
 library(logger)
 log_threshold(TRACE)
@@ -58,6 +63,7 @@ source("funs/geoshaper_findlocations.R")
 source("funs/database_fun.R")
 source("funs/queue_fun.R")
 source("funs/download_fun.R")
+source("funs/data_to_tool_fun.R")
 
 
 # Set language and date options                                             ====
@@ -166,6 +172,8 @@ source("modules/update_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
+source("modules/add_show_availability.R")
+source("modules/add_single_text_message.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")
