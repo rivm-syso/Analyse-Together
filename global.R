@@ -57,6 +57,7 @@ library(samanapir)
 library(ATdatabase)
 
 # Source functions
+library(here)
 source("funs/assign_color_stations.R")
 source("funs/assign_linetype_stations.R")
 source("funs/geoshaper_findlocations.R")
@@ -64,6 +65,10 @@ source("funs/database_fun.R")
 source("funs/queue_fun.R")
 source("funs/download_fun.R")
 source("funs/data_to_tool_fun.R")
+
+# launch queue manager
+qm_script <- here("scripts","queue_manager.R")
+system2("Rscript", qm_script, wait = FALSE)
 
 
 # Set language and date options                                             ====
@@ -185,10 +190,10 @@ source("modules/add_timevariation_daily_plot.R")
 # Source layout
 source("modules/add_tabpanels.R")
 
-# Source que display
-source("modules/view_que.R")
-
-# Create the queue
-que <- task_q$new()
-
+# # Source que display
+# source("modules/view_que.R")
+# 
+# # Create the queue
+# que <- task_q$new()
+# 
 ### THE END                                                                 ====

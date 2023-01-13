@@ -45,18 +45,24 @@ download_api_button_server <- function(id,
                                          kits <- get_stations_from_selection(name, type = type)
                                          log_trace("mod download: Overview kits opgehaald")
                                          # Download the data from the sensors - > via the queue
+                                         dl_req <- data.frame()
+                                         job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
                                          for(i in seq(1, length(kits))){
-                                           qid <- que$push(dl_station, list(kits[i],
-                                                                            time_start,
-                                                                           time_end),
-                                                           id = kits[i])
+                                             dl_req <- bind_rows(dl_req, data.frame(station = kits[i],
+                                                                                    time_start = time_start,
+                                                                                    time_end = time_end, 
+                                                                                    row.names = NULL))
 
-
-                                           log_trace("pushed job {qid} to the queue")
                                          }
-
-                                         # start queue
-                                         que$poll()
+                                         if(!doc_exists(type = "data_req", ref = job_id, conn = pool)) {
+                                           log_trace("data request {job_id} stored")
+                                             # this observeEvent is
+                                             # called multiple times,
+                                             # and multiple writes to
+                                             # the db as result
+                                             add_doc(type = "data_req", ref = job_id, doc = dl_req, 
+                                                     conn = pool, overwrite = FALSE)
+                                         }
 
                                        }
                      })

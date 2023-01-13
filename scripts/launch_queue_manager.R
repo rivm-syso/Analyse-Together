@@ -33,7 +33,6 @@ source(here("funs","download_fun.R"))
 source(here("scripts","test_functions.R"))
 
 qm_script <- here("scripts","queue_manager.R")
-
 system2("Rscript", qm_script, wait = FALSE)
 
 for(i in 1:5) {
