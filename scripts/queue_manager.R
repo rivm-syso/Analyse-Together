@@ -77,8 +77,8 @@ list_doc <- function(type, conn) {
         for (i in 1:nrow(j)) {
 
             qid <- que$push(dl_station, list(j$station[i],
-                                             j$time_start[i],
-                                             j$time_end[i]), 
+                                             as_datetime(j$time_start[i]),
+                                             as_datetime(j$time_end[i])), 
                             id = j$station[i])
             log_trace("pushed job {qid} to the queue")
             que$poll()
@@ -87,8 +87,15 @@ list_doc <- function(type, conn) {
         time_spent <- system.time(
 
                                   while(nrow(que$list_tasks()) >4) {
-                                      while(!is.null(que$pop())) {
-                                          que$pop()
+                                      repeat{
+                                          res <- que$pop()
+                                          if(!is.null(res)) {
+                                              if(!is.null(res$error)) {
+                                                  log_warn("ERROR dl_station:\n {res$error}")
+                                              }
+                                          } else {
+                                              break
+                                          }
                                       }
                                       Sys.sleep(3)
                                   }

@@ -114,7 +114,7 @@ task_q <- R6::R6Class(
                                          duplicates <- which(private$tasks$state == "duplicate")
                                          if(length(duplicates) >=1) {
                                              log_trace("running duplicates {duplicates} tasks: {private$tasks$id[duplicates]}")
-                                             print(private$tasks$id[duplicates])
+#                                              print(private$tasks$id[duplicates])
                                              for(i in duplicates) {
                                                  log_trace("running {i}")
                                                  id <- gsub(".* ", "", private$tasks$id[i])
