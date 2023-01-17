@@ -212,4 +212,12 @@ shinyServer(function(global, input, output, session) {
   ################# overig ##################
   #view_que_server("view_que", que)
 
+  # keep queue running
+  a <- observe({
+      invalidateLater(3e3, NULL) # 10 seconds
+      log_trace("server: poll queue")
+      que$poll()
+      
+  }, suspended = TRUE)
+
 })
