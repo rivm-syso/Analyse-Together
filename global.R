@@ -70,7 +70,6 @@ source("funs/data_to_tool_fun.R")
 qm_script <- here("scripts","queue_manager.R")
 system2("Rscript", qm_script, wait = FALSE)
 
-
 # Set language and date options                                             ====
 
 options(encoding = "UTF-8")                  # Standard UTF-8 encoding
@@ -100,7 +99,6 @@ pool <- dbPool(
   dbname = db_path
 
 )
-
 
 ### Initiate some variables                                                 ====
 # Default start and end time for the date picker
@@ -137,7 +135,6 @@ line_overload <- 'dotted'
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
-
 # Connections with the database tables
 measurements_con <- tbl(pool, "measurements")
 stations_con <- tbl(pool, "location")
@@ -173,7 +170,7 @@ source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
 source("modules/download_api_button.R")
-source("modules/update_data_button.R")
+source("modules/get_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
@@ -192,8 +189,8 @@ source("modules/add_tabpanels.R")
 
 # # Source que display
 # source("modules/view_que.R")
-# 
+#
 # # Create the queue
 # que <- task_q$new()
-# 
+#
 ### THE END                                                                 ====

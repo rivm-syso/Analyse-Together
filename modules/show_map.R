@@ -12,9 +12,8 @@ show_map_output <- function(id) {
   ns <- NS(id)
 
   tagList(
-    leafletOutput(ns('map')),
-    uiOutput(ns('sensormap'))
-  )
+    leafletOutput(ns('map'))
+    )
 
 }
 
