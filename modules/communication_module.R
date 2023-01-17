@@ -55,6 +55,7 @@ communication_server <- function(id,
                    log_trace("mod com: selected stations {selected_station}")
 
                    return(selected_station)
+
                  })
 
                  # Get parameter selection ----
@@ -147,6 +148,7 @@ communication_server <- function(id,
                  return(list(
                    selected_measurements = reactive({filter_data_measurements()}),
                    knmi_measurements = reactive({get_knmi_measurements()})
+
                  ))
 
                })

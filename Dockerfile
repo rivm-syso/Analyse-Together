@@ -49,6 +49,8 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
      shiny.i18n \
      dbplyr \
      here \
+     shinyalert \
+     future \
      && rm -rf /tmp/downloaded_packages
 
 # Create folder 

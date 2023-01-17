@@ -107,7 +107,7 @@ shinyServer(function(global, input, output, session) {
                                                     proj_or_mun = proj_or_mun_select ,
                                                     name_munproj = choice_select,
                                                     daterange = select_date_range,
-                                                    que = que)
+                                                    pool = pool)
 
   # get the data from the database
   get_data_button <- get_data_button_server("get_btn_pushed",
@@ -130,7 +130,6 @@ shinyServer(function(global, input, output, session) {
                                             line_overload
                                             )
 
-
   # To give some indication of the data available in dbs
   show_availability_server("show_availability",
                            data_to_show = data_measurements,
@@ -140,8 +139,6 @@ shinyServer(function(global, input, output, session) {
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
 
   ############ Observers ##############
-
-
    # Observe if you change tab and store the tabname ----
     observeEvent(input$second_order_tabs,{
       data_other$tab_choice <- input$second_order_tabs
@@ -160,7 +157,6 @@ shinyServer(function(global, input, output, session) {
       # Get the message and store them
       message_data_new <- get_data_button$message_data()
       message_data$data_in_dbs <- message_data_new
-
     })
 
     # Observe filtered data from stations ----
@@ -191,5 +187,12 @@ shinyServer(function(global, input, output, session) {
 
   ################# overig ##################
   #view_que_server("view_que", que)
+  # keep queue running
+  a <- observe({
+      invalidateLater(3e3, NULL) # 10 seconds
+      log_trace("server: poll queue")
+      que$poll()
+
+  }, suspended = TRUE)
 
 })

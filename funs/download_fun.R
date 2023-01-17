@@ -62,8 +62,8 @@ dl_station <- function(id, time_start, time_end) {
     log_trace("Downloading measurements for AQ station. pm10 station: {lmlstation[1]}, pm25 station: {lmlstation[2]}")
     for(j in unique(lmlstation)) {
         log_trace("downloading for LML station  {j}")
-        print(lmlstation)
-        print(unique(lmlstation))
+#         print(lmlstation)
+#         print(unique(lmlstation))
         d <- download_data(j, Tstart = time_start, Tend = time_end,
                            fun = "download_data_lml",
                            conn = conn)
