@@ -18,6 +18,7 @@ library(shinycssloaders)
 library(shinyWidgets)
 # library(shinytest)
 library(shinyjs)
+library(shinyalert)
 
 # For the translation
 library(shiny.i18n)
@@ -44,6 +45,10 @@ library(sf)
 
 library(lubridate)
 
+library(future)
+library(promises)
+plan(multiprocess)
+
 # logger
 library(logger)
 log_threshold(TRACE)
@@ -52,13 +57,18 @@ library(samanapir)
 library(ATdatabase)
 
 # Source functions
+library(here)
 source("funs/assign_color_stations.R")
 source("funs/assign_linetype_stations.R")
 source("funs/geoshaper_findlocations.R")
 source("funs/database_fun.R")
 source("funs/queue_fun.R")
 source("funs/download_fun.R")
+source("funs/data_to_tool_fun.R")
 
+# launch queue manager
+qm_script <- here("scripts","queue_manager.R")
+system2("Rscript", qm_script, wait = FALSE)
 
 # Set language and date options                                             ====
 
@@ -89,7 +99,6 @@ pool <- dbPool(
   dbname = db_path
 
 )
-
 
 ### Initiate some variables                                                 ====
 # Default start and end time for the date picker
@@ -126,7 +135,6 @@ line_overload <- 'dotted'
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
-
 # Connections with the database tables
 measurements_con <- tbl(pool, "measurements")
 stations_con <- tbl(pool, "location")
@@ -162,10 +170,12 @@ source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
 source("modules/download_api_button.R")
-source("modules/update_data_button.R")
+source("modules/get_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
+source("modules/add_show_availability.R")
+source("modules/add_single_text_message.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")
@@ -177,10 +187,10 @@ source("modules/add_timevariation_daily_plot.R")
 # Source layout
 source("modules/add_tabpanels.R")
 
-# Source que display
-source("modules/view_que.R")
-
-# Create the queue
-que <- task_q$new()
-
+# # Source que display
+# source("modules/view_que.R")
+#
+# # Create the queue
+# que <- task_q$new()
+#
 ### THE END                                                                 ====

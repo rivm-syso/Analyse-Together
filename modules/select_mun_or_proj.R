@@ -1,8 +1,8 @@
 ###############################################
-### pickerInput - select component ###
+### pickerInput - to choose type either project or municipality ###
 ###############################################
 
-# This is a project selection module
+# This is a project selection module, to choose type either project or municipality
 ######################################################################
 # Output Module
 ######################################################################
@@ -10,7 +10,6 @@
 project_or_mun_selection_output <- function(id) {
 
   ns <- NS(id)
-
   uiOutput(ns("proj_or_mun_select"))
 
 }
@@ -20,7 +19,8 @@ project_or_mun_selection_output <- function(id) {
 # Server Module
 ######################################################################
 
-project_or_mun_selection_server <- function(id, select_choices) {
+project_or_mun_selection_server <- function(id,
+                                            select_choices) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -48,4 +48,3 @@ project_or_mun_selection_server <- function(id, select_choices) {
   })
 
 }
-

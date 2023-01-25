@@ -66,6 +66,7 @@ dl_station <- function(id, time_start, time_end) {
         
     for(j in unique(lmlstation)) {
         log_trace("downloading for LML station  {j}")
+
         d <- download_data(j, Tstart = time_start, Tend = time_end,
                            fun = "download_data_lml",
                            conn = conn)
