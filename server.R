@@ -14,7 +14,7 @@ shinyServer(function(global, input, output, session) {
   # Store the station locations and plotcolor etc
   data_stations <- reactiveValues()
   # Store other information
-  data_other <- reactiveValues()
+  data_other <- reactiveValues(group_name = group_name_default, group_number = 1)
   # Store messages to communicate with user
   message_data <- reactiveValues()
 
@@ -56,7 +56,9 @@ shinyServer(function(global, input, output, session) {
                          # Options for the linetype
                          line_cat,
                          line_default,
-                         line_overload
+                         line_overload,
+                         #Default group name
+                         group_name_none
                          )
 
   # The bar plot
@@ -127,7 +129,9 @@ shinyServer(function(global, input, output, session) {
                                             # Options for the linetype
                                             line_cat,
                                             line_default,
-                                            line_overload
+                                            line_overload,
+                                            # Default group name
+                                            group_name_none
                                             )
 
   # To give some indication of the data available in dbs
@@ -163,6 +167,9 @@ shinyServer(function(global, input, output, session) {
     observe({
       data_filtered <- communication_stuff$selected_measurements()
       data_measurements$data_filtered <- data_filtered
+
+      data_grouped <- communication_stuff$grouped_measurements()
+      data_measurements$data_grouped <- data_grouped
     })
 
     # Observe filtered data from knmi ----

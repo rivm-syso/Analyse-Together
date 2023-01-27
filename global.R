@@ -132,6 +132,11 @@ line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
 line_default <- 'solid'
 line_overload <- 'dotted'
 
+# First name of the group
+group_name_default <- "groep_1"
+# Default for no group
+group_name_none <- ""
+
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 

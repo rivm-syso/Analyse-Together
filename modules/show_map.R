@@ -24,7 +24,7 @@ show_map_output <- function(id) {
 
 show_map_server <- function(id,
                             data_stations,
-                            tabsetpanel_info,
+                            data_other,
                             # Options for the colors
                             col_cat,
                             col_default,
@@ -32,7 +32,9 @@ show_map_server <- function(id,
                             # Options for the linetype
                             line_cat,
                             line_default,
-                            line_overload
+                            line_overload,
+                            # default group name
+                            group_name_none
                             ) {
 
   moduleServer(id, function(input, output, session) {
@@ -114,6 +116,9 @@ show_map_server <- function(id,
       # Set the deselected station to select == F
       data_stns <- data_stns %>%
         dplyr::mutate(selected = ifelse(station == id_selected, F, selected),
+                      # Remove group name and label
+                      group_name = ifelse(station == id_selected, group_name_none, group_name),
+                      label = ifelse(station == id_selected, station, label),
                       # Change the color to the default
                       col = ifelse(station == id_selected, col_default, col),
                       # Change the linetype to the default
@@ -128,12 +133,17 @@ show_map_server <- function(id,
       # Get the data from the stations
       data_stns <- data_stations$data
 
+      # Get the group name
+      get_group_name <- data_other$group_name
+
       # Set the selected station to select == T
       data_stns <- data_stns %>%
-        dplyr::mutate(selected = ifelse(station == id_selected, T, selected))
+        dplyr::mutate(selected = ifelse(station == id_selected, T, selected),
+                      group_name = ifelse(station == id_selected, get_group_name, group_name),
+                      label = ifelse(station == id_selected, get_group_name, label))
 
       # Assign colors -> sensor
-      data_stns <- assign_color_stations(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
+      data_stns <- assign_color_stations_group(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
 
       # Assign linetype -> reference station
       data_stns <- assign_linetype_stations(data_stns, line_cat, line_default, line_overload, line_station_type = "ref")
@@ -252,7 +262,7 @@ show_map_server <- function(id,
 
     # Observe if tabsetpanel is changed to the visualisation tab -> redraw map
     observe({
-      tab_info <- tabsetpanel_info$tab_choice
+      tab_info <- data_other$tab_choice
       if(!purrr::is_null(tab_info)){
         # If you arrive on this tabpanel then redraw the map.
         if(tab_info == "Visualise data"){

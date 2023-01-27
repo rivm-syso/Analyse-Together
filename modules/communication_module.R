@@ -108,6 +108,33 @@ communication_server <- function(id,
                    return(measurements_filt_stns)
                  })
 
+                 # Calculate group mean ----
+                 # Reactive to colculate the mean for each group
+                 calc_group_mean <- reactive({
+                   # check if stations are selected
+                   shiny::validate(need(!is.null(data_stations$data), "No data_stations"))
+                   station_info <- data_stations$data %>%
+                     dplyr::filter(selected == T)
+
+                   # Get the measurements of those stations
+                   measurements <- filter_data_measurements()
+
+                   # Combine station_info with the measurements
+                   data_combi <- dplyr::left_join(measurements, station_info, by = "station")
+
+                   # Calculate group mean and sd
+                   data_mean <- data_combi %>%
+                     group_by(group_name, date, parameter) %>%
+                     dplyr::summarise(value = mean(value, na.rm = T),
+                                      number = n(),
+                                      sd = mean(sd, na.rm = T)/sqrt(n())
+                                     ) %>%
+                     ungroup()
+
+                   return(data_mean)
+
+                 })
+
                  # Get knmi measurements ----
                  # the knmi measurements are excluded
                  # by the selected parameter in the measurements_filt_stns
@@ -147,7 +174,8 @@ communication_server <- function(id,
                  # Return ----
                  return(list(
                    selected_measurements = reactive({filter_data_measurements()}),
-                   knmi_measurements = reactive({get_knmi_measurements()})
+                   knmi_measurements = reactive({get_knmi_measurements()}),
+                   grouped_measurements = reactive({calc_group_mean()})
 
                  ))
 
