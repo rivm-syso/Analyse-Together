@@ -131,6 +131,10 @@ shinyServer(function(global, input, output, session) {
                                             group_name_none
                                             )
 
+  # Create a new group
+  set_new_group_button <- set_group_button_server("set_group_pushed",
+                                                  data_other = data_other)
+
   # To give some indication of the data available in dbs
   show_availability_server("show_availability",
                            data_to_show = data_measurements,
@@ -187,6 +191,15 @@ shinyServer(function(global, input, output, session) {
       data_stations_adjust <- map$data_stations()
       data_stations$data <- data_stations_adjust
     })
+
+  # Observe if new group is created ----
+  observe({
+    new_group_name <- set_new_group_button$group_name()
+    new_group_number <- set_new_group_button$group_number()
+
+    data_other$group_name <- new_group_name
+    data_other$group_number <- new_group_number
+  })
 
 
   ################# overig ##################

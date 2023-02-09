@@ -192,6 +192,10 @@ source("modules/add_timevariation_daily_plot.R")
 # Source layout
 source("modules/add_tabpanels.R")
 
+
+# Source new group button
+source("modules/set_groupname_button.R")
+
 # # Source que display
 # source("modules/view_que.R")
 #
