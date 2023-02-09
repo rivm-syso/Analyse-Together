@@ -84,14 +84,12 @@ shinyServer(function(global, input, output, session) {
 
   # The timevariation plot
   timevar_plot_weekly <- timevar_weekly_server("timevar_plot_weekly",
-                                               data_measurements = data_measurements,
-                                               data_stations = data_stations,
-                                               data_other = data_other,
+                                               data_measurements = reactive(data_measurements$data_grouped),
+                                               parameter = reactive(data_other$parameter),
                                                overview_component)
   timevar_plot_daily <- timevar_daily_server("timevar_plot_daily",
-                                             data_measurements = data_measurements,
-                                             data_stations = data_stations,
-                                             data_other = data_other,
+                                             data_measurements = reactive(data_measurements$data_grouped),
+                                             parameter = reactive(data_other$parameter),
                                              overview_component)
 
   # The communication module

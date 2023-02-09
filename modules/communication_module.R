@@ -97,11 +97,22 @@ communication_server <- function(id,
                                           !purrr::is_empty(selected_stations),
                                         "Not yet data selected" ) )
 
+                   # Get the info for each selected station
+                   station_info <- data_stations() %>%
+                     dplyr::filter(selected == T)
+
                    # Filter the measurements
                    measurements_filt_stns <- data_all %>%
                      dplyr::filter(date > start_time & date < end_time &
                                      station %in% selected_stations &
                                      parameter == selected_parameter)
+
+                   # Combine station_info with the measurements and keep relevant columns
+                   measurements_filt_stns <-
+                     dplyr::left_join(measurements_filt_stns,
+                                      station_info, by = "station") %>%
+                     dplyr::select(station, date, parameter, value, sd, label,
+                                   group_name, col, size, station_type, linetype)
 
                    # log_trace("mod com: number of selected stations {length(selected_stations)}")
                    # log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
@@ -114,24 +125,23 @@ communication_server <- function(id,
                  calc_group_mean <- reactive({
                    # check if stations are selected
                    shiny::validate(need(!is.null(data_stations()), "No data_stations"))
-                   station_info <- data_stations() %>%
-                     dplyr::filter(selected == T)
 
                    # Get the measurements of those stations
                    measurements <- filter_data_measurements()
 
-                   # Combine station_info with the measurements
-                   data_combi <- dplyr::left_join(measurements, station_info, by = "station")
+                   # # Combine station_info with the measurements
+                   # data_combi <- dplyr::left_join(measurements, station_info, by = "station")
 
                    # Calculate group mean and sd
-                   data_mean <- data_combi %>%
+                   data_mean <- measurements %>%
                      # Keep also the parameters for the plotting
-                     group_by(group_name, date, parameter, label, col, size, station_type, linetype) %>%
+                     dplyr::group_by(group_name, date, parameter, label, col,
+                                     size, station_type, linetype) %>%
                      dplyr::summarise(value = mean(value, na.rm = T),
                                       number = n(),
                                       sd = mean(sd, na.rm = T)/sqrt(n())
                                      ) %>%
-                     ungroup()
+                     dplyr::ungroup()
 
                    return(data_mean)
 
