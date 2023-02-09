@@ -24,7 +24,8 @@ show_map_output <- function(id) {
 
 show_map_server <- function(id,
                             data_stations,
-                            data_other,
+                            group_name,# class: "reactiveExpr" "reactive" "function"
+                            tab_choice,# class: "reactiveExpr" "reactive" "function"
                             # Options for the colors
                             col_cat,
                             col_default,
@@ -134,7 +135,7 @@ show_map_server <- function(id,
       data_stns <- data_stations$data
 
       # Get the group name
-      get_group_name <- data_other$group_name
+      get_group_name <- group_name()
 
       # Set the selected station to select == T
       data_stns <- data_stns %>%
@@ -262,7 +263,7 @@ show_map_server <- function(id,
 
     # Observe if tabsetpanel is changed to the visualisation tab -> redraw map
     observe({
-      tab_info <- data_other$tab_choice
+      tab_info <- tab_choice()
       if(!purrr::is_null(tab_info)){
         # If you arrive on this tabpanel then redraw the map.
         if(tab_info == "Visualise data"){

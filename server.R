@@ -40,15 +40,16 @@ shinyServer(function(global, input, output, session) {
 
   # Get metadata
   meta_table <- metadata_server("meta_table",
-                                data_measurements = data_measurements,
-                                data_stations = data_stations,
+                                data_measurements = reactive(data_measurements$data_all),
+                                data_stations = reactive(data_stations$data),
                                 time_period = select_date_range,
                                 name_munproj = choice_select)
 
   # The Map
   map <- show_map_server("map",
                          data_stations,
-                         data_other,
+                         reactive(data_other$group_name),
+                         reactive(data_other$tab_choice),
                          # Options for the colors
                          col_cat,
                          col_default,
@@ -97,8 +98,8 @@ shinyServer(function(global, input, output, session) {
 
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
-                                              data_measurements = data_measurements,
-                                              data_stations = data_stations,
+                                              data_measurements = reactive(data_measurements$data_all),
+                                              data_stations = reactive(data_stations$data),
                                               meta, # TODO willen we hier wat mee?
                                               selected_parameter = select_component,
                                               selected_time = select_date_range
@@ -163,7 +164,7 @@ shinyServer(function(global, input, output, session) {
       message_data$data_in_dbs <- message_data_new
     })
 
-    # Observe filtered data from stations ----
+    # Observe filtered data from stations and groups ----
     observe({
       data_filtered <- communication_stuff$selected_measurements()
       data_measurements$data_filtered <- data_filtered

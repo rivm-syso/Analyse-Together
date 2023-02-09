@@ -32,12 +32,13 @@ communication_output <- function(id) {
 #
 
 communication_server <- function(id,
-                                 data_measurements,
-                                 data_stations,
+                                 data_measurements, # class: "reactiveExpr" "reactive" "function"
+                                 data_stations, # class: "reactiveExpr" "reactive" "function"
                                  data_meta,
                                  selected_parameter,
                                  selected_time
-) {
+                                 )
+  {
 
   moduleServer(id,
                function(input, output, session) {
@@ -46,8 +47,8 @@ communication_server <- function(id,
 
                  # Get selected stations ----
                  get_selected_station <- reactive({
-                   shiny::validate(need(!is.null(data_stations$data), "No data_stations"))
-                   selected_station <- data_stations$data %>%
+                   shiny::validate(need(!is.null(data_stations()), "No data_stations"))
+                   selected_station <- data_stations() %>%
                      dplyr::filter(selected == T) %>%
                      dplyr::select(station) %>%
                      pull()
@@ -86,7 +87,7 @@ communication_server <- function(id,
                    selected_stations <- get_selected_station()
 
                    # Get the data
-                   data_all <- data_measurements$data_all
+                   data_all <- data_measurements()
 
                    # Check if everything is available for the selection
                    shiny::validate(need(!is.null(start_time) &
@@ -112,8 +113,8 @@ communication_server <- function(id,
                  # Reactive to colculate the mean for each group
                  calc_group_mean <- reactive({
                    # check if stations are selected
-                   shiny::validate(need(!is.null(data_stations$data), "No data_stations"))
-                   station_info <- data_stations$data %>%
+                   shiny::validate(need(!is.null(data_stations()), "No data_stations"))
+                   station_info <- data_stations() %>%
                      dplyr::filter(selected == T)
 
                    # Get the measurements of those stations
@@ -124,7 +125,8 @@ communication_server <- function(id,
 
                    # Calculate group mean and sd
                    data_mean <- data_combi %>%
-                     group_by(group_name, date, parameter) %>%
+                     # Keep also the parameters for the plotting
+                     group_by(group_name, date, parameter, label, col, size, station_type, linetype) %>%
                      dplyr::summarise(value = mean(value, na.rm = T),
                                       number = n(),
                                       sd = mean(sd, na.rm = T)/sqrt(n())
@@ -148,7 +150,7 @@ communication_server <- function(id,
                    selected_stations <- all_selected_stations[grep("KNMI", all_selected_stations)]
 
                    # Get the data
-                   data_all <- data_measurements$data_all
+                   data_all <- data_measurements()
 
                    # Check if everything is available for the selection
                    shiny::validate(need(!is.null(start_time) &
