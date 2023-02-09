@@ -64,17 +64,15 @@ shinyServer(function(global, input, output, session) {
 
   # The bar plot
   barplot <- barplot_server("barplot_plot",
-                            data_measurements = data_measurements,
-                            data_stations = data_stations,
-                            data_other = data_other,
+                            data_measurements = reactive(data_measurements$data_grouped),
+                            parameter = reactive(data_other$parameter),
                             overview_component,
                             theme_plots)
 
   # The timeseries plot
   timeseries_plot <- timeseries_server(id = "timeseries_plot",
-                                       data_measurements = data_measurements,
-                                       data_stations = data_stations,
-                                       data_other = data_other,
+                                       data_measurements = reactive(data_measurements$data_grouped),
+                                       parameter = reactive(data_other$parameter),
                                        overview_component,
                                        theme_plots)
   # The pollutionrose plot

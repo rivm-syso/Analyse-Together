@@ -23,8 +23,7 @@ timeseries_output <- function(id) {
 
 timeseries_server <- function(id,
                               data_measurements,
-                              data_stations,
-                              data_other,
+                              parameter,
                               overview_component,
                               theme_plots){
 
@@ -35,8 +34,9 @@ timeseries_server <- function(id,
          # Create time plot with ggplot
          output$timeseries_plot <- renderPlot({
 
-           # Get the data to plot
-           data_plot <- data_measurements$data_filtered
+         browser()
+         # Get the data to plot
+         data_plot <- data_measurements()
 
          # Check if there is data to plot
          shiny::validate(
@@ -44,23 +44,16 @@ timeseries_server <- function(id,
                 'Geen sensordata beschikbaar.')
            )
 
-         # Get the colours for the stations
-         data_stations <- data_stations$data %>%
-           dplyr::select(c(station, col, linetype, size, station_type, label)) %>%
-           dplyr::distinct(station, .keep_all = T) %>%
-           dplyr::filter(!grepl("KNMI", station))
-
-         # Determine parameter for the label in the plot
-         parameter <- data_other$parameter
+          # Determine parameter for the label in the plot
+         parameter <- parameter()
 
          # Find the corresponding label
          parameter_label <- overview_component %>%
            dplyr::filter(component == parameter) %>%
            dplyr::pull(label)
 
-         # Add colour and linetype to the data_measurements
+         # Add max min values for the ribbon
          data_timeseries <- data_plot %>%
-           dplyr::left_join(data_stations, by = "station") %>%
            dplyr::mutate(ribbon_min = value - sd,
                          ribbon_max = value + sd) %>%
            dplyr::mutate(ribbon_min = ifelse(ribbon_min < 0, 0, ribbon_min),
@@ -68,14 +61,14 @@ timeseries_server <- function(id,
 
          # Calculate stats for the axis
          n_days_in_plot <- round(as.numeric(max(data_timeseries$date) - min(data_timeseries$date)))
-         n_stat_in_plot <- length(unique(data_timeseries$station))
+         n_stat_in_plot <- length(unique(data_timeseries$label))
 
          min_meas <- plyr::round_any(min(data_timeseries$value-data_timeseries$sd, na.rm = T), 5, f = floor)
          max_meas <- plyr::round_any(max(data_timeseries$value+data_timeseries$sd, na.rm = T), 5, f = ceiling)
          steps <- plyr::round_any(max_meas / 15, 10, f = ceiling) # to create interactive y-breaks
 
          # Make a plot ====
-         try(ggplot(data = data_timeseries, aes(x = date, y = value, group = label)) +
+         try(ggplot(data = data_timeseries, aes(x = date, y = value)) +
                geom_line(aes(color = label, linetype = station_type)) +
                geom_ribbon(aes(y = value, ymin = ribbon_min, ymax = ribbon_max, fill = label), alpha = .2) +
                scale_color_manual(values = c(paste0(data_timeseries$col)),
