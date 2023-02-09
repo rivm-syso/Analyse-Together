@@ -112,7 +112,9 @@ communication_server <- function(id,
                      dplyr::left_join(measurements_filt_stns,
                                       station_info, by = "station") %>%
                      dplyr::select(station, date, parameter, value, sd, label,
-                                   group_name, col, size, station_type, linetype)
+                                   group_name, col, size, station_type, linetype) %>%
+                     # Keep for this dataset the label the same as the station. No changes for grouping yet.
+                     dplyr::mutate(label = station)
 
                    # log_trace("mod com: number of selected stations {length(selected_stations)}")
                    # log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
@@ -129,11 +131,11 @@ communication_server <- function(id,
                    # Get the measurements of those stations
                    measurements <- filter_data_measurements()
 
-                   # # Combine station_info with the measurements
-                   # data_combi <- dplyr::left_join(measurements, station_info, by = "station")
-
                    # Calculate group mean and sd
                    data_mean <- measurements %>%
+                     # Set label to groupname
+                     dplyr::mutate(label = dplyr::case_when(station_type == "sensor" ~ group_name,
+                                                   T ~ station)) %>%
                      # Keep also the parameters for the plotting
                      dplyr::group_by(group_name, date, parameter, label, col,
                                      size, station_type, linetype) %>%

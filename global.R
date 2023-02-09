@@ -188,6 +188,7 @@ source("modules/add_timeseries_plot.R")
 source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_weekly_plot.R")
 source("modules/add_timevariation_daily_plot.R")
+source("modules/add_individual_timeseries_plot.R")
 
 # Source layout
 source("modules/add_tabpanels.R")

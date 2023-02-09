@@ -92,6 +92,13 @@ shinyServer(function(global, input, output, session) {
                                              parameter = reactive(data_other$parameter),
                                              overview_component)
 
+  # Individual timeseries plot
+  indu_timeseries <- individual_timeseries_server("indu_timeseries",
+                                                  data_measurements = reactive(data_measurements$data_filtered),
+                                                  parameter = reactive(data_other$parameter),
+                                                  overview_component = overview_component,
+                                                  theme_plots)
+
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
                                               data_measurements = reactive(data_measurements$data_all),
