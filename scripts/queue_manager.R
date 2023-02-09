@@ -32,10 +32,10 @@ setwd(here::here())
 
 # source scripts
 
-source(here("funs","database_fun.R"))
-source(here("funs","queue_fun.R"))
-source(here("funs","download_fun.R"))
-source(here("scripts","test_functions.R"))
+source(here::here("funs","database_fun.R"))
+source(here::here("funs","queue_fun.R"))
+source(here::here("funs","download_fun.R"))
+source(here::here("scripts","test_functions.R"))
 
 # Connect with the database using pool, store data, read table              ====
     
@@ -51,7 +51,7 @@ list_doc <- function(type, conn) {
 
     qry <- glue::glue_sql("SELECT ref FROM meta WHERE type={type};", 
                           .con = conn)
-    res <- dbGetQuery(conn, qry)
+    res <- DBI::dbGetQuery(conn, qry)
     return(res$ref)
 
 }
@@ -69,7 +69,7 @@ list_doc <- function(type, conn) {
             next
         }
         job_id <- joblist[1]
-        j <- get_doc(type = "data_req", ref = job_id, conn = pool)
+        j <- ATdatabase::get_doc(type = "data_req", ref = job_id, conn = pool)
 
         # create queue, run jobs, wait until finished, collect stats
 
@@ -103,7 +103,7 @@ list_doc <- function(type, conn) {
 
         j_done <- list(j, data.frame(sec = c(time_spent)))
         remove_doc(type = "data_req", ref = job_id, conn = pool)
-        add_doc(type = "data_req_done", ref = job_id, doc = j_done, conn = pool)
+        ATdatabase::add_doc(type = "data_req_done", ref = job_id, doc = j_done, conn = pool)
     }
 
 
