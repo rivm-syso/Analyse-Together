@@ -179,6 +179,7 @@ source("modules/get_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
+source("modules/add_metadata_param_tables.R")
 source("modules/add_show_availability.R")
 source("modules/add_single_text_message.R")
 

@@ -6,6 +6,7 @@ tpAnalyse <- function(){
   tp <-  shiny::tabsetPanel(
                            tpTimeplot(),
                            tpInduTimeplot(),
+                           tpMetadata(),
                            tpBarplot(),
                            # tpKalender(),
                            tpTimevariationWeekly(),
@@ -183,3 +184,22 @@ tpInduTimeplot <- function(){
 
   return(tp)
 }
+
+
+tpMetadata <- function(){
+  tp <-  shiny::tabPanel("Table",
+                         helpText(i18n$t("expl_timeplot"), style = "margin-left: 20px; "),
+                         fluidRow(
+
+                           # Render individual timeseries plot.
+                           column(12,class = "col-lg-12",wellPanel(metadata_param_output("meta_param_table"))),
+
+                         ),
+                         h4(i18n$t("title_expl"), style = "margin-left: 20px"),
+                         p(i18n$t("expl_timeplot_expl"),
+                           style = "font-size:12px; margin-left: 20px")
+  )
+
+  return(tp)
+}
+

@@ -44,6 +44,12 @@ shinyServer(function(global, input, output, session) {
                                 data_stations = reactive(data_stations$data),
                                 time_period = select_date_range,
                                 name_munproj = choice_select)
+  meta_param_table <- metadata_param_server("meta_param_table",
+                                data_measurements = reactive(data_measurements$data_all),
+                                data_stations = reactive(data_stations$data),
+                                parameter = reactive(data_other$parameter),
+                                time_period = select_date_range,
+                                name_munproj = choice_select)
 
   # The Map
   map <- show_map_server("map",
