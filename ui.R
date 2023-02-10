@@ -110,7 +110,6 @@ shinyUI(
 
                           # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
                           tabsetPanel(tpAnalyse(), id = "tabsanalyse")
-
                  )
                )
            )

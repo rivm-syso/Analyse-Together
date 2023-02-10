@@ -45,7 +45,8 @@ individual_timeseries_server <- function(id,
       )
 
       # Get the unique station names
-      station_select <- data_measurements() %>%  dplyr:: select(station) %>%  unique() %>% pull()
+      station_select <- data_measurements() %>%  dplyr:: select(station) %>%
+        unique() %>% pull()
       return(station_select)
       })
 
@@ -71,10 +72,14 @@ individual_timeseries_server <- function(id,
 
     })
 
-    # Observe if the pickerinput has changed
-    observeEvent(input$sensor_indu, {
+    # Reactive to draw the plot
+    draw_plot <- reactive({
       # Get the name of the station
       indu_station_name <- input$sensor_indu
+
+      # Check if there is any station selected
+      shiny::validate(need(!is.null(indu_station_name), "Please select station."))
+
       # Get the measurements of the station
       measurements <- data_measurements() %>% dplyr::filter(station == indu_station_name)
       # Create timeseries plot
@@ -83,6 +88,17 @@ individual_timeseries_server <- function(id,
                         parameter = parameter,
                         overview_component = overview_component,
                         theme_plots = theme_plots)
+    })
+
+    # Observe if the pickerinput has changed
+    observeEvent(input$sensor_indu, {
+      draw_plot()
+    })
+
+    # Observe if the parameter has changed
+    observe( {
+      new_parameter <- parameter()
+      draw_plot()
     })
 
   })
