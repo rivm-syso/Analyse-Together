@@ -35,7 +35,7 @@ metadata_server <- function(id,
     # Get selected measurements from communication module
     metadata_table <- reactive({
       # Get the data measurements
-      data_all <- data_measurements$data_all
+      data_all <- data_measurements()
 
       # Check if there is data
       shiny::validate(
@@ -44,7 +44,7 @@ metadata_server <- function(id,
       )
 
       # Get the info of the stations
-      data_stations_part <- data_stations$data %>%
+      data_stations_part <- data_stations() %>%
         dplyr::select(c(station, lat, lon, station_type)) %>%
         dplyr::distinct(station, .keep_all = T)
 

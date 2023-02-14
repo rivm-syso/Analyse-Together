@@ -36,7 +36,9 @@ get_data_button_server <- function(id,
                                    # Options for the linetype
                                    line_cat,
                                    line_default,
-                                   line_overload
+                                   line_overload,
+                                   # DEfault group name
+                                   group_name_none
                                   ) {
 
   moduleServer(id, function(input, output, session) {
@@ -89,8 +91,12 @@ get_data_button_server <- function(id,
       data_stations$data <- data_stations$data %>%
         dplyr::distinct(station, .keep_all = T) %>%
         # Add some specific info for the tool
-        dplyr::mutate(selected = F, col = col_default, linetype = line_default, station_type = "sensor") %>%
-        dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI", ifelse(grepl("NL", station) == T, "ref", station_type))) %>%
+        dplyr::mutate(selected = F, col = col_default, linetype = line_default,
+                      station_type = "sensor", group_name = group_name_none,
+                      label = station) %>%
+        dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI",
+                                            ifelse(grepl("NL", station) == T, "ref",
+                                                   station_type))) %>%
         dplyr::mutate(linetype = ifelse(station_type == "ref", line_overload, linetype),
                       size = ifelse(station_type == "ref", 2,1))
 

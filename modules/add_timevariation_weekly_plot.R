@@ -22,8 +22,7 @@ timevar_weekly_output <- function(id) {
 
 timevar_weekly_server <- function(id,
                                   data_measurements,
-                                  data_stations,
-                                  data_other,
+                                  parameter,
                                   overview_component) {
 
   moduleServer(id, function(input, output, session) {
@@ -32,7 +31,7 @@ timevar_weekly_server <- function(id,
 
     output$timevar_plot_weekly <- renderPlot({
       # Get the data to plot
-      data_plot <- data_measurements$data_filtered
+      data_plot <- data_measurements()
 
       # Check if there is data to plot
       shiny::validate(
@@ -40,34 +39,22 @@ timevar_weekly_server <- function(id,
              'Geen sensordata beschikbaar.')
       )
 
-      # Get the colours for the stations
-      data_stations <- data_stations$data %>%
-        dplyr::select(c(station, col, linetype, size)) %>%
-        dplyr::distinct(station, .keep_all = T) %>%
-        dplyr::filter(!grepl("KNMI", station))
-
       # Determine parameter for the label in the plot
-      parameter <- data_other$parameter
+      parameter <- parameter()
 
       # Find the corresponding label
       parameter_label <- overview_component %>%
         dplyr::filter(component == parameter) %>%
         dplyr::pull(label)
 
-      # Get measurements stations
-      data_timevar <- data_plot
-      data_timevar <- data_plot %>%
-        dplyr::left_join(data_stations, by = "station")
 
       # Make a plot
-      data_timevar$value <- as.numeric(data_timevar$value)
-
-      plot_all <- timeVariation(data_timevar,
+      plot_all <- timeVariation(data_plot,
                     pollutant = "value",
                     normalise = FALSE,
-                    group = "station",
+                    group = "label",
                     alpha = 0.1,
-                    cols = data_timevar$col,
+                    cols = data_plot$col,
                     local.tz = "Europe/Amsterdam",
                     ylim = c(0,NA),
                     ylab = parameter_label,

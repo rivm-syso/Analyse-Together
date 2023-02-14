@@ -110,7 +110,6 @@ shinyUI(
 
                           # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
                           tabsetPanel(tpAnalyse(), id = "tabsanalyse")
-
                  )
                )
            )
@@ -126,7 +125,10 @@ shinyUI(
         conditionalPanel(condition="input.second_order_tabs=='Informatie over data'",
                          column(width = 6,div(br(),i18n$t("expl_metadata")))),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
-                         column(width = 6, show_map_output("map"), style = "margin-top: 30px;")),
+                         fluidRow(column(width = 6, show_map_output("map"),
+                                         style = "margin-top: 30px;",
+                                         style = "margin-bottom: 30px;"),
+                                  column(width = 6, set_group_button_output("set_group_pushed")))),
 
       )
     ),

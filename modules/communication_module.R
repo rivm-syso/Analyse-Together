@@ -32,12 +32,13 @@ communication_output <- function(id) {
 #
 
 communication_server <- function(id,
-                                 data_measurements,
-                                 data_stations,
+                                 data_measurements, # class: "reactiveExpr" "reactive" "function"
+                                 data_stations, # class: "reactiveExpr" "reactive" "function"
                                  data_meta,
                                  selected_parameter,
                                  selected_time
-) {
+                                 )
+  {
 
   moduleServer(id,
                function(input, output, session) {
@@ -46,8 +47,8 @@ communication_server <- function(id,
 
                  # Get selected stations ----
                  get_selected_station <- reactive({
-                   shiny::validate(need(!is.null(data_stations$data), "No data_stations"))
-                   selected_station <- data_stations$data %>%
+                   shiny::validate(need(!is.null(data_stations()), "No data_stations"))
+                   selected_station <- data_stations() %>%
                      dplyr::filter(selected == T) %>%
                      dplyr::select(station) %>%
                      pull()
@@ -86,7 +87,7 @@ communication_server <- function(id,
                    selected_stations <- get_selected_station()
 
                    # Get the data
-                   data_all <- data_measurements$data_all
+                   data_all <- data_measurements()
 
                    # Check if everything is available for the selection
                    shiny::validate(need(!is.null(start_time) &
@@ -96,16 +97,56 @@ communication_server <- function(id,
                                           !purrr::is_empty(selected_stations),
                                         "Not yet data selected" ) )
 
+                   # Get the info for each selected station
+                   station_info <- data_stations() %>%
+                     dplyr::filter(selected == T)
+
                    # Filter the measurements
                    measurements_filt_stns <- data_all %>%
                      dplyr::filter(date > start_time & date < end_time &
                                      station %in% selected_stations &
                                      parameter == selected_parameter)
 
+                   # Combine station_info with the measurements and keep relevant columns
+                   measurements_filt_stns <-
+                     dplyr::left_join(measurements_filt_stns,
+                                      station_info, by = "station") %>%
+                     dplyr::select(station, date, parameter, value, sd, label,
+                                   group_name, col, size, station_type, linetype) %>%
+                     # Keep for this dataset the label the same as the station. No changes for grouping yet.
+                     dplyr::mutate(label = station)
+
                    # log_trace("mod com: number of selected stations {length(selected_stations)}")
                    # log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
                    log_trace("mod com: filtered measurements {nrow(measurements_filt_stns)}")
                    return(measurements_filt_stns)
+                 })
+
+                 # Calculate group mean ----
+                 # Reactive to colculate the mean for each group
+                 calc_group_mean <- reactive({
+                   # check if stations are selected
+                   shiny::validate(need(!is.null(data_stations()), "No data_stations"))
+
+                   # Get the measurements of those stations
+                   measurements <- filter_data_measurements()
+
+                   # Calculate group mean and sd
+                   data_mean <- measurements %>%
+                     # Set label to groupname
+                     dplyr::mutate(label = dplyr::case_when(station_type == "sensor" ~ group_name,
+                                                   T ~ station)) %>%
+                     # Keep also the parameters for the plotting
+                     dplyr::group_by(group_name, date, parameter, label, col,
+                                     size, station_type, linetype) %>%
+                     dplyr::summarise(value = mean(value, na.rm = T),
+                                      number = n(),
+                                      sd = mean(sd, na.rm = T)/sqrt(n())
+                                     ) %>%
+                     dplyr::ungroup()
+
+                   return(data_mean)
+
                  })
 
                  # Get knmi measurements ----
@@ -121,7 +162,7 @@ communication_server <- function(id,
                    selected_stations <- all_selected_stations[grep("KNMI", all_selected_stations)]
 
                    # Get the data
-                   data_all <- data_measurements$data_all
+                   data_all <- data_measurements()
 
                    # Check if everything is available for the selection
                    shiny::validate(need(!is.null(start_time) &
@@ -147,7 +188,8 @@ communication_server <- function(id,
                  # Return ----
                  return(list(
                    selected_measurements = reactive({filter_data_measurements()}),
-                   knmi_measurements = reactive({get_knmi_measurements()})
+                   knmi_measurements = reactive({get_knmi_measurements()}),
+                   grouped_measurements = reactive({calc_group_mean()})
 
                  ))
 

@@ -14,7 +14,7 @@ shinyServer(function(global, input, output, session) {
   # Store the station locations and plotcolor etc
   data_stations <- reactiveValues()
   # Store other information
-  data_other <- reactiveValues()
+  data_other <- reactiveValues(group_name = group_name_default, group_number = 1)
   # Store messages to communicate with user
   message_data <- reactiveValues()
 
@@ -40,15 +40,22 @@ shinyServer(function(global, input, output, session) {
 
   # Get metadata
   meta_table <- metadata_server("meta_table",
-                                data_measurements = data_measurements,
-                                data_stations = data_stations,
+                                data_measurements = reactive(data_measurements$data_all),
+                                data_stations = reactive(data_stations$data),
+                                time_period = select_date_range,
+                                name_munproj = choice_select)
+  meta_param_table <- metadata_param_server("meta_param_table",
+                                data_measurements = reactive(data_measurements$data_all),
+                                data_stations = reactive(data_stations$data),
+                                parameter = reactive(data_other$parameter),
                                 time_period = select_date_range,
                                 name_munproj = choice_select)
 
   # The Map
   map <- show_map_server("map",
                          data_stations,
-                         data_other,
+                         reactive(data_other$group_name),
+                         reactive(data_other$tab_choice),
                          # Options for the colors
                          col_cat,
                          col_default,
@@ -56,22 +63,22 @@ shinyServer(function(global, input, output, session) {
                          # Options for the linetype
                          line_cat,
                          line_default,
-                         line_overload
+                         line_overload,
+                         #Default group name
+                         group_name_none
                          )
 
   # The bar plot
   barplot <- barplot_server("barplot_plot",
-                            data_measurements = data_measurements,
-                            data_stations = data_stations,
-                            data_other = data_other,
+                            data_measurements = reactive(data_measurements$data_grouped),
+                            parameter = reactive(data_other$parameter),
                             overview_component,
                             theme_plots)
 
   # The timeseries plot
   timeseries_plot <- timeseries_server(id = "timeseries_plot",
-                                       data_measurements = data_measurements,
-                                       data_stations = data_stations,
-                                       data_other = data_other,
+                                       data_measurements = reactive(data_measurements$data_grouped),
+                                       parameter = reactive(data_other$parameter),
                                        overview_component,
                                        theme_plots)
   # The pollutionrose plot
@@ -83,20 +90,25 @@ shinyServer(function(global, input, output, session) {
 
   # The timevariation plot
   timevar_plot_weekly <- timevar_weekly_server("timevar_plot_weekly",
-                                               data_measurements = data_measurements,
-                                               data_stations = data_stations,
-                                               data_other = data_other,
+                                               data_measurements = reactive(data_measurements$data_grouped),
+                                               parameter = reactive(data_other$parameter),
                                                overview_component)
   timevar_plot_daily <- timevar_daily_server("timevar_plot_daily",
-                                             data_measurements = data_measurements,
-                                             data_stations = data_stations,
-                                             data_other = data_other,
+                                             data_measurements = reactive(data_measurements$data_grouped),
+                                             parameter = reactive(data_other$parameter),
                                              overview_component)
+
+  # Individual timeseries plot
+  indu_timeseries <- individual_timeseries_server("indu_timeseries",
+                                                  data_measurements = reactive(data_measurements$data_filtered),
+                                                  parameter = reactive(data_other$parameter),
+                                                  overview_component = overview_component,
+                                                  theme_plots)
 
   # The communication module
   communication_stuff <- communication_server("test_comm_output",
-                                              data_measurements = data_measurements,
-                                              data_stations = data_stations,
+                                              data_measurements = reactive(data_measurements$data_all),
+                                              data_stations = reactive(data_stations$data),
                                               meta, # TODO willen we hier wat mee?
                                               selected_parameter = select_component,
                                               selected_time = select_date_range
@@ -127,8 +139,14 @@ shinyServer(function(global, input, output, session) {
                                             # Options for the linetype
                                             line_cat,
                                             line_default,
-                                            line_overload
+                                            line_overload,
+                                            # Default group name
+                                            group_name_none
                                             )
+
+  # Create a new group
+  set_new_group_button <- set_group_button_server("set_group_pushed",
+                                                  data_other = data_other)
 
   # To give some indication of the data available in dbs
   show_availability_server("show_availability",
@@ -159,10 +177,13 @@ shinyServer(function(global, input, output, session) {
       message_data$data_in_dbs <- message_data_new
     })
 
-    # Observe filtered data from stations ----
+    # Observe filtered data from stations and groups ----
     observe({
       data_filtered <- communication_stuff$selected_measurements()
       data_measurements$data_filtered <- data_filtered
+
+      data_grouped <- communication_stuff$grouped_measurements()
+      data_measurements$data_grouped <- data_grouped
     })
 
     # Observe filtered data from knmi ----
@@ -183,6 +204,15 @@ shinyServer(function(global, input, output, session) {
       data_stations_adjust <- map$data_stations()
       data_stations$data <- data_stations_adjust
     })
+
+  # Observe if new group is created ----
+  observe({
+    new_group_name <- set_new_group_button$group_name()
+    new_group_number <- set_new_group_button$group_number()
+
+    data_other$group_name <- new_group_name
+    data_other$group_number <- new_group_number
+  })
 
 
   ################# overig ##################

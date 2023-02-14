@@ -132,6 +132,11 @@ line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
 line_default <- 'solid'
 line_overload <- 'dotted'
 
+# First name of the group
+group_name_default <- "groep_1"
+# Default for no group
+group_name_none <- ""
+
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
@@ -174,6 +179,7 @@ source("modules/get_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_tables.R")
+source("modules/add_metadata_param_tables.R")
 source("modules/add_show_availability.R")
 source("modules/add_single_text_message.R")
 
@@ -183,9 +189,14 @@ source("modules/add_timeseries_plot.R")
 source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_weekly_plot.R")
 source("modules/add_timevariation_daily_plot.R")
+source("modules/add_individual_timeseries_plot.R")
 
 # Source layout
 source("modules/add_tabpanels.R")
+
+
+# Source new group button
+source("modules/set_groupname_button.R")
 
 # # Source que display
 # source("modules/view_que.R")
