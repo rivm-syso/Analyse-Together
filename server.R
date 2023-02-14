@@ -147,6 +147,7 @@ shinyServer(function(global, input, output, session) {
   # Create a new group
   set_new_group_button <- set_group_button_server("set_group_pushed",
                                                   data_other = data_other)
+  single_text_server("name_group", reactive(data_other$group_name))
 
   # To give some indication of the data available in dbs
   show_availability_server("show_availability",

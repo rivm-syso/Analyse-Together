@@ -45,7 +45,7 @@ shinyUI(
     tabPanel(
       title = "Home",
 
-      fluidRow(column(width = 1, offset=10,
+      fluidRow(column(width = 1, offset = 10,
                       shiny.i18n::usei18n(i18n),
                       radioGroupButtons('selected_language',
                                         size = 'sm',
@@ -119,16 +119,22 @@ shinyUI(
         conditionalPanel(condition="input.second_order_tabs=='Select data'",
                          column(width = 6,div(br(),br(),h3(i18n$t("tool_welcome")),
                             p(i18n$t("tool_welcome_expl")),
-                            p(i18n$t("link_to_samenmeten"), a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-                            br(),i18n$t("link_to_LML"), a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-                            br(),i18n$t("link_to_projecten"), a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'), style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
+                            p(i18n$t("link_to_samenmeten"),
+                              a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
+                            br(),i18n$t("link_to_LML"),
+                            a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
+                            br(),i18n$t("link_to_projecten"),
+                            a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
+                            style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
         conditionalPanel(condition="input.second_order_tabs=='Informatie over data'",
                          column(width = 6,div(br(),i18n$t("expl_metadata")))),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
-                         fluidRow(column(width = 6, show_map_output("map"),
+                         column(width = 6, show_map_output("map"),
                                          style = "margin-top: 30px;",
                                          style = "margin-bottom: 30px;"),
-                                  column(width = 6, set_group_button_output("set_group_pushed")))),
+                         fluidRow(column(width = 2, set_group_button_output("set_group_pushed")),
+                                  column(width = 2, single_text_output("name_group")))
+        )
 
       )
     ),
