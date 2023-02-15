@@ -58,8 +58,9 @@ timevar_daily_server <- function(id,
       steps <- plyr::round_any(max_meas / 15, 6, f = ceiling) # to create interactive y-breaks
       n_stat_in_plot <- length(unique(plot_all$col))
 
-      plot_part <- ggplot(data = plot_all) +
-            geom_line(aes(x = hourofday, y = mean_hour, group = label, color = label)) +
+      plot_part <- ggplot(data = plot_all,aes(x = hourofday, y = mean_hour, group = label, color = label), lwd = 1) +
+            geom_line() +
+            geom_point() +
             scale_color_manual(values = plot_all$col,
                                    breaks = plot_all$label) +
             scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),

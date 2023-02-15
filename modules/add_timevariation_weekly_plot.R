@@ -51,7 +51,11 @@ timevar_weekly_server <- function(id,
       # Make a plot
       plot_all <- data_plot %>% dplyr::mutate(daynumber = weekdays(date)) %>%
                                 dplyr::group_by(label, daynumber) %>%
-                                dplyr::mutate(mean_day = mean(value, na.rm = T))
+                                dplyr::mutate(mean_day = mean(value, na.rm = T)) %>% 
+                                dplyr::arrange(date)
+      
+      plot_all$daynumber <- factor(plot_all$daynumber,levels = c("maandag", "dinsdag", "woensdag",
+                                                                 "donderdag", "vrijdag", "zaterdag", "zondag"))
       
       # Obtain info for the axis
       min_meas <- plyr::round_any(min(plot_all$mean_day, na.rm = T), 5, f = floor)
@@ -59,16 +63,17 @@ timevar_weekly_server <- function(id,
       steps <- plyr::round_any(max_meas / 15, 6, f = ceiling) # to create interactive y-breaks
       n_stat_in_plot <- length(unique(plot_all$col))
       
-      plot_part <- ggplot(data = plot_all) +
-        geom_line(aes(x = daynumber, y = mean_day, group = label, color = label), lwd = 1) +
+      plot_part <- ggplot(data = plot_all,aes(x = daynumber, y = mean_day, group = label, color = label), lwd = 1) +
+        geom_line() +
+        geom_point() +
         scale_color_manual(values = plot_all$col,
                            breaks = plot_all$label) +
         scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
                            minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2),
                                               by = steps/2),
                            limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
-       labs(x = "Day of the week", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
-             title=paste0('Daily pattern for: ', parameter_label)) +
+        labs(x = "Day of the week", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
+             title=paste0('Weekly pattern for: ', parameter_label)) +
         expand_limits(y=0) +
         theme_plots +
         theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),
