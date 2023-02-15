@@ -72,7 +72,7 @@ timevar_weekly_server <- function(id,
                            minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2),
                                               by = steps/2),
                            limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
-        labs(x = "Day of the week", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
+        labs(x = i18n$t("xlab_weeklypattern"), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
              title=paste0('Weekly pattern for: ', parameter_label)) +
         expand_limits(y=0) +
         theme_plots +

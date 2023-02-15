@@ -159,6 +159,14 @@
         "en": "Daily pattern",
         "nl": "Dagelijks patroon"
       },
+      {"tag" : "xlab_dailypattern",
+        "en": "Hour of the day",
+        "nl": "Uur van de dag"
+      },
+      {"tag" : "xlab_weeklypattern",
+        "en": "Day of the week",
+        "nl": "Dag van de week"
+      },
       {"tag" : "expl_overviewplot_daily",
         "en": "See Dutch",
         "nl": "Deze grafieken laten het uurlijkse gemiddelde zien per sensor of sensorgroep. Dit is uitgerekend over alle dagen die u heeft geselecteerd. Dit levert een gemiddelde dagelijkse gang van de concentraties op."
