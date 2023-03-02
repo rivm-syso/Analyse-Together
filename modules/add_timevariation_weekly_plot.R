@@ -68,7 +68,6 @@ timevar_weekly_server <- function(id,
         geom_line() +
         geom_point() +
         facet_wrap(~ daynumber, nrow = 1) +
-        theme(panel.spacing.x = 0) +
         scale_color_manual(values = plot_all$col,
                            breaks = plot_all$label) +
         scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
@@ -76,13 +75,14 @@ timevar_weekly_server <- function(id,
                                               by = steps/2),
                            limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
         scale_x_continuous(breaks = c(0, 6, 12, 18)) +
-        labs(x = i18n$t("xlab_weeklypattern"), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
+        labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
              title=paste0('Weekly pattern for: ', parameter_label)) +
         #expand_limits(y=0) +
         theme_plots +
         theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),
               axis.text.x = element_text(color = "black", size = 16, angle = 0,
                                          hjust = 0.5, vjust = 0))  +
+        theme(panel.spacing.x = unit(0, "cm")) +
         guides(colour = guide_legend(title = "Group / Station",
                                      override.aes = list(size=3)))
       
