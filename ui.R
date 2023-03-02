@@ -106,7 +106,8 @@ shinyUI(
                  title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
 
                  fluidRow(column(12, class = "col-lg-12",
-                          wellPanel(component_selection_output("select_component"), style = "margin-bottom: -10px"))
+                          wellPanel(component_selection_output("select_component"),
+                                    style = "margin-bottom: -10px"))
                           ,
 
                           # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R

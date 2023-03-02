@@ -103,6 +103,18 @@
         "en": "This tool was build for citizens. The code is open-source.",
         "nl": "Deze tool is ontwikkeld voor burgers. De code is open-source."
       },
+      {"tag" : "btn_get_data",
+        "en": "Check data availability",
+        "nl": "Check de beschikbaarheid"
+      },
+      {"tag" : "btn_external_source",
+        "en": "Get the data from external source",
+        "nl": "Data ophalen van externe bron"
+      },
+      {"tag" : "btn_create_group",
+        "en": "Create new group",
+        "nl": "Maak nieuwe groep"
+      },
       {"tag" : "word_table",
         "en": "Table for",
         "nl": "Tabel voor"
@@ -119,11 +131,23 @@
         "en": "within",
         "nl": "in"
       },
+      {"tag" : "word_meta_table",
+        "en": "Table",
+        "nl": "Tabel"
+      },
+      {"tag" : "expl_meta_table",
+        "en": "sfd",
+        "nl": "dsfsd"
+      },
+      {"tag" : "expl_meta_table_expl",
+        "en": "sdfsd",
+        "nl": "sdfds"
+      },
       {"tag" : "expl_metadata",
         "en": "This is a table with information on the sensors, stations and KNMI-stations available for this project. The number of measurements are displayed for each sensor and station, and are component specific. Furthermore, this table gives insight into the timespan of the data-availability.",
         "nl": "Dit is een tabel met informatie over de sensoren, stations en KNMI-stations beschikbaar binnen dit project. "
       },
-      {"tag" : "Timeseries",
+      {"tag" : "word_timeseries",
         "en": "Timeseries",
         "nl": "Tijdserie"
       },
@@ -135,7 +159,7 @@
         "en": "See Dutch",
         "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse sensorwaarden voor de geselecteerde periode. Deze waarden kan je vergeleken met metingen van het dichtsbijzijnde meetstation van het luchtmeetnet. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3"
       },
-      {"tag" : "Barplot",
+      {"tag" : "word_barplot",
         "en": "Barplot",
         "nl": "Barplot"
       },
@@ -147,15 +171,15 @@
         "en": "Graph shows the average of the selected stations and sensors. The average is calculated for the timerange as selected in the previous step.                                   The white number in each bar, displays the number of measurements within this timeperiod. If this number is very low, the statistical power of                                  the difference between stations/sensors is lower.",
         "nl": "Als je een sensor of groep sensoren selecteert, zie je het gemiddelde voor de geselecteerde tijdreeks. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen."
       },
-      {"tag" : "weekpattern",
+      {"tag" : "word_weekpattern",
         "en": "Weekly pattern",
         "nl": "Wekelijks patroon"
       },
-      {"tag" : "expl_overviewplot",
+      {"tag" : "expl_overviewplot_weekly",
         "en": "See Dutch",
         "nl": "Deze grafieken laten het uurlijkse gemiddelde zien per sensor of sensorgroep. Dit is uitgerekend per weekdag. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag."
       },
-      {"tag" : "daypattern",
+      {"tag" : "word_daypattern",
         "en": "Daily pattern",
         "nl": "Dagelijks patroon"
       },
@@ -163,15 +187,24 @@
         "en": "See Dutch",
         "nl": "Deze grafieken laten het uurlijkse gemiddelde zien per sensor of sensorgroep. Dit is uitgerekend over alle dagen die u heeft geselecteerd. Dit levert een gemiddelde dagelijkse gang van de concentraties op."
       },
-      {"tag" : "expl_overviewplot_expl",
+      {"tag" : "expl_overviewplot_expl_weekly",
         "en": "See Dutch",
         "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplits naar alle dagen van de week."
       },
       {"tag" : "expl_overviewplot_expl_daily",
         "en": "See Dutch",
         "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag."
+      },{"tag" : "word_indu_timeseries",
+        "en": "Individual timeseries",
+        "nl": "Individuele tijdreeks"
+      },{"tag" : "expl_indu_timeplot",
+        "en": "dgfdsgf",
+        "nl": "sdfsdf"
+      },{"tag" : "expl_indu_timeplot_expl",
+        "en": "dsgfdf",
+        "nl": "dsfd"
       },
-      {"tag" : "conc_rose",
+      {"tag" : "word_conc_rose",
         "en": "Concentration rose (%)",
         "nl": "Concentratieroos (%)"
       },

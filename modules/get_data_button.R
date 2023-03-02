@@ -11,7 +11,7 @@ get_data_button_output <- function(id) {
 
   ns <- NS(id)
   tagList(
-  actionButton(ns("get_data_button"), "Check data availability", style="background-color: #ffe9b7")
+  actionButton(ns("get_data_button"), i18n$t("btn_get_data"), style="background-color: #ffe9b7")
   )
 }
 
