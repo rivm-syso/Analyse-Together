@@ -11,15 +11,15 @@
 	      "en": "Information tool",
 	      "nl": "Informatie over de tool"
 	  },
-	   {"tag" : "link_to_samenmeten",
+	   {"tag" : "expl_link_to_samenmeten",
 	      "en": "Real-time measurements of the sensors are available on the Measure Together Dataportal:",
-	      "nl": "Real-time metingen van de sensoren kunt u vinden op het Samen Meten Dataportaal:"
+	      "nl": "Real-time metingen van de sensoren kunt u vinden op het Samen Meten Dataportaal: "
 	  },
-	  {"tag" : "link_to_LML",
+	  {"tag" : "expl_link_to_LML",
 	      "en": "Real-time measurements of the stations are available on the National Air Monitoring Network website:",
 	      "nl": "Real-time metingen van de stations kunt u vinden op de Landelijk Luchtmeetnet website:"
 	  },
-	  {"tag" : "link_to_projecten",
+	  {"tag" : "expl_link_to_projecten",
 	      "en": "For more information on the projects itself, see our website:",
 	      "nl": "Voor meer informatie over de projecten zelf, zie onze website:"
 	  },
@@ -215,6 +215,18 @@
       {"tag" : "expl_concplot%_expl",
         "en": "See Dutch",
         "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windsector het aandeel (in %) van deze sector in de totale gemiddelde concentratie. De gemiddelde concentratie per sector wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichtpaarse vulling en een hele kleine donkerpaarse vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichtpaarse vulling) brengt en slechts af en toe een hoge concenetratie (donkerpaarse vulling)."
+      },
+      {"tag" : "expl_no_data_available",
+        "en": "No data available.",
+        "nl": "Geen data beschikbaar."
+      },
+      {"tag" : "expl_select_1_weather",
+        "en": "Please, select only 1 weather station.",
+        "nl": "Selecteer slechts 1 weerstation, a.u.b."
+      },
+      {"tag" : "expl_no_weather_data",
+        "en": "No weather data available.",
+        "nl": "Geen weerdata beschikbaar."
       }
 
     ]
