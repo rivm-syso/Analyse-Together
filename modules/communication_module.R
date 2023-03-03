@@ -131,6 +131,9 @@ communication_server <- function(id,
                    # Get the measurements of those stations
                    measurements <- filter_data_measurements()
 
+                   # Remove duplicates
+                   measurements <- measurements %>% dplyr::distinct()
+
                    # Calculate group mean and sd
                    data_mean <- measurements %>%
                      # Set label to groupname
