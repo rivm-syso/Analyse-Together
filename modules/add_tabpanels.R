@@ -4,6 +4,7 @@
 
 tpAnalyse <- function(){
   tp <-  shiny::tabsetPanel(
+                           tpInfotext(),
                            tpTimeplot(),
                            tpInduTimeplot(),
                            tpMetadata(),
@@ -195,6 +196,18 @@ tpMetadata <- function(){
                            column(12,class = "col-lg-12",wellPanel(metadata_param_output("meta_param_table"))),
 
                          ),
+                         h4(i18n$t("title_expl"), style = "margin-left: 20px"),
+                         p(i18n$t("expl_timeplot_expl"),
+                           style = "font-size:12px; margin-left: 20px")
+  )
+
+  return(tp)
+}
+
+tpInfotext <- function(){
+  tp <-  shiny::tabPanel("Infotext",
+                         helpText(i18n$t("expl_timeplot"), style = "margin-left: 20px; "),
+
                          h4(i18n$t("title_expl"), style = "margin-left: 20px"),
                          p(i18n$t("expl_timeplot_expl"),
                            style = "font-size:12px; margin-left: 20px")
