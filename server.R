@@ -83,9 +83,9 @@ shinyServer(function(global, input, output, session) {
                                        theme_plots)
   # The pollutionrose plot
   pollrose_plot <- pollrose_server("pollrose_plot",
-                                   data_measurements = data_measurements,
-                                   data_stations = data_stations,
-                                   data_other = data_other,
+                                   data_measurements =  reactive(data_measurements$data_grouped),
+                                   data_measurements_knmi =  reactive(data_measurements$data_filtered_knmi),
+                                   parameter = reactive(data_other$parameter),
                                    overview_component)
 
   # The timevariation plot
