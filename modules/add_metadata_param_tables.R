@@ -122,7 +122,7 @@ metadata_param_server <- function(id,
         data_for_table <- metadata_table() %>%
           dplyr::select(-c(selected, col, max_obs))
 
-        try(datatable(data_for_table,
+        try(DT::datatable(data_for_table,
                       colnames = c("Station" = "station",
                                    "Group" = "group_name",
                                    "Datacapture %" = "per_obs",
