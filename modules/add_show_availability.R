@@ -56,7 +56,7 @@ show_availability_server <- function(id,
         scale_fill_identity() +
         geom_bar(stat = "identity", show.legend = F, color = "black") +
         # Add some text to the plot
-        geom_text(aes(label = label_bar, y = number_stations - 2),   vjust = 0, colour = "white") +
+        geom_label(aes(label = label_bar, x = x, y = number_stations ), nudge_y = 0, colour = "white", fill = "black", size = 4) +
         # Remove all axis and labels etc.
         theme_void()
     })
