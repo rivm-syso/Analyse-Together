@@ -25,7 +25,8 @@ show_availability_output <- function(id) {
 show_availability_server <- function(id,
                                      data_to_show,
                                      data_stations,
-                                     time_period
+                                     selected_start_date,
+                                     selected_end_date
 ) {
 
   moduleServer(id, function(input, output, session) {
@@ -94,8 +95,8 @@ show_availability_server <- function(id,
       data_measurements <- data_to_show$data_all
 
       # Get the selected time period and the number of days
-      start_time <- time_period$selected_start_date()
-      end_time <- time_period$selected_end_date()
+      start_time <- selected_start_date()
+      end_time <- selected_end_date()
 
       diff_time <- end_time - start_time
 
