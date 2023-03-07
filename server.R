@@ -119,6 +119,7 @@ shinyServer(function(global, input, output, session) {
   # Download data from external source to database
   download_api_button <- download_api_button_server("dl_btn_pushed",
                                                     proj_or_mun_select = reactive(data_other$proj_or_mun_select),                                                    name_munproj = reactive(data_other$name_munproj),
+                                                    name_munproj = reactive(data_other$name_munproj),
                                                     selected_start_date = reactive(data_other$start_date),
                                                     selected_end_date = reactive(data_other$end_date),
                                                     pool = pool)
@@ -129,6 +130,7 @@ shinyServer(function(global, input, output, session) {
                                             data_stations = data_stations,
                                             message_data = message_data,
                                             proj_or_mun_select = reactive(data_other$proj_or_mun_select),                                            name_munproj = reactive(data_other$name_munproj),
+                                            name_munproj = reactive(data_other$name_munproj),
                                             selected_start_date = reactive(data_other$start_date),
                                             selected_end_date = reactive(data_other$end_date),
                                             pool = pool,
