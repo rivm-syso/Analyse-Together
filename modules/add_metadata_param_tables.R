@@ -122,6 +122,14 @@ metadata_param_server <- function(id,
         data_for_table <- metadata_table() %>%
           dplyr::select(-c(selected, col, max_obs))
 
+        # Text to set some information above the table
+        caption_text <- paste0(i18n$t("word_table")," ",
+                               " ", parameter() ," ",i18n$t("word_within"),
+                               " ",project_or_municipality(), "<br> for the period: ",
+                               time_period$selected_start_date() ," to ",
+                               time_period$selected_end_date(), " .")
+
+        # create the table
         try(DT::datatable(data_for_table,
                       colnames = c("Station" = "station",
                                    "Group" = "group_name",
@@ -129,11 +137,7 @@ metadata_param_server <- function(id,
                                    "First measurements" = "first_m",
                                    "Last measurements" = "last_m",
                                    "Type" = "station_type"),
-                      caption = paste0(i18n$t("word_table")," ",
-                                       " ", parameter() ," ",i18n$t("word_within"),
-                                       " ",project_or_municipality(), "/n for the period: ",
-                                       time_period$selected_start_date() ," to ",
-                                       time_period$selected_end_date(), " ."),
+                      caption = HTML(caption_text),
                       options = list(scrollX = TRUE, pageLength = 12,
                                      lengthChange = FALSE), class = c('row-border', 'hover'),
                       rownames = FALSE) %>%
