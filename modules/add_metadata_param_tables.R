@@ -119,19 +119,25 @@ metadata_param_server <- function(id,
         col_group <- data_for_table %>% dplyr::select(group_name, col) %>% unique()
 
         # Select data for in the table to show
-        data_for_table <- metadata_table() %>% dplyr::select(-c(selected, col))
+        data_for_table <- metadata_table() %>%
+          dplyr::select(-c(selected, col, max_obs))
 
-        try(datatable(data_for_table,
+        # Text to set some information above the table
+        caption_text <- paste0(i18n$t("word_table")," ",
+                               " ", parameter() ," ",i18n$t("word_within"),
+                               " ",project_or_municipality(), "<br> for the period: ",
+                               time_period$selected_start_date() ," to ",
+                               time_period$selected_end_date(), " .")
+
+        # create the table
+        try(DT::datatable(data_for_table,
                       colnames = c("Station" = "station",
                                    "Group" = "group_name",
-                                   "Percentage measured %" = "per_obs",
-                                   "Maximum measurements" = "max_obs",
+                                   "Datacapture %" = "per_obs",
                                    "First measurements" = "first_m",
                                    "Last measurements" = "last_m",
                                    "Type" = "station_type"),
-                      caption = paste0(i18n$t("word_table")," ",
-                                       " ", parameter() ," ",i18n$t("word_within"),
-                                       " ",project_or_municipality()),
+                      caption = HTML(caption_text),
                       options = list(scrollX = TRUE, pageLength = 12,
                                      lengthChange = FALSE), class = c('row-border', 'hover'),
                       rownames = FALSE) %>%
@@ -140,7 +146,7 @@ metadata_param_server <- function(id,
                           valueColumns = c("Group"),
                           backgroundColor = styleEqual(levels = col_group$group_name,
                                                        values = col_group$col)) %>%
-              formatStyle(columns = c("Percentage measured %"),
+              formatStyle(columns = c("Datacapture %"),
                           backgroundColor = styleInterval(cuts = breaks_col()$brks,
                                                           values = breaks_col()$clrs)
               )

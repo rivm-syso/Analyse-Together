@@ -11,9 +11,7 @@ show_availability_output <- function(id) {
 
   ns <- NS(id)
   tagList(
-    tableOutput(ns("show_stations")),
     textOutput(ns("show_stations_text")),
-    dataTableOutput(ns("show_available_data_table")),
     plotOutput(ns("show_available_data"))
   )
 }
@@ -32,43 +30,37 @@ show_availability_server <- function(id,
 
     ns <- session$ns
 
+    # Plot to visualise the number of stations available tov the total
     output$show_available_data <- renderPlot({
+      # Check if data is there
       shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
 
-      data_to_plot <- data_to_show$data_all %>%
-        dplyr::filter(parameter == "pm25") %>%
-        dplyr::select(station, parameter, date) %>%
-        dplyr::mutate(timestamp_table = date %>% format("%Y-%m-%d") %>% as.POSIXct(format ="%Y-%m-%d")) %>%
-        dplyr::select(-date) %>%
-        unique() %>%
-        group_by(timestamp_table, parameter) %>%
-        dplyr::mutate(number_a_day = n()) %>%
-        ungroup() %>%
-        # Needed for the openair plot
-        dplyr::mutate(date = timestamp_table)
-
-      max_stations <- data_stations$data %>% nrow()
-
-
-      calendarPlot(data_to_plot, pollutant = "number_a_day", limits = c(0, max_stations), main = "Aantal sensoren per dag")
-
-    })
-
-    # Show number of stations in table
-    output$show_stations <- renderTable({
-      shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
-      data_to_plot <- data_to_show$data_all %>%
+      # Count the number of stations with data
+      number_stations <- data_to_show$data_all %>%
         dplyr::filter(parameter == "pm25_kal") %>%
         dplyr::select(station) %>%
         unique() %>%
-        count()
+        count() %>% pull()
 
+      # Get the total number of stations in this municipality/project
       data_total <- data_stations$data %>% nrow()
 
-      data_to_plot <- data.frame("aantal stations PM2.5" = data_to_plot$n,
-                                 "totaal aantal stations" = data_total)
+      # Set a label and combine data for the plot
+      label_bar = paste0(number_stations, " Available in tool")
+      data_plot <- data.frame(aantal = c( data_total - number_stations, number_stations),
+                              col = factor(c( "#edffed", "#006400"), levels = c("#edffed", "#006400")),
+                              x = c("test", "test"))
 
+      # Render the plot
+      ggplot(data_plot, aes(x = x, fill = col, y = aantal)) +
+        scale_fill_identity() +
+        geom_bar(stat = "identity", show.legend = F, color = "black") +
+        # Add some text to the plot
+        geom_label(aes(label = label_bar, x = x, y = number_stations ), nudge_y = 0, colour = "white", fill = "black", size = 4) +
+        # Remove all axis and labels etc.
+        theme_void()
     })
+
 
     # Show number of stations in text
     output$show_stations_text <- renderText({
@@ -85,7 +77,8 @@ show_availability_server <- function(id,
 
     })
 
-    # Show data availability in table (per station)
+    # Show data availability in table (per station per week)
+    # For now redundant, but maybe interested later
     output$show_available_data_table <- renderDataTable({
       # Check if data available to show
       shiny::validate(need((nrow(data_to_show$data_all)>0), message = "No data available."))
