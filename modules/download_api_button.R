@@ -19,9 +19,10 @@ download_api_button_output <- function(id) {
 ######################################################################
 
 download_api_button_server <- function(id,
-                                       proj_or_mun,
+                                       proj_or_mun_select,
                                        name_munproj,
-                                       daterange,
+                                       selected_start_date,
+                                       selected_end_date,
                                        pool)
   {
 
@@ -32,12 +33,12 @@ download_api_button_server <- function(id,
      btn <- eventReactive(input$download_api_button, {T})
 
      observeEvent(input$download_api_button, {
-         type <- ifelse(is.null(proj_or_mun()), NA, proj_or_mun())
+         type <- ifelse(is.null(proj_or_mun_select()), NA, proj_or_mun_select())
          name <- ifelse(is.null(name_munproj()), NA, name_munproj())
-         tstart <- as_datetime(ifelse(is.null(daterange$selected_start_date()), NA, daterange$selected_start_date()))
-         tend <- as_datetime(ifelse(is.null(daterange$selected_end_date()), NA, daterange$selected_end_date()))
-         time_start <- daterange$selected_start_date() %>% as.POSIXct()
-         time_end <- daterange$selected_end_date() %>%  as.POSIXct()
+         tstart <- as_datetime(ifelse(is.null(selected_start_date()), NA, selected_start_date()))
+         tend <- as_datetime(ifelse(is.null(selected_end_date()), NA, selected_end_date()))
+         time_start <- selected_start_date() %>% as.POSIXct()
+         time_end <- selected_end_date() %>%  as.POSIXct()
          log_trace("mod download: Download pushed with paremeters Type: {type}; name: {name}; time_start: {tstart}; time_end: {tend}")
 
 

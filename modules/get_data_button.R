@@ -23,9 +23,10 @@ get_data_button_server <- function(id,
                                    data_measurements,
                                    data_stations,
                                    message_data,
-                                   proj_or_mun,
+                                   proj_or_mun_select,
                                    name_munproj,
-                                   select_date_range,
+                                   selected_start_date,
+                                   selected_end_date,
                                    pool,
                                    measurements_con,
                                    stations_con,
@@ -48,7 +49,7 @@ get_data_button_server <- function(id,
     # Observe if the get_data_button is clicked ----
     observeEvent(input$get_data_button, {
       # Get the selected choice
-      type_choice <- proj_or_mun()
+      type_choice <- proj_or_mun_select()
       # Name of municipality/project
       name_choice <- name_munproj()
 
@@ -59,8 +60,8 @@ get_data_button_server <- function(id,
       )
 
       # Get the selected time period
-      start_time <- select_date_range$selected_start_date()
-      end_time <- select_date_range$selected_end_date()
+      start_time <- selected_start_date()
+      end_time <- selected_end_date()
 
       # Load the data from the caching database
       # Get the station names in the selected Municipality/project
