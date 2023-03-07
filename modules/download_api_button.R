@@ -19,7 +19,7 @@ download_api_button_output <- function(id) {
 ######################################################################
 
 download_api_button_server <- function(id,
-                                       proj_or_mun_select,
+                                       proj_or_mun,
                                        name_munproj,
                                        selected_start_date,
                                        selected_end_date,
@@ -33,7 +33,7 @@ download_api_button_server <- function(id,
      btn <- eventReactive(input$download_api_button, {T})
 
      observeEvent(input$download_api_button, {
-         type <- ifelse(is.null(proj_or_mun_select()), NA, proj_or_mun_select())
+         type <- ifelse(is.null(proj_or_mun()), NA, proj_or_mun())
          name <- ifelse(is.null(name_munproj()), NA, name_munproj())
          tstart <- as_datetime(ifelse(is.null(selected_start_date()), NA, selected_start_date()))
          tend <- as_datetime(ifelse(is.null(selected_end_date()), NA, selected_end_date()))

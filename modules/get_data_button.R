@@ -23,7 +23,7 @@ get_data_button_server <- function(id,
                                    data_measurements,
                                    data_stations,
                                    message_data,
-                                   proj_or_mun_select,
+                                   proj_or_mun,
                                    name_munproj,
                                    selected_start_date,
                                    selected_end_date,
@@ -49,7 +49,7 @@ get_data_button_server <- function(id,
     # Observe if the get_data_button is clicked ----
     observeEvent(input$get_data_button, {
       # Get the selected choice
-      type_choice <- proj_or_mun_select()
+      type_choice <- proj_or_mun()
       # Name of municipality/project
       name_choice <- name_munproj()
 

@@ -34,7 +34,7 @@ shinyServer(function(global, input, output, session) {
 
   # choose proj/mun
   choice_select <- choice_selection_server("choice_select",
-                                           proj_or_mun_select = reactive(data_other$proj_or_mun_select),
+                                           proj_or_mun_select = proj_or_mun_select,
                                            mun_choices = mun_choices,
                                            proj_choices = proj_choices)
 
@@ -118,7 +118,7 @@ shinyServer(function(global, input, output, session) {
 
   # Download data from external source to database
   download_api_button <- download_api_button_server("dl_btn_pushed",
-                                                    proj_or_mun_select = reactive(data_other$proj_or_mun_select),                                                    name_munproj = reactive(data_other$name_munproj),
+                                                    proj_or_mun = reactive(data_other$proj_or_mun) ,
                                                     name_munproj = reactive(data_other$name_munproj),
                                                     selected_start_date = reactive(data_other$start_date),
                                                     selected_end_date = reactive(data_other$end_date),
@@ -129,7 +129,7 @@ shinyServer(function(global, input, output, session) {
                                             data_measurements = data_measurements,
                                             data_stations = data_stations,
                                             message_data = message_data,
-                                            proj_or_mun_select = reactive(data_other$proj_or_mun_select),                                            name_munproj = reactive(data_other$name_munproj),
+                                            proj_or_mun = reactive(data_other$proj_or_mun) ,
                                             name_munproj = reactive(data_other$name_munproj),
                                             selected_start_date = reactive(data_other$start_date),
                                             selected_end_date = reactive(data_other$end_date),
@@ -205,19 +205,19 @@ shinyServer(function(global, input, output, session) {
       data_other$parameter <- parameter
     })
 
-    # Observe the select mun or proj ----
-    observe({
-      shiny::validate(need(!is.null(proj_or_mun_select()), "No choice between mun or proj yet."))
-      proj_or_mun_select <- proj_or_mun_select()
-      data_other$proj_or_mun_select <- proj_or_mun_select
-    })
-
     # Observe the time period ----
     observe({
       start_date_set <- select_date_range$selected_start_date()
       end_date_set <- select_date_range$selected_end_date()
       data_other$start_date <- start_date_set
       data_other$end_date <- end_date_set
+    })
+
+    # Observe the selection municipality OR project ----
+    observe({
+      shiny::validate(need(!is.null(proj_or_mun_select()), "No municipality/project yet."))
+      proj_mun_or <- proj_or_mun_select()
+      data_other$proj_or_mun <- proj_mun_or
     })
 
     # Observe the municipality/project name ----
