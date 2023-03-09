@@ -25,7 +25,8 @@ get_data_button_server <- function(id,
                                    message_data,
                                    proj_or_mun,
                                    name_munproj,
-                                   select_date_range,
+                                   selected_start_date,
+                                   selected_end_date,
                                    pool,
                                    measurements_con,
                                    stations_con,
@@ -59,8 +60,8 @@ get_data_button_server <- function(id,
       )
 
       # Get the selected time period
-      start_time <- select_date_range$selected_start_date()
-      end_time <- select_date_range$selected_end_date()
+      start_time <- selected_start_date()
+      end_time <- selected_end_date()
 
       # Load the data from the caching database
       # Get the station names in the selected Municipality/project

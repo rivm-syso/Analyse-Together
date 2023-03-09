@@ -26,7 +26,8 @@ metadata_param_server <- function(id,
                             data_measurements,
                             data_stations,
                             parameter,
-                            time_period,
+                            selected_start_date,
+                            selected_end_date,
                             name_munproj) {
 
   moduleServer(id, function(input, output, session) {
@@ -50,8 +51,8 @@ metadata_param_server <- function(id,
         dplyr::distinct(station, .keep_all = T)
 
       # Get the selected time period and the number of hours
-      start_time <- time_period$selected_start_date()
-      end_time <- time_period$selected_end_date()
+      start_time <- selected_start_date()
+      end_time <- selected_end_date()
       timerange <- difftime(end_time, start_time, unit = "hours")
 
       # Prepare the data for the table - do some summarise
