@@ -127,8 +127,8 @@ metadata_param_server <- function(id,
         caption_text <- paste0(i18n$t("word_table")," ",
                                " ", parameter() ," ",i18n$t("word_within"),
                                " ",project_or_municipality(), "<br> for the period: ",
-                               time_period$selected_start_date() ," to ",
-                               time_period$selected_end_date(), " .")
+                               selected_start_date() ," to ",
+                               selected_end_date(), " .")
 
         # create the table
         try(DT::datatable(data_for_table,
