@@ -113,8 +113,6 @@ shinyUI(
                             br(),i18n$t("link_to_projecten"),
                             a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
                             style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
-        conditionalPanel(condition="input.second_order_tabs=='Informatie over data'",
-                         column(width = 6,div(br(),i18n$t("expl_metadata")))),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
                          column(width = 6, show_map_output("map"),
                                          style = "margin-top: 30px;",
