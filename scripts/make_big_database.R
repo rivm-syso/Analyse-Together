@@ -49,13 +49,13 @@ download_municipalities <- c("Nijmegen", "Eindhoven",
 
 # source scripts
 
-source(here("funs","database_fun.R"))
-source(here("funs","queue_fun.R"))
-source(here("funs","download_fun.R"))
-source(here("scripts","test_functions.R"))
+source(here::here("funs","database_fun.R"))
+source(here::here("funs","queue_fun.R"))
+source(here::here("funs","download_fun.R"))
+source(here::here("scripts","test_functions.R"))
 
 # create new fresh database
-source(here("scripts","init_database.R"))
+source(here::here("scripts","init_database.R"))
 
 
 # Connect with the database using pool, store data, read table              ====

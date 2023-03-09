@@ -26,7 +26,8 @@ metadata_param_server <- function(id,
                             data_measurements,
                             data_stations,
                             parameter,
-                            time_period,
+                            selected_start_date,
+                            selected_end_date,
                             name_munproj) {
 
   moduleServer(id, function(input, output, session) {
@@ -50,8 +51,9 @@ metadata_param_server <- function(id,
         dplyr::distinct(station, .keep_all = T)
 
       # Get the selected time period and the number of hours
-      start_time <- time_period$selected_start_date()
-      end_time <- time_period$selected_end_date()
+      start_time <- selected_start_date()
+      end_time <- selected_end_date()
+
       timerange <- difftime(end_time, start_time, unit = "hours")
 
       # Prepare the data for the table - do some summarise
@@ -119,19 +121,25 @@ metadata_param_server <- function(id,
         col_group <- data_for_table %>% dplyr::select(group_name, col) %>% unique()
 
         # Select data for in the table to show
-        data_for_table <- metadata_table() %>% dplyr::select(-c(selected, col))
+        data_for_table <- metadata_table() %>%
+          dplyr::select(-c(selected, col, max_obs))
 
-        try(datatable(data_for_table,
+        # Text to set some information above the table
+        caption_text <- paste0(i18n$t("word_table")," ",
+                               " ", parameter() ," ",i18n$t("word_within"),
+                               " ",project_or_municipality(), "<br> for the period: ",
+                               time_period$selected_start_date() ," to ",
+                               time_period$selected_end_date(), " .")
+
+        # create the table
+        try(DT::datatable(data_for_table,
                       colnames = c("Station" = "station",
                                    "Group" = "group_name",
-                                   "Percentage measured %" = "per_obs",
-                                   "Maximum measurements" = "max_obs",
+                                   "Datacapture %" = "per_obs",
                                    "First measurements" = "first_m",
                                    "Last measurements" = "last_m",
                                    "Type" = "station_type"),
-                      caption = paste0(i18n$t("word_table")," ",
-                                       " ", parameter() ," ",i18n$t("word_within"),
-                                       " ",project_or_municipality()),
+                      caption = HTML(caption_text),
                       options = list(scrollX = TRUE, pageLength = 12,
                                      lengthChange = FALSE), class = c('row-border', 'hover'),
                       rownames = FALSE) %>%
@@ -140,7 +148,8 @@ metadata_param_server <- function(id,
                           valueColumns = c("Group"),
                           backgroundColor = styleEqual(levels = col_group$group_name,
                                                        values = col_group$col)) %>%
-              formatStyle(columns = c("Percentage measured %"),
+              formatStyle(columns = c("Datacapture %"),
+
                           backgroundColor = styleInterval(cuts = breaks_col()$brks,
                                                           values = breaks_col()$clrs)
               )

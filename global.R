@@ -67,7 +67,7 @@ source("funs/download_fun.R")
 source("funs/data_to_tool_fun.R")
 
 # launch queue manager
-qm_script <- here("scripts","queue_manager.R")
+qm_script <- here::here("scripts","queue_manager.R")
 system2("Rscript", qm_script, wait = FALSE)
 
 # Set language and date options                                             ====
@@ -109,9 +109,9 @@ municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
 projects <- read_csv("./prepped_data/projects.csv")
 
 # add_doc doesn't work, see ATdatabase #8
-add_doc("application", "municipalities", municipalities, conn = pool,
+ATdatabase::add_doc("application", "municipalities", municipalities, conn = pool,
         overwrite = TRUE)
-add_doc("application", "projects", projects, conn = pool,
+ATdatabase::add_doc("application", "projects", projects, conn = pool,
         overwrite = TRUE)
 
 # Connections with the database tables
@@ -178,7 +178,6 @@ source("modules/download_api_button.R")
 source("modules/get_data_button.R")
 
 # Source modules for metadata
-source("modules/add_metadata_tables.R")
 source("modules/add_metadata_param_tables.R")
 source("modules/add_show_availability.R")
 source("modules/add_single_text_message.R")
@@ -193,7 +192,6 @@ source("modules/add_individual_timeseries_plot.R")
 
 # Source layout
 source("modules/add_tabpanels.R")
-
 
 # Source new group button
 source("modules/set_groupname_button.R")

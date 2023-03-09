@@ -79,24 +79,11 @@ shinyUI(
                                    column(6, get_data_button_output("get_btn_pushed")),
                                    column(6, download_api_button_output("dl_btn_pushed")),
                                    single_text_output("text_data_available"),
-                                   show_availability_output("show_availability"),
-                                   download_api_button_output("dl_btn_pushed")
+                                   show_availability_output("show_availability")
                           )
                    )
 
                  )
-               ),
-
-               tabPanel(
-
-                 value = "Informatie over data",
-                 title = HTML(paste0(i18n$t("title_metadata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
-
-                 fluidRow(
-                   column(12, class = "col-lg-12", wellPanel(metadata_output("meta_table")), inlineCSS(list("table" = "font-size: 13px"))),
-
-                 ),
-
                ),
 
                tabPanel(
@@ -135,7 +122,6 @@ shinyUI(
                          fluidRow(column(width = 2, set_group_button_output("set_group_pushed")),
                                   column(width = 2, single_text_output("name_group")))
         )
-
       )
     ),
 

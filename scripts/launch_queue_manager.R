@@ -27,16 +27,16 @@ setwd(here::here())
 
 # source scripts
 
-source(here("funs","database_fun.R"))
-source(here("funs","queue_fun.R"))
-source(here("funs","download_fun.R"))
-source(here("scripts","test_functions.R"))
+source(here::here("funs","database_fun.R"))
+source(here::here("funs","queue_fun.R"))
+source(here::here("funs","download_fun.R"))
+source(here::here("scripts","test_functions.R"))
 
-qm_script <- here("scripts","queue_manager.R")
+qm_script <- here::here("scripts","queue_manager.R")
 system2("Rscript", qm_script, wait = FALSE)
 
 for(i in 1:5) {
-    source(here("scripts", "create_data_request.R"))
+    source(here::here("scripts", "create_data_request.R"))
 }
 
 while(TRUE) {
