@@ -75,7 +75,8 @@ timevar_daily_server <- function(id,
             theme_plots +
             theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),
                   axis.text.x = element_text(color = "black", size = 16, angle = 0,
-                                             hjust = 0.5, vjust = 0))  +
+                                             hjust = 0.5, vjust = 0),
+                  legend.position="top")  +
             guides(colour = guide_legend(title = "Group / Station",
                                          override.aes = list(size=3)))
 

@@ -80,7 +80,8 @@ timeseries_server <- function(id,
                labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
                     title=paste0('Timeseries for: ', parameter_label)) +
                theme_plots +
-               theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)))  +
+               theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),
+                     legend.position="top")  +
                guides(colour = guide_legend(override.aes = list(size=2)),
                       linetype = guide_legend(override.aes = list(size = 1)))
          )
