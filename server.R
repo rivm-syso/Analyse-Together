@@ -79,9 +79,9 @@ shinyServer(function(global, input, output, session) {
                                        theme_plots)
   # The pollutionrose plot
   pollrose_plot <- pollrose_server("pollrose_plot",
-                                   data_measurements = data_measurements,
-                                   data_stations = data_stations,
-                                   data_other = data_other,
+                                   data_measurements =  reactive(data_measurements$data_grouped),
+                                   data_measurements_knmi =  reactive(data_measurements$data_filtered_knmi),
+                                   parameter = reactive(data_other$parameter),
                                    overview_component)
 
   # The timevariation plot
@@ -146,6 +146,9 @@ shinyServer(function(global, input, output, session) {
   # Create a new group
   set_new_group_button <- set_group_button_server("set_group_pushed",
                                                   data_other = data_other)
+
+  single_text_server("name_group", reactive(data_other$group_name))
+
 
   # To give some indication of the data available in dbs
   show_availability_server("show_availability",

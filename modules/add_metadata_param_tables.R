@@ -53,6 +53,7 @@ metadata_param_server <- function(id,
       # Get the selected time period and the number of hours
       start_time <- selected_start_date()
       end_time <- selected_end_date()
+
       timerange <- difftime(end_time, start_time, unit = "hours")
 
       # Prepare the data for the table - do some summarise
@@ -148,6 +149,7 @@ metadata_param_server <- function(id,
                           backgroundColor = styleEqual(levels = col_group$group_name,
                                                        values = col_group$col)) %>%
               formatStyle(columns = c("Datacapture %"),
+
                           backgroundColor = styleInterval(cuts = breaks_col()$brks,
                                                           values = breaks_col()$clrs)
               )

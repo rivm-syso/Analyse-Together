@@ -52,6 +52,7 @@ timevar_daily_server <- function(id,
                                 dplyr::group_by(label, hourofday) %>%
                                 dplyr::mutate(mean_hour = mean(value, na.rm = T))
 
+
       # Obtain info for the axis
       min_meas <- plyr::round_any(min(plot_all$mean_hour, na.rm = T), 5, f = floor)
       max_meas <- plyr::round_any(max(plot_all$mean_hour, na.rm = T), 5, f = ceiling)

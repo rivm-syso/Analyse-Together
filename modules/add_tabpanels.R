@@ -208,7 +208,7 @@ tpInfotext <- function(){
   tp <-  shiny::tabPanel("Infotext",
                          helpText(i18n$t("expl_timeplot"), style = "margin-left: 20px; "),
 
-                         h4(i18n$t("title_expl"), style = "margin-left: 20px"),
+                        h4(i18n$t("title_expl"), style = "margin-left: 20px"),
                          p(i18n$t("expl_timeplot_expl"),
                            style = "font-size:12px; margin-left: 20px")
   )
