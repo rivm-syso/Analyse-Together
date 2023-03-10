@@ -43,10 +43,6 @@
         "en": "Select data",
         "nl": "Selecteer data"
     },
-      {"tag" : "title_metadata",
-        "en": "Information on the data",
-        "nl": "Info over de data"
-      },
       {"tag" : "title_visualisedata",
         "en": "Visualise data",
         "nl": "Visualiseer data"
@@ -119,10 +115,6 @@
         "en": "within",
         "nl": "in"
       },
-      {"tag" : "expl_metadata",
-        "en": "This is a table with information on the sensors, stations and KNMI-stations available for this project. The number of measurements are displayed for each sensor and station, and are component specific. Furthermore, this table gives insight into the timespan of the data-availability.",
-        "nl": "Dit is een tabel met informatie over de sensoren, stations en KNMI-stations beschikbaar binnen dit project. "
-      },
       {"tag" : "Timeseries",
         "en": "Timeseries",
         "nl": "Tijdserie"
@@ -158,6 +150,14 @@
       {"tag" : "daypattern",
         "en": "Daily pattern",
         "nl": "Dagelijks patroon"
+      },
+      {"tag" : "xlab_dailypattern",
+        "en": "Hour of the day",
+        "nl": "Uur van de dag"
+      },
+      {"tag" : "xlab_weeklypattern",
+        "en": "Day of the week",
+        "nl": "Dag van de week"
       },
       {"tag" : "expl_overviewplot_daily",
         "en": "See Dutch",

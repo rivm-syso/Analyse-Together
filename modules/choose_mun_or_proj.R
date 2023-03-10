@@ -1,8 +1,8 @@
 ###############################################
-### pickerInput - select component ###
+### pickerInput - select name project/municipality ###
 ###############################################
 
-# This is a municipality selection module
+# This is a municipality selection module, to select the name of the project/municipality
 ######################################################################
 # Output Module
 ######################################################################
@@ -10,24 +10,26 @@
 choice_selection_output <- function(id) {
 
   ns <- NS(id)
-
   uiOutput(ns("choice_select"))
 
 }
-
 
 ######################################################################
 # Server Module
 ######################################################################
 
-choice_selection_server <- function(id, com_module, mun_choices, proj_choices) {
+choice_selection_server <- function(id,
+                                    proj_or_mun_select,
+                                    mun_choices,
+                                    proj_choices) {
 
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 
+    # Get whether a project of municipality is selected
     get_choice_select <- reactive({
-      choice_select <- com_module$choice_select()
+      choice_select <- proj_or_mun_select()
       return(choice_select)})
 
 
@@ -67,4 +69,3 @@ choice_selection_server <- function(id, com_module, mun_choices, proj_choices) {
   })
 
 }
-

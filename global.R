@@ -18,6 +18,7 @@ library(shinycssloaders)
 library(shinyWidgets)
 # library(shinytest)
 library(shinyjs)
+library(shinyalert)
 
 # For the translation
 library(shiny.i18n)
@@ -44,6 +45,10 @@ library(sf)
 
 library(lubridate)
 
+library(future)
+library(promises)
+plan(multiprocess)
+
 # logger
 library(logger)
 log_threshold(TRACE)
@@ -52,13 +57,18 @@ library(samanapir)
 library(ATdatabase)
 
 # Source functions
+library(here)
 source("funs/assign_color_stations.R")
 source("funs/assign_linetype_stations.R")
 source("funs/geoshaper_findlocations.R")
 source("funs/database_fun.R")
 source("funs/queue_fun.R")
 source("funs/download_fun.R")
+source("funs/data_to_tool_fun.R")
 
+# launch queue manager
+qm_script <- here::here("scripts","queue_manager.R")
+system2("Rscript", qm_script, wait = FALSE)
 
 # Set language and date options                                             ====
 
@@ -90,7 +100,6 @@ pool <- dbPool(
 
 )
 
-
 ### Initiate some variables                                                 ====
 # Default start and end time for the date picker
 default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
@@ -100,9 +109,9 @@ municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
 projects <- read_csv("./prepped_data/projects.csv")
 
 # add_doc doesn't work, see ATdatabase #8
-add_doc("application", "municipalities", municipalities, conn = pool,
+ATdatabase::add_doc("application", "municipalities", municipalities, conn = pool,
         overwrite = TRUE)
-add_doc("application", "projects", projects, conn = pool,
+ATdatabase::add_doc("application", "projects", projects, conn = pool,
         overwrite = TRUE)
 
 # Connections with the database tables
@@ -123,9 +132,13 @@ line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
 line_default <- 'solid'
 line_overload <- 'dotted'
 
+# First name of the group
+group_name_default <- "groep_1"
+# Default for no group
+group_name_none <- ""
+
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
-
 
 # Connections with the database tables
 measurements_con <- tbl(pool, "measurements")
@@ -162,10 +175,12 @@ source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
 source("modules/download_api_button.R")
-source("modules/update_data_button.R")
+source("modules/get_data_button.R")
 
 # Source modules for metadata
-source("modules/add_metadata_tables.R")
+source("modules/add_metadata_param_tables.R")
+source("modules/add_show_availability.R")
+source("modules/add_single_text_message.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")
@@ -173,13 +188,18 @@ source("modules/add_timeseries_plot.R")
 source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_weekly_plot.R")
 source("modules/add_timevariation_daily_plot.R")
+source("modules/add_individual_timeseries_plot.R")
 
 # Source layout
 source("modules/add_tabpanels.R")
 
-# Source que display
-source("modules/view_que.R")
-# Create the queue
-que <- task_q$new()
+# Source new group button
+source("modules/set_groupname_button.R")
 
+# # Source que display
+# source("modules/view_que.R")
+#
+# # Create the queue
+# que <- task_q$new()
+#
 ### THE END                                                                 ====
