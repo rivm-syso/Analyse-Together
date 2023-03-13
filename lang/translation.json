@@ -43,10 +43,6 @@
         "en": "Select data",
         "nl": "Selecteer data"
     },
-      {"tag" : "title_metadata",
-        "en": "Information on the data",
-        "nl": "Info over de data"
-      },
       {"tag" : "title_visualisedata",
         "en": "Visualise data",
         "nl": "Visualiseer data"
@@ -183,6 +179,14 @@
         "en": "Daily pattern",
         "nl": "Dagelijks patroon"
       },
+      {"tag" : "xlab_dailypattern",
+        "en": "Hour of the day",
+        "nl": "Uur van de dag"
+      },
+      {"tag" : "xlab_weeklypattern",
+        "en": "Day of the week",
+        "nl": "Dag van de week"
+      },
       {"tag" : "expl_overviewplot_daily",
         "en": "See Dutch",
         "nl": "Deze grafieken laten het uurlijkse gemiddelde zien per sensor of sensorgroep. Dit is uitgerekend over alle dagen die u heeft geselecteerd. Dit levert een gemiddelde dagelijkse gang van de concentraties op."
@@ -194,13 +198,16 @@
       {"tag" : "expl_overviewplot_expl_daily",
         "en": "See Dutch",
         "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag."
-      },{"tag" : "word_indu_timeseries",
+      },
+      {"tag" : "word_indu_timeseries",
         "en": "Individual timeseries",
         "nl": "Individuele tijdreeks"
-      },{"tag" : "expl_indu_timeplot",
+      },
+      {"tag" : "expl_indu_timeplot",
         "en": "dgfdsgf",
         "nl": "sdfsdf"
-      },{"tag" : "expl_indu_timeplot_expl",
+      },
+      {"tag" : "expl_indu_timeplot_expl",
         "en": "dsgfdf",
         "nl": "dsfd"
       },

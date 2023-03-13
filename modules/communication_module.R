@@ -36,7 +36,8 @@ communication_server <- function(id,
                                  data_stations, # class: "reactiveExpr" "reactive" "function"
                                  data_meta,
                                  selected_parameter,
-                                 selected_time
+                                 selected_start_date,
+                                 selected_end_date
                                  )
   {
 
@@ -77,8 +78,8 @@ communication_server <- function(id,
                  # Reactive for the measurements to filter on input, time, stations, component
                  filter_data_measurements <- reactive({
                    # Get the start and end time to filter on
-                   start_time <- selected_time$selected_start_date()
-                   end_time <- selected_time$selected_end_date()
+                   start_time <- selected_start_date()
+                   end_time <- selected_end_date()
 
                    # Get the chosen parameter
                    selected_parameter <- get_parameter_selection()$parameter
@@ -131,6 +132,9 @@ communication_server <- function(id,
                    # Get the measurements of those stations
                    measurements <- filter_data_measurements()
 
+                   # Remove duplicates
+                   measurements <- measurements %>% dplyr::distinct()
+
                    # Calculate group mean and sd
                    data_mean <- measurements %>%
                      # Set label to groupname
@@ -154,8 +158,8 @@ communication_server <- function(id,
                  # by the selected parameter in the measurements_filt_stns
                  get_knmi_measurements <- reactive({
                    # Get the start and end time to filter on
-                   start_time <- selected_time$selected_start_date()
-                   end_time <- selected_time$selected_end_date()
+                   start_time <- selected_start_date()
+                   end_time <- selected_end_date()
 
                    # Get selected stations
                    all_selected_stations <- get_selected_station()

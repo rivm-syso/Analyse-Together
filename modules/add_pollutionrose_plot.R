@@ -23,8 +23,8 @@ pollrose_output <- function(id) {
 
 pollrose_server <- function(id,
                             data_measurements,
-                            data_stations,
-                            data_other,
+                            data_measurements_knmi,
+                            parameter,
                             overview_component) {
 
   moduleServer(id, function(input, output, session) {
@@ -33,10 +33,10 @@ pollrose_server <- function(id,
 
     output$pollrose_plot <- renderPlot({
       # Get the data to plot - stations
-      data_plot <- data_measurements$data_filtered
+      data_plot <- data_measurements()
 
       # Get the data to plot - KNMI wind data
-      data_plot_wind <- data_measurements$data_filtered_knmi
+      data_plot_wind <- data_measurements_knmi()
 
       # Check if there is data to plot
       shiny::validate(
@@ -46,41 +46,34 @@ pollrose_server <- function(id,
              'Geen knmi-data beschikbaar.'),
       )
 
-      # Get the colours for the stations
-      data_stations <- data_stations$data %>%
-        dplyr::select(c(station, col, linetype, size)) %>%
-        dplyr::distinct(station, .keep_all = T) %>%
-        dplyr::filter(!grepl("KNMI", station))
-
-      # Determine parameter for the label in the plot
-      parameter <- data_other$parameter
-
-      # Find the corresponding label
+      # Find the corresponding label, for the parameter
       parameter_label <- overview_component %>%
-        dplyr::filter(component == parameter) %>%
+        dplyr::filter(component == parameter()) %>%
         dplyr::pull(label)
 
       # Get the stations data
       data_pollrose <- data_plot
-      data_pollrose <- data_plot %>%
-        dplyr::left_join(data_stations, by = "station")
 
       # Get the KNMI data
       knmidata <- data_plot_wind %>%
         dplyr::filter(parameter == 'wd' | parameter == 'ws') %>%
-        dplyr::select(c('station', 'parameter', 'value', 'timestamp')) %>%
+        dplyr::select(c('station', 'parameter', 'value', 'date')) %>%
         tidyr::pivot_wider(names_from = 'parameter', values_from = 'value', values_fn = mean) %>%
         rename(knmi_stat = station)
 
+      # Check if there is only 1 knmi station is selected
+      knmi_number <- knmidata %>% dplyr::select(knmi_stat) %>% unique() %>% count() %>% pull()
+      shiny::validate(need(knmi_number == 1, "Please select only 1 KNMI station."))
+
       # Merge KNMI data with the stations data
-      data_pollrose <- dplyr::left_join(data_pollrose, knmidata, by = 'timestamp', keep = T)
+      data_pollrose <- dplyr::left_join(data_pollrose, knmidata, by = 'date')
 
       # Make a plot ====
       try(pollutionRose(data_pollrose,
                         pollutant = "value",
                         wd = "wd",
                         ws = "ws",
-                        type = 'station',
+                        type = 'label',
                         local.tz = "Europe/Amsterdam",
                         cols = "Oranges",
                         statistic = 'prop.mean',

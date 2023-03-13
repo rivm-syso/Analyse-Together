@@ -48,47 +48,35 @@ timevar_daily_server <- function(id,
         dplyr::pull(label)
 
       # Make a plot
-      plot_all <- timeVariation(data_plot,
-                    pollutant = "value",
-                    normalise = FALSE,
-                    group = "label",
-                    alpha = 0.1,
-                    cols = data_plot$col,
-                    local.tz="Europe/Amsterdam",
-                    ylim = c(0,NA),
-                    ylab = parameter_label,
-                    xlab = "Hour of the day",
-                    start.day = 1,
-                    par.settings = list(fontsize=list(text=15)),
-                    key = T
-                    )
+      plot_all <- data_plot %>% dplyr::mutate(hourofday = hour(date)) %>%
+                                dplyr::group_by(label, hourofday) %>%
+                                dplyr::mutate(mean_hour = mean(value, na.rm = T))
+
 
       # Obtain info for the axis
-      min_meas <- plyr::round_any(min(plot_all$data$hour$Upper, na.rm = T), 5, f = floor)
-      max_meas <- plyr::round_any(max(plot_all$data$hour$Lower, na.rm = T), 5, f = ceiling)
+      min_meas <- plyr::round_any(min(plot_all$mean_hour, na.rm = T), 5, f = floor)
+      max_meas <- plyr::round_any(max(plot_all$mean_hour, na.rm = T), 5, f = ceiling)
       steps <- plyr::round_any(max_meas / 15, 6, f = ceiling) # to create interactive y-breaks
-      n_stat_in_plot <- length(unique(plot_all$data$hour$variable))
+      n_stat_in_plot <- length(unique(plot_all$col))
 
-      plot_part <- ggplot(data = plot_all$data$hour, aes(x = hour, y = Mean, group = variable)) +
-            geom_line(aes(color = variable)) +
-            geom_ribbon(aes(y = Mean, ymin = Lower, ymax = Upper, fill = variable), alpha = 0.2) +
-            scale_color_manual(values = c(paste0(data_plot$col)),
-                                breaks = c(paste0(data_plot$label))) +
-            scale_fill_manual(values=c(paste0(data_plot$col)),
-                               breaks = c(paste0(data_plot$label)), guide = 'none') +
+      plot_part <- ggplot(data = plot_all,aes(x = hourofday, y = mean_hour, group = label, color = label), lwd = 1) +
+            geom_line() +
+            geom_point() +
+            scale_color_manual(values = plot_all$col,
+                                   breaks = plot_all$label) +
             scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
                                minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2),
                                                   by = steps/2),
                                limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
             scale_x_continuous(breaks = seq(0,23,2), minor_breaks = seq(0,23,1)) +
-            labs(x = "Hour of the day", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
+            labs(x = i18n$t("xlab_dailypattern"), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
                  title=paste0('Daily pattern for: ', parameter_label)) +
             expand_limits(y=0) +
             theme_plots +
             theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),
                   axis.text.x = element_text(color = "black", size = 16, angle = 0,
                                              hjust = 0.5, vjust = 0))  +
-            guides(colour = guide_legend(title = "Sensor / Station",
+            guides(colour = guide_legend(title = "Group / Station",
                                          override.aes = list(size=3)))
 
         plot_part

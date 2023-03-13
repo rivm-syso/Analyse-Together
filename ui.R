@@ -45,7 +45,7 @@ shinyUI(
     tabPanel(
       title = "Home",
 
-      fluidRow(column(width = 1, offset=10,
+      fluidRow(column(width = 1, offset = 10,
                       shiny.i18n::usei18n(i18n),
                       radioGroupButtons('selected_language',
                                         size = 'sm',
@@ -80,24 +80,11 @@ shinyUI(
                                    column(6, get_data_button_output("get_btn_pushed")),
                                    column(6, download_api_button_output("dl_btn_pushed")),
                                    single_text_output("text_data_available"),
-                                   show_availability_output("show_availability"),
-                                   download_api_button_output("dl_btn_pushed")
+                                   show_availability_output("show_availability")
                           )
                    )
 
                  )
-               ),
-
-               tabPanel(
-
-                 value = "Informatie over data",
-                 title = HTML(paste0(i18n$t("title_metadata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
-
-                 fluidRow(
-                   column(12, class = "col-lg-12", wellPanel(metadata_output("meta_table")), inlineCSS(list("table" = "font-size: 13px"))),
-
-                 ),
-
                ),
 
                tabPanel(
@@ -121,17 +108,21 @@ shinyUI(
         conditionalPanel(condition="input.second_order_tabs=='Select data'",
                          column(width = 6,div(br(),br(),h3(i18n$t("tool_welcome")),
                             p(i18n$t("tool_welcome_expl")),
-                            p(i18n$t("expl_link_to_samenmeten"), a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-                            br(),i18n$t("expl_link_to_LML"), a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-                            br(),i18n$t("expl_link_to_projecten"), a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'), style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
-        conditionalPanel(condition="input.second_order_tabs=='Informatie over data'",
-                         column(width = 6,div(br(),i18n$t("expl_metadata")))),
+
+                            p(i18n$t("link_to_samenmeten"),
+                              a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
+                            br(),i18n$t("link_to_LML"),
+                            a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
+                            br(),i18n$t("link_to_projecten"),
+                            a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
+                            style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
-                         fluidRow(column(width = 6, show_map_output("map"),
+                         column(width = 6, show_map_output("map"),
                                          style = "margin-top: 30px;",
                                          style = "margin-bottom: 30px;"),
-                                  column(width = 6, set_group_button_output("set_group_pushed")))),
-
+                         fluidRow(column(width = 2, set_group_button_output("set_group_pushed")),
+                                  column(width = 2, single_text_output("name_group")))
+        )
       )
     ),
 
