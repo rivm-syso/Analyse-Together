@@ -1,5 +1,5 @@
 ######################################################################
-# script to test download queue manager 
+# script to test download queue manager
 ######################################################################
 # This script runs the queue manager in a idle while loop. The queue
 # manager takes a data request from the database and starts the
@@ -21,7 +21,7 @@ library(lubridate)
 
 # logger
 library(logger)
-log_threshold(TRACE)
+log_threshold(INFO)
 
 library(samanapir)
 library(ATdatabase)
@@ -38,7 +38,7 @@ source(here::here("funs","download_fun.R"))
 source(here::here("scripts","test_functions.R"))
 
 # Connect with the database using pool, store data, read table              ====
-    
+
 fname_db <- get_database_path()
 pool <- dbPool(
 
@@ -49,7 +49,7 @@ pool <- dbPool(
 
 list_doc <- function(type, conn) {
 
-    qry <- glue::glue_sql("SELECT ref FROM meta WHERE type={type};", 
+    qry <- glue::glue_sql("SELECT ref FROM meta WHERE type={type};",
                           .con = conn)
     res <- DBI::dbGetQuery(conn, qry)
     return(res$ref)
@@ -78,9 +78,9 @@ list_doc <- function(type, conn) {
 
             qid <- que$push(dl_station, list(j$station[i],
                                              as_datetime(j$time_start[i]),
-                                             as_datetime(j$time_end[i])), 
+                                             as_datetime(j$time_end[i])),
                             id = j$station[i])
-            log_trace("pushed job {qid} to the queue")
+            log_info("pushed job {qid} to the queue")
             que$poll()
         }
 

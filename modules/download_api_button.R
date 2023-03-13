@@ -39,7 +39,7 @@ download_api_button_server <- function(id,
          tend <- as_datetime(ifelse(is.null(selected_end_date()), NA, selected_end_date()))
          time_start <- selected_start_date() %>% as.POSIXct()
          time_end <- selected_end_date() %>%  as.POSIXct()
-         log_trace("mod download: Download pushed with paremeters Type: {type}; name: {name}; time_start: {tstart}; time_end: {tend}")
+         log_info("mod download: Download pushed with paremeters Type: {type}; name: {name}; time_start: {tstart}; time_end: {tend}")
 
 
          if(any(is.na(c(type, name, tstart, tend)))) {
@@ -67,7 +67,7 @@ download_api_button_server <- function(id,
 
            }
            if(!doc_exists(type = "data_req", ref = job_id, conn = pool)) {
-             log_trace("data request {job_id} stored")
+             log_info("mod download: data request {job_id} stored")
                # this observeEvent is
                # called multiple times,
                # and multiple writes to
