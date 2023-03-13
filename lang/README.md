@@ -15,3 +15,4 @@ Guidelines for the keys:
     All titles, tab-titles and headers starts with "title_"
     All elements of the plots starts with "plot_"
     For single (or 2) words starts with "word_"
+    For the text in a button starts with "btn_"

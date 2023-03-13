@@ -9,7 +9,6 @@ tpAnalyse <- function(){
                            tpInduTimeplot(),
                            tpMetadata(),
                            tpBarplot(),
-                           # tpKalender(),
                            tpTimevariationWeekly(),
                            tpTimevariationDaily(),
                            #tpPercentileRose(),
@@ -23,12 +22,14 @@ tpAnalyse <- function(){
 }
 
 tpTimeplot <- function(){
-  tp <-  shiny::tabPanel(i18n$t("Timeseries"),
-                         helpText(i18n$t("expl_timeplot"), style = "margin-left: 20px; "),
+  tp <-  shiny::tabPanel(i18n$t("word_timeseries"),
+                         helpText(i18n$t("expl_timeplot"),
+                                  style = "margin-left: 20px; "),
                          fluidRow(
 
                            # Render timeseries plot.
-                           column(12,class = "col-lg-12",wellPanel(timeseries_output("timeseries_plot"))),
+                           column(12,class = "col-lg-12",
+                                  wellPanel(timeseries_output("timeseries_plot"))),
 
                          ),
                          h4(i18n$t("title_expl"), style = "margin-left: 20px"),
@@ -40,13 +41,15 @@ tpTimeplot <- function(){
 }
 
 tpBarplot <- function(){
-  tp <-  shiny::tabPanel(i18n$t("Barplot"),
-                         helpText(i18n$t("expl_barplot"),style = "margin-left: 20px;"),
+  tp <-  shiny::tabPanel(i18n$t("word_barplot"),
+                         helpText(i18n$t("expl_barplot"),
+                                  style = "margin-left: 20px;"),
 
                          fluidRow(
 
-                             # check output communicatition module
-                             column(12, class = "col-lg-12",wellPanel(barplot_output("barplot_plot")))
+                             # render barplot
+                             column(12, class = "col-lg-12",
+                                    wellPanel(barplot_output("barplot_plot")))
 
                            ),
                          h4(i18n$t("title_expl"), style = "margin-left: 20px"),
@@ -57,33 +60,21 @@ tpBarplot <- function(){
   return(tp)
 }
 
-tpKalender <- function(){
-  tp <-  shiny::tabPanel("Calender plot",
-                         helpText("This graph shows ..."),
-                         plotOutput("calendar"),
-                         h4(i18n$t("title_expl")),
-                         p("If you select ...", HTML("&mu;g/m<sup>3</sup>."),
-                           "The colors are indicating ...",
-                           style = "font-size:12px")
-
-  )
-  return(tp)
-}
 
 tpTimevariationWeekly <- function(){
-  tp <-  shiny::tabPanel(i18n$t("weekpattern"),
-                         helpText(i18n$t("expl_overviewplot"), style = "margin-left: 20px;"),
+  tp <-  shiny::tabPanel(i18n$t("word_weekpattern"),
+                         helpText(i18n$t("expl_overviewplot_weekly"), style = "margin-left: 20px;"),
 
                          fluidRow(
 
-                           # Render timevariation plot.
-
-                           column(12, class = "col-lg-12", wellPanel(timevar_weekly_output("timevar_plot_weekly"))),
+                           # Render  plot.
+                           column(12, class = "col-lg-12",
+                                  wellPanel(timevar_weekly_output("timevar_plot_weekly"))),
 
                          ),
 
                          h4(i18n$t("title_expl"), style = "margin-left: 20px"),
-                         p(i18n$t("expl_overviewplot_expl"),
+                         p(i18n$t("expl_overviewplot_expl_weekly"),
                            style = "font-size:12px;margin-left: 20px")
   )
 
@@ -91,14 +82,15 @@ tpTimevariationWeekly <- function(){
 }
 
 tpTimevariationDaily <- function(){
-  tp <-  shiny::tabPanel(i18n$t("daypattern"),
-                         helpText(i18n$t("expl_overviewplot_daily"), style = "margin-left: 20px;"),
+  tp <-  shiny::tabPanel(i18n$t("word_daypattern"),
+                         helpText(i18n$t("expl_overviewplot_daily"),
+                                  style = "margin-left: 20px;"),
 
                          fluidRow(
 
-                           # Render timevariation plot.
-
-                           column(12,class = "col-lg-12", wellPanel(timevar_daily_output("timevar_plot_daily"))),
+                           # Render  plot.
+                           column(12,class = "col-lg-12",
+                                  wellPanel(timevar_daily_output("timevar_plot_daily"))),
 
                          ),
 
@@ -150,14 +142,15 @@ tpPercentileRose<- function(){
 }
 
 tpPollutionRose<- function(){
-  tp <-  shiny::tabPanel(i18n$t("conc_rose"),
+  tp <-  shiny::tabPanel(i18n$t("word_conc_rose"),
                          helpText(i18n$t("expl_concplot%"), style = "margin-left: 20px;"),
 
                     fluidRow(
 
                       # Render pollutionrose plot.
 
-                      column(12, class = "col-lg-12",wellPanel(pollrose_output("pollrose_plot"))),
+                      column(12, class = "col-lg-12",
+                             wellPanel(pollrose_output("pollrose_plot"))),
 
                     ),
                     h4(i18n$t("title_expl"), style = "margin-left: 20px"),
@@ -170,16 +163,17 @@ tpPollutionRose<- function(){
 
 
 tpInduTimeplot <- function(){
-  tp <-  shiny::tabPanel("Individual timeseries",
-                         helpText(i18n$t("expl_timeplot"), style = "margin-left: 20px; "),
+  tp <-  shiny::tabPanel(i18n$t("word_indu_timeseries"),
+                         helpText(i18n$t("expl_indu_timeplot"), style = "margin-left: 20px; "),
                          fluidRow(
 
                            # Render individual timeseries plot.
-                           column(12,class = "col-lg-12",wellPanel(individual_timeseries_output("indu_timeseries"))),
+                           column(12,class = "col-lg-12",
+                                  wellPanel(individual_timeseries_output("indu_timeseries"))),
 
                          ),
                          h4(i18n$t("title_expl"), style = "margin-left: 20px"),
-                         p(i18n$t("expl_timeplot_expl"),
+                         p(i18n$t("expl_indu_timeplot_expl"),
                            style = "font-size:12px; margin-left: 20px")
   )
 
@@ -188,16 +182,17 @@ tpInduTimeplot <- function(){
 
 
 tpMetadata <- function(){
-  tp <-  shiny::tabPanel("Table",
-                         helpText(i18n$t("expl_timeplot"), style = "margin-left: 20px; "),
+  tp <-  shiny::tabPanel(i18n$t("word_meta_table"),
+                         helpText(i18n$t("expl_meta_table"), style = "margin-left: 20px; "),
                          fluidRow(
 
-                           # Render individual timeseries plot.
-                           column(12,class = "col-lg-12",wellPanel(metadata_param_output("meta_param_table"))),
+                           # Render table
+                           column(12,class = "col-lg-12",
+                                  wellPanel(metadata_param_output("meta_param_table"))),
 
                          ),
                          h4(i18n$t("title_expl"), style = "margin-left: 20px"),
-                         p(i18n$t("expl_timeplot_expl"),
+                         p(i18n$t("expl_meta_table_expl"),
                            style = "font-size:12px; margin-left: 20px")
   )
 
