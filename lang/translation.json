@@ -32,9 +32,14 @@
 	      "nl": "Welkom bij de Samen Analyseren tool"
 	  },
 	  {"tag" : "tool_welcome_expl",
-	      "en": "With this tool you can compare the sensordata of a project or municipality with official measurement data from the National Air Monitoring Network, or, for example, compare your municipality with a municipality nearby. You do this by first making a choice from the menu on the left side of the screen. When you choose 'municipality', you can then select a municipality of your choice. Then, select a time period and click on 'start download'. The data you are interested in, will be retrieved from the database for you. This may take a while, but if you have used this specific data-set before, the data is already in the tool for you. Click on one of the other two tabs to start your analysis.",
-	      "nl": "Met deze tool kunt u de sensordata van een project of gemeente vergelijken met officiële meetdata van het Landelijk Luchtmeetnet, of bijvoorbeeld uw gemeente vergelijken met een gemeente in de buurt. Dat doet u door hier eerst een keuze te maken uit het keuzemenu links in beeld. Wanneer u kiest voor 'gemeente', dan kunt u daarna een gemeente naar keuze selecteren. Vervolgens selecteert u een tijdsperiode en klikt u op 'start download'. De data waar u in bent geïnteresseerd, zal voor u uit de database worden opgehaald. Dat kan even duren, maar als u deze dataset al eens eerder heeft gebruikt, staat de data al voor u in de tool. Klik op een van de twee andere tabbladen voor de start van uw analyse."
+	      "en": "See Dutch",
+	      "nl": "Welkom bij deze tool om de gegevens van de luchtkwaliteitssensoren te ontdekken. In dit eerste menu kunt u de keuze maken om de sensoren binnen een bepaald project of binnen een bepaalde gemeente te gaan bekijken. Ook kunt u de tijdsperiode kiezen. Druk vervolgens op de linkerbutton 'Check de beschikbaarheid', dan worden de gegevens in de tool geladen. Mochten er geen gegevens beschikbaar zijn, klik dan op de rechterbutton 'Data ophalen van externe bron'. We combineren de gegevens van SamenMeten, Luchtmeetnet en het KNMI, met de rechterbutton worden deze van de externe partijen verzameld. Dit kan een tijdje duren, advies is om later terug te komen. Om de gegevens te gaan bekijken, klik nogmaals de linkerbutton en ga verder naar het tabblad 'Visualiseer data'."
+
 	  },
+	      {"tag": "infotext_vis_expl",
+	      "en": "See Dutch",
+	      "nl": "Hier kunt u de gegevens gaan ontdekken. We hebben verschillende visualisaties gekozen om te helpen bij het bekijken van de gegevens. Zo kunt u de tijdreeks bekijken, de gegevens in een tabel of met de windgegevens in een windroos. Bij elke visualisatie staat een korte toelichting. Op de kaart maakt u een selectie van de sensoren, deze worden gelijk gegroepeerd. Door een groep sensoren te groeperen en te middelen worden de meetgegevens betrouwbaarder. De individuele sensoren kunt u bekijken in de tijdreeks van individuele sensor. Om een nieuwe groep te maken, kies de button onder de kaart."
+	      },
       {"tag" : "sel_knmi",
 	    	"en": "Show KNMI stations",
 	      "nl": "Toon KNMI-stations"
