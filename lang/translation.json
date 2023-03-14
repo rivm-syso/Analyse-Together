@@ -23,9 +23,37 @@
 	      "en": "For more information on the projects itself, see our website:",
 	      "nl": "Voor meer informatie over de projecten zelf, zie onze website:"
 	  },
-	    {"tag" : "tool_intro",
+	    {"tag" : "tool_intro_expl",
 	      "en": "The Analyse Together Tool (AT-tool) was developed by RIVM for downloading and analysing sensordata. In addition, with this tool you can easily combine the sensordata with official measurement data from the National Air Monitoring Network and with the weather data from the KNMI. The tool uses the R package openair and is offered completely open source.",
 	      "nl": "De Samen Analyseren Tool is door het RIVM ontwikkeld voor het downloaden en analyseren van sensordata. Daarnaast kun je met deze tool de sensordata  eenvoudig combineren met officiële meetdata van het Landelijk Luchtmeetnet en met de weergegevens van het KNMI. De tool maakt gebruik van het R package openair en wordt geheel open source aangeboden."
+	  },
+      {"tag" : "word_ATTool",
+	      "en": "Analyse Together Tool",
+	      "nl": "Samen Analyseren tool"
+	  },
+      {"tag" : "word_data",
+	      "en": "Data",
+	      "nl": "Data"
+	  },
+      {"tag" : "tool_intro_data_expl",
+	      "en": "See Dutch",
+	      "nl": " De sensordata is afkomstig uit de Samen Meten database . De getoonde waarden geven een indicatie van de fijnstofconcentratie. De data is niet geschikt om te toetsen aan grenswaarden. Elke sensor kan worden vergeleken met een meetstation van het Luchtmeetnet . De windgegevens voor het berekenen van de windroos komen van een weerstation van het KNMI . De locaties van de gebruikte luchtmeetnet- en weerstations worden met icoontjes op de kaart getoond. In het tabblad 'Selectie' kunt u de data van de sensoren van een project of gemeente, van de meetstations van het luchtmeetnet en van de meetstations van het KNMI laden. Deze gegevens worden via API's bij de desbetreffende partij opgevraagd. Het opvragen en ophalen van de gegevens kan enige tijd duren. De gegevens worden in de tool opgeslagen, waardoor alleen de eerste keer het downloaden enige tijd duurt. De volgende keren en voor andere gebruikers zijn de gegevens snel beschikbaar."
+	  },
+      {"tag" : "word_cal_values",
+	      "en": "See Dutch",
+	      "nl": "Gekalibreerde waarden"
+	  },
+      {"tag" : "tool_intro_cal_values_expl",
+	      "en": "See Dutch",
+	      "nl": " De gedownloade data bevat ruwe én gekalibreerde data. Details over de kalibratieprocedure zijn te vinden op het Samen Meten Kennisportaal. De kalibratie van sensordata wordt gedaan met behulp van secundaire data die niet altijd beschikbaar zijn. Het kan daarom voorkomen dat voor sommige tijdsperioden geen gekalibreerde waarden in de database aanwezig zijn. We krijgen steeds meer begrip van situaties waarin de sensoren – ook na kalibratie – minder betrouwbare waarden geven. Dit zijn bijvoorbeeld situaties met zeer hoge luchtvochtigheid (vanaf 97 à 98% zoals gemeten op KNMI stations). Met name in de wintermaanden in de nacht en vroege ochtend kan de luchtvochtigheid zeer hoog kan zijn. Daarnaast kan het zijn dat deze sensoren altijd of vaak afwijken van de patronen die andere sensoren laten zien. Het is op dit moment nog niet mogelijk om de meetwaarden van deze uren of sensoren uit de gegevens te filteren. Daar werken we wel aan."
+	  },
+    {"tag" : "word_opensource",
+	      "en": "Open source",
+	      "nl": "Opensource"
+	  },
+      {"tag" : "tool_intro_opensource_expl",
+	      "en": "See Dutch",
+	      "nl": "De broncode voor deze tool wordt geheel open source aangeboden via onze GitHub-pagina . Iedereen mag deze tool verder ontwikkelen of aanpassen, mits de aanpassingen weer open source beschikbaar komen. "
 	  },
 	    {"tag" : "tool_welcome",
 	      "en": "Welcome to the Analyse Together tool",
@@ -137,40 +165,36 @@
         "nl": "Tabel"
       },
       {"tag" : "expl_meta_table",
-        "en": "sfd",
-        "nl": "dsfsd"
+        "en": "See Dutch",
+        "nl": "In onderstaande tabel kunt u de databeschikbaarheid van de sensoren en stations zien."
       },
       {"tag" : "expl_meta_table_expl",
-        "en": "sdfsd",
-        "nl": "sdfds"
-      },
-      {"tag" : "expl_metadata",
-        "en": "This is a table with information on the sensors, stations and KNMI-stations available for this project. The number of measurements are displayed for each sensor and station, and are component specific. Furthermore, this table gives insight into the timespan of the data-availability.",
-        "nl": "Dit is een tabel met informatie over de sensoren, stations en KNMI-stations beschikbaar binnen dit project. "
+        "en": "See Dutch",
+        "nl": "Per sensor is de datacapture bepaald, dit houdt in hoeveel procent van de totale tijd de sensor gegevens heeft. Ook kunt u het moment van de eerste en laatste meting zien. Om een goed gemiddelde te bepalen wil je het liefste dat de sensoren dezelfde periode gemeten hebben en een hoge datacapture."
       },
       {"tag" : "word_timeseries",
         "en": "Timeseries",
-        "nl": "Tijdserie"
+        "nl": "Tijdreeks"
       },
       {"tag" : "expl_timeplot",
         "en": "This plot show the timeseries of the sensor.",
-        "nl": "Deze grafiek laat de tijdreeks van de sensor in vergelijking met het meetstation zien."
+        "nl": "Deze grafiek laat de tijdreeks van geselecteerde groep(en) zien."
       },
       {"tag" : "expl_timeplot_expl",
         "en": "See Dutch",
-        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse sensorwaarden voor de geselecteerde periode. Deze waarden kan je vergeleken met metingen van het dichtsbijzijnde meetstation van het luchtmeetnet. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3"
+        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. Deze waarden kan je vergeleken met metingen van het dichtsbijzijnde meetstation van het luchtmeetnet. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_barplot",
         "en": "Barplot",
-        "nl": "Barplot"
+        "nl": "Staafdiagram"
       },
       {"tag" : "expl_barplot",
         "en": "See Dutch",
-        "nl": "Deze grafiek laat de gemiddelde concentratie van de sensor in vergelijking met het meetstation zien."
+        "nl": "Deze grafiek laat de gemiddelde concentratie van de groep zien."
       },
       {"tag" : "expl_barplot_expl",
-        "en": "Graph shows the average of the selected stations and sensors. The average is calculated for the timerange as selected in the previous step.                                   The white number in each bar, displays the number of measurements within this timeperiod. If this number is very low, the statistical power of                                  the difference between stations/sensors is lower.",
-        "nl": "Als je een sensor of groep sensoren selecteert, zie je het gemiddelde voor de geselecteerde tijdreeks. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen."
+        "en": "See Dutch",
+        "nl": "Dit figuur laat het gemiddelde van de groep of het station zien. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen. Let op: Voor het bekijken van een jaargemiddelde: check in de tabel of de individuele tijdreeks of de sensoren wel het hele jaar gemeten hebben. <br> Het getal geeft het aantal metingen aan, de pootjes geven de standaard deviatie van de metingen aan. Op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_weekpattern",
         "en": "Weekly pattern",
@@ -178,7 +202,11 @@
       },
       {"tag" : "expl_overviewplot_weekly",
         "en": "See Dutch",
-        "nl": "Deze grafieken laten het uurlijkse gemiddelde zien per sensor of sensorgroep. Dit is uitgerekend per weekdag. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag."
+        "nl": "Deze grafiek laat het uurlijkse gemiddelde zien groep/station per dag."
+      },
+      {"tag" : "expl_overviewplot_expl_weekly",
+        "en": "See Dutch",
+        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplits naar alle dagen van de week. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag. Op de x-as zie je de dag van de week met elk uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_daypattern",
         "en": "Daily pattern",
@@ -194,27 +222,23 @@
       },
       {"tag" : "expl_overviewplot_daily",
         "en": "See Dutch",
-        "nl": "Deze grafieken laten het uurlijkse gemiddelde zien per sensor of sensorgroep. Dit is uitgerekend over alle dagen die u heeft geselecteerd. Dit levert een gemiddelde dagelijkse gang van de concentraties op."
-      },
-      {"tag" : "expl_overviewplot_expl_weekly",
-        "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplits naar alle dagen van de week."
+        "nl": "Deze grafiek laat het uurlijkse gemiddelde zien per groep/station per uur van de dag. Dit is uitgerekend over alle dagen die u heeft geselecteerd. Dit levert een gemiddelde dagelijkse gang van de concentraties op."
       },
       {"tag" : "expl_overviewplot_expl_daily",
         "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag."
+        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag. Op de x-as zie je het uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_indu_timeseries",
         "en": "Individual timeseries",
         "nl": "Individuele tijdreeks"
       },
       {"tag" : "expl_indu_timeplot",
-        "en": "dgfdsgf",
-        "nl": "sdfsdf"
+        "en": "See Dutch",
+        "nl": "Hier kunt u de tijdreeks van de individuele sensor bekijken."
       },
       {"tag" : "expl_indu_timeplot_expl",
-        "en": "dsgfdf",
-        "nl": "dsfd"
+        "en": "See Dutch",
+        "nl": "Nadat u op de kaart verschillende sensoren heeft geselecteerd, kunt u door middel van de drop-down een sensor kiezen. De tijdreeks van deze enkele sensor wordt dan getoond. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_conc_rose",
         "en": "Concentration rose (%)",
@@ -222,11 +246,11 @@
       },
       {"tag" : "expl_concplot%",
         "en": "See Dutch",
-        "nl": "Deze grafiek toont per windrichting de relatieve bijdrage aan de totale gemiddelde concentratie per sensor of sensorgroep."
+        "nl": "Deze grafiek toont per windrichting de relatieve bijdrage aan de totale gemiddelde concentratie per groep of station."
       },
       {"tag" : "expl_concplot%_expl",
         "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windsector het aandeel (in %) van deze sector in de totale gemiddelde concentratie. De gemiddelde concentratie per sector wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichtpaarse vulling en een hele kleine donkerpaarse vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichtpaarse vulling) brengt en slechts af en toe een hoge concenetratie (donkerpaarse vulling)."
+        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windsector het aandeel (in %) van deze sector in de totale gemiddelde concentratie. De gemiddelde concentratie per sector wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
       },
       {"tag" : "expl_no_data_available",
         "en": "No data available.",

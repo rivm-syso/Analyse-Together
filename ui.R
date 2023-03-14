@@ -128,10 +128,17 @@ shinyUI(
 
     tabPanel(
       title = i18n$t("title_infotool"),
-      h4(i18n$t("title_expl")),
-      p(i18n$t("tool_intro"),
-        style = "font-size:13px"))
+        h4(i18n$t("word_ATTool")),
+        p(i18n$t("tool_intro_expl")),br(),
+        h4(i18n$t("word_data")),
+        p(i18n$t("tool_intro_data_expl")),br(),
+        h4(i18n$t("word_cal_values")),
+        p(i18n$t("tool_intro_cal_values_expl")),br(),
+      h4(i18n$t("word_opensource")),
+      p(i18n$t("tool_intro_opensource_expl"))
+    )
 
   )
 
 )
+
