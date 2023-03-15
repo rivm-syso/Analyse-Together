@@ -41,11 +41,10 @@ source(here::here("scripts","test_functions.R"))
     
 fname_db <- get_database_path()
 pool <- dbPool(
-
-               drv = SQLite(),
+               drv = SQLite(synchronous = "off"),
                dbname = fname_db
-
 )
+pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 
 list_doc <- function(type, conn) {
 
