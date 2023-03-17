@@ -52,7 +52,8 @@ shinyUI(
                                         justified = T,
                                         width = '80px',
                                         label = NULL,
-                                        choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
+                                        choices = i18n$get_languages(),
+                                        # choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
                                         selected = i18n$get_key_translation(), direction = 'horizontal'),
                                         align = "left",
                                         style = "margin-bottom: -10px;",
@@ -92,7 +93,8 @@ shinyUI(
                  title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
 
                  fluidRow(column(12, class = "col-lg-12",
-                          wellPanel(component_selection_output("select_component"), style = "margin-bottom: -10px"))
+                          wellPanel(component_selection_output("select_component"),
+                                    style = "margin-bottom: -10px"))
                           ,
 
                           # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
@@ -106,11 +108,12 @@ shinyUI(
         conditionalPanel(condition="input.second_order_tabs=='Select data'",
                          column(width = 6,div(br(),br(),h3(i18n$t("tool_welcome")),
                             p(i18n$t("tool_welcome_expl")),
-                            p(i18n$t("link_to_samenmeten"),
+
+                            p(i18n$t("expl_link_to_samenmeten"),
                               a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-                            br(),i18n$t("link_to_LML"),
+                            br(),i18n$t("expl_link_to_LML"),
                             a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-                            br(),i18n$t("link_to_projecten"),
+                            br(),i18n$t("expl_link_to_projecten"),
                             a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
                             style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
@@ -125,10 +128,17 @@ shinyUI(
 
     tabPanel(
       title = i18n$t("title_infotool"),
-      h4(i18n$t("title_expl")),
-      p(i18n$t("tool_intro"),
-        style = "font-size:13px"))
+        h4(i18n$t("word_ATTool")),
+        p(i18n$t("tool_intro_expl")),br(),
+        h4(i18n$t("word_data")),
+        p(i18n$t("tool_intro_data_expl")),br(),
+        h4(i18n$t("word_cal_values")),
+        p(i18n$t("tool_intro_cal_values_expl")),br(),
+      h4(i18n$t("word_opensource")),
+      p(i18n$t("tool_intro_opensource_expl"))
+    )
 
   )
 
 )
+

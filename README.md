@@ -80,5 +80,3 @@ By contributing to this project, you agree to abide by its terms.
 This projects is licenced using the Open Source GPL-3 licence, please
 see the [licence](LICENSE.md) for details
 
-
-
