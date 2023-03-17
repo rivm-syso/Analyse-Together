@@ -77,26 +77,28 @@ while(TRUE) {
 
     job_id <- joblist[1]
     j <- ATdatabase::get_doc(type = "data_req", ref = job_id, conn = pool)
-    log_trace("queueman: data request {job_id} created")
+    log_trace("queueman: data request {job_id} found")
 
     # create queue, run jobs, wait until finished, collect stats
 
 
-    for (i in 1:nrow(j)) {
+    for (i in 500:nrow(j)) {
 
         qid <- que$push(dl_station, list(j$station[i],
                                          as_datetime(j$time_start[i]),
                                          as_datetime(j$time_end[i])), 
                         id = j$station[i])
         log_trace("pushed job {qid} to the queue")
-        que$poll()
     }
+
     Sys.sleep(1)
+                                  
+    log_trace("queueman: starting queue with  {nrow(que$list_tasks())} jobs on queue")
 
     time_spent <- system.time(
 
                               while(nrow(que$list_tasks()) >4) {
-                                  que$poll()
+                                  #que$poll()
                                   log_trace("queueman: still {nrow(que$list_tasks())} jobs on queue")
                                   
                                   x <- as.data.frame(que$list_tasks())
@@ -107,12 +109,13 @@ while(TRUE) {
                                       res <- que$pop()
                                       if(!is.null(res)) {
                                           if(!is.null(res$error)) {
-                                              log_warn("ERROR dl_station:\n {res$error}")
+                                              log_warn("ERROR dl_station: res$task_id\n {res$error}")
                                           } else {
                                               log_trace("queueman: task popped")
                                               NULL
                                           }
-                                              print(res)
+                                              
+                                          print(res)
                                       } else {
                                           log_trace("queueman: task Nulled")
                                           break

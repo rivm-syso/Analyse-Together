@@ -93,6 +93,8 @@ dl_station <- function(id, time_start, time_end) {
 
     log_trace("download completed, disconnecting db {id}")
     DBI::dbDisconnect(conn)
+    log_trace("dl_station returning {id}")
+    cat("dl_station finished", id, "\n")
     return()
 
 }
