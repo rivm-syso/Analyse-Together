@@ -109,11 +109,11 @@ shinyUI(
                          column(width = 6,div(br(),br(),h3(i18n$t("tool_welcome")),
                             p(i18n$t("tool_welcome_expl")),
 
-                            p(i18n$t("link_to_samenmeten"),
+                            p(i18n$t("expl_link_to_samenmeten"),
                               a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-                            br(),i18n$t("link_to_LML"),
+                            br(),i18n$t("expl_link_to_LML"),
                             a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-                            br(),i18n$t("link_to_projecten"),
+                            br(),i18n$t("expl_link_to_projecten"),
                             a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
                             style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
@@ -128,10 +128,17 @@ shinyUI(
 
     tabPanel(
       title = i18n$t("title_infotool"),
-      h4(i18n$t("title_expl")),
-      p(i18n$t("tool_intro"),
-        style = "font-size:13px"))
+        h4(i18n$t("word_ATTool")),
+        p(i18n$t("tool_intro_expl")),br(),
+        h4(i18n$t("word_data")),
+        p(i18n$t("tool_intro_data_expl")),br(),
+        h4(i18n$t("word_cal_values")),
+        p(i18n$t("tool_intro_cal_values_expl")),br(),
+      h4(i18n$t("word_opensource")),
+      p(i18n$t("tool_intro_opensource_expl"))
+    )
 
   )
 
 )
+
