@@ -82,7 +82,7 @@ while(TRUE) {
     # create queue, run jobs, wait until finished, collect stats
 
 
-    for (i in 500:nrow(j)) {
+    for (i in 1:nrow(j)) {
 
         qid <- que$push(dl_station, list(j$station[i],
                                          as_datetime(j$time_start[i]),

@@ -51,22 +51,52 @@ pool <- dbPool(
 
 dbtables <- get_db_tables(pool)
 
+create_data_request <- function(kits, time_start, time_end, conn, max_requests = 100) {
 
-for(i in 1:4) {
-    job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
-    print(job_id)
+    add_req <- function(x,y) {
+        dl_req <- data.frame()
+        for(i in 1:nrow(x))  {
+            dl_req <- bind_rows(dl_req, data.frame(station = x$station[i],
+                                                   time_start = x$time_start[i],
+                                                   time_end = x$time_end[i], row.names = NULL))
 
-    dl_req <- data.frame()
-    for (i in 1:10) {
-        rnd_station <- get_rnd_station(dbtables)
-        dl_req <- bind_rows(dl_req, data.frame(station = rnd_station$station,
-                                               time_start = rnd_station$time_start,
-                                               time_end = rnd_station$time_end, row.names = NULL))
+        }
+        return(dl_req)
     }
 
-    add_doc(type = "data_req", ref = job_id, doc = dl_req, conn = pool, overwrite = TRUE)
-    x <- get_doc(type = "data_req", ref = job_id, conn = pool)
+
+    job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
+    kits_req <- tibble(station = kits, time_start = time_start, time_end = time_end) %>% 
+        rowid_to_column("id") %>%
+        mutate(set = ceiling(id / max_requests)) %>% 
+        group_by(set)
+           
+    res <- kits_req  %>% group_map(add_req)
+    print(res)
+
+        
+    job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
+    for(i in 1:length(res)) {
+        job_id_seq <- sprintf("%s_%04i", job_id, i)
+        print(job_id_seq)
+        print(res[[i]])
+        add_doc(type = "data_req", ref = job_id_seq, doc = res[[i]], conn = pool, overwrite = TRUE)
+    }
+
+
 }
+
+kits <- data.frame()
+for(i in 1:10) {
+    rnd_station <- get_rnd_station(dbtables)
+    kits <- rbind(kits, data.frame(station = rnd_station$station,
+                                   time_start = rnd_station$time_start,
+                                   time_end = rnd_station$time_end),
+                                    row.names = NULL)
+}
+
+create_data_request(kits$station, time_start = kits$time_start, time_end = kits$time_end,
+                        conn = pool, max_requests = 3)
 
 
 poolClose(pool)
