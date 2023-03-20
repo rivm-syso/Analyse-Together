@@ -45,46 +45,10 @@ pool <- dbPool(
                dbname = fname_db
 
 )
-#sqliteSetBusyHandler(pool, 10e3)
 
 # get some testing data to create jobs, add jobs to meta database
 
 dbtables <- get_db_tables(pool)
-
-create_data_request <- function(kits, time_start, time_end, conn, max_requests = 100) {
-
-    add_req <- function(x,y) {
-        dl_req <- data.frame()
-        for(i in 1:nrow(x))  {
-            dl_req <- bind_rows(dl_req, data.frame(station = x$station[i],
-                                                   time_start = x$time_start[i],
-                                                   time_end = x$time_end[i], row.names = NULL))
-
-        }
-        return(dl_req)
-    }
-
-
-    job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
-    kits_req <- tibble(station = kits, time_start = time_start, time_end = time_end) %>% 
-        rowid_to_column("id") %>%
-        mutate(set = ceiling(id / max_requests)) %>% 
-        group_by(set)
-           
-    res <- kits_req  %>% group_map(add_req)
-    print(res)
-
-        
-    job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
-    for(i in 1:length(res)) {
-        job_id_seq <- sprintf("%s_%04i", job_id, i)
-        print(job_id_seq)
-        print(res[[i]])
-        add_doc(type = "data_req", ref = job_id_seq, doc = res[[i]], conn = pool, overwrite = TRUE)
-    }
-
-
-}
 
 kits <- data.frame()
 for(i in 1:10) {

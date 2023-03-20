@@ -1,8 +1,68 @@
 ######################################################################
-# functions fro the download queue
+#
+#
+#
+# functions for the download queue
+#
+#
+#
 ######################################################################
 
+create_data_request <- function(kits, time_start, time_end, conn, max_requests = 100) {
+    # Function to create a data request. A data request is a json doc
+    # with a data.frame with 3 columns: kitid, time_start and
+    # time_end. Each data request has an unique id and a index number.
+    # Data requests can request max_requests kits/timestamp
+    # combinations, if their are more kits/timestamps needed the
+    # request is devided in sub requests. This function stores the
+    # requests tot the database.
+    #
+    # kits: a vector of kits
+    # time_start / time_end: a single value of time ranges, or a
+    #   vector with the same length as kits with differen time ranges.
+    # conn: database connection object
+    # max_request: max jobs on queue for each request
+    #
+    # Return value: a list with data requests
 
+    add_req <- function(x,y) {
+        dl_req <- data.frame()
+        for(i in 1:nrow(x))  {
+            dl_req <- bind_rows(dl_req, data.frame(station = x$station[i],
+                                                   time_start = x$time_start[i],
+                                                   time_end = x$time_end[i], row.names = NULL))
+
+        }
+        return(dl_req)
+    }
+
+
+    job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
+    kits_req <- tibble(station = kits, time_start = time_start, time_end = time_end) %>% 
+        rowid_to_column("id") %>%
+        mutate(set = ceiling(id / max_requests)) %>% 
+        group_by(set)
+           
+    res <- kits_req  %>% group_map(add_req)
+        
+    job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
+    for(i in 1:length(res)) {
+        job_id_seq <- sprintf("%s_%04i", job_id, i)
+        print(job_id_seq)
+        print(res[[i]])
+        add_doc(type = "data_req", ref = job_id_seq, doc = res[[i]], conn = pool, overwrite = TRUE)
+    }
+    invisible(res)
+
+}
+
+
+
+
+
+######################################################################
+# R6 queue object, used by queue_manager
+######################################################################
 
 task_q <- R6::R6Class(
                       "task_q",
