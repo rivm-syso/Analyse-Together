@@ -39,7 +39,6 @@ source(here::here("scripts","test_functions.R"))
 # setup logging
 pid <- Sys.getpid()
 logfile <- file.path(get_database_dirname(),paste0("download.log"))
-print(logfile)
 log_threshold(TRACE)
 log_appender(appender_file(logfile))
 
@@ -115,7 +114,6 @@ while(TRUE) {
                                               NULL
                                           }
                                               
-                                          print(res)
                                       } else {
                                           log_trace("queueman: task Nulled")
                                           break

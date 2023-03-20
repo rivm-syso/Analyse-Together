@@ -50,7 +50,13 @@ create_data_request <- function(kits, time_start, time_end, conn, max_requests =
         job_id_seq <- sprintf("%s_%04i", job_id, i)
         print(job_id_seq)
         print(res[[i]])
-        add_doc(type = "data_req", ref = job_id_seq, doc = res[[i]], conn = pool, overwrite = TRUE)
+           
+        if(!doc_exists(type = "data_req", ref = job_id_seq, conn = pool)) {
+            log_trace("data request {job_id_seq} stored")
+            add_doc(type = "data_req", ref = job_id_seq,
+                    doc = res[[i]], conn = pool,
+                    overwrite = TRUE)
+        }
     }
     invisible(res)
 
