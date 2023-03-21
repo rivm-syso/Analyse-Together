@@ -19,6 +19,7 @@ RUN apt-get update \
     libproj-dev \
     libssl-dev \
     rsync \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # install R pkgs
