@@ -5,9 +5,9 @@
 tpAnalyse <- function(){
   tp <-  shiny::tabsetPanel(
                            tpInfotext(),
+                           tpMetadata(),
                            tpTimeplot(),
                            tpInduTimeplot(),
-                           tpMetadata(),
                            tpBarplot(),
                            tpTimevariationWeekly(),
                            tpTimevariationDaily(),
