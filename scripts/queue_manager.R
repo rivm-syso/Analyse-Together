@@ -38,8 +38,8 @@ source(here::here("scripts","test_functions.R"))
 
 # setup logging
 pid <- Sys.getpid()
-logfile <- file.path(get_database_dirname(),paste0("download.log"))
-log_threshold(TRACE)
+logfile <- file.path(get_database_dirname(),paste0("queue.log"))
+log_threshold(DEBUG)
 log_appender(appender_file(logfile))
 
 # Connect with the database using pool, store data, read table              ====
@@ -76,7 +76,7 @@ while(TRUE) {
 
     job_id <- joblist[1]
     j <- ATdatabase::get_doc(type = "data_req", ref = job_id, conn = pool)
-    log_trace("queueman: data request {job_id} found")
+    log_debug("queue_man: data request {job_id} found")
 
     # create queue, run jobs, wait until finished, collect stats
 
@@ -87,44 +87,42 @@ while(TRUE) {
                                          as_datetime(j$time_start[i]),
                                          as_datetime(j$time_end[i])), 
                         id = j$station[i])
-        log_trace("pushed job {qid} to the queue")
+        log_trace("queue_man: pushed job {qid} to the queue")
     }
 
     Sys.sleep(1)
                                   
-    log_trace("queueman: starting queue with  {nrow(que$list_tasks())} jobs on queue")
+    log_debug("queue_man: starting queue with {nrow(que$list_tasks())} jobs on queue")
 
+    counter <- 0
     time_spent <- system.time(
 
                               while(nrow(que$list_tasks()) >4) {
-                                  #que$poll()
-                                  log_trace("queueman: still {nrow(que$list_tasks())} jobs on queue")
-                                  
-                                  x <- as.data.frame(que$list_tasks())
-                                  saveRDS(x,here("data","quelist.rds"))
-
+                                  njobs <- nrow(que$list_tasks())
+                                  counter <- counter + 1
+                                  if(counter%%10 == 0) {
+                                      log_debug("queue_man: still {njobs} jobs on queue")
+                                  }
 
                                   repeat{
                                       res <- que$pop()
                                       if(!is.null(res)) {
                                           if(!is.null(res$error)) {
-                                              log_warn("ERROR dl_station: res$task_id\n {res$error}")
+                                              log_warn("ERROR queue_man:  dl_station: res$task_id\n {res$error}")
                                           } else {
-                                              log_trace("queueman: task popped")
-                                              NULL
+                                              log_trace("queue_man: task popped, result found for task {res$id}")
                                           }
-                                              
                                       } else {
-                                          log_trace("queueman: task Nulled")
+                                          log_trace("queueman: task pop returned NULL")
                                           break
                                       }
                                   }
-                                  Sys.sleep(3)
+                                  Sys.sleep(5)
                               }
     )
 
     j_done <- list(j, data.frame(sec = c(time_spent)))
-    log_trace("queueman: data request {job_id} done")
+    log_debug("queue_man: data request {job_id} done")
     remove_doc(type = "data_req", ref = job_id, conn = pool)
     ATdatabase::add_doc(type = "data_req_done", ref = job_id, doc = j_done, conn = pool)
 }

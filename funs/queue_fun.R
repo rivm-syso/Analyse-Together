@@ -48,11 +48,9 @@ create_data_request <- function(kits, time_start, time_end, conn, max_requests =
     job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
     for(i in 1:length(res)) {
         job_id_seq <- sprintf("%s_%04i", job_id, i)
-        print(job_id_seq)
-        print(res[[i]])
            
         if(!doc_exists(type = "data_req", ref = job_id_seq, conn = pool)) {
-            log_trace("data request {job_id_seq} stored")
+            log_trace("create_data_request: data request {job_id_seq} stored")
             add_doc(type = "data_req", ref = job_id_seq,
                     doc = res[[i]], conn = pool,
                     overwrite = TRUE)
@@ -179,16 +177,16 @@ task_q <- R6::R6Class(
 
                                          duplicates <- which(private$tasks$state == "duplicate")
                                          if(length(duplicates) >=1) {
-                                             log_trace("running duplicates {duplicates} tasks: {private$tasks$id[duplicates]}")
+                                             log_trace("task_q: running duplicates {duplicates} tasks: {private$tasks$id[duplicates]}")
 #                                              print(private$tasks$id[duplicates])
                                              for(i in duplicates) {
-                                                 log_trace("running {i}")
+                                                 log_trace("task_q: create_data_reques: running {i}")
                                                  id <- gsub(".* ", "", private$tasks$id[i])
-                                                 log_trace("new id {id}")
+                                                 log_trace("task_q: new id {id}")
                                                  if (id %in% private$tasks$id) {
-                                                     log_trace("new id {id} is duplicate")
+                                                     log_trace("task_q: new id {id} is duplicate")
                                                  } else {
-                                                     log_trace("new id {id} is set to waiting")
+                                                     log_trace("task_q: new id {id} is set to waiting")
                                                      private$tasks$id[i] <- id
                                                      private$tasks$state[i] <- "waiting"
                                                  }
@@ -202,7 +200,7 @@ task_q <- R6::R6Class(
                                              for(i in donetasks) {
                                                  oldid <- private$tasks$id[i]
                                                  if(!grepl("^\\.", oldid)) {
-                                                     log_trace("rename done task {i}, {private$tasks$id[i]}")
+                                                     log_trace("task_q: rename done task {i}, {private$tasks$id[i]}")
                                                      newid <- paste(private$tasks$seq[i],private$tasks$id[i])
                                                      private$tasks$id[i] <- newid
                                                  }
