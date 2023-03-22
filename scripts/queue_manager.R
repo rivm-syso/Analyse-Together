@@ -109,6 +109,7 @@ while(TRUE) {
                                       if(!is.null(res)) {
                                           if(!is.null(res$error)) {
                                               log_warn("ERROR queue_man:  dl_station: res$task_id\n {res$error}")
+                                              # print(res)
                                           } else {
                                               log_trace("queue_man: task popped, result found for task {res$id}")
                                           }
