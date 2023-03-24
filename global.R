@@ -94,13 +94,13 @@ theme_plots <- theme_bw(base_size = 18) +
 db_path <- get_database_path()
 log_info("opening database {db_path}")
 pool <- dbPool(
-
-  drv = SQLite(),
-  dbname = db_path
-
+               drv = SQLite(synchronous = "off"),
+               dbname = db_path
 )
+pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 
-### Initiate some variables                                                 ====
+
+## Initiate some variables                                                 ====
 # Default start and end time for the date picker
 default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
 

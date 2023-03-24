@@ -151,8 +151,6 @@ download_sensor_meta <- function(name, type, conn = pool) {
                stop("download_sensor_meta: unknown type")
            })
 
-
-
     stations <- projinfo$sensor_data %>%
         select(kit_id, lat, lon) %>%
         as_tibble
@@ -263,10 +261,14 @@ round_to_days <- function(time_start, time_end) {
 
 download_data_samenmeten <- function(x, station, conn ) {
 
-    streams <- get_doc(type = "datastream", ref = station, conn) %>%
-        pull(datastream_id)
-    streams_desc <- get_doc(type = "datastream", ref = station, conn) %>%
-        select(datastream_id, kit_id_ext)
+    streaminfo <- get_doc(type = "datastream", ref = station, conn)
+    if(length(streaminfo) == 1 && is.na(streaminfo)) {
+        log_warn("download_data_samenmeten: datastream {station} is empty") 
+        return(NULL)
+    } else {
+        streams <- streaminfo %>% pull(datastream_id)
+        streams_desc <- streaminfo %>% select(datastream_id, kit_id_ext)
+    }
 
     ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
     te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
