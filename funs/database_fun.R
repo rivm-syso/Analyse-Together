@@ -34,7 +34,7 @@ get_database_path <- function(db = "database.db") {
         create_database_tables(pool)
     }
 
-        
+
     return(db_path)
 }
 
@@ -108,7 +108,7 @@ download_sensor_meta <- function(name, type, conn = pool) {
     #    type: either 'project' or 'municipality'
     #    conn: db connection object
 
-    #############
+    #--
     # vectorized helper functions
 
     insert_location_info_vectorized <- function(x, conn = conn) {
@@ -137,7 +137,7 @@ download_sensor_meta <- function(name, type, conn = pool) {
 
     }
 
-    #############
+    #--
 
 
     switch(type,
@@ -345,25 +345,6 @@ download_locations_knmi <- function(knmi_stations, time_start, time_end) {
 
 }
 
-get_lmlstations_from_meta <- function(meta_data){
-
-  meta_doc <- meta_data %>% filter(type == "station") %>% select(doc)
-
-  station_list <- c()
-
-  for (i in 1:nrow(meta_doc)){
-    station_list <- append(station_list, str_split(meta_doc[i, ], ","))
-  }
-
-  station_list <- unlist(station_list)
-  station_list <- station_list[str_detect(station_list, "NL")]
-  station_list <- gsub('[^[:alnum:] ]', '', station_list)
-  station_list <- Filter(function(x) str_length(x) < 8, station_list)
-  station_list <- unique(station_list)
-
-  return(station_list)
-
-}
 
 download_data_lml <- function(x, station, conn) {
 
