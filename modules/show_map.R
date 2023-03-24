@@ -45,13 +45,13 @@ show_map_server <- function(id,
     # Initialisation icons ----
     # Icons for the reference stations
     icons_stations <- iconList(
-      lml_selected = makeIcon(iconUrl = "images/lml_selected.png", iconWidth = 24, iconHeight = 16),
-      lml_deselected = makeIcon(iconUrl = "images/lml_deselected.png",  iconWidth = 24, iconHeight = 16))
+      lml_selected = makeIcon(iconUrl = "images/lml_selected_txt.png", iconWidth = 24, iconHeight = 16),
+      lml_deselected = makeIcon(iconUrl = "images/lml_deselected_txt.png",  iconWidth = 24, iconHeight = 16))
 
     # Icons for the knmi stations
     icons_knmis <- iconList(
-      knmi_selected = makeIcon(iconUrl = "images/knmi_selected.png", iconWidth = 20, iconHeight = 20),
-      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected.png", iconWidth = 20, iconHeight = 20))
+      knmi_selected = makeIcon(iconUrl = "images/knmi_selected_txt.png", iconWidth = 30, iconHeight = 16),
+      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected_txt.png", iconWidth = 30, iconHeight = 16))
 
     # Get the locations from the stations and convert to spatialcoordinates ----
     get_locations <- reactive({
@@ -238,6 +238,7 @@ show_map_server <- function(id,
 
       # Put selected stations on map
       data_selected <- data_snsrs %>% dplyr::filter(selected)
+      
       if(nrow(data_selected > 0)){
         proxy %>%
           addMarkers(data = data_selected, ~lon, ~lat,
