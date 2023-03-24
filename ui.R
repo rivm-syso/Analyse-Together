@@ -117,12 +117,20 @@ shinyUI(
                             a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
                             style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
-                         column(width = 6, show_map_output("map"),
-                                         style = "margin-top: 30px;",
-                                         style = "margin-bottom: 30px;"),
-                         fluidRow(column(width = 2, set_group_button_output("set_group_pushed")),
-                                  column(width = 2, single_text_output("name_group")))
-        )
+                         column(width = 6,
+                                style = "margin-top: 30px;",
+                                style = "margin-bottom: 30px;",
+                                fluidRow(
+                                  show_map_output("map")),
+                                br(),
+                                  fluidRow(
+                                    column(width = 3, set_group_button_output("set_group_pushed")),
+                                    column(width = 8, offset = 1,
+                                           p("U voegt nu sensoren toe aan: "),
+                                           single_text_output("name_group")))
+
+                         )
+                        )
       )
     ),
 
