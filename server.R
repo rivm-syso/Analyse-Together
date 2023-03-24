@@ -152,8 +152,8 @@ shinyServer(function(global, input, output, session) {
 
   # To give some indication of the data available in dbs
   show_availability_server("show_availability",
-                           data_to_show = data_measurements,
-                           data_stations = data_stations,
+                           data_to_show = reactive(data_measurements$data_all),
+                           data_stations = reactive(data_stations$data),
                            selected_start_date = reactive(data_other$start_date),
                            selected_end_date = reactive(data_other$end_date)
                            )
@@ -172,9 +172,13 @@ shinyServer(function(global, input, output, session) {
       data_measumerements_new <- get_data_button$data_measurements()
       data_measurements$data_all <- data_measumerements_new
 
-      # Get the station info and store them
-      data_stations_new <- get_data_button$data_stations()
-      data_stations$data <- data_stations_new
+      # Get the station info - all stations - and store them
+      data_stations_new <- get_data_button$data_stations_all()
+      data_stations$data_all <- data_stations_new
+
+      # Get the station info - stations with data - and store them
+      data_stations_filtered_new <- get_data_button$data_stations_filtered()
+      data_stations$data <- data_stations_filtered_new
 
       # Get the message and store them
       message_data_new <- get_data_button$message_data()
