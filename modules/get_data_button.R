@@ -86,10 +86,16 @@ get_data_button_server <- function(id,
       data_measurements$data_all <- add_uncertainty_sensor(data_measurements$data_all)
 
       # Get the information from the stations
-      data_stations$data <- get_locations(stations_con, stations_name)
+      data_stations$data_all <- get_locations(stations_con, stations_name)
+
+      # Select only the station containing data
+      stations_with_data <- data_measurements$data_all %>%
+        dplyr::select(station) %>%
+        unique() %>% pull()
 
       # Take for each sensor 1 location and add the plot-colours etc.
-      data_stations$data <- data_stations$data %>%
+      data_stations$data <- data_stations$data_all %>%
+        dplyr::filter(station %in% stations_with_data) %>%
         dplyr::distinct(station, .keep_all = T) %>%
         # Add some specific info for the tool
         dplyr::mutate(selected = F, col = col_default, linetype = line_default,
@@ -107,7 +113,8 @@ get_data_button_server <- function(id,
 
     return(list(
       data_measurements = reactive({data_measurements$data_all}),
-      data_stations = reactive({data_stations$data}),
+      data_stations_all = reactive({data_stations$data_all}),
+      data_stations_filtered = reactive({data_stations$data}),
       message_data = reactive({message_data$data_in_dbs})
     ))
 
