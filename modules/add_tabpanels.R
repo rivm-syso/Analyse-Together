@@ -205,7 +205,8 @@ tpInfotext <- function(){
 
                            # Render table
                            column(12,class = "col-lg-12",
-                                  wellPanel(p(i18n$t("infotext_vis_expl"))))
+                                  wellPanel(p(i18n$t("infotext_vis_1_expl")),
+                                            p(i18n$t("infotext_vis_2_expl"))))
 
                          )
   )

@@ -13,15 +13,23 @@
 	  },
 	   {"tag" : "expl_link_to_samenmeten",
 	      "en": "Real-time measurements of the sensors are available on the Measure Together Dataportal:",
-	      "nl": "Real-time metingen van de sensoren kunt u vinden op het Samen Meten Dataportaal: "
+	      "nl": "Real-time metingen van de sensoren kun je vinden op het Samen Meten Dataportaal: "
 	  },
 	  {"tag" : "expl_link_to_LML",
 	      "en": "Real-time measurements of the stations are available on the National Air Monitoring Network website:",
-	      "nl": "Real-time metingen van de officiele meetstations kunt u vinden op de Landelijk Luchtmeetnet website:"
+	      "nl": "Real-time metingen van de officiele meetstations kun je vinden op de Landelijk Luchtmeetnet website:"
+	  },
+	 	  {"tag" : "expl_link_to_KNMI",
+	      "en": "See Dutch",
+	      "nl": "Meer informatie over de metingen van het KNMI kun je vinden op:"
 	  },
 	  {"tag" : "expl_link_to_projecten",
 	      "en": "For more information on the projects itself, see our website:",
 	      "nl": "Voor meer informatie over de projecten zelf, zie onze website:"
+	  },
+	  {"tag" : "expl_link_github",
+	      "en": "See Dutch",
+	      "nl": "Voor de code zie op de GitHub-pagina:"
 	  },
 	    {"tag" : "tool_intro_expl",
 	      "en": "The Analyse Together Tool (AT-tool) was developed by RIVM for downloading and analysing sensordata. In addition, with this tool you can easily combine the sensordata with official measurement data from the National Air Monitoring Network and with the weather data from the KNMI. The tool uses the R package openair and is offered completely open source.",
@@ -34,6 +42,10 @@
       {"tag" : "word_data",
 	      "en": "Data",
 	      "nl": "Data"
+	  },
+      {"tag" : "word_links",
+	      "en": "Links",
+	      "nl": "Links"
 	  },
       {"tag" : "tool_intro_data_expl",
 	      "en": "See Dutch",
@@ -59,14 +71,33 @@
 	      "en": "Welcome to the Analyse Together tool",
 	      "nl": "Welkom bij de Samen Analyseren tool"
 	  },
-	  {"tag" : "tool_welcome_expl",
+	  {"tag" : "tool_welcome_1_expl",
 	      "en": "See Dutch",
-	      "nl": "Welkom bij deze tool om de gegevens van de luchtkwaliteitssensoren te ontdekken. In dit eerste menu kunt u de keuze maken om de sensoren binnen een bepaald project of binnen een bepaalde gemeente te gaan bekijken. Ook kunt u de tijdsperiode kiezen. Druk vervolgens op de linkerbutton 'Check de beschikbaarheid', dan worden de gegevens in de tool geladen. Mochten er geen gegevens beschikbaar zijn, klik dan op de rechterbutton 'Data ophalen van externe bron'. We combineren de gegevens van SamenMeten, Luchtmeetnet en het KNMI, met de rechterbutton worden deze van de externe partijen verzameld. Dit kan een tijdje duren, advies is om later terug te komen. Om de gegevens te gaan bekijken, klik nogmaals de linkerbutton en ga verder naar het tabblad 'Visualiseer data'."
-
+	      "nl": "Welkom bij deze tool om de gegevens van de luchtkwaliteitssensoren te ontdekken. In deze tool combineren we de gegevens van SamenMeten, het Luchtmeetnet en het KNMI. Je kunt de gegevens per project of per gemeente bekijken. Dit gaat als volgt:"
+	      	  },
+  {"tag" : "tool_welcome_2_expl",
+	      "en": "See Dutch",
+	      "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken, en selecteer het betreffende project of gemeente. Ook kun je de tijdsperiode kiezen. "
 	  },
-	      {"tag": "infotext_vis_expl",
+	  {"tag" : "tool_welcome_3_expl",
 	      "en": "See Dutch",
-	      "nl": "Hier kunt u de gegevens gaan ontdekken. We hebben verschillende visualisaties gekozen om te helpen bij het bekijken van de gegevens. Zo kunt u de tijdreeks bekijken, de gegevens in een tabel of met de windgegevens in een windroos. Bij elke visualisatie staat een korte toelichting. Op de kaart maakt u een selectie van de sensoren, deze worden gelijk gegroepeerd. Door een groep sensoren te groeperen en te middelen worden de meetgegevens betrouwbaarder. De individuele sensoren kunt u bekijken in de tijdreeks van individuele sensor. Om een nieuwe groep te maken, kies de button onder de kaart."
+	      "nl": "2. Druk vervolgens op de linkerbutton 'Check de beschikbaarheid', dan worden de gegevens in de tool geladen. Nadat de gegevens in de tool zijn geladen, kun je in de andere tabbladen aan de slag met het bekijken van de gegevens."
+	  },
+	  {"tag" : "tool_welcome_4_expl",
+	      "en": "See Dutch",
+	      "nl": "3. Mochten de gegevens nog niet beschikbaar zijn, klik dan op de rechterbutton 'Data ophalen van externe bron'. De gegevens worden dan op de achtergrond opgehaald van SamenMeten, het Luchtmeetnet en het KNMI. Dit kan een tijdje duren, ons advies is om later terug te komen."
+	  },
+  {"tag" : "tool_welcome_5_expl",
+	      "en": "See Dutch",
+	      "nl": "4. Om de gegevens te gaan bekijken, klik altijd (nog eens) op de linkerbutton en ga verder naar het tabblad 'Visualiseer data'."
+	  },
+	      {"tag": "infotext_vis_1_expl",
+	      "en": "See Dutch",
+	      "nl": "Hier kun je de gegevens gaan ontdekken. We hebben verschillende visualisaties gekozen om te helpen bij het bekijken van de gegevens. Zo kun je de tijdreeks bekijken, de gegevens in een tabel of met de windgegevens in een windroos. Bij elke visualisatie staat een korte toelichting. "
+	      },
+	      {"tag": "infotext_vis_2_expl",
+	      "en": "See Dutch",
+	      "nl": "Op de kaart maak je een selectie van de sensoren, deze worden gelijk gegroepeerd. Door een groep sensoren te groeperen en te middelen worden de meetgegevens betrouwbaarder. De individuele sensoren kun je bekijken in de tijdreeks van individuele sensor. Het maken van een groep kan op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. Om een nieuwe groep te maken, kies de button onder de kaart. Elke keer dat je op de button klikt, verschijnt er een nieuw groeps ID. Wil je een groep wijzigen, dan klik je op het prullenbak 'Delete layers'. Druk op save om de wijziging door te voeren."
 	      },
       {"tag" : "sel_knmi",
 	    	"en": "Show KNMI stations",
