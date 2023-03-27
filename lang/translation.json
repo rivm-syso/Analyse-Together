@@ -43,6 +43,10 @@
 	      "en": "Data",
 	      "nl": "Data"
 	  },
+    {"tag" : "word_info",
+	      "en": "Information",
+	      "nl": "Informatie"
+	  },
       {"tag" : "word_links",
 	      "en": "Links",
 	      "nl": "Links"
@@ -201,7 +205,7 @@
       },
       {"tag" : "expl_meta_table_expl",
         "en": "See Dutch",
-        "nl": "Per sensor is de datacapture bepaald, dit houdt in hoeveel procent van de geselecteerde tijd de sensor gegevens heeft. Ook kunt u het moment van de eerste en laatste meting zien. Om een goed gemiddelde te bepalen wil je het liefste dat de sensoren dezelfde periode gemeten hebben en een hoge datacapture hebben."
+        "nl": "Per sensor is de datacapture bepaald, dit houdt in hoeveel procent van de geselecteerde tijd de sensor gegevens heeft. Ook kun je het moment van de eerste en laatste meting zien. Om een goed gemiddelde te bepalen wil je het liefste dat de sensoren dezelfde periode gemeten hebben en een hoge datacapture hebben."
       },
       {"tag" : "word_timeseries",
         "en": "Timeseries",
@@ -213,7 +217,7 @@
       },
       {"tag" : "expl_timeplot_expl",
         "en": "See Dutch",
-        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. Deze waarden kan je vergeleken met metingen van het dichtsbijzijnde meetstation van het luchtmeetnet. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. Deze waarden kan je vergelijken met metingen van het officiele meetstation van het Luchtmeetnet. Deze kun je zelf toevoegen door deze aan te klikken op de kaart. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_barplot",
         "en": "Barplot",

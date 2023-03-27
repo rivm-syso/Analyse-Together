@@ -200,7 +200,7 @@ tpMetadata <- function(){
 }
 
 tpInfotext <- function(){
-  tp <-  shiny::tabPanel("Infotext",
+  tp <-  shiny::tabPanel(i18n$t("word_info"),
                          fluidRow(
 
                            # Render table
