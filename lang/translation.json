@@ -17,7 +17,7 @@
 	  },
 	  {"tag" : "expl_link_to_LML",
 	      "en": "Real-time measurements of the stations are available on the National Air Monitoring Network website:",
-	      "nl": "Real-time metingen van de stations kunt u vinden op de Landelijk Luchtmeetnet website:"
+	      "nl": "Real-time metingen van de officiele meetstations kunt u vinden op de Landelijk Luchtmeetnet website:"
 	  },
 	  {"tag" : "expl_link_to_projecten",
 	      "en": "For more information on the projects itself, see our website:",
@@ -37,7 +37,7 @@
 	  },
       {"tag" : "tool_intro_data_expl",
 	      "en": "See Dutch",
-	      "nl": " De sensordata is afkomstig uit de Samen Meten database . De getoonde waarden geven een indicatie van de fijnstofconcentratie. De data is niet geschikt om te toetsen aan grenswaarden. Elke sensor kan worden vergeleken met een meetstation van het Luchtmeetnet . De windgegevens voor het berekenen van de windroos komen van een weerstation van het KNMI . De locaties van de gebruikte luchtmeetnet- en weerstations worden met icoontjes op de kaart getoond. In het tabblad 'Selectie' kunt u de data van de sensoren van een project of gemeente, van de meetstations van het luchtmeetnet en van de meetstations van het KNMI laden. Deze gegevens worden via API's bij de desbetreffende partij opgevraagd. Het opvragen en ophalen van de gegevens kan enige tijd duren. De gegevens worden in de tool opgeslagen, waardoor alleen de eerste keer het downloaden enige tijd duurt. De volgende keren en voor andere gebruikers zijn de gegevens snel beschikbaar."
+	      "nl": " De sensordata is afkomstig uit de Samen Meten database. De getoonde waarden geven een indicatie van de fijnstofconcentratie op een specifieke locatie. De data is niet geschikt om te toetsen aan de Europese grenswaarden. Elke sensor kan worden vergeleken met een meetstation van het Luchtmeetnet. De windgegevens voor het berekenen van de windroos komen van een weerstation van het KNMI. De locaties van de gebruikte Luchtmeetnet- en weerstations worden met icoontjes op de kaart getoond. In het tabblad 'Selecteer data' kun je de data van de sensoren van een project of gemeente, van de meetstations van het Luchtmeetnet en van de meetstations van het KNMI laden. Deze gegevens worden via API's bij de desbetreffende partij opgevraagd. Het opvragen en ophalen van de gegevens kan enige tijd duren. De gegevens worden in de tool opgeslagen, waardoor alleen de eerste keer het downloaden enige tijd duurt. De volgende keren en voor andere gebruikers zijn de gegevens snel beschikbaar."
 	  },
       {"tag" : "word_cal_values",
 	      "en": "See Dutch",
@@ -170,7 +170,7 @@
       },
       {"tag" : "expl_meta_table_expl",
         "en": "See Dutch",
-        "nl": "Per sensor is de datacapture bepaald, dit houdt in hoeveel procent van de totale tijd de sensor gegevens heeft. Ook kunt u het moment van de eerste en laatste meting zien. Om een goed gemiddelde te bepalen wil je het liefste dat de sensoren dezelfde periode gemeten hebben en een hoge datacapture."
+        "nl": "Per sensor is de datacapture bepaald, dit houdt in hoeveel procent van de geselecteerde tijd de sensor gegevens heeft. Ook kunt u het moment van de eerste en laatste meting zien. Om een goed gemiddelde te bepalen wil je het liefste dat de sensoren dezelfde periode gemeten hebben en een hoge datacapture hebben."
       },
       {"tag" : "word_timeseries",
         "en": "Timeseries",
@@ -194,7 +194,7 @@
       },
       {"tag" : "expl_barplot_expl",
         "en": "See Dutch",
-        "nl": "Dit figuur laat het gemiddelde van de groep of het station zien. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen. Let op: Voor het bekijken van een jaargemiddelde: check in de tabel of de individuele tijdreeks of de sensoren wel het hele jaar gemeten hebben. <br> Het getal geeft het aantal metingen aan, de pootjes geven de standaard deviatie van de metingen aan. Op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Dit figuur laat het gemiddelde van de groep of het officiele meetstation zien. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen. Let op: Voor het bekijken van een jaargemiddelde: check in de tabel of de individuele tijdreeks of de sensoren wel het hele jaar gemeten hebben. Het getal geeft het aantal metingen aan, de pootjes geven de standaard deviatie van de metingen aan. Op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_weekpattern",
         "en": "Weekly pattern",
@@ -206,7 +206,7 @@
       },
       {"tag" : "expl_overviewplot_expl_weekly",
         "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplits naar alle dagen van de week. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag. Op de x-as zie je de dag van de week met elk uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplitst naar alle dagen van de week. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag. Op de x-as zie je de dag van de week met elk uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_daypattern",
         "en": "Daily pattern",
@@ -238,7 +238,7 @@
       },
       {"tag" : "expl_indu_timeplot_expl",
         "en": "See Dutch",
-        "nl": "Nadat u op de kaart verschillende sensoren heeft geselecteerd, kunt u door middel van de drop-down een sensor kiezen. De tijdreeks van deze enkele sensor wordt dan getoond. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Nadat je op de kaart verschillende sensoren heeft geselecteerd, kun je door middel van het dropdownmenu een sensor kiezen. De tijdreeks van deze enkele sensor wordt dan getoond. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_conc_rose",
         "en": "Concentration rose (%)",
@@ -250,7 +250,7 @@
       },
       {"tag" : "expl_concplot%_expl",
         "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windsector het aandeel (in %) van deze sector in de totale gemiddelde concentratie. De gemiddelde concentratie per sector wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
+        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde concentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
       },
       {"tag" : "expl_no_data_available",
         "en": "No data available.",
