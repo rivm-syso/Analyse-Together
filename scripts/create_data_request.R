@@ -1,8 +1,11 @@
 ######################################################################
-# script to test download queue functions
+# script to test download queue manager 
 ######################################################################
-# This script must be run interactive
+# This script creates 5 data request, based on a random selection of
+# existing. Each data request contains 10 stations for which a small
+# time range is requested
 ######################################################################
+
 
 # Read in the necessary libraries                                           ====
 
@@ -21,6 +24,7 @@ log_threshold(TRACE)
 
 library(samanapir)
 library(ATdatabase)
+library(here)
 
 # set working directory to root of repo
 setwd(here::here())
@@ -42,36 +46,21 @@ pool <- dbPool(
 
 )
 
+# get some testing data to create jobs, add jobs to meta database
 
-# now let's start the queue
-que <- task_q$new()
-
-# and push some jobs to the queue
 dbtables <- get_db_tables(pool)
-for (i in 1:10) {
-    rnd_station <- get_rnd_station(dbtables)
-    qid <- que$push(dl_station, list(rnd_station$station,
-                                     rnd_station$time_start,
-                                     rnd_station$time_end), 
-                    id = rnd_station$station)
-    log_trace("pushed job {qid} to the queue")
 
+kits <- data.frame()
+for(i in 1:10) {
+    rnd_station <- get_rnd_station(dbtables)
+    kits <- rbind(kits, data.frame(station = rnd_station$station,
+                                   time_start = rnd_station$time_start,
+                                   time_end = rnd_station$time_end),
+                                    row.names = NULL)
 }
 
-# start queue
-que$poll()
-
-# see what's on the queue
-tlist <- que$list_tasks()
-print(tlist)
-
-p <- station_overview(pool)
-print(p)
-
-t1 <- simple_task_list() %>%
-    as.data.frame()
-print(t1)
+create_data_request(kits$station, time_start = kits$time_start, time_end = kits$time_end,
+                        conn = pool, max_requests = 3)
 
 
-
-
+poolClose(pool)

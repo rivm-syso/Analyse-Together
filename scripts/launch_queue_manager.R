@@ -1,7 +1,7 @@
 ######################################################################
-# Database monitoring script
+# This scripts launches and monitors the que manager
 ######################################################################
-
+######################################################################
 
 # Read in the necessary libraries                                           ====
 
@@ -32,33 +32,13 @@ source(here::here("funs","queue_fun.R"))
 source(here::here("funs","download_fun.R"))
 source(here::here("scripts","test_functions.R"))
 
-# Connect with the database using pool, store data, read table              ====
-    
-fname_db <- get_database_path()
-pool <- dbPool(
+qm_script <- here::here("scripts","queue_manager.R")
+system2("Rscript", qm_script, wait = FALSE)
 
-               drv = SQLite(),
-               dbname = fname_db
+for(i in 1:5) {
+    source(here::here("scripts", "create_data_request.R"))
+}
 
-)
-
-
-# Connections with the database tables
-measurements_con <- tbl(pool, "measurements")
-stations_con <- tbl(pool, "location")
-cache_con <- tbl(pool, "cache")
-
-repeat{
-
-    n_m <- nrow(measurements_con%>%collect())
-    n_s <- nrow(stations_con%>%collect())
-    n_c <- nrow(cache_con%>%collect())
-    print(now())
-    cat("Measurements:\t", n_m, "\n")
-    cat("Stations:\t", n_s, "\n")
-    cat("Cache:\t\t", n_c, "\n")
-    cat("\n\n")
-    Sys.sleep(5)
-
-
+while(TRUE) {
+    Sys.sleep(3600)
 }
