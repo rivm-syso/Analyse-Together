@@ -10,6 +10,7 @@ library(RSQLite)
 library(pool)
 library(ATdatabase)
 library(here)
+library(logger)
 source(here::here("funs","database_fun.R"))
 
 
