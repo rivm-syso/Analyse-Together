@@ -58,7 +58,7 @@ timevar_weekly_server <- function(id,
       names_weekdays <- c("maandag", "dinsdag", "woensdag",
         "donderdag", "vrijdag", "zaterdag", "zondag")
       values_weekdays <- c(1,2,3,4,5,6,7)
-      labels_weekdays_plot <- setNames(values_weekdays,names_weekdays)
+      labels_weekdays_plot <- setNames(names_weekdays, values_weekdays)
 
       # Obtain info for the axis
       min_meas <- plyr::round_any(min(plot_all$mean_day_hour, na.rm = T), 5, f = floor)
