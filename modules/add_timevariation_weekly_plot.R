@@ -48,18 +48,17 @@ timevar_weekly_server <- function(id,
         dplyr::pull(label)
 
       # Make a plot
-      plot_all <- data_plot %>% dplyr::mutate(daynumber = weekdays(date),
+      plot_all <- data_plot %>% dplyr::mutate(daynumber = lubridate::wday(date, week_start = 1),
                                               hourofday = hour(date)) %>%
                                 dplyr::group_by(label, daynumber, hourofday) %>%
                                 dplyr::mutate(mean_day_hour = mean(value, na.rm = T)) %>%
                                 dplyr::arrange(date)
 
-      plot_all$daynumber <- factor(plot_all$daynumber,levels = c("maandag", "dinsdag", "woensdag",
-                                                                 "donderdag", "vrijdag", "zaterdag", "zondag"))
-
-      log_trace("weekly plot mod: {names(plot_all)} ")
-      log_trace("weekly plot mod: {head(plot_all)} ")
-      log_trace("weekly plot mod: {plot_all %>% dplyr::filter(is.na(daynumber))} ")
+      # Create labels
+      names_weekdays <- c("maandag", "dinsdag", "woensdag",
+        "donderdag", "vrijdag", "zaterdag", "zondag")
+      values_weekdays <- c(1,2,3,4,5,6,7)
+      labels_weekdays_plot <- setNames(values_weekdays,names_weekdays)
 
       # Obtain info for the axis
       min_meas <- plyr::round_any(min(plot_all$mean_day_hour, na.rm = T), 5, f = floor)
@@ -70,7 +69,7 @@ timevar_weekly_server <- function(id,
       plot_part <- ggplot(data = plot_all,aes(x = hourofday, y = mean_day_hour, group = label, color = label), lwd = 1) +
         geom_line() +
         geom_point() +
-        facet_wrap(~ daynumber, nrow = 1) +
+        facet_wrap(~ daynumber, nrow = 1, labeller = labeller(daynumber = labels_weekdays_plot)) +
         scale_color_manual(values = plot_all$col,
                            breaks = plot_all$label) +
         scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
