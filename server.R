@@ -153,9 +153,7 @@ shinyServer(function(global, input, output, session) {
   # To give some indication of the data available in dbs
   show_availability_server("show_availability",
                            data_stations_all = reactive(data_stations$data_all),
-                           data_stations_with_data = reactive(data_stations$data),
-                           selected_start_date = reactive(data_other$start_date),
-                           selected_end_date = reactive(data_other$end_date)
+                           data_stations_with_data = reactive(data_stations$data)
                            )
 
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
