@@ -47,7 +47,6 @@ timevar_weekly_server <- function(id,
         dplyr::filter(component == parameter) %>%
         dplyr::pull(label)
 
-
       # Make a plot
       plot_all <- data_plot %>% dplyr::mutate(daynumber = weekdays(date),
                                               hourofday = hour(date)) %>%
@@ -57,6 +56,10 @@ timevar_weekly_server <- function(id,
 
       plot_all$daynumber <- factor(plot_all$daynumber,levels = c("maandag", "dinsdag", "woensdag",
                                                                  "donderdag", "vrijdag", "zaterdag", "zondag"))
+
+      log_trace("weekly plot mod: {names(plot_all)} ")
+      log_trace("weekly plot mod: {head(plot_all)} ")
+      log_trace("weekly plot mod: {plot_all %>% dplyr::filter(is.na(daynumber))} ")
 
       # Obtain info for the axis
       min_meas <- plyr::round_any(min(plot_all$mean_day_hour, na.rm = T), 5, f = floor)
