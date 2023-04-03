@@ -115,6 +115,10 @@
         "en": "Visualise data",
         "nl": "Visualiseer data"
       },
+      {"tag" : "title_advanced",
+        "en": "Advanced",
+        "nl": "Advanced"
+      },
       {"tag" : "sel_basedon",
         "en": "Selection based on:",
         "nl": "Selectie gebaseerd op:"
@@ -298,6 +302,14 @@
       {"tag" : "expl_no_weather_data",
         "en": "No weather data available.",
         "nl": "Geen weerdata beschikbaar."
+      },
+      {"tag" : "expl_download_to_pc",
+        "en" : "Download data to pc",
+        "nl" : "Download data naar pc"
+      },
+      {"tag": "btn_pc",
+        "en" : "Download to pc",
+        "nl": "Download to pc"
       }
 
     ]

@@ -174,8 +174,6 @@ source("modules/select_date_range.R")
 source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
-source("modules/download_api_button.R")
-source("modules/get_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
@@ -193,8 +191,11 @@ source("modules/add_individual_timeseries_plot.R")
 # Source layout
 source("modules/add_tabpanels.R")
 
-# Source new group button
+# Source buttons
 source("modules/set_groupname_button.R")
+source("modules/download_api_button.R")
+source("modules/get_data_button.R")
+source("modules/download_to_pc.R")
 
 # # Source que display
 # source("modules/view_que.R")

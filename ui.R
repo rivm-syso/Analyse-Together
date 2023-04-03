@@ -99,6 +99,17 @@ shinyUI(
                           # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
                           tabsetPanel(tpAnalyse(), id = "tabsanalyse")
                  )
+               ),
+               tabPanel(
+                 value = "Advanced",
+                 title = HTML(paste0(i18n$t("title_advanced")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
+
+                 fluidRow(
+                   wellPanel(h4(i18n$t("expl_download_to_pc")),
+                             download_pc_button_output("download_pc"))
+
+                 )
+
                )
            )
         ),
