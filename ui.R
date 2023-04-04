@@ -106,6 +106,7 @@ shinyUI(
 
                  fluidRow(
                    wellPanel(h4(i18n$t("expl_download_to_pc")),
+                             p(i18n$t("expl_download_to_pc_expl")),
                              download_pc_button_output("download_pc"))
 
                  )

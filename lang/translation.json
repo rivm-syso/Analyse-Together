@@ -307,9 +307,13 @@
         "en" : "Download data to pc",
         "nl" : "Download data naar pc"
       },
+      {"tag" : "expl_download_to_pc_expl",
+        "en" : "See Dutch",
+        "nl" : "Klik op onderstaande button om de gegevens vanuit de tool naar uw eigen computer te downloaden. De download bevat een csv-bestand met de kolommen: 'station' de naam erin van het station/sensor; 'date' de datum en tijd; 'wd' de windrichting (missing data: -999, windstil = 0, veranderlijk = 990); 'ws' de windsnelheid; 'pm10' de concentratie pm10; 'pm10_kal' de gekalibreerde concentratie pm10; 'pm25' de concentratie pm2,5 ; 'pm25_kal' de gekalibreerde concentratie pm2,5 ; 'lat' de latitude van de locatie; 'lon' de longitude van de locatie. Wanneer een waarde niet beschikbaar is, is 'NA' meegegeven."
+      },
       {"tag": "btn_pc",
         "en" : "Download to pc",
-        "nl": "Download to pc"
+        "nl": "Download naar pc"
       }
 
     ]
