@@ -198,7 +198,6 @@ shinyServer(function(global, input, output, session) {
 
       data_grouped <- communication_stuff$grouped_measurements()
       data_measurements$data_grouped <- data_grouped
-      browser()
     })
 
     # Observe filtered data from knmi ----
