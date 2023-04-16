@@ -39,7 +39,7 @@ source(here::here("scripts","test_functions.R"))
 # setup logging
 pid <- Sys.getpid()
 logfile <- file.path(get_database_dirname(),paste0("queue.log"))
-log_threshold(DEBUG)
+log_threshold(TRACE)
 log_appender(appender_file(logfile))
 
 # Connect with the database using pool, store data, read table              ====
@@ -62,8 +62,6 @@ list_doc <- function(type, conn) {
 }
 
 
-que <- task_q$new()
-# get single job
 
 while(TRUE) {
 
@@ -74,9 +72,14 @@ while(TRUE) {
         next
     }
 
+    # start queue
+    que <- task_q$new()
+
+    # get job
     job_id <- joblist[1]
     j <- ATdatabase::get_doc(type = "data_req", ref = job_id, conn = pool)
     log_debug("queue_man: data request {job_id} found")
+    log_trace("queue_man: total of {(lenth(joblist}) of data requests still waiting")
 
     # create queue, run jobs, wait until finished, collect stats
 
@@ -95,13 +98,25 @@ while(TRUE) {
     log_debug("queue_man: starting queue with {nrow(que$list_tasks())} jobs on queue")
 
     counter <- 0
+    last_njobs <- 0
+    watchdog_counter <- 0
+    success <- FALSE
+
     time_spent <- system.time(
 
                               while(nrow(que$list_tasks()) >4) {
-                                  njobs <- nrow(que$list_tasks())
+                                  njobs <- nrow(que$list_tasks()) - 4
                                   counter <- counter + 1
                                   if(counter%%10 == 0) {
                                       log_debug("queue_man: still {njobs} jobs on queue")
+                                      if (last_njobs == njobs) {
+                                          watchdog_counter  <- watchdog_counter + 1
+                                      }
+                                      if(watchdog_counter > 10) {
+                                          log_warn("WARNING queue_man: queue stalled, watchdog activated")
+                                          break
+                                      }
+                                      last_njobs  <- njobs
                                   }
 
                                   repeat{
@@ -115,6 +130,7 @@ while(TRUE) {
                                           }
                                       } else {
                                           log_trace("queueman: task pop returned NULL")
+                                          success <- TRUE
                                           break
                                       }
                                   }
@@ -122,10 +138,17 @@ while(TRUE) {
                               }
     )
 
-    j_done <- list(j, data.frame(sec = c(time_spent)))
-    log_debug("queue_man: data request {job_id} done")
-    remove_doc(type = "data_req", ref = job_id, conn = pool)
-    ATdatabase::add_doc(type = "data_req_done", ref = job_id, doc = j_done, conn = pool)
+    rm(que); gc()
+
+    if(success) {
+        log_debug("queue_man: queue finished with success")
+        j_done <- list(j, data.frame(sec = c(time_spent)))
+        log_debug("queue_man: data request {job_id} done")
+        remove_doc(type = "data_req", ref = job_id, conn = pool)
+        ATdatabase::add_doc(type = "data_req_done", ref = job_id, doc = j_done, conn = pool)
+    } else {
+        log_warn("WARNING: queue_man: queue finished without success, retrying")
+    }
 }
 
 
