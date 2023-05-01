@@ -1,6 +1,33 @@
 # Script to analyse the duration of the data requests as stored in the meta table in dbs
+# Read in the necessary libraries                                           ====
 
-# Get the meta table from the dbs
+# Tidyverse (essential)
+library(tidyverse)
+
+# Databases (essential)
+library(RSQLite)
+library(pool)
+
+library(lubridate)
+library(ATdatabase)
+library(here)
+
+# set working directory to root of repo
+setwd(here::here())
+
+# source scripts
+source(here::here("funs","database_fun.R"))
+
+# Connect with the database using pool, store data, read table            ====
+fname_db <- get_database_path()
+pool <- dbPool(
+
+  drv = SQLite(),
+  dbname = fname_db
+
+)
+
+# Get the meta table from the dbs                                     ====
 meta_table <- tbl(pool, "meta") %>% as.data.frame()
 # Select only the info about the data requests
 data_requests <- meta_table %>% dplyr::filter(type == 'data_req_done')
@@ -31,7 +58,7 @@ for (ind in seq(1,nrow(data_requests))){
   info_req_all <- info_req_all %>% dplyr::bind_rows(info_req)
 }
 
-# Some summaries
+# Some summaries                                                      ====
 summary(info_req_all)
 mean_values <- info_req_all %>% dplyr::summarise_all("mean")
 median_values <- info_req_all %>% dplyr::summarise_all("median")
@@ -39,7 +66,7 @@ median_values <- info_req_all %>% dplyr::summarise_all("median")
 mean_values
 median_values
 
-# Visualisations of the loading time
+# Visualisations of the loading time                                ====
 p_time_count <- ggplot(info_req_all, aes(time_req/60, count_stations)) +
   geom_point() +
   labs(title = "Per request request: loading time vs number stations" ,
