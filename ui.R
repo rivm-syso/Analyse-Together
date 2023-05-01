@@ -72,18 +72,27 @@ shinyUI(
 
                  fluidRow(
 
-                   column(12, class = "col-lg-12",
-                          wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
-                                   choice_selection_output("choice_select"),
-                                   date_range_output("select_date_range"),
-                                   column(6, get_data_button_output("get_btn_pushed")),
-                                   column(6, download_api_button_output("dl_btn_pushed")),
-                                   single_text_output("text_data_available"),
-                                   show_availability_output("show_availability")
-                          )
-                   )
+                   column(width = 12,
+                          wellPanel(
+                            div(h3(i18n$t("tool_welcome")),
+                            p(i18n$t("tool_welcome_1_expl")),
+                            p(i18n$t("tool_welcome_2_expl")),
+                            p(i18n$t("tool_welcome_3_expl")),
+                            p(i18n$t("tool_welcome_4_expl")),
+                            p(i18n$t("tool_welcome_5_expl")),
 
+                            p(i18n$t("expl_link_to_samenmeten"),
+                              a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
+                              br(),i18n$t("expl_link_to_LML"),
+                              a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
+                              br(),i18n$t("expl_link_to_KNMI"),
+                              a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
+                              br(),i18n$t("expl_link_to_projecten"),
+                              a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
+                              style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))
+                   )
                  )
+
                ),
 
                tabPanel(
@@ -117,22 +126,19 @@ shinyUI(
 
         # Conditional panels for the right side of the page:
         conditionalPanel(condition="input.second_order_tabs=='Select data'",
-                         column(width = 6,div(br(),br(),h3(i18n$t("tool_welcome")),
-                            p(i18n$t("tool_welcome_1_expl")),
-                            p(i18n$t("tool_welcome_2_expl")),
-                            p(i18n$t("tool_welcome_3_expl")),
-                            p(i18n$t("tool_welcome_4_expl")),
-                            p(i18n$t("tool_welcome_5_expl")),
+                           column(width = 6,
+                                  wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+                                            choice_selection_output("choice_select"),
+                                            date_range_output("select_date_range"),
+                                            column(6, get_data_button_output("get_btn_pushed")),
+                                            column(6, download_api_button_output("dl_btn_pushed")),
+                                            single_text_output("text_data_available"),
+                                            show_availability_output("show_availability")
+                                  )
 
-                            p(i18n$t("expl_link_to_samenmeten"),
-                              a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-                            br(),i18n$t("expl_link_to_LML"),
-                            a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-                            br(),i18n$t("expl_link_to_KNMI"),
-                            a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
-                            br(),i18n$t("expl_link_to_projecten"),
-                            a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
-                            style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
+                           )
+
+                         ),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
                          column(width = 6,
                                 style = "margin-top: 30px;",
