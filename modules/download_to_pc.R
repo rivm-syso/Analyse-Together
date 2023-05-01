@@ -36,11 +36,11 @@ download_pc_button_server <- function(id,
           paste0('data_', name_munproj(),'_', selected_start_date(),
                  '_', selected_end_date(), '.csv')
         },
-        # Geef de data op: deze wordt eerst met de API opgehaald
+        # bepaal de content van de download
         content = function(file) {
           # Get the data in wide for download
           data_to_download <- data_measurements() %>%
-            dplyr::filter(parameter %in% c("pm10_kal", "pm10", "pm25_kal", "pm25", "wd", "ws")) %>%
+            dplyr::filter(parameter %in% c("pm10_kal", "pm10", "pm25_kal", "pm25", "wd", "ws", "temp", "pres", "rh")) %>%
             dplyr::select(c(station, date, parameter, value)) %>%
             unique() %>%
             tidyr::pivot_wider(values_from = value, names_from = parameter)
@@ -53,8 +53,11 @@ download_pc_button_server <- function(id,
           data_to_download <- data_to_download %>%
             dplyr::left_join(data_locations, by = "station")
 
+          # Add some explanation and source to the file
+          write.table(i18n$t("expl_download_to_pc_expl"), file, row.names = FALSE)
+
           # Write output to user
-          write.table(data_to_download, file, sep = ',', row.names = FALSE)
+          write.table(data_to_download, file, sep = ',', row.names = FALSE, append = T)
         }
       )
   })
