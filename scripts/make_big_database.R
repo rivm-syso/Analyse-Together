@@ -24,7 +24,7 @@ setwd(here::here())
 library(logger)
 log_threshold(TRACE)
 
-remotes::install_github('jspijker/samanapir', ref = 'Issue_2')
+remotes::install_github('rivm-syso/samanapir', ref = 'main')
 library(samanapir)
 library(ATdatabase)
 
@@ -38,10 +38,15 @@ library(ATdatabase)
 time_start <- as_datetime("2022-08-01 00:00:00")
 time_end <- as_datetime("2022-10-31 23:59:59")
 
+# time_start <- as_datetime("2023-01-01 00:00:00")
+# time_end <- as_datetime("2023-03-31 23:59:59")
+# 
 # set municipalities to download
 download_municipalities <- c("Nijmegen", "Eindhoven",
-                             "Veenendaal", "Meierijstad",
-                             "Zaanstad")
+                             "Veenendaal", "Rotterdam",
+                             "Zaanstad", "Amsterdam",
+                             "Almere", "Amersfoort",
+                             "Alkmaar")
                                 
 ######################################################################
 # start
@@ -68,44 +73,16 @@ pool <- dbPool(
 
 )
 
-# Get all kits
-
-kits <- c()
+# # Get all kits
 for (i in download_municipalities) {
     download_sensor_meta(i, type = "municipality")
-    mkits <- get_stations_from_selection(i, type = "municipality")
-    kits <- c(kits,mkits)
+    kits <- get_stations_from_selection(i, type = "municipality")
+
+    create_data_request(kits = kits,
+                        time_start = time_start,
+                        time_end = time_end,
+                        conn = pool,
+                        max_requests = 100)
 }
-
-# start queue
-que <- task_q$new()
-
-for (i in kits) {
-
-    qid <- que$push(dl_station, list(i, time_start,time_end),
-                    id = i)
-    log_trace("pushed job {qid} to the queue")
-}
-
-que$poll()
-
-
-tlist <- que$list_tasks()
-print(tlist)
-
-
-p <- station_overview(pool)
-print(p)
-
-
-repeat{
-    x <- que$pop()
-    if(length(x) != 0) {
-        print(x)
-    }
-    Sys.sleep(1)
-}
-
-
 
 
