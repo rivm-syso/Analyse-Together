@@ -79,7 +79,7 @@ while(TRUE) {
     job_id <- joblist[1]
     j <- ATdatabase::get_doc(type = "data_req", ref = job_id, conn = pool)
     log_debug("queue_man: data request {job_id} found")
-    log_trace("queue_man: total of {(lenth(joblist}) of data requests still waiting")
+    log_trace("queue_man: total of {length(joblist)} of data requests still waiting")
 
     # create queue, run jobs, wait until finished, collect stats
 
