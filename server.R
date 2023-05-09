@@ -217,8 +217,8 @@ shinyServer(function(global, input, output, session) {
     observe({
       start_date_set <- select_date_range$selected_start_date()
       end_date_set <- select_date_range$selected_end_date()
-      data_other$start_date <- start_date_set
-      data_other$end_date <- end_date_set
+      data_other$start_date <- lubridate::as_datetime(start_date_set, tz = "Europe/Amsterdam")
+      data_other$end_date <- lubridate::as_datetime(end_date_set, tz = "Europe/Amsterdam")
     })
 
     # Observe the selection municipality OR project ----
