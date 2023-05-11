@@ -213,6 +213,7 @@ show_map_server <- function(id,
                          weight = 2,
                          label = lapply(data_snsrs_col$station, HTML),
                          layerId = ~station,
+                         fillOpacity = 0.7,
                          radius = 5,
                          color = data_snsrs_col$col,
                          group = "sensoren"
@@ -238,7 +239,7 @@ show_map_server <- function(id,
 
       # Put selected stations on map
       data_selected <- data_snsrs %>% dplyr::filter(selected)
-      
+
       if(nrow(data_selected > 0)){
         proxy %>%
           addMarkers(data = data_selected, ~lon, ~lat,
