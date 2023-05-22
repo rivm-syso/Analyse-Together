@@ -83,7 +83,10 @@ get_data_button_server <- function(id,
       data_measurements$data_all <- add_ref_kal(data_measurements$data_all)
 
       # Add uncertainty to the measurements of the sensors
-      data_measurements$data_all <- add_uncertainty_sensor(data_measurements$data_all)
+      data_measurements$data_all <- add_uncertainty_sensor_percent(data_measurements$data_all)
+
+      # Add bias to the uncertainty sensors raw data
+      data_measurements$data_all <- add_uncertainty_bias_sensor(data_measurements$data_all)
 
       # Get the information from the stations
       data_stations$data_all <- get_locations(stations_con, stations_name)
