@@ -78,6 +78,9 @@ show_map_server <- function(id,
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
         addTiles() %>%
+        addProviderTiles(
+                         'Esri.WorldGrayCanvas'
+       ) %>% 
         addDrawToolbar(
           targetGroup = 'Selected',
           polylineOptions = FALSE,
@@ -96,7 +99,7 @@ show_map_server <- function(id,
         addEasyButton(easyButton(
           icon="fa-crosshairs", title="Locate Me",
           onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
-        addScaleBar(position = "bottomleft")
+        addScaleBar(position = "bottomleft") 
     })
 
     # Functions ----

@@ -47,7 +47,7 @@ library(lubridate)
 
 library(future)
 library(promises)
-plan(multiprocess)
+plan(multisession)
 
 # logger
 library(logger)
