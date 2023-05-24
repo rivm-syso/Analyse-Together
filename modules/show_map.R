@@ -79,8 +79,13 @@ show_map_server <- function(id,
         setView(5.384214, 52.153708 , zoom = 7) %>%
         addTiles() %>%
         addProviderTiles(
-                         'Esri.WorldGrayCanvas'
+                         'Esri.WorldGrayCanvas' # option 1
+                         #'Esri.WorldTopoMap'   # option 2
+                         
        ) %>% 
+        addProviderTiles(
+          'CartoDB.PositronOnlyLabels' # option 1
+        ) %>% 
         addDrawToolbar(
           targetGroup = 'Selected',
           polylineOptions = FALSE,
