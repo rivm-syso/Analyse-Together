@@ -145,9 +145,20 @@ communication_server <- function(id,
                                      size, station_type, linetype) %>%
                      dplyr::summarise(value = mean(value, na.rm = T),
                                       number = n(),
-                                      sd = mean(sd, na.rm = T)/sqrt(n())
-                                     ) %>%
+                                      sd = mean(sd, na.rm = T)/sqrt(n())) %>%
                      dplyr::ungroup()
+
+                   # Set sd of a sensor to a minimal value, different for pm10 and pm25
+                   data_mean <- data_mean %>%
+                     # Check for minimal sd for sensors
+                     dplyr::mutate(
+                       sd = dplyr::case_when(station_type == "sensor" &
+                                               grepl("pm25", parameter, fixed = T) &
+                                               sd < uc_min_pm25 ~ uc_min_pm25,
+                                             station_type == "sensor" &
+                                               grepl("pm10", parameter, fixed = T) &
+                                               sd < uc_min_pm10 ~ uc_min_pm10,
+                                             T ~ sd))
 
                    return(data_mean)
 
