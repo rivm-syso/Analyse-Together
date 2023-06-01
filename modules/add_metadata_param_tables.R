@@ -117,8 +117,11 @@ metadata_param_server <- function(id,
         # Check if there is data
         shiny::validate(need(!is.null(data_for_table), "No data available."))
 
+
         # Get the colours for the names
-        col_group <- data_for_table %>% dplyr::select(group_name, col) %>% unique()
+        col_group <- data_for_table %>% dplyr::select(group_name, col) %>% unique() %>%
+          # Set the colours for not selected stations and the ref stations to white in stead of black
+          dplyr::mutate(col = ifelse(col == col_default, "#FFFFFF", col))
 
         # Select data for in the table to show
         data_for_table <- metadata_table() %>%
@@ -149,7 +152,6 @@ metadata_param_server <- function(id,
                           backgroundColor = styleEqual(levels = col_group$group_name,
                                                        values = col_group$col)) %>%
               formatStyle(columns = c("Datacapture %"),
-
                           backgroundColor = styleInterval(cuts = breaks_col()$brks,
                                                           values = breaks_col()$clrs)
               )
