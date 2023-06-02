@@ -17,7 +17,7 @@
 	  },
 	  {"tag" : "expl_link_to_LML",
 	      "en": "Real-time measurements of the stations are available on the National Air Monitoring Network website:",
-	      "nl": "Real-time metingen van de officiele meetstations kun je vinden op de Landelijk Luchtmeetnet website:"
+	      "nl": "Real-time metingen van de referentiemeetstations kun je vinden op de Landelijk Luchtmeetnet website:"
 	  },
 	 	  {"tag" : "expl_link_to_KNMI",
 	      "en": "See Dutch",
@@ -32,8 +32,8 @@
 	      "nl": "Voor de code zie op de GitHub-pagina:"
 	  },
 	    {"tag" : "tool_intro_expl",
-	      "en": "The Analyse Together Tool (AT-tool) was developed by RIVM for downloading and analysing sensordata. In addition, with this tool you can easily combine the sensordata with official measurement data from the National Air Monitoring Network and with the weather data from the KNMI. The tool uses the R package openair and is offered completely open source.",
-	      "nl": "De Samen Analyseren Tool is door het RIVM ontwikkeld voor het downloaden en analyseren van sensordata. Daarnaast kun je met deze tool de sensordata  eenvoudig combineren met officiële meetdata van het Landelijk Luchtmeetnet en met de weergegevens van het KNMI. De tool maakt gebruik van het R package openair en wordt geheel open source aangeboden."
+	      "en": "The Analyse Together Tool (AT-tool) was developed by RIVM for downloading and analysing sensordata. In addition, with this tool you can easily combine the sensordata with (unvalidated) official measurement data from the National Air Monitoring Network and with the weather data from the KNMI. The tool uses the R package openair and is offered completely open source.",
+	      "nl": "De Samen Analyseren Tool is door het RIVM ontwikkeld voor het downloaden en analyseren van sensordata. Daarnaast kun je met deze tool de sensordata  eenvoudig combineren met (ongevalideerde) referentiemeetdata van het Landelijk Luchtmeetnet en met de weergegevens van het KNMI. De tool maakt gebruik van het R package openair en wordt geheel open source aangeboden."
 	  },
       {"tag" : "word_ATTool",
 	      "en": "Analyse Together Tool",
@@ -221,7 +221,7 @@
       },
       {"tag" : "expl_timeplot_expl",
         "en": "See Dutch",
-        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. Deze waarden kan je vergelijken met metingen van het officiele meetstation van het Luchtmeetnet. Deze kun je zelf toevoegen door deze aan te klikken op de kaart. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. Deze waarden kan je vergelijken met de (ongevalideerde) metingen van het referentiemeetstation van het Luchtmeetnet. Deze kun je zelf toevoegen door deze aan te klikken op de kaart. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_barplot",
         "en": "Barplot",
@@ -233,7 +233,7 @@
       },
       {"tag" : "expl_barplot_expl",
         "en": "See Dutch",
-        "nl": "Dit figuur laat het gemiddelde van de groep of het officiele meetstation zien. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen. Let op: Voor het bekijken van een jaargemiddelde: check in de tabel of de individuele tijdreeks of de sensoren wel het hele jaar gemeten hebben. Het getal geeft het aantal metingen aan, de pootjes geven de standaard deviatie van de metingen aan. Op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Dit figuur laat het gemiddelde van de groep of het referentiemeetstation zien. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen. Let op: Voor het bekijken van een jaargemiddelde: check in de tabel of de individuele tijdreeks of de sensoren wel het hele jaar gemeten hebben. Het getal geeft het aantal metingen aan, de pootjes geven de standaard deviatie van de metingen aan. Op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_weekpattern",
         "en": "Weekly pattern",
@@ -289,7 +289,7 @@
       },
       {"tag" : "expl_concplot%_expl",
         "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde concentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
+        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde concentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotendeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
       },
       {"tag" : "expl_no_data_available",
         "en": "No data available.",
@@ -309,7 +309,11 @@
       },
       {"tag" : "expl_download_to_pc_expl",
         "en" : "See Dutch",
-        "nl" : "Klik op onderstaande button om de gegevens vanuit de tool naar uw eigen computer te downloaden. De download bevat een csv-bestand met de kolommen: 'station' de naam erin van het station/sensor; 'date' de datum en tijd; 'wd' de windrichting (missing data: -999, windstil = 0, veranderlijk = 990); 'ws' de windsnelheid; 'pm10' de concentratie pm10; 'pm10_kal' de gekalibreerde concentratie pm10; 'pm25' de concentratie pm2,5 ; 'pm25_kal' de gekalibreerde concentratie pm2,5 ; 'lat' de latitude van de locatie; 'lon' de longitude van de locatie. Wanneer een waarde niet beschikbaar is, is 'NA' meegegeven."
+        "nl" : "Klik op onderstaande button om de gegevens vanuit de tool naar uw eigen computer te downloaden. De download bevat een zip-bestand met daarin een csv-bestand met de gegevens en een txt-bestand met informatie over de kolommen. Bronvermelding: KNMI-gegevens komen vanaf knmi.nl, de referentiemeetwaarden van luchtmeetnet.nl en de sensormetingen van SamenMeten. LET OP: voor de meetwaarden van luchtmeetnet gaat het om ongevalideerde gegevens."
+      },
+    {"tag" : "expl_download_to_pc_readme",
+        "en" : "See Dutch",
+        "nl" : "Bronvermelding: KNMI-gegevens komen vanaf knmi.nl, de referentiemeetwaarden van luchtmeetnet.nl en de sensormetingen van SamenMeten. LET OP: voor de meetwaarden van luchtmeetnet gaat het om ongevalideerde gegevens. Het csv-bestand heeft de volgende kolommen: 'station' de naam erin van het station/sensor; 'date' de datum en tijd in tijdszone Europe/Amsterdam; 'wd' de windrichting (missing data: -999, windstil = 0, veranderlijk = 990); 'ws' de windsnelheid in m/s; 'pm10' de concentratie pm10 in ug/m3; 'pm10_kal' de gekalibreerde concentratie pm10 in ug/m3; 'pm25' de concentratie pm2,5 in ug/m3; 'pm25_kal' de gekalibreerde concentratie pm2,5 in ug/m3; 'lat' de latitude van de locatie; 'lon' de longitude van de locatie. Wanneer een waarde niet beschikbaar is, is 'NA' meegegeven."
       },
       {"tag": "btn_pc",
         "en" : "Download to pc",
