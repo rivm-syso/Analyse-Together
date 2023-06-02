@@ -34,7 +34,7 @@ download_pc_button_server <- function(id,
         filename = function(){
           # Create file name
           paste0('data_', name_munproj(),'_', selected_start_date(),
-                 '_', selected_end_date(), '.csv')
+                 '_', selected_end_date(), '.zip')
         },
         # bepaal de content van de download
         content = function(file) {
@@ -53,12 +53,22 @@ download_pc_button_server <- function(id,
           data_to_download <- data_to_download %>%
             dplyr::left_join(data_locations, by = "station")
 
+          # Filenames in zip
+          file_readme <- paste0('README_data_', name_munproj(),'_', selected_start_date(),
+                                '_', selected_end_date(), '.txt')
+
+          file_csv <- paste0('data_', name_munproj(),'_', selected_start_date(),
+                                '_', selected_end_date(), '.csv')
+
           # Add some explanation and source to the file
-          write.table(i18n$t("expl_download_to_pc_expl"), file, row.names = FALSE)
+          write.table(i18n$t("expl_download_to_pc_readme"), file_readme, row.names = FALSE)
 
           # Write output to user
-          write.table(data_to_download, file, sep = ',', row.names = FALSE, append = T)
-        }
+          write.table(data_to_download, file_csv, sep = ',', row.names = FALSE, append = F)
+
+          zip(zipfile=file, files=c(file_csv, file_readme))
+        },
+        contentType = "application/zip"
       )
   })
 }
