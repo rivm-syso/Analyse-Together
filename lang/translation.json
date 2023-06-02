@@ -200,8 +200,8 @@
         "nl": "in"
       },
       {"tag" : "word_meta_table",
-        "en": "Table",
-        "nl": "Tabel"
+        "en": "Create group",
+        "nl": "Maak groep"
       },
       {"tag" : "expl_meta_table",
         "en": "See Dutch",
