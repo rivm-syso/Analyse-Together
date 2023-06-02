@@ -126,14 +126,13 @@ communication_server <- function(id,
                  # Calculate group mean ----
                  # Reactive to colculate the mean for each group
                  calc_group_mean <- reactive({
-                   # check if stations are selected
-                   shiny::validate(need(!is.null(data_stations()), "No data_stations"))
-
                    # Get the measurements of those stations
                    measurements <- filter_data_measurements()
 
-                   # Remove duplicates
-                   measurements <- measurements %>% dplyr::distinct()
+                   # check if stations are selected
+                   shiny::validate(need(!is_empty(measurements) &
+                                          !dim(measurements)[1] == 0,
+                                        "No data_stations"))
 
                    # Calculate group mean and sd
                    data_mean <- measurements %>%

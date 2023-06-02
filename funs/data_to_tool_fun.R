@@ -110,7 +110,7 @@ add_uncertainty_sensor_percent <- function(data_measurements, uc_pm10 = 20,
                                         parameter == "pm25" & !grepl("NL", station) ~ (uc_pm25/100*value),
                                         parameter == "pm10_kal" & !grepl("NL", station) ~ (uc_pm10/100*value),
                                         parameter == "pm10" & !grepl("NL", station) ~ (uc_pm10/100*value),
-                                        # If not a sensor then unertainty of 0
+                                        # If not a sensor then uncertainty of 0
                                         T ~ 0))
   # Check for the minimal uncertainty
   data_measurements <- data_measurements %>%
@@ -122,7 +122,7 @@ add_uncertainty_sensor_percent <- function(data_measurements, uc_pm10 = 20,
                                         parameter == "pm25" & !grepl("NL", station) & sd > uc_min_pm25 ~ sd,
                                         parameter == "pm10_kal" & !grepl("NL", station) & sd > uc_min_pm10 ~ sd,
                                         parameter == "pm10" & !grepl("NL", station) & sd > uc_min_pm10 ~ sd,
-                                        # If not a sensor then unertainty of 0
+                                        # If not a sensor then uncertainty of 0
                                         T ~ 0))
 
   return(data_measurements)

@@ -79,6 +79,15 @@ get_data_button_server <- function(id,
       }
       message_data$data_in_dbs <- c(paste0("Data available in ", type_choice, " ", name_choice))
 
+      # Remove duplicates
+      data_measurements$data_all <- data_measurements$data_all %>%
+        # drop the ID column
+        dplyr::select(-c(id)) %>%
+        dplyr::distinct()
+
+      # Remove NA values
+      data_measurements$data_all <- data_measurements$data_all[!is.na(data_measurements$data_all$value), ]
+
       # Create a pm10_kal and pm25_kl for reference stations
       data_measurements$data_all <- add_ref_kal(data_measurements$data_all)
 
