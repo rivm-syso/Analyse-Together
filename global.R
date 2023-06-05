@@ -47,7 +47,7 @@ library(lubridate)
 
 # logger
 library(logger)
-log_threshold(TRACE)
+log_threshold(INFO)
 
 library(samanapir)
 library(ATdatabase)
