@@ -35,13 +35,16 @@ setwd(here::here())
 source(here::here("funs","database_fun.R"))
 source(here::here("funs","queue_fun.R"))
 source(here::here("funs","download_fun.R"))
+source(here::here("funs","logging_fun.R"))
 source(here::here("scripts","test_functions.R"))
 
 # setup logging
 pid <- Sys.getpid()
 logfile <- file.path(get_database_dirname(),paste0("queue.log"))
-log_threshold(TRACE)
 log_appender(appender_file(logfile))
+log_info("Queue_manager started")
+set_loglevel()
+
 
 # Connect with the database using pool, store data, read table              ====
 
