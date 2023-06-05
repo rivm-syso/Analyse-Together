@@ -45,13 +45,13 @@ show_map_server <- function(id,
     # Initialisation icons ----
     # Icons for the reference stations
     icons_stations <- iconList(
-      lml_selected = makeIcon(iconUrl = "images/lml_selected.png", iconWidth = 24, iconHeight = 16),
-      lml_deselected = makeIcon(iconUrl = "images/lml_deselected.png",  iconWidth = 24, iconHeight = 16))
+      lml_selected = makeIcon(iconUrl = "images/lml_selected_txt.png", iconWidth = 24, iconHeight = 16),
+      lml_deselected = makeIcon(iconUrl = "images/lml_deselected_txt.png",  iconWidth = 24, iconHeight = 16))
 
     # Icons for the knmi stations
     icons_knmis <- iconList(
-      knmi_selected = makeIcon(iconUrl = "images/knmi_selected.png", iconWidth = 20, iconHeight = 20),
-      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected.png", iconWidth = 20, iconHeight = 20))
+      knmi_selected = makeIcon(iconUrl = "images/knmi_selected_txt.png", iconWidth = 30, iconHeight = 16),
+      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected_txt.png", iconWidth = 30, iconHeight = 16))
 
     # Get the locations from the stations and convert to spatialcoordinates ----
     get_locations <- reactive({
@@ -140,8 +140,16 @@ show_map_server <- function(id,
       # Set the selected station to select == T
       data_stns <- data_stns %>%
         dplyr::mutate(selected = ifelse(station == id_selected, T, selected),
-                      group_name = ifelse(station == id_selected, get_group_name, group_name),
-                      label = ifelse(station == id_selected, get_group_name, label))
+                      group_name = ifelse(station == id_selected & station_type == "sensor",
+                                          get_group_name,
+                                          ifelse(station == id_selected & station_type != "sensor",
+                                                 station,
+                                                 group_name)),
+                      label = ifelse(station == id_selected & station_type == "sensor",
+                                     get_group_name,
+                                     ifelse(station == id_selected & station_type != "sensor",
+                                            station,
+                                            label)))
 
       # Assign colors -> sensor
       data_stns <- assign_color_stations_group(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
@@ -213,6 +221,7 @@ show_map_server <- function(id,
                          weight = 2,
                          label = lapply(data_snsrs_col$station, HTML),
                          layerId = ~station,
+                         fillOpacity = 0.7,
                          radius = 5,
                          color = data_snsrs_col$col,
                          group = "sensoren"
@@ -238,6 +247,7 @@ show_map_server <- function(id,
 
       # Put selected stations on map
       data_selected <- data_snsrs %>% dplyr::filter(selected)
+
       if(nrow(data_selected > 0)){
         proxy %>%
           addMarkers(data = data_selected, ~lon, ~lat,

@@ -19,26 +19,26 @@ shinyServer(function(global, input, output, session) {
   message_data <- reactiveValues()
 
   ########### Modules ################
-  # The pickerInput for component selection
+  # The pickerInput for component selection ----
   select_component <- component_selection_server("select_component",
                                                  comp_choices)
 
-  # select project/mun
+  # select project/mun ----
   proj_or_mun_select <- project_or_mun_selection_server("proj_or_mun_select",
                                                         select_choices)
 
-  # The dateRangeInput for date range selection
+  # The dateRangeInput for date range selection ----
   select_date_range <- date_range_server("select_date_range",
                                          list(start_time = default_time$start_time,
                                               end_time = default_time$end_time))
 
-  # choose proj/mun
+  # choose proj/mun ----
   choice_select <- choice_selection_server("choice_select",
                                            proj_or_mun_select = proj_or_mun_select,
                                            mun_choices = mun_choices,
                                            proj_choices = proj_choices)
 
-  # Get metadata
+  # Get metadata ----
   meta_param_table <- metadata_param_server("meta_param_table",
                                 data_measurements = reactive(data_measurements$data_all),
                                 data_stations = reactive(data_stations$data),
@@ -47,7 +47,7 @@ shinyServer(function(global, input, output, session) {
                                 selected_end_date = reactive(data_other$end_date),
                                 name_munproj = reactive(data_other$name_munproj))
 
-  # The Map
+  # The Map ----
   map <- show_map_server("map",
                          data_stations,
                          reactive(data_other$group_name),
@@ -64,27 +64,27 @@ shinyServer(function(global, input, output, session) {
                          group_name_none
                          )
 
-  # The bar plot
+  # The bar plot ----
   barplot <- barplot_server("barplot_plot",
                             data_measurements = reactive(data_measurements$data_grouped),
                             parameter = reactive(data_other$parameter),
                             overview_component,
                             theme_plots)
 
-  # The timeseries plot
+  # The timeseries plot ----
   timeseries_plot <- timeseries_server(id = "timeseries_plot",
                                        data_measurements = reactive(data_measurements$data_grouped),
                                        parameter = reactive(data_other$parameter),
                                        overview_component,
                                        theme_plots)
-  # The pollutionrose plot
+  # The pollutionrose plot ----
   pollrose_plot <- pollrose_server("pollrose_plot",
                                    data_measurements =  reactive(data_measurements$data_grouped),
                                    data_measurements_knmi =  reactive(data_measurements$data_filtered_knmi),
                                    parameter = reactive(data_other$parameter),
                                    overview_component)
 
-  # The timevariation plot
+  # The timevariation plot ----
   timevar_plot_weekly <- timevar_weekly_server("timevar_plot_weekly",
                                                data_measurements = reactive(data_measurements$data_grouped),
                                                parameter = reactive(data_other$parameter),
@@ -94,14 +94,14 @@ shinyServer(function(global, input, output, session) {
                                              parameter = reactive(data_other$parameter),
                                              overview_component)
 
-  # Individual timeseries plot
+  # Individual timeseries plot ----
   indu_timeseries <- individual_timeseries_server("indu_timeseries",
                                                   data_measurements = reactive(data_measurements$data_filtered),
                                                   parameter = reactive(data_other$parameter),
                                                   overview_component = overview_component,
                                                   theme_plots)
 
-  # The communication module
+  # The communication module ----
   communication_stuff <- communication_server("test_comm_output",
                                               data_measurements = reactive(data_measurements$data_all),
                                               data_stations = reactive(data_stations$data),
@@ -111,7 +111,7 @@ shinyServer(function(global, input, output, session) {
                                               selected_end_date = reactive(data_other$end_date)
                                               )
 
-  # Download data from external source to database
+  # Download data from external source to database ----
   download_api_button <- download_api_button_server("dl_btn_pushed",
                                                     proj_or_mun = reactive(data_other$proj_or_mun) ,
                                                     name_munproj = reactive(data_other$name_munproj),
@@ -119,7 +119,7 @@ shinyServer(function(global, input, output, session) {
                                                     selected_end_date = reactive(data_other$end_date),
                                                     pool = pool)
 
-  # get the data from the database
+  # Get the data from the database ----
   get_data_button <- get_data_button_server("get_btn_pushed",
                                             data_measurements = data_measurements,
                                             data_stations = data_stations,
@@ -143,24 +143,30 @@ shinyServer(function(global, input, output, session) {
                                             group_name_none
                                             )
 
-  # Create a new group
+  # Download to pc user ----
+  download_pc_button_server("download_pc",
+                            data_measurements = reactive(data_measurements$data_all),
+                            data_stations = reactive(data_stations$data_all),
+                            name_munproj = reactive(data_other$name_munproj),
+                            selected_start_date = reactive(data_other$start_date),
+                            selected_end_date = reactive(data_other$end_date))
+
+  # Create a new group ----
   set_new_group_button <- set_group_button_server("set_group_pushed",
                                                   data_other = data_other)
 
   single_text_server("name_group", reactive(data_other$group_name))
 
 
-  # To give some indication of the data available in dbs
+  # To give some indication of the data available in dbs ----
   show_availability_server("show_availability",
-                           data_to_show = data_measurements,
-                           data_stations = data_stations,
-                           selected_start_date = reactive(data_other$start_date),
-                           selected_end_date = reactive(data_other$end_date)
+                           data_stations_all = reactive(data_stations$data_all),
+                           data_stations_with_data = reactive(data_stations$data)
                            )
 
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
 
-  ############ Observers ##############
+   ########### Observers ################
    # Observe if you change tab and store the tabname ----
     observeEvent(input$second_order_tabs,{
       data_other$tab_choice <- input$second_order_tabs
@@ -172,9 +178,13 @@ shinyServer(function(global, input, output, session) {
       data_measumerements_new <- get_data_button$data_measurements()
       data_measurements$data_all <- data_measumerements_new
 
-      # Get the station info and store them
-      data_stations_new <- get_data_button$data_stations()
-      data_stations$data <- data_stations_new
+      # Get the station info - all stations - and store them
+      data_stations_new <- get_data_button$data_stations_all()
+      data_stations$data_all <- data_stations_new
+
+      # Get the station info - stations with data - and store them
+      data_stations_filtered_new <- get_data_button$data_stations_filtered()
+      data_stations$data <- data_stations_filtered_new
 
       # Get the message and store them
       message_data_new <- get_data_button$message_data()
@@ -207,8 +217,8 @@ shinyServer(function(global, input, output, session) {
     observe({
       start_date_set <- select_date_range$selected_start_date()
       end_date_set <- select_date_range$selected_end_date()
-      data_other$start_date <- start_date_set
-      data_other$end_date <- end_date_set
+      data_other$start_date <- lubridate::as_datetime(start_date_set, tz = "Europe/Amsterdam")
+      data_other$end_date <- lubridate::as_datetime(end_date_set, tz = "Europe/Amsterdam")
     })
 
     # Observe the selection municipality OR project ----

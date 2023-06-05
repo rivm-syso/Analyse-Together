@@ -4,7 +4,7 @@
 # that the application uses, and the sourcing of custom functions.
 
 # Define the version of your application                                    ====
-application_version <- "0.0.3"
+application_version <- "0.0.4 TEST-versie"
 install_github <- FALSE # we run into API rate limits
 
 # Read in the necessary libraries                                           ====
@@ -44,10 +44,6 @@ library(openair)         # For openair-plots
 library(sf)
 
 library(lubridate)
-
-library(future)
-library(promises)
-plan(multiprocess)
 
 # logger
 library(logger)
@@ -94,13 +90,13 @@ theme_plots <- theme_bw(base_size = 18) +
 db_path <- get_database_path()
 log_info("opening database {db_path}")
 pool <- dbPool(
-
-  drv = SQLite(),
-  dbname = db_path
-
+               drv = SQLite(synchronous = "off"),
+               dbname = db_path
 )
+pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 
-### Initiate some variables                                                 ====
+
+## Initiate some variables                                                 ====
 # Default start and end time for the date picker
 default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
 
@@ -122,8 +118,8 @@ stations_con <- tbl(pool, "location")
 
 # Define colors, line types,choices etc.                                   ====
 # Colours for the sensors
-col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
-col_cat <- rev(col_cat) # the saturated colours first
+col_cat <- list('#e17000','#007bc7','#673327','#39870c','#ffb612','#42145f','#777c00', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
+# col_cat <- rev(col_cat) # the saturated colours first
 col_default <- '#000000'
 col_overload <- '#111111'
 
@@ -174,8 +170,6 @@ source("modules/select_date_range.R")
 source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
-source("modules/download_api_button.R")
-source("modules/get_data_button.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
@@ -193,8 +187,11 @@ source("modules/add_individual_timeseries_plot.R")
 # Source layout
 source("modules/add_tabpanels.R")
 
-# Source new group button
+# Source buttons
 source("modules/set_groupname_button.R")
+source("modules/download_api_button.R")
+source("modules/get_data_button.R")
+source("modules/download_to_pc.R")
 
 # # Source que display
 # source("modules/view_que.R")

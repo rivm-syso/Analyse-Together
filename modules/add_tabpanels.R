@@ -5,9 +5,9 @@
 tpAnalyse <- function(){
   tp <-  shiny::tabsetPanel(
                            tpInfotext(),
+                           tpMetadata(),
                            tpTimeplot(),
                            tpInduTimeplot(),
-                           tpMetadata(),
                            tpBarplot(),
                            tpTimevariationWeekly(),
                            tpTimevariationDaily(),
@@ -200,12 +200,15 @@ tpMetadata <- function(){
 }
 
 tpInfotext <- function(){
-  tp <-  shiny::tabPanel("Infotext",
-                         helpText(i18n$t("expl_timeplot"), style = "margin-left: 20px; "),
+  tp <-  shiny::tabPanel(i18n$t("word_info"),
+                         fluidRow(
 
-                        h4(i18n$t("title_expl"), style = "margin-left: 20px"),
-                         p(i18n$t("expl_timeplot_expl"),
-                           style = "font-size:12px; margin-left: 20px")
+                           # Render table
+                           column(12,class = "col-lg-12",
+                                  wellPanel(p(i18n$t("infotext_vis_1_expl")),
+                                            p(i18n$t("infotext_vis_2_expl"))))
+
+                         )
   )
 
   return(tp)
