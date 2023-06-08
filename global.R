@@ -14,6 +14,10 @@ library(tidyverse)
 # Lubridate (essential)
 library(lubridate)
 
+# datawizard
+library(datawizard)
+
+
 # Shiny (essential)
 library(shiny)
 library(shinycssloaders)

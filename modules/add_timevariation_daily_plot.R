@@ -47,29 +47,47 @@ timevar_daily_server <- function(id,
         dplyr::filter(component == parameter) %>%
         dplyr::pull(label)
 
-      # Make a plot
-      plot_all <- data_plot %>% dplyr::mutate(hourofday = hour(date)) %>%
-                                dplyr::group_by(label, hourofday) %>%
-                                dplyr::mutate(mean_hour = mean(value, na.rm = T))
+      # calculate plot data
+      plot_all <- data_plot %>%
+        dplyr::mutate(hourofday = hour(date)) %>%
+        dplyr::group_by(label, hourofday) %>%
+        dplyr::mutate(weights = number/max(number),
+                      w_mean = datawizard::weighted_mean(value, weights),
+                      w_sd = datawizard::weighted_sd(value, weights)
+                      ) %>%
+        dplyr::ungroup() %>%
+        dplyr::select(label, col, size, linetype, hourofday, w_mean, w_sd) %>%
+        distinct()
 
 
       # Obtain info for the axis
-      min_meas <- plyr::round_any(min(plot_all$mean_hour, na.rm = T), 5, f = floor)
-      max_meas <- plyr::round_any(max(plot_all$mean_hour, na.rm = T), 5, f = ceiling)
+      min_meas <- plyr::round_any(min(plot_all$w_mean, na.rm = T), 5, f = floor)
+      max_meas <- plyr::round_any(max(plot_all$w_mean, na.rm = T), 5, f = ceiling)
       steps <- plyr::round_any(max_meas / 15, 6, f = ceiling) # to create interactive y-breaks
       n_stat_in_plot <- length(unique(plot_all$col))
 
-      plot_part <- ggplot(data = plot_all,aes(x = hourofday, y = mean_hour, group = label, color = label), lwd = 1) +
+      # The errorbars overlapped, so use position_dodge to move them horizontally
+      pd <- position_dodge(0.2) # move them .1 to the left and right
+
+      # Generate plot
+      plot_part <- ggplot(data = plot_all,
+                          aes(x = hourofday, y = w_mean, group = label, color = label),
+                          lwd = 1) +
             geom_line() +
             geom_point() +
+            geom_errorbar(aes(ymin=w_mean - 2*w_sd, ymax=w_mean + 2*w_sd), width=.1,
+                          position=pd) +
             scale_color_manual(values = plot_all$col,
                                    breaks = plot_all$label) +
-            scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
-                               minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2),
-                                                  by = steps/2),
-                               limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
+            # # If you want to use this, please check the min_meas to change to
+            # # include the errorbars too
+            # scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
+            #                    minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2),
+            #                                       by = steps/2),
+            #                    limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
             scale_x_continuous(breaks = seq(0,23,2), minor_breaks = seq(0,23,1)) +
-            labs(x = i18n$t("xlab_dailypattern"), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
+            labs(x = i18n$t("xlab_dailypattern"),
+                 y = expression(paste("Concentration (", mu, "g/",m^3,")")),
                  title=paste0('Daily pattern for: ', parameter_label)) +
             expand_limits(y=0) +
             theme_plots +
