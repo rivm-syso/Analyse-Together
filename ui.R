@@ -133,7 +133,10 @@ shinyUI(
                                             column(6, get_data_button_output("get_btn_pushed")),
                                             column(6, download_api_button_output("dl_btn_pushed")),
                                             single_text_output("text_data_available"),
-                                            show_availability_output("show_availability")
+                                            br(),
+                                            single_text_output("text_check_visualisation"),
+                                            br(),
+                                            single_text_output("text_download_estimation")
                                   )
 
                            )
