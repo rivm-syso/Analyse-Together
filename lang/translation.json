@@ -291,6 +291,10 @@
         "en": "When you click on a sensor, a weighted concentration rose plot is displayed. This calculates the percentage contribution of each wind direction to the total average concentration. The average concentration per wind direction is weighted based on the frequency of occurrence. For example, if there is a triangle located in the bottom left of the gray line with a 15% value and a large light fill area along with a very small dark fill area, it means that the wind blows from the southwest approximately 15% of the time, mostly bringing low concentrations (light fill) and occasionally high concentrations (dark fill).",
         "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde concentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
       },
+    {"tag" : "expl_add_sensor_to_group",
+        "en": "The selected sensors will be added to group:",
+        "nl": "U voegt nu sensoren toe aan groep: "
+      },
       {"tag" : "expl_no_data_available",
         "en": "No data available.",
         "nl": "Geen data beschikbaar."
