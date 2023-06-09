@@ -63,6 +63,34 @@
 	      "en": "See Dutch",
 	      "nl": " De gedownloade data bevat ruwe én gekalibreerde data. Details over de kalibratieprocedure zijn te vinden op het Samen Meten Kennisportaal. De kalibratie van sensordata wordt gedaan met behulp van secundaire data die niet altijd beschikbaar zijn. Het kan daarom voorkomen dat voor sommige tijdsperioden geen gekalibreerde waarden in de database aanwezig zijn. We krijgen steeds meer begrip van situaties waarin de sensoren – ook na kalibratie – minder betrouwbare waarden geven. Dit zijn bijvoorbeeld situaties met zeer hoge luchtvochtigheid (vanaf 97 à 98% zoals gemeten op KNMI stations). Met name in de wintermaanden in de nacht en vroege ochtend kan de luchtvochtigheid zeer hoog kan zijn. Daarnaast kan het zijn dat deze sensoren altijd of vaak afwijken van de patronen die andere sensoren laten zien. Het is op dit moment nog niet mogelijk om de meetwaarden van deze uren of sensoren uit de gegevens te filteren. Daar werken we wel aan."
 	  },
+	  {"tag" : "word_variation_stick",
+	      "en": "See Dutch",
+	      "nl": "Spreidingsbalken voor variatie binnen een tijdsperiode"
+	  },
+      {"tag" : "tool_variation_stick_expl",
+	      "en": "See Dutch",
+	      "nl": "Voor het maken van de figuren met het wekelijkse en dagelijkse patroon wordt het gemiddelde over gegroepeerde metingen berekend. Daarnaast wordt de standaard deviatie bepaald: deze waarde kan je wat vertellen over de spreiding van de meetwaardes in de periode. Bijvoorbeeld op 8 maandagen zijn de meetwaardes: 10, 2, 6, 8, 12, 12, 9, 13;  op 8 dinsdagen is er gemeten 20, 12, 16, 18, 36, 4, 9, 12. Op de dinsdagen is de spreiding groter dan op de maandagen. Dit kun je in het figuur terugzien door een langere spreidingsbalk rond het gemiddelde. Voor het berekenen van het gemiddelde en de standaard deviatie is het aantal sensoren in de groep gebruikt als weegfactor. De meetonzekerheden zijn in deze situatie minder relevant, in deze figuren ligt de focus op de spreiding gedurende de specifieke dag of het uur."
+	  },
+	  {"tag" : "word_confident_interval",
+	      "en": "See Dutch",
+	      "nl": "Betrouwbaarheidsbanden voor geschatte meetonzekerheid sensoren"
+	  },
+      {"tag" : "tool_confident_interval_1_expl",
+	      "en": "See Dutch",
+	      "nl": "De meetresultaten van een lowcost-sensor zijn niet zo betrouwbaar als die van de referentie-apparatuur. De referentie-apparatuur wordt in detail gekalibreerd en gecontroleerd waardoor ook de meetonzekerheden kunnen worden bepaald. Voor de sensoren is dat lastiger, waardoor de meetonzekerheden groter zijn. In de Samen Analyseren tool is de geschatte meetonzekerheid gevisualiseerd met een lichtgekleurde band om de meetwaardes heen. Een eerste stap in het verbeteren van de betrouwbaarheid van de sensormeting is het uitvoeren van een kalibratie (referentie uitleg kalibratie). Hiermee kan een deel van de meetonzekerheid worden verklaard en verwijderd. Door de kalibratie wordt de betrouwbaarheidsband dus smaller. "
+	  },
+	  {"tag" : "tool_confident_interval_2_expl",
+	      "en": "See Dutch",
+	      "nl": "De meetonzekerheid van de sensor is geschat op 20% van de meetwaarde, met een minimale onzekerheid van 5,3 µg/m3 voor pm2,5 en 8,5 µg/m3 voor pm10. Deze minimale waardes zijn bepaald als de intersensor onzekerheid en voor nu aangenomen als eerste schatting. "
+	  },
+	  {"tag" : "tool_confident_interval_3_expl",
+	      "en": "See Dutch",
+	      "nl": "Wanneer meerdere sensoren worden gegroepeerd, dan nemen we aan dat het groepsgemiddelde een betrouwbaardere concentratie weergeeft dan de individuele sensoren. De betrouwbaarheidsband voor de groepsgemiddeldes is berekend door de onzekerheid van de individuele sensoren te middelen en te delen door de wortel van het aantal sensoren. Ook hierbij is de minimale onzekerheid aangehouden. "
+	  },
+	  {"tag" : "tool_confident_interval_4_expl",
+	      "en": "See Dutch",
+	      "nl": "Op deze manier kan er in de Samen Analyseren Tool ontdekt worden hoe de onzekerheid van sensoren onderling kan verschillen en wat het effect is van het groeperen van de sensoren. Voor een statistische analyse zijn deze schattingen van de onzekerheid niet geschikt. Daarvoor is een uitgebreidere analyse nodig in combinatie van de individuele sensoren en referentiemetingen."
+	  },
     {"tag" : "word_opensource",
 	      "en": "Open source",
 	      "nl": "Opensource"
@@ -221,7 +249,7 @@
       },
       {"tag" : "expl_timeplot_expl",
         "en": "See Dutch",
-        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. Deze waarden kan je vergelijken met metingen van het officiele meetstation van het Luchtmeetnet. Deze kun je zelf toevoegen door deze aan te klikken op de kaart. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. De band rondom de meetlijn is de betrouwbaarheidsband, meer informatie daarover vind je onder het 'Informatie'-tabblad. Deze waarden kan je vergelijken met metingen van het officiele meetstation van het Luchtmeetnet. Deze kun je zelf toevoegen door deze aan te klikken op de kaart. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_barplot",
         "en": "Barplot",
@@ -245,7 +273,7 @@
       },
       {"tag" : "expl_overviewplot_expl_weekly",
         "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplitst naar alle dagen van de week. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag. Op de x-as zie je de dag van de week met elk uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplitst naar alle dagen van de week. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag. De staafjes geven de spreidng weer, meer informatie is te vinden onder het 'Informatie'-tabblad. Op de x-as zie je de dag van de week met elk uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_daypattern",
         "en": "Daily pattern",
@@ -265,7 +293,7 @@
       },
       {"tag" : "expl_overviewplot_expl_daily",
         "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag. Op de x-as zie je het uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag. De staafjes geven de spreidng weer, meer informatie is te vinden onder het 'Informatie'-tabblad. Op de x-as zie je het uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_indu_timeseries",
         "en": "Individual timeseries",
@@ -277,7 +305,7 @@
       },
       {"tag" : "expl_indu_timeplot_expl",
         "en": "See Dutch",
-        "nl": "Nadat je op de kaart verschillende sensoren heeft geselecteerd, kun je door middel van het dropdownmenu een sensor kiezen. De tijdreeks van deze enkele sensor wordt dan getoond. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Nadat je op de kaart verschillende sensoren heeft geselecteerd, kun je door middel van het dropdownmenu een sensor kiezen. De tijdreeks van deze enkele sensor wordt dan getoond. De band rondom de meetlijn is de betrouwbaarheidsband, meer informatie daarover vind je onder het 'Informatie'-tabblad. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_conc_rose",
         "en": "Concentration rose (%)",
