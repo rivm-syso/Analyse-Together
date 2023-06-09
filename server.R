@@ -4,7 +4,7 @@ shinyServer(function(global, input, output, session) {
   # To change the language in the tool
   observeEvent(input$selected_language, {
     # Here is where we update language in session
-    shiny.i18n::update_lang(session, input$selected_language)
+    shiny.i18n::update_lang(session = session, language = input$selected_language)
   })
 
   ############### ReactiveValues #############

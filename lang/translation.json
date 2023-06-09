@@ -20,15 +20,15 @@
 	      "nl": "Real-time metingen van de referentiemeetstations kun je vinden op de Landelijk Luchtmeetnet website:"
 	  },
 	 	  {"tag" : "expl_link_to_KNMI",
-	      "en": "See Dutch",
+	      "en": "More information about the measurements from KNMI can be found on:",
 	      "nl": "Meer informatie over de metingen van het KNMI kun je vinden op:"
-	  },
+	 	  },
 	  {"tag" : "expl_link_to_projecten",
 	      "en": "For more information on the projects itself, see our website:",
 	      "nl": "Voor meer informatie over de projecten zelf, zie onze website:"
 	  },
 	  {"tag" : "expl_link_github",
-	      "en": "See Dutch",
+	      "en": "For a closer look at the programming code, see the GitHub-page:",
 	      "nl": "Voor de code zie op de GitHub-pagina:"
 	  },
 	    {"tag" : "tool_intro_expl",
@@ -43,7 +43,7 @@
 	      "en": "Data",
 	      "nl": "Data"
 	  },
-    {"tag" : "word_info",
+      {"tag" : "word_info",
 	      "en": "Information",
 	      "nl": "Informatie"
 	  },
@@ -52,15 +52,15 @@
 	      "nl": "Links"
 	  },
       {"tag" : "tool_intro_data_expl",
-	      "en": "See Dutch",
+	      "en": " The sensor data is sourced from the Samen Meten database. The displayed values provide an indication of the particulate matter concentration at a specific location. The data is not suitable for comparing against European threshold values. Each sensor can be compared to a measurement station of the Air Quality Monitoring Network (Luchtmeetnet). The wind data used to calculate the wind rose comes from a weather station of the Royal Netherlands Meteorological Institute (KNMI). The locations of the utilized Luchtmeetnet and weather stations are shown on the map with icons. In the 'Select Data' tab, you can load data from sensors of a project or municipality, measurement stations of the Luchtmeetnet, and measurement stations of the KNMI. These data are retrieved through APIs from the respective parties. The retrieval and fetching of data may take some time. The data is stored in the tool, so subsequent downloads are faster after the initial download. The data is readily available for subsequent uses and other users.",
 	      "nl": " De sensordata is afkomstig uit de Samen Meten database. De getoonde waarden geven een indicatie van de fijnstofconcentratie op een specifieke locatie. De data is niet geschikt om te toetsen aan de Europese grenswaarden. Elke sensor kan worden vergeleken met een meetstation van het Luchtmeetnet. De windgegevens voor het berekenen van de windroos komen van een weerstation van het KNMI. De locaties van de gebruikte Luchtmeetnet- en weerstations worden met icoontjes op de kaart getoond. In het tabblad 'Selecteer data' kun je de data van de sensoren van een project of gemeente, van de meetstations van het Luchtmeetnet en van de meetstations van het KNMI laden. Deze gegevens worden via API's bij de desbetreffende partij opgevraagd. Het opvragen en ophalen van de gegevens kan enige tijd duren. De gegevens worden in de tool opgeslagen, waardoor alleen de eerste keer het downloaden enige tijd duurt. De volgende keren en voor andere gebruikers zijn de gegevens snel beschikbaar."
 	  },
       {"tag" : "word_cal_values",
-	      "en": "See Dutch",
+	      "en": "Calibrated values",
 	      "nl": "Gekalibreerde waarden"
 	  },
       {"tag" : "tool_intro_cal_values_expl",
-	      "en": "See Dutch",
+	      "en": "The downloaded data contains raw and calibrated data. Details about the calibration procedure can be found on the Samen Meten Knowledge Portal. The calibration of sensor data is done using secondary data, which may not always be available. Therefore, it is possible that calibrated values are not present in the database for certain time periods. We are gaining more understanding of situations in which the sensors, even after calibration, provide less reliable values. These situations include high humidity conditions (as from 97-98% as measured at KNMI stations). Particularly during the winter months, in the night and early morning, humidity can be very high. Additionally, these sensors may consistently or frequently deviate from the patterns observed by other sensors. At present, it is not yet possible to filter out the measurement values from these hours or sensors in the data. However, we are working on it.",
 	      "nl": " De gedownloade data bevat ruwe én gekalibreerde data. Details over de kalibratieprocedure zijn te vinden op het Samen Meten Kennisportaal. De kalibratie van sensordata wordt gedaan met behulp van secundaire data die niet altijd beschikbaar zijn. Het kan daarom voorkomen dat voor sommige tijdsperioden geen gekalibreerde waarden in de database aanwezig zijn. We krijgen steeds meer begrip van situaties waarin de sensoren – ook na kalibratie – minder betrouwbare waarden geven. Dit zijn bijvoorbeeld situaties met zeer hoge luchtvochtigheid (vanaf 97 à 98% zoals gemeten op KNMI stations). Met name in de wintermaanden in de nacht en vroege ochtend kan de luchtvochtigheid zeer hoog kan zijn. Daarnaast kan het zijn dat deze sensoren altijd of vaak afwijken van de patronen die andere sensoren laten zien. Het is op dit moment nog niet mogelijk om de meetwaarden van deze uren of sensoren uit de gegevens te filteren. Daar werken we wel aan."
 	  },
     {"tag" : "word_opensource",
@@ -68,39 +68,39 @@
 	      "nl": "Opensource"
 	  },
       {"tag" : "tool_intro_opensource_expl",
-	      "en": "See Dutch",
-	      "nl": "De broncode voor deze tool wordt geheel open source aangeboden via onze GitHub-pagina . Iedereen mag deze tool verder ontwikkelen of aanpassen, mits de aanpassingen weer open source beschikbaar komen. "
+	      "en": "The source code for this tool is offered entirely as open source on our GitHub page. Anyone is free to further develop or modify this tool, provided that the modifications are made available again as open source.",
+	      "nl": "De broncode voor deze tool wordt geheel open source aangeboden via onze GitHub-pagina. Iedereen mag deze tool verder ontwikkelen of aanpassen, mits de aanpassingen weer open source beschikbaar komen. "
 	  },
 	    {"tag" : "tool_welcome",
 	      "en": "Welcome to the Analyse Together tool",
 	      "nl": "Welkom bij de Samen Analyseren tool"
 	  },
-	  {"tag" : "tool_welcome_1_expl",
-	      "en": "See Dutch",
+	    {"tag" : "tool_welcome_1_expl",
+	      "en": "Welcome to this tool for exploring air quality sensor data. In this tool, we combine data from SamenMeten, the Air Quality Monitoring Network, and the KNMI. You can view the data per project or per municipality. Here's how it works:",
 	      "nl": "Welkom bij deze tool om de gegevens van de luchtkwaliteitssensoren te ontdekken. In deze tool combineren we de gegevens van SamenMeten, het Luchtmeetnet en het KNMI. Je kunt de gegevens per project of per gemeente bekijken. Dit gaat als volgt:"
 	      	  },
-  {"tag" : "tool_welcome_2_expl",
-	      "en": "See Dutch",
+    {"tag" : "tool_welcome_2_expl",
+	      "en": "1. Choose whether you want to view the data from a specific project or within a particular municipality, and select the corresponding project or municipality. You can also define the time period.",
 	      "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken, en selecteer het betreffende project of gemeente. Ook kun je de tijdsperiode kiezen. "
 	  },
-	  {"tag" : "tool_welcome_3_expl",
-	      "en": "See Dutch",
+	 {"tag" : "tool_welcome_3_expl",
+	      "en": "2. Then, press the left button 'Check availability' to load the data into the tool. Once the data is loaded into the tool, you can proceed to explore the data in the other tabs.",
 	      "nl": "2. Druk vervolgens op de linkerbutton 'Check de beschikbaarheid', dan worden de gegevens in de tool geladen. Nadat de gegevens in de tool zijn geladen, kun je in de andere tabbladen aan de slag met het bekijken van de gegevens."
 	  },
 	  {"tag" : "tool_welcome_4_expl",
-	      "en": "See Dutch",
+	      "en": "3. If the data is not yet available, click on the right button 'Retrieve data from external source'. The data will then be fetched from SamenMeten, the Air Quality Monitoring Network, and the KNMI in the background. This process may take some time, so we advise you to check back later.",
 	      "nl": "3. Mochten de gegevens nog niet beschikbaar zijn, klik dan op de rechterbutton 'Data ophalen van externe bron'. De gegevens worden dan op de achtergrond opgehaald van SamenMeten, het Luchtmeetnet en het KNMI. Dit kan een tijdje duren, ons advies is om later terug te komen."
 	  },
   {"tag" : "tool_welcome_5_expl",
-	      "en": "See Dutch",
+	      "en": "4. To view the data, always click (once again) on the left button and proceed to the 'Visualize data' tab.",
 	      "nl": "4. Om de gegevens te gaan bekijken, klik altijd (nog eens) op de linkerbutton en ga verder naar het tabblad 'Visualiseer data'."
 	  },
 	      {"tag": "infotext_vis_1_expl",
-	      "en": "See Dutch",
+	      "en": "Here you can explore the data. We have selected various visualizations to assist in viewing the data. You can view the time series, the data in a table, or the wind data in a wind rose. Each visualization is accompanied by a brief explanation.",
 	      "nl": "Hier kun je de gegevens gaan ontdekken. We hebben verschillende visualisaties gekozen om te helpen bij het bekijken van de gegevens. Zo kun je de tijdreeks bekijken, de gegevens in een tabel of met de windgegevens in een windroos. Bij elke visualisatie staat een korte toelichting. "
 	      },
 	      {"tag": "infotext_vis_2_expl",
-	      "en": "See Dutch",
+	      "en": "On the map, you can select sensors, which will be grouped together. By grouping and averaging a group of sensors, the measurement data becomes more reliable. You can view individual sensors in the time series of each sensor. There are two ways to create a group: by selecting a group of sensors using the square on the map ('Draw a rectangle'), or by clicking on individual sensors. To create a new group, use the button below the map. Each time you click the button, a new group ID will appear. To modify a group, click the trash can icon ('Delete layers'). Press save to apply the changes.",
 	      "nl": "Op de kaart maak je een selectie van de sensoren, deze worden gelijk gegroepeerd. Door een groep sensoren te groeperen en te middelen worden de meetgegevens betrouwbaarder. De individuele sensoren kun je bekijken in de tijdreeks van individuele sensor. Het maken van een groep kan op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. Om een nieuwe groep te maken, kies de button onder de kaart. Elke keer dat je op de button klikt, verschijnt er een nieuw groeps ID. Wil je een groep wijzigen, dan klik je op het prullenbak 'Delete layers'. Druk op save om de wijziging door te voeren."
 	      },
       {"tag" : "sel_knmi",
@@ -123,7 +123,7 @@
         "en": "Selection based on:",
         "nl": "Selectie gebaseerd op:"
       },
-	  {"tag" : "word_muni",
+	    {"tag" : "word_muni",
         "en": "Municipality",
         "nl": "Gemeente"
       },
@@ -135,7 +135,7 @@
         "en": "Change language",
         "nl": "Wijzig taal"
       },
-	  {"tag" : "sel_date",
+	    {"tag" : "sel_date",
         "en": "Select date range:",
         "nl": "Selecteer een periode:"
       },
@@ -143,7 +143,7 @@
         "en": "Select component:",
         "nl": "Selecteer component:"
       },
-	  {"tag" : "title_time",
+	    {"tag" : "title_time",
         "en": "Timeseries",
         "nl": "Tijdreeks"
       },
@@ -155,7 +155,7 @@
         "en": "Overview of measurements",
         "nl": "Overzicht van de metingen"
       },
-	  {"tag" : "title_conc%",
+	    {"tag" : "title_conc%",
         "en": "Concentration rose (%)",
         "nl": "Concentratieroos (%)"
       },
@@ -167,7 +167,7 @@
         "en": "More information on the projects can be found on the samenmeten dataportaal.",
         "nl": "Meer informatie over de projecten kan je vinden op samenmeten.nl"
       },
-	  {"tag" : "expl_expltool",
+	    {"tag" : "expl_expltool",
         "en": "This tool was build for citizens. The code is open-source.",
         "nl": "Deze tool is ontwikkeld voor burgers. De code is open-source."
       },
@@ -204,11 +204,11 @@
         "nl": "Tabel"
       },
       {"tag" : "expl_meta_table",
-        "en": "See Dutch",
+        "en": "In the table below, you can see the data availability of the sensors and stations.",
         "nl": "In onderstaande tabel kunt u de databeschikbaarheid van de sensoren en stations zien."
       },
       {"tag" : "expl_meta_table_expl",
-        "en": "See Dutch",
+        "en": "For each sensor, the data capture is determined, indicating the percentage of selected time for which the sensor has data. You can also see the time of the first and last measurement. To determine a reliable average, it is preferable for the sensors to have measured during the same period and have a high data capture.",
         "nl": "Per sensor is de datacapture bepaald, dit houdt in hoeveel procent van de geselecteerde tijd de sensor gegevens heeft. Ook kun je het moment van de eerste en laatste meting zien. Om een goed gemiddelde te bepalen wil je het liefste dat de sensoren dezelfde periode gemeten hebben en een hoge datacapture hebben."
       },
       {"tag" : "word_timeseries",
@@ -220,31 +220,31 @@
         "nl": "Deze grafiek laat de tijdreeks van geselecteerde groep(en) zien."
       },
       {"tag" : "expl_timeplot_expl",
-        "en": "See Dutch",
-        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. Deze waarden kan je vergelijken met de (ongevalideerde) metingen van het referentiemeetstation van het Luchtmeetnet. Deze kun je zelf toevoegen door deze aan te klikken op de kaart. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "en": "When you click on one or more sensors, you will see a timeseries of hourly values for the selected period. The values are averaged per group. You can compare these values with measurements from the official air quality monitoring station (Luchtmeetnet). You can add the official station by clicking on it on the map. The x-axis represents the selected time period, and the y-axis represents the concentration of PM10 or PM2.5 in µg/m³.",
+        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. Deze waarden kan je vergelijken met metingen van het officiele meetstation van het Luchtmeetnet. Deze kun je zelf toevoegen door deze aan te klikken op de kaart. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_barplot",
         "en": "Barplot",
         "nl": "Staafdiagram"
       },
       {"tag" : "expl_barplot",
-        "en": "See Dutch",
+        "en": "This plot shows the average concentration of the group.",
         "nl": "Deze grafiek laat de gemiddelde concentratie van de groep zien."
       },
       {"tag" : "expl_barplot_expl",
-        "en": "See Dutch",
-        "nl": "Dit figuur laat het gemiddelde van de groep of het referentiemeetstation zien. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen. Let op: Voor het bekijken van een jaargemiddelde: check in de tabel of de individuele tijdreeks of de sensoren wel het hele jaar gemeten hebben. Het getal geeft het aantal metingen aan, de pootjes geven de standaard deviatie van de metingen aan. Op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "en": "This figure shows the average concentration of the group or the official station. When you have at least a year of data, it is possible to calculate an annual average concentration. Note: To view an annual average, check the table or individual timeseries to ensure that the sensors have measured throughout the entire year. The y-axis represents the concentration of PM10 or PM2.5 in µg/m³.",
+        "nl": "Dit figuur laat het gemiddelde van de groep of het officiele meetstation zien. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen. Let op: Voor het bekijken van een jaargemiddelde: check in de tabel of de individuele tijdreeks of de sensoren wel het hele jaar gemeten hebben. Op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_weekpattern",
         "en": "Weekly pattern",
         "nl": "Wekelijks patroon"
       },
       {"tag" : "expl_overviewplot_weekly",
-        "en": "See Dutch",
+        "en": "This plot shows the hourly average concentration for the group/station per day.",
         "nl": "Deze grafiek laat het uurlijkse gemiddelde zien groep/station per dag."
       },
       {"tag" : "expl_overviewplot_expl_weekly",
-        "en": "See Dutch",
+        "en": "When you click on a sensor, the average concentration is shown for each weekday and hour. This provides an overview of the average concentration at each hour of the day, separated by weekdays. It shows the average daily variation in concentrations for each weekday. The x-axis represents the day of the week and each hour of the day, while the y-axis represents the concentration of PM10 or PM2.5 in µg/m³.",
         "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplitst naar alle dagen van de week. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag. Op de x-as zie je de dag van de week met elk uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_daypattern",
@@ -260,11 +260,11 @@
         "nl": "Dag van de week"
       },
       {"tag" : "expl_overviewplot_daily",
-        "en": "See Dutch",
+        "en": "This graph shows the hourly average per group/station per hour of the day. It is calculated over all selected days, resulting in an average daily pattern of concentrations.",
         "nl": "Deze grafiek laat het uurlijkse gemiddelde zien per groep/station per uur van de dag. Dit is uitgerekend over alle dagen die u heeft geselecteerd. Dit levert een gemiddelde dagelijkse gang van de concentraties op."
       },
       {"tag" : "expl_overviewplot_expl_daily",
-        "en": "See Dutch",
+        "en": "If you click on a sensor, the average concentration per hour will be displayed. This allows you to see the average concentration at each hour of the day. The x-axis represents the hour of the day, and the y-axis represents the concentration of PM10 or PM2.5 in μg/m³.",
         "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag. Op de x-as zie je het uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_indu_timeseries",
@@ -272,11 +272,11 @@
         "nl": "Individuele tijdreeks"
       },
       {"tag" : "expl_indu_timeplot",
-        "en": "See Dutch",
+        "en": "Here you can view the timeseries of the individual sensor.",
         "nl": "Hier kunt u de tijdreeks van de individuele sensor bekijken."
       },
       {"tag" : "expl_indu_timeplot_expl",
-        "en": "See Dutch",
+        "en": "After selecting different sensors on the map, you can choose a sensor from the dropdown menu. The timeseries of the selected sensor will be displayed. The x-axis represents the selected time period, and the y-axis represents the concentration of PM10 or PM2.5 in μg/m³.",
         "nl": "Nadat je op de kaart verschillende sensoren heeft geselecteerd, kun je door middel van het dropdownmenu een sensor kiezen. De tijdreeks van deze enkele sensor wordt dan getoond. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_conc_rose",
@@ -284,12 +284,16 @@
         "nl": "Concentratieroos (%)"
       },
       {"tag" : "expl_concplot%",
-        "en": "See Dutch",
+        "en": "This graph shows the relative contribution to the total average concentration per group or station for each wind direction.",
         "nl": "Deze grafiek toont per windrichting de relatieve bijdrage aan de totale gemiddelde concentratie per groep of station."
       },
       {"tag" : "expl_concplot%_expl",
-        "en": "See Dutch",
-        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde concentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotendeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
+        "en": "When you click on a sensor, a weighted concentration rose plot is displayed. This calculates the percentage contribution of each wind direction to the total average concentration. The average concentration per wind direction is weighted based on the frequency of occurrence. For example, if there is a triangle located in the bottom left of the gray line with a 15% value and a large light fill area along with a very small dark fill area, it means that the wind blows from the southwest approximately 15% of the time, mostly bringing low concentrations (light fill) and occasionally high concentrations (dark fill).",
+        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde concentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
+      },
+    {"tag" : "expl_add_sensor_to_group",
+        "en": "The selected sensors will be added to group:",
+        "nl": "U voegt nu sensoren toe aan groep: "
       },
       {"tag" : "expl_no_data_available",
         "en": "No data available.",
