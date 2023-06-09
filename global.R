@@ -45,13 +45,9 @@ library(sf)
 
 library(lubridate)
 
-library(future)
-library(promises)
-plan(multisession)
-
 # logger
 library(logger)
-log_threshold(TRACE)
+log_threshold(INFO)
 
 library(samanapir)
 library(ATdatabase)
@@ -122,8 +118,8 @@ stations_con <- tbl(pool, "location")
 
 # Define colors, line types,choices etc.                                   ====
 # Colours for the sensors
-col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
-col_cat <- rev(col_cat) # the saturated colours first
+col_cat <- list('#e17000','#007bc7','#673327','#39870c','#ffb612','#42145f','#777c00', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
+# col_cat <- rev(col_cat) # the saturated colours first
 col_default <- '#000000'
 col_overload <- '#111111'
 
