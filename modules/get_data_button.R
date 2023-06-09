@@ -67,7 +67,7 @@ get_data_button_server <- function(id,
       # Get the station names in the selected Municipality/project
       stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
 
-      log_trace("get mod: {lubridate::now()} Get data from caching database ... ")
+      log_info("get mod: Get data from caching database: {name_choice} ; {start_time} ; {end_time}... ")
 
       # Get the data measurements of the selected Municipality/project in the period
       data_measurements$data_all <- get_measurements(measurements_con, stations_name, start_time, end_time)
@@ -119,7 +119,7 @@ get_data_button_server <- function(id,
         dplyr::mutate(linetype = ifelse(station_type == "ref", line_overload, linetype),
                       size = ifelse(station_type == "ref", 2,1))
 
-      log_trace("get mod: {lubridate::now()} Data available in tool. ")
+      log_info("get mod: Data available in tool. ")
 
     })
 

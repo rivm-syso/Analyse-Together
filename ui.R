@@ -149,7 +149,7 @@ shinyUI(
                                   fluidRow(
                                     column(width = 3, set_group_button_output("set_group_pushed")),
                                     column(width = 8, offset = 1,
-                                           p("U voegt nu sensoren toe aan: "),
+                                           p(i18n$t("expl_add_sensor_to_group")),
                                            single_text_output("name_group")))
 
                          )
