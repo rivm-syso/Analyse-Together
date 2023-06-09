@@ -20,9 +20,9 @@
 	      "nl": "Real-time metingen van de officiele meetstations kun je vinden op de Landelijk Luchtmeetnet website:"
 	  },
 	 	  {"tag" : "expl_link_to_KNMI",
-	      "en": "More information about the measurements from KNMI can be found on:"
+	      "en": "More information about the measurements from KNMI can be found on:",
 	      "nl": "Meer informatie over de metingen van het KNMI kun je vinden op:"
-	  },
+	 	  },
 	  {"tag" : "expl_link_to_projecten",
 	      "en": "For more information on the projects itself, see our website:",
 	      "nl": "Voor meer informatie over de projecten zelf, zie onze website:"
@@ -43,7 +43,7 @@
 	      "en": "Data",
 	      "nl": "Data"
 	  },
-    {"tag" : "word_info",
+      {"tag" : "word_info",
 	      "en": "Information",
 	      "nl": "Informatie"
 	  },
@@ -52,7 +52,7 @@
 	      "nl": "Links"
 	  },
       {"tag" : "tool_intro_data_expl",
-	      "en": " The sensor data is sourced from the Samen Meten database. The displayed values provide an indication of the particulate matter concentration at a specific location. The data is not suitable for comparing against European threshold values. Each sensor can be compared to a measurement station of the Air Quality Monitoring Network (Luchtmeetnet). The wind data used to calculate the wind rose comes from a weather station of the Royal Netherlands Meteorological Institute (KNMI). The locations of the utilized Luchtmeetnet and weather stations are shown on the map with icons. In the 'Select Data' tab, you can load data from sensors of a project or municipality, measurement stations of the Luchtmeetnet, and measurement stations of the KNMI. These data are retrieved through APIs from the respective parties. The retrieval and fetching of data may take some time. The data is stored in the tool, so subsequent downloads are faster after the initial download. The data is readily available for subsequent uses and other users."
+	      "en": " The sensor data is sourced from the Samen Meten database. The displayed values provide an indication of the particulate matter concentration at a specific location. The data is not suitable for comparing against European threshold values. Each sensor can be compared to a measurement station of the Air Quality Monitoring Network (Luchtmeetnet). The wind data used to calculate the wind rose comes from a weather station of the Royal Netherlands Meteorological Institute (KNMI). The locations of the utilized Luchtmeetnet and weather stations are shown on the map with icons. In the 'Select Data' tab, you can load data from sensors of a project or municipality, measurement stations of the Luchtmeetnet, and measurement stations of the KNMI. These data are retrieved through APIs from the respective parties. The retrieval and fetching of data may take some time. The data is stored in the tool, so subsequent downloads are faster after the initial download. The data is readily available for subsequent uses and other users.",
 	      "nl": " De sensordata is afkomstig uit de Samen Meten database. De getoonde waarden geven een indicatie van de fijnstofconcentratie op een specifieke locatie. De data is niet geschikt om te toetsen aan de Europese grenswaarden. Elke sensor kan worden vergeleken met een meetstation van het Luchtmeetnet. De windgegevens voor het berekenen van de windroos komen van een weerstation van het KNMI. De locaties van de gebruikte Luchtmeetnet- en weerstations worden met icoontjes op de kaart getoond. In het tabblad 'Selecteer data' kun je de data van de sensoren van een project of gemeente, van de meetstations van het Luchtmeetnet en van de meetstations van het KNMI laden. Deze gegevens worden via API's bij de desbetreffende partij opgevraagd. Het opvragen en ophalen van de gegevens kan enige tijd duren. De gegevens worden in de tool opgeslagen, waardoor alleen de eerste keer het downloaden enige tijd duurt. De volgende keren en voor andere gebruikers zijn de gegevens snel beschikbaar."
 	  },
       {"tag" : "word_cal_values",
@@ -60,7 +60,7 @@
 	      "nl": "Gekalibreerde waarden"
 	  },
       {"tag" : "tool_intro_cal_values_expl",
-	      "en": "The downloaded data contains raw and calibrated data. Details about the calibration procedure can be found on the Samen Meten Knowledge Portal. The calibration of sensor data is done using secondary data, which may not always be available. Therefore, it is possible that calibrated values are not present in the database for certain time periods. We are gaining more understanding of situations in which the sensors, even after calibration, provide less reliable values. These situations include high humidity conditions (as from 97-98% as measured at KNMI stations). Particularly during the winter months, in the night and early morning, humidity can be very high. Additionally, these sensors may consistently or frequently deviate from the patterns observed by other sensors. At present, it is not yet possible to filter out the measurement values from these hours or sensors in the data. However, we are working on it."
+	      "en": "The downloaded data contains raw and calibrated data. Details about the calibration procedure can be found on the Samen Meten Knowledge Portal. The calibration of sensor data is done using secondary data, which may not always be available. Therefore, it is possible that calibrated values are not present in the database for certain time periods. We are gaining more understanding of situations in which the sensors, even after calibration, provide less reliable values. These situations include high humidity conditions (as from 97-98% as measured at KNMI stations). Particularly during the winter months, in the night and early morning, humidity can be very high. Additionally, these sensors may consistently or frequently deviate from the patterns observed by other sensors. At present, it is not yet possible to filter out the measurement values from these hours or sensors in the data. However, we are working on it.",
 	      "nl": " De gedownloade data bevat ruwe én gekalibreerde data. Details over de kalibratieprocedure zijn te vinden op het Samen Meten Kennisportaal. De kalibratie van sensordata wordt gedaan met behulp van secundaire data die niet altijd beschikbaar zijn. Het kan daarom voorkomen dat voor sommige tijdsperioden geen gekalibreerde waarden in de database aanwezig zijn. We krijgen steeds meer begrip van situaties waarin de sensoren – ook na kalibratie – minder betrouwbare waarden geven. Dit zijn bijvoorbeeld situaties met zeer hoge luchtvochtigheid (vanaf 97 à 98% zoals gemeten op KNMI stations). Met name in de wintermaanden in de nacht en vroege ochtend kan de luchtvochtigheid zeer hoog kan zijn. Daarnaast kan het zijn dat deze sensoren altijd of vaak afwijken van de patronen die andere sensoren laten zien. Het is op dit moment nog niet mogelijk om de meetwaarden van deze uren of sensoren uit de gegevens te filteren. Daar werken we wel aan."
 	  },
     {"tag" : "word_opensource",
@@ -75,15 +75,15 @@
 	      "en": "Welcome to the Analyse Together tool",
 	      "nl": "Welkom bij de Samen Analyseren tool"
 	  },
-	  {"tag" : "tool_welcome_1_expl",
+	    {"tag" : "tool_welcome_1_expl",
 	      "en": "Welcome to this tool for exploring air quality sensor data. In this tool, we combine data from SamenMeten, the Air Quality Monitoring Network, and the KNMI. You can view the data per project or per municipality. Here's how it works:",
 	      "nl": "Welkom bij deze tool om de gegevens van de luchtkwaliteitssensoren te ontdekken. In deze tool combineren we de gegevens van SamenMeten, het Luchtmeetnet en het KNMI. Je kunt de gegevens per project of per gemeente bekijken. Dit gaat als volgt:"
 	      	  },
-  {"tag" : "tool_welcome_2_expl",
+    {"tag" : "tool_welcome_2_expl",
 	      "en": "1. Choose whether you want to view the data from a specific project or within a particular municipality, and select the corresponding project or municipality. You can also define the time period.",
 	      "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken, en selecteer het betreffende project of gemeente. Ook kun je de tijdsperiode kiezen. "
 	  },
-	  {"tag" : "tool_welcome_3_expl",
+	 {"tag" : "tool_welcome_3_expl",
 	      "en": "2. Then, press the left button 'Check availability' to load the data into the tool. Once the data is loaded into the tool, you can proceed to explore the data in the other tabs.",
 	      "nl": "2. Druk vervolgens op de linkerbutton 'Check de beschikbaarheid', dan worden de gegevens in de tool geladen. Nadat de gegevens in de tool zijn geladen, kun je in de andere tabbladen aan de slag met het bekijken van de gegevens."
 	  },
@@ -123,7 +123,7 @@
         "en": "Selection based on:",
         "nl": "Selectie gebaseerd op:"
       },
-	  {"tag" : "word_muni",
+	    {"tag" : "word_muni",
         "en": "Municipality",
         "nl": "Gemeente"
       },
@@ -135,7 +135,7 @@
         "en": "Change language",
         "nl": "Wijzig taal"
       },
-	  {"tag" : "sel_date",
+	    {"tag" : "sel_date",
         "en": "Select date range:",
         "nl": "Selecteer een periode:"
       },
@@ -143,7 +143,7 @@
         "en": "Select component:",
         "nl": "Selecteer component:"
       },
-	  {"tag" : "title_time",
+	    {"tag" : "title_time",
         "en": "Timeseries",
         "nl": "Tijdreeks"
       },
@@ -155,7 +155,7 @@
         "en": "Overview of measurements",
         "nl": "Overzicht van de metingen"
       },
-	  {"tag" : "title_conc%",
+	    {"tag" : "title_conc%",
         "en": "Concentration rose (%)",
         "nl": "Concentratieroos (%)"
       },
@@ -167,7 +167,7 @@
         "en": "More information on the projects can be found on the samenmeten dataportaal.",
         "nl": "Meer informatie over de projecten kan je vinden op samenmeten.nl"
       },
-	  {"tag" : "expl_expltool",
+	    {"tag" : "expl_expltool",
         "en": "This tool was build for citizens. The code is open-source.",
         "nl": "Deze tool is ontwikkeld voor burgers. De code is open-source."
       },
@@ -232,9 +232,8 @@
         "nl": "Deze grafiek laat de gemiddelde concentratie van de groep zien."
       },
       {"tag" : "expl_barplot_expl",
-        "en": "This figure shows the average concentration of the group or the official station. When you have at least a year of data, it is possible to calculate an annual average concentration. Note: To view an annual average, check the table or individual timeseries to ensure that the sensors have measured throughout the entire year. The number represents the number of measurements, and the bars represent the standard deviation of the measurements. The y-axis represents the concentration of PM10 or PM2.5 in µg/m³."
-,
-        "nl": "Dit figuur laat het gemiddelde van de groep of het officiele meetstation zien. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen. Let op: Voor het bekijken van een jaargemiddelde: check in de tabel of de individuele tijdreeks of de sensoren wel het hele jaar gemeten hebben. Het getal geeft het aantal metingen aan, de pootjes geven de standaard deviatie van de metingen aan. Op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "en": "This figure shows the average concentration of the group or the official station. When you have at least a year of data, it is possible to calculate an annual average concentration. Note: To view an annual average, check the table or individual timeseries to ensure that the sensors have measured throughout the entire year. The y-axis represents the concentration of PM10 or PM2.5 in µg/m³.",
+        "nl": "Dit figuur laat het gemiddelde van de groep of het officiele meetstation zien. Vanaf een jaar data wordt het mogelijk om een jaargemiddelde concentratie te berekenen. Let op: Voor het bekijken van een jaargemiddelde: check in de tabel of de individuele tijdreeks of de sensoren wel het hele jaar gemeten hebben. Op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_weekpattern",
         "en": "Weekly pattern",

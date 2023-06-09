@@ -77,12 +77,12 @@ show_map_server <- function(id,
       ns("map")
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
-        addTiles() %>%
+        # addTiles() %>%
         addProviderTiles(
                          'Esri.WorldGrayCanvas' # option 1
                          #'Esri.WorldTopoMap'   # option 2
-                         
-       ) %>% 
+
+       ) %>%
         addProviderTiles(
           'CartoDB.PositronOnlyLabels' # option 1
         ) %>%
@@ -104,7 +104,7 @@ show_map_server <- function(id,
         addEasyButton(easyButton(
           icon="fa-crosshairs", title="Locate Me",
           onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
-        addScaleBar(position = "bottomleft") 
+        addScaleBar(position = "bottomleft")
     })
 
     # Functions ----
@@ -246,7 +246,7 @@ show_map_server <- function(id,
 
       # Put selected stations on map
       data_selected <- data_snsrs %>% dplyr::filter(selected)
-      
+
       if(nrow(data_selected > 0)){
         proxy %>%
           addMarkers(data = data_selected, ~lon, ~lat,
