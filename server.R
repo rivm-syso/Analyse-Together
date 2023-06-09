@@ -166,7 +166,7 @@ shinyServer(function(global, input, output, session) {
 
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
   single_text_server("text_download_estimation", text_message = reactive(message_data$download_estimation))
-  single_text_server("text_check_visualisation", text_message = reactive("Check with the visualisations if all expected data is available."))
+  single_text_server("text_check_visualisation", text_message = reactive("Please, check with the visualisations if all expected data is available."))
 
 
 
