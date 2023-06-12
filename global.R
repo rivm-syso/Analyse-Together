@@ -173,7 +173,6 @@ source("modules/choose_mun_or_proj.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
-source("modules/add_show_availability.R")
 source("modules/add_single_text_message.R")
 
 # Source modules visualisation
