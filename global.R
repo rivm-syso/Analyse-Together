@@ -47,7 +47,7 @@ library(lubridate)
 
 # logger
 library(logger)
-log_threshold(INFO)
+#log_threshold(loglevel)
 
 library(samanapir)
 library(ATdatabase)
@@ -61,6 +61,8 @@ source("funs/database_fun.R")
 source("funs/queue_fun.R")
 source("funs/download_fun.R")
 source("funs/data_to_tool_fun.R")
+source("funs/logging_fun.R")
+set_loglevel()
 
 # launch queue manager
 qm_script <- here::here("scripts","queue_manager.R")
