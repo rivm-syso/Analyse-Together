@@ -66,10 +66,25 @@ median_values <- info_req_all %>% dplyr::summarise_all("median")
 mean_values
 median_values
 
-# Visualisations of the loading time                                ====
+# Visualisations of the loading time: Count vs time                         ====
 p_time_count <- ggplot(info_req_all, aes(time_req/60, count_stations)) +
   geom_point() +
+  geom_smooth(method='lm', se = F) +
   labs(title = "Per request request: loading time vs number stations" ,
        x = "Time [minutes]", y = "Number stations") +
   theme_bw()
 p_time_count
+
+# Visualisations of the loading time: time vs count                             ====
+p_time_count <- ggplot(info_req_all %>% dplyr::filter(count_stations !=100), aes( count_stations, time_req/60)) +
+  geom_point() +
+  geom_smooth(method='lm', se = F) +
+  labs(title = "Per request request: loading time vs number stations" ,
+       y = "Time [minutes]", x = "Number stations") +
+  theme_bw()
+p_time_count
+
+# Calc lineair relation
+m <- lm(formula = time_req ~ count_stations,
+        data = info_req_all %>% dplyr::filter(count_stations !=100))
+m

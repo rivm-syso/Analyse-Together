@@ -165,6 +165,10 @@ shinyServer(function(global, input, output, session) {
                            )
 
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
+  single_text_server("text_download_estimation", text_message = reactive(message_data$download_estimation))
+  single_text_server("text_check_visualisation", text_message = reactive("Please, check with the visualisations if all expected data is available."))
+
+
 
    ########### Observers ################
    # Observe if you change tab and store the tabname ----
@@ -186,9 +190,6 @@ shinyServer(function(global, input, output, session) {
       data_stations_filtered_new <- get_data_button$data_stations_filtered()
       data_stations$data <- data_stations_filtered_new
 
-      # Get the message and store them
-      message_data_new <- get_data_button$message_data()
-      message_data$data_in_dbs <- message_data_new
     })
 
     # Observe filtered data from stations and groups ----

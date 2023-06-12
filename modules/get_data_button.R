@@ -69,6 +69,14 @@ get_data_button_server <- function(id,
 
       log_info("get mod: Get data from caching database: {name_choice} ; {start_time} ; {end_time}... ")
 
+      # Estimate the download time, if sensors exists in selection
+      if(is.null(stations_name)){
+        message_data$download_estimation <- c(paste0("No sensors in selection."))
+      }else{
+        estimate_time <- ceiling((length(stations_name) * 7 + 30)/60)
+        message_data$download_estimation <- c(paste0("Estimated load time from external source: ", estimate_time, " minutes."))
+      }
+
       # Get the data measurements of the selected Municipality/project in the period
       data_measurements$data_all <- get_measurements(measurements_con, stations_name, start_time, end_time)
 
