@@ -82,10 +82,10 @@ add_uncertainty_sensor <- function(data_measurements, uc_pm10 = 8.5, uc_pm25 = 5
 
   # Add uncertainty to the measurements of the sensors
   data_measurements <- data_measurements %>%
-    dplyr::mutate(sd = dplyr::case_when(parameter == "pm25_kal" & !grepl("NL", station) ~ uc_pm25,
-                                        parameter == "pm25" & !grepl("NL", station) ~ uc_pm25,
-                                        parameter == "pm10_kal" & !grepl("NL", station) ~ uc_pm10,
-                                        parameter == "pm10" & !grepl("NL", station) ~ uc_pm10,
+    dplyr::mutate(sd = dplyr::case_when(parameter == "pm25_kal" & !grepl("^NL.[0-9].", station) ~ uc_pm25,
+                                        parameter == "pm25" & !grepl("^NL.[0-9].", station) ~ uc_pm25,
+                                        parameter == "pm10_kal" & !grepl("^NL.[0-9].", station) ~ uc_pm10,
+                                        parameter == "pm10" & !grepl("^NL.[0-9].", station) ~ uc_pm10,
                                         T ~ 0))
   return(data_measurements)
 }
@@ -106,22 +106,22 @@ add_uncertainty_sensor_percent <- function(data_measurements, uc_pm10 = 20,
 
   # Add uncertainty to the measurements of the sensors
   data_measurements <- data_measurements %>%
-    dplyr::mutate(sd = dplyr::case_when(parameter == "pm25_kal" & !grepl("NL", station) ~ (uc_pm25/100*value),
-                                        parameter == "pm25" & !grepl("NL", station) ~ (uc_pm25/100*value),
-                                        parameter == "pm10_kal" & !grepl("NL", station) ~ (uc_pm10/100*value),
-                                        parameter == "pm10" & !grepl("NL", station) ~ (uc_pm10/100*value),
+    dplyr::mutate(sd = dplyr::case_when(parameter == "pm25_kal" & !grepl("^NL.[0-9].", station) ~ (uc_pm25/100*value),
+                                        parameter == "pm25" & !grepl("^NL.[0-9].", station) ~ (uc_pm25/100*value),
+                                        parameter == "pm10_kal" & !grepl("^NL.[0-9].", station) ~ (uc_pm10/100*value),
+                                        parameter == "pm10" & !grepl("^NL.[0-9].", station) ~ (uc_pm10/100*value),
                                         # If not a sensor then uncertainty of 0
                                         T ~ 0))
   # Check for the minimal uncertainty
   data_measurements <- data_measurements %>%
-    dplyr::mutate(sd = dplyr::case_when(parameter == "pm25_kal" & !grepl("NL", station) & sd < uc_min_pm25 ~ uc_min_pm25,
-                                        parameter == "pm25" & !grepl("NL", station) & sd < uc_min_pm25 ~ uc_min_pm25,
-                                        parameter == "pm10_kal" & !grepl("NL", station) & sd < uc_min_pm10 ~ uc_min_pm10,
-                                        parameter == "pm10" & !grepl("NL", station) & sd < uc_min_pm10 ~ uc_min_pm10,
-                                        parameter == "pm25_kal" & !grepl("NL", station) & sd > uc_min_pm25 ~ sd,
-                                        parameter == "pm25" & !grepl("NL", station) & sd > uc_min_pm25 ~ sd,
-                                        parameter == "pm10_kal" & !grepl("NL", station) & sd > uc_min_pm10 ~ sd,
-                                        parameter == "pm10" & !grepl("NL", station) & sd > uc_min_pm10 ~ sd,
+    dplyr::mutate(sd = dplyr::case_when(parameter == "pm25_kal" & !grepl("^NL.[0-9].", station) & sd < uc_min_pm25 ~ uc_min_pm25,
+                                        parameter == "pm25" & !grepl("^NL.[0-9].", station) & sd < uc_min_pm25 ~ uc_min_pm25,
+                                        parameter == "pm10_kal" & !grepl("^NL.[0-9].", station) & sd < uc_min_pm10 ~ uc_min_pm10,
+                                        parameter == "pm10" & !grepl("^NL.[0-9].", station) & sd < uc_min_pm10 ~ uc_min_pm10,
+                                        parameter == "pm25_kal" & !grepl("^NL.[0-9].", station) & sd > uc_min_pm25 ~ sd,
+                                        parameter == "pm25" & !grepl("^NL.[0-9].", station) & sd > uc_min_pm25 ~ sd,
+                                        parameter == "pm10_kal" & !grepl("^NL.[0-9].", station) & sd > uc_min_pm10 ~ sd,
+                                        parameter == "pm10" & !grepl("^NL.[0-9].", station) & sd > uc_min_pm10 ~ sd,
                                         # If not a sensor then uncertainty of 0
                                         T ~ 0))
 
@@ -144,11 +144,11 @@ add_uncertainty_bias_sensor <- function(data_measurements){
   ## PM25
   # Get the pm25 calibrated values and the raw values of the sensors
   data_pm25_kal <- data_measurements %>%
-    dplyr::filter(parameter == "pm25_kal" & !grepl("NL", station)) %>%
+    dplyr::filter(parameter == "pm25_kal" & !grepl("^NL.[0-9].", station)) %>%
     dplyr::mutate(value_pm25kal = value) %>%
     dplyr::select(c("station", "date", "aggregation", "timestamp", "value_pm25kal"))
   data_pm25 <- data_measurements %>%
-    dplyr::filter(parameter == "pm25" & !grepl("NL", station) )
+    dplyr::filter(parameter == "pm25" & !grepl("^NL.[0-9].", station) )
 
   # Calc the bias as difference between the kal and raw
   data_combi_pm25 <- data_pm25 %>%
@@ -161,12 +161,12 @@ add_uncertainty_bias_sensor <- function(data_measurements){
   ## PM10
   # Get the pm10 calibrated values and the raw values of the sensors
   data_pm10_kal <- data_measurements %>%
-    dplyr::filter(parameter == "pm10_kal" & !grepl("NL", station)) %>%
+    dplyr::filter(parameter == "pm10_kal" & !grepl("^NL.[0-9].", station)) %>%
     dplyr::mutate(value_pm10kal = value) %>%
     dplyr::select(c("station", "date", "aggregation", "timestamp", "value_pm10kal"))
 
   data_pm10 <- data_measurements %>%
-    dplyr::filter(parameter == "pm10" & !grepl("NL", station))
+    dplyr::filter(parameter == "pm10" & !grepl("^NL.[0-9].", station))
 
   # Calc the bias as difference between the kal and raw
   data_combi_pm10 <- data_pm10 %>%
@@ -179,8 +179,8 @@ add_uncertainty_bias_sensor <- function(data_measurements){
   ## Add those new SD to the data_measurements
   # Df with all the data unchanged
   data_without <- data_measurements %>%
-    dplyr::filter(!(parameter == "pm25" & !grepl("NL", station)) &
-                    !((parameter == "pm10") & !grepl("NL", station)))
+    dplyr::filter(!(parameter == "pm25" & !grepl("^NL.[0-9].", station)) &
+                    !((parameter == "pm10") & !grepl("^NL.[0-9].", station)))
 
   # Add changed and unchanged data together
   data_measurements <- dplyr::bind_rows(data_without, data_combi_pm10, data_combi_pm25)

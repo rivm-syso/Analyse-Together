@@ -114,7 +114,7 @@ get_data_button_server <- function(id,
                       station_type = "sensor", group_name = group_name_none,
                       label = station) %>%
         dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI",
-                                            ifelse(grepl("NL", station) == T, "ref",
+                                            ifelse(grepl("^NL.[0-9].", station) == T, "ref",
                                                    station_type))) %>%
         dplyr::mutate(linetype = ifelse(station_type == "ref", line_overload, linetype),
                       size = ifelse(station_type == "ref", 2,1))
