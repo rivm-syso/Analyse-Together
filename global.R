@@ -8,9 +8,15 @@ application_version <- "0.0.4 TEST-versie"
 install_github <- FALSE # we run into API rate limits
 
 # Read in the necessary libraries                                           ====
-
 # Tidyverse (essential)
 library(tidyverse)
+
+# Lubridate (essential)
+library(lubridate)
+
+# datawizard
+library(datawizard)
+
 
 # Shiny (essential)
 library(shiny)
@@ -36,14 +42,11 @@ library(leaflet)         # For maps
 library(leaflet.extras)  # For maps
 library(sp)              # For maps
 library(DT)              # For tables
-library(plotly)          # For graphs
 library(latex2exp)       # For titles in graphs
 library(openair)         # For openair-plots
 
 # Geo
 library(sf)
-
-library(lubridate)
 
 # logger
 library(logger)
@@ -69,7 +72,6 @@ qm_script <- here::here("scripts","queue_manager.R")
 system2("Rscript", qm_script, wait = FALSE)
 
 # Set language and date options                                             ====
-
 options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
@@ -103,8 +105,8 @@ pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
 
 # store lists with projects and municipalities
-municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
-projects <- read_csv("./prepped_data/projects.csv")
+municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F, col_types = c("d", "c"))
+projects <- read_csv("./prepped_data/projects.csv", col_types = c("c"))
 
 # add_doc doesn't work, see ATdatabase #8
 ATdatabase::add_doc("application", "municipalities", municipalities, conn = pool,
@@ -134,6 +136,12 @@ line_overload <- 'dotted'
 group_name_default <- "groep_1"
 # Default for no group
 group_name_none <- ""
+
+# Minimal sd value sensor pm10
+uc_min_pm10 <- 8.5
+
+# Minimal sd value sensor pm25
+uc_min_pm25 <- 5.3
 
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))

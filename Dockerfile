@@ -52,6 +52,7 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
      here \
      shinyalert \
      future \
+     datawizard \
      && rm -rf /tmp/downloaded_packages
 
 # Create folder 

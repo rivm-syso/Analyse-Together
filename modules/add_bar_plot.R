@@ -58,18 +58,10 @@ barplot_server <- function(id,
                           n_obs = n()) %>%
             distinct(label, .keep_all = TRUE)
 
-
           # Make a plot
           try(ggplot(data = data_barplot, aes(y=gemiddelde, x=label)) +
             geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black',
                      size = data_barplot$size/2) +
-            geom_errorbar(aes(ymin=gemiddelde-standaarddev,
-                              ymax=gemiddelde+standaarddev),
-                          size = data_barplot$size/2,
-                          width=.2,
-                          position=position_dodge(.9), color='black') +
-            geom_text(aes(y = gemiddelde-gemiddelde+2, label = n_obs),
-                      colour = 'white', size = 9-2*log(length(unique(data_barplot$label)))) +
             labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
                  title=paste0('Barplot for: ', parameter_label)) +
             expand_limits(y=0) + # Make sure no negative values are shown
