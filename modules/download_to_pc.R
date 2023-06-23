@@ -61,7 +61,7 @@ download_pc_button_server <- function(id,
                                 '_', selected_end_date(), '.csv')
 
           # Add some explanation and source to the file
-          write.table(i18n$t("expl_download_to_pc_readme"), file_readme, row.names = FALSE)
+          write.table(i18n$t("expl_download_to_pc_readme"), col.names = F, file_readme, row.names = FALSE)
 
           # Write output to user
           write.table(data_to_download, file_csv, sep = ',', row.names = FALSE, append = F)
