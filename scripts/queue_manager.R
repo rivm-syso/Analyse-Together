@@ -1,5 +1,5 @@
 ######################################################################
-# script to test download queue manager 
+# script to test download queue manager
 ######################################################################
 # This script runs the queue manager in a idle while loop. The queue
 # manager takes a data request from the database and starts the
@@ -22,6 +22,7 @@ library(lubridate)
 # logger
 library(logger)
 
+
 library(samanapir)
 library(ATdatabase)
 library(here)
@@ -34,16 +35,19 @@ setwd(here::here())
 source(here::here("funs","database_fun.R"))
 source(here::here("funs","queue_fun.R"))
 source(here::here("funs","download_fun.R"))
+source(here::here("funs","logging_fun.R"))
 source(here::here("scripts","test_functions.R"))
 
 # setup logging
 pid <- Sys.getpid()
 logfile <- file.path(get_database_dirname(),paste0("queue.log"))
-log_threshold(TRACE)
 log_appender(appender_file(logfile))
+log_info("Queue_manager started")
+set_loglevel()
+
 
 # Connect with the database using pool, store data, read table              ====
-    
+
 fname_db <- get_database_path()
 pool <- dbPool(
                drv = SQLite(synchronous = "off"),
@@ -54,7 +58,7 @@ pool::dbExecute(pool, "PRAGMA synchronous = 1 ")
 
 list_doc <- function(type, conn) {
 
-    qry <- glue::glue_sql("SELECT ref FROM meta WHERE type={type};", 
+    qry <- glue::glue_sql("SELECT ref FROM meta WHERE type={type};",
                           .con = conn)
     res <- DBI::dbGetQuery(conn, qry)
     return(res$ref)
@@ -97,10 +101,12 @@ while(TRUE) {
                                   
     log_debug("queue_man: starting queue with {nrow(que$list_tasks())} jobs on queue")
 
+
     counter <- 0
     last_njobs <- 0
     watchdog_counter <- 0
     success <- FALSE
+
 
     time_spent <- system.time(
 

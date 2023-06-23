@@ -4,13 +4,19 @@
 # that the application uses, and the sourcing of custom functions.
 
 # Define the version of your application                                    ====
-application_version <- "0.0.4 TEST-versie"
+application_version <- "0.99.0"
 install_github <- FALSE # we run into API rate limits
 
 # Read in the necessary libraries                                           ====
-
 # Tidyverse (essential)
 library(tidyverse)
+
+# Lubridate (essential)
+library(lubridate)
+
+# datawizard
+library(datawizard)
+
 
 # Shiny (essential)
 library(shiny)
@@ -36,22 +42,15 @@ library(leaflet)         # For maps
 library(leaflet.extras)  # For maps
 library(sp)              # For maps
 library(DT)              # For tables
-library(plotly)          # For graphs
 library(latex2exp)       # For titles in graphs
 library(openair)         # For openair-plots
 
 # Geo
 library(sf)
 
-library(lubridate)
-
-library(future)
-library(promises)
-plan(multiprocess)
-
 # logger
 library(logger)
-log_threshold(TRACE)
+#log_threshold(loglevel)
 
 library(samanapir)
 library(ATdatabase)
@@ -65,13 +64,14 @@ source("funs/database_fun.R")
 source("funs/queue_fun.R")
 source("funs/download_fun.R")
 source("funs/data_to_tool_fun.R")
+source("funs/logging_fun.R")
+set_loglevel()
 
 # launch queue manager
 qm_script <- here::here("scripts","queue_manager.R")
 system2("Rscript", qm_script, wait = FALSE)
 
 # Set language and date options                                             ====
-
 options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
@@ -105,8 +105,8 @@ pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
 
 # store lists with projects and municipalities
-municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F)
-projects <- read_csv("./prepped_data/projects.csv")
+municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F, col_types = c("d", "c"))
+projects <- read_csv("./prepped_data/projects.csv", col_types = c("c"))
 
 # add_doc doesn't work, see ATdatabase #8
 ATdatabase::add_doc("application", "municipalities", municipalities, conn = pool,
@@ -122,8 +122,8 @@ stations_con <- tbl(pool, "location")
 
 # Define colors, line types,choices etc.                                   ====
 # Colours for the sensors
-col_cat <- list('#ffb612','#42145f','#777c00','#007bc7','#673327','#e17000','#39870c', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
-col_cat <- rev(col_cat) # the saturated colours first
+col_cat <- list('#e17000','#007bc7','#673327','#39870c','#ffb612','#42145f','#777c00', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
+# col_cat <- rev(col_cat) # the saturated colours first
 col_default <- '#000000'
 col_overload <- '#111111'
 
@@ -136,6 +136,12 @@ line_overload <- 'dotted'
 group_name_default <- "groep_1"
 # Default for no group
 group_name_none <- ""
+
+# Minimal sd value sensor pm10
+uc_min_pm10 <- 8.5
+
+# Minimal sd value sensor pm25
+uc_min_pm25 <- 5.3
 
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
@@ -177,7 +183,6 @@ source("modules/choose_mun_or_proj.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
-source("modules/add_show_availability.R")
 source("modules/add_single_text_message.R")
 
 # Source modules visualisation

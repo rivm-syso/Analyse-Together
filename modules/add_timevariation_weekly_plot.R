@@ -47,12 +47,19 @@ timevar_weekly_server <- function(id,
         dplyr::filter(component == parameter) %>%
         dplyr::pull(label)
 
-      # Make a plot
-      plot_all <- data_plot %>% dplyr::mutate(daynumber = lubridate::wday(date, week_start = 1),
-                                              hourofday = hour(date)) %>%
-                                dplyr::group_by(label, daynumber, hourofday) %>%
-                                dplyr::mutate(mean_day_hour = mean(value, na.rm = T)) %>%
-                                dplyr::arrange(date)
+      # calculate plot data
+      plot_all <- data_plot %>%
+        dplyr::mutate(daynumber = lubridate::wday(date, week_start = 1),
+                      hourofday = hour(date)) %>%
+        dplyr::group_by(label, daynumber, hourofday) %>%
+        dplyr::mutate(weights = number/max(number),
+                      w_mean = datawizard::weighted_mean(value, weights),
+                      w_sd = datawizard::weighted_sd(value, weights)) %>%
+        dplyr::arrange(date) %>%
+        dplyr::ungroup() %>%
+        dplyr::select(label, col, size, linetype, hourofday, daynumber, w_mean, w_sd) %>%
+        distinct()
+
 
       # Create labels
       names_weekdays <- c("maandag", "dinsdag", "woensdag",
@@ -61,21 +68,29 @@ timevar_weekly_server <- function(id,
       labels_weekdays_plot <- setNames(names_weekdays, values_weekdays)
 
       # Obtain info for the axis
-      min_meas <- plyr::round_any(min(plot_all$mean_day_hour, na.rm = T), 5, f = floor)
-      max_meas <- plyr::round_any(max(plot_all$mean_day_hour, na.rm = T), 5, f = ceiling)
+      min_meas <- plyr::round_any(min(plot_all$w_mean, na.rm = T), 5, f = floor)
+      max_meas <- plyr::round_any(max(plot_all$w_mean, na.rm = T), 5, f = ceiling)
       steps <- plyr::round_any(max_meas / 15, 6, f = ceiling) # to create interactive y-breaks
       n_stat_in_plot <- length(unique(plot_all$col))
 
-      plot_part <- ggplot(data = plot_all,aes(x = hourofday, y = mean_day_hour, group = label, color = label), lwd = 1) +
+      # The errorbars overlapped, so use position_dodge to move them horizontally
+      pd <- position_dodge(0.2) # move them .1 to the left and right
+
+      # generate the plot
+      plot_part <- ggplot(data = plot_all,aes(x = hourofday, y = w_mean,
+                                              group = label, color = label),
+                          lwd = 1) +
         geom_line() +
         geom_point() +
+        geom_errorbar(aes(ymin=w_mean - 2*w_sd, ymax=w_mean + 2*w_sd), width=.1,
+                      position=pd, alpha = 0.6) +
         facet_wrap(~ daynumber, nrow = 1, labeller = labeller(daynumber = labels_weekdays_plot)) +
         scale_color_manual(values = plot_all$col,
                            breaks = plot_all$label) +
-        scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
-                           minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2),
-                                              by = steps/2),
-                           limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
+        # scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
+        #                    minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2),
+        #                                       by = steps/2),
+        #                    limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
         scale_x_continuous(breaks = c(0, 6, 12, 18)) +
         labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
              title=paste0('Weekly pattern for: ', parameter_label)) +

@@ -77,7 +77,15 @@ show_map_server <- function(id,
       ns("map")
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
-        addTiles() %>%
+        # addTiles() %>%
+        addProviderTiles(
+                         'Esri.WorldGrayCanvas' # option 1
+                         #'Esri.WorldTopoMap'   # option 2
+
+       ) %>%
+        addProviderTiles(
+          'CartoDB.PositronOnlyLabels' # option 1
+        ) %>%
         addDrawToolbar(
           targetGroup = 'Selected',
           polylineOptions = FALSE,
@@ -140,8 +148,16 @@ show_map_server <- function(id,
       # Set the selected station to select == T
       data_stns <- data_stns %>%
         dplyr::mutate(selected = ifelse(station == id_selected, T, selected),
-                      group_name = ifelse(station == id_selected, get_group_name, group_name),
-                      label = ifelse(station == id_selected, get_group_name, label))
+                      group_name = ifelse(station == id_selected & station_type == "sensor",
+                                          get_group_name,
+                                          ifelse(station == id_selected & station_type != "sensor",
+                                                 station,
+                                                 group_name)),
+                      label = ifelse(station == id_selected & station_type == "sensor",
+                                     get_group_name,
+                                     ifelse(station == id_selected & station_type != "sensor",
+                                            station,
+                                            label)))
 
       # Assign colors -> sensor
       data_stns <- assign_color_stations_group(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
@@ -213,6 +229,7 @@ show_map_server <- function(id,
                          weight = 2,
                          label = lapply(data_snsrs_col$station, HTML),
                          layerId = ~station,
+                         fillOpacity = 0.7,
                          radius = 5,
                          color = data_snsrs_col$col,
                          group = "sensoren"
@@ -238,7 +255,7 @@ show_map_server <- function(id,
 
       # Put selected stations on map
       data_selected <- data_snsrs %>% dplyr::filter(selected)
-      
+
       if(nrow(data_selected > 0)){
         proxy %>%
           addMarkers(data = data_selected, ~lon, ~lat,
