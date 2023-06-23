@@ -4,7 +4,7 @@ shinyServer(function(global, input, output, session) {
   # To change the language in the tool
   observeEvent(input$selected_language, {
     # Here is where we update language in session
-    shiny.i18n::update_lang(session, input$selected_language)
+    shiny.i18n::update_lang(session = session, language = input$selected_language)
   })
 
   ############### ReactiveValues #############
@@ -157,14 +157,11 @@ shinyServer(function(global, input, output, session) {
 
   single_text_server("name_group", reactive(data_other$group_name))
 
-
-  # To give some indication of the data available in dbs ----
-  show_availability_server("show_availability",
-                           data_stations_all = reactive(data_stations$data_all),
-                           data_stations_with_data = reactive(data_stations$data)
-                           )
-
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
+  single_text_server("text_download_estimation", text_message = reactive(message_data$download_estimation))
+  single_text_server("text_check_visualisation", text_message = reactive("Please, check with the visualisations if all expected data is available."))
+
+
 
    ########### Observers ################
    # Observe if you change tab and store the tabname ----
@@ -186,9 +183,6 @@ shinyServer(function(global, input, output, session) {
       data_stations_filtered_new <- get_data_button$data_stations_filtered()
       data_stations$data <- data_stations_filtered_new
 
-      # Get the message and store them
-      message_data_new <- get_data_button$message_data()
-      message_data$data_in_dbs <- message_data_new
     })
 
     # Observe filtered data from stations and groups ----
@@ -217,8 +211,8 @@ shinyServer(function(global, input, output, session) {
     observe({
       start_date_set <- select_date_range$selected_start_date()
       end_date_set <- select_date_range$selected_end_date()
-      data_other$start_date <- start_date_set
-      data_other$end_date <- end_date_set
+      data_other$start_date <- lubridate::as_datetime(start_date_set, tz = "Europe/Amsterdam")
+      data_other$end_date <- lubridate::as_datetime(end_date_set, tz = "Europe/Amsterdam")
     })
 
     # Observe the selection municipality OR project ----

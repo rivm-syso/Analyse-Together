@@ -15,11 +15,12 @@ dl_station <- function(id, time_start, time_end) {
 
     #load functions
     source(here("funs","database_fun.R"))
+    source(here("funs","logging_fun.R"))
 
     pid <- Sys.getpid()
     logfile <- file.path(get_database_dirname(),paste0("download.log"))
-    log_threshold(TRACE)
     log_appender(appender_file(logfile))
+    set_loglevel()
 
     fname_db <- get_database_path()
     conn <- DBI::dbConnect(drv = SQLite(synchronous = "off"), dbname = fname_db)

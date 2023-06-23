@@ -36,23 +36,22 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
      sp \
      sf \
      DT \
-     plotly \
      latex2exp \
      openair \
      logger \
      remotes \
-     && rm -rf /tmp/downloaded_packages
-
-# install some more R pkgs (in a new layer)
-RUN install2.r --error --skipinstalled --ncpus -1 \
      plyr \
      shinyjs \
      shiny.i18n \
      dbplyr \
      here \
      shinyalert \
-     future \
+     datawizard \
      && rm -rf /tmp/downloaded_packages
+
+# install some more R pkgs (in a new layer)
+# RUN install2.r --error --skipinstalled --ncpus -1 \
+#      && rm -rf /tmp/downloaded_packages
 
 # Create folder 
 # copy app

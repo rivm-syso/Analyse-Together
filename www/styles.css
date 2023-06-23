@@ -123,7 +123,9 @@ a:visited {
 .leaflet-container {
 	background: white;
 	height: calc(100vh - 330px) !important;
+	outline: 0;
 }
+
 
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
     z-index: unset !important;

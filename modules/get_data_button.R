@@ -67,7 +67,15 @@ get_data_button_server <- function(id,
       # Get the station names in the selected Municipality/project
       stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
 
-      log_trace("get mod: {lubridate::now()} Get data from caching database ... ")
+      log_info("get mod: Get data from caching database: {name_choice} ; {start_time} ; {end_time}... ")
+
+      # Estimate the download time, if sensors exists in selection
+      if(is.null(stations_name)){
+        message_data$download_estimation <- c(paste0("No sensors in selection."))
+      }else{
+        estimate_time <- ceiling((length(stations_name) * 7 + 30)/60)
+        message_data$download_estimation <- c(paste0("Estimated load time from external source: ", estimate_time, " minutes."))
+      }
 
       # Get the data measurements of the selected Municipality/project in the period
       data_measurements$data_all <- get_measurements(measurements_con, stations_name, start_time, end_time)
@@ -79,11 +87,23 @@ get_data_button_server <- function(id,
       }
       message_data$data_in_dbs <- c(paste0("Data available in ", type_choice, " ", name_choice))
 
+      # Remove duplicates
+      data_measurements$data_all <- data_measurements$data_all %>%
+        # drop the ID column
+        dplyr::select(-c(id)) %>%
+        dplyr::distinct()
+
+      # Remove NA values
+      data_measurements$data_all <- data_measurements$data_all[!is.na(data_measurements$data_all$value), ]
+
       # Create a pm10_kal and pm25_kl for reference stations
       data_measurements$data_all <- add_ref_kal(data_measurements$data_all)
 
       # Add uncertainty to the measurements of the sensors
-      data_measurements$data_all <- add_uncertainty_sensor(data_measurements$data_all)
+      data_measurements$data_all <- add_uncertainty_sensor_percent(data_measurements$data_all)
+
+      # Add bias to the uncertainty sensors raw data
+      data_measurements$data_all <- add_uncertainty_bias_sensor(data_measurements$data_all)
 
       # Get the information from the stations
       data_stations$data_all <- get_locations(stations_con, stations_name)
@@ -102,12 +122,12 @@ get_data_button_server <- function(id,
                       station_type = "sensor", group_name = group_name_none,
                       label = station) %>%
         dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI",
-                                            ifelse(grepl("NL", station) == T, "ref",
+                                            ifelse(grepl("^NL.[0-9].", station) == T, "ref",
                                                    station_type))) %>%
         dplyr::mutate(linetype = ifelse(station_type == "ref", line_overload, linetype),
                       size = ifelse(station_type == "ref", 2,1))
 
-      log_trace("get mod: {lubridate::now()} Data available in tool. ")
+      log_info("get mod: Data available in tool. ")
 
     })
 

@@ -67,29 +67,38 @@ shinyUI(
                tabPanel(
 
                  value = "Select data",
-                 title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
+                 title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
 
                  fluidRow(
 
-                   column(12, class = "col-lg-12",
-                          wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
-                                   choice_selection_output("choice_select"),
-                                   date_range_output("select_date_range"),
-                                   column(6, get_data_button_output("get_btn_pushed")),
-                                   column(6, download_api_button_output("dl_btn_pushed")),
-                                   single_text_output("text_data_available"),
-                                   show_availability_output("show_availability")
-                          )
-                   )
+                   column(width = 12,
+                          wellPanel(
+                            div(h3(i18n$t("tool_welcome")),
+                            p(i18n$t("tool_welcome_1_expl")),
+                            p(i18n$t("tool_welcome_2_expl")),
+                            p(i18n$t("tool_welcome_3_expl")),
+                            p(i18n$t("tool_welcome_4_expl")),
+                            p(i18n$t("tool_welcome_5_expl")),
 
+                            p(i18n$t("expl_link_to_samenmeten"),
+                              a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
+                              br(),i18n$t("expl_link_to_LML"),
+                              a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
+                              br(),i18n$t("expl_link_to_KNMI"),
+                              a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
+                              br(),i18n$t("expl_link_to_projecten"),
+                              a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
+                              style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))
+                   )
                  )
+
                ),
 
                tabPanel(
 
                  value = "Visualise data",
-                 title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
+                 title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
                  fluidRow(column(12, class = "col-lg-12",
                           wellPanel(component_selection_output("select_component"),
@@ -102,7 +111,7 @@ shinyUI(
                ),
                tabPanel(
                  value = "Advanced",
-                 title = HTML(paste0(i18n$t("title_advanced")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
+                 title = HTML(paste0(i18n$t("title_advanced")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
                  fluidRow(
                    wellPanel(h4(i18n$t("expl_download_to_pc")),
@@ -117,22 +126,22 @@ shinyUI(
 
         # Conditional panels for the right side of the page:
         conditionalPanel(condition="input.second_order_tabs=='Select data'",
-                         column(width = 6,div(br(),br(),h3(i18n$t("tool_welcome")),
-                            p(i18n$t("tool_welcome_1_expl")),
-                            p(i18n$t("tool_welcome_2_expl")),
-                            p(i18n$t("tool_welcome_3_expl")),
-                            p(i18n$t("tool_welcome_4_expl")),
-                            p(i18n$t("tool_welcome_5_expl")),
+                           column(width = 6,
+                                  wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+                                            choice_selection_output("choice_select"),
+                                            date_range_output("select_date_range"),
+                                            column(6, get_data_button_output("get_btn_pushed")),
+                                            column(6, download_api_button_output("dl_btn_pushed")),
+                                            single_text_output("text_data_available"),
+                                            br(),
+                                            single_text_output("text_check_visualisation"),
+                                            br(),
+                                            single_text_output("text_download_estimation")
+                                  )
 
-                            p(i18n$t("expl_link_to_samenmeten"),
-                              a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-                            br(),i18n$t("expl_link_to_LML"),
-                            a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-                            br(),i18n$t("expl_link_to_KNMI"),
-                            a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
-                            br(),i18n$t("expl_link_to_projecten"),
-                            a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
-                            style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))),
+                           )
+
+                         ),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
                          column(width = 6,
                                 style = "margin-top: 30px;",
@@ -143,7 +152,7 @@ shinyUI(
                                   fluidRow(
                                     column(width = 3, set_group_button_output("set_group_pushed")),
                                     column(width = 8, offset = 1,
-                                           p("U voegt nu sensoren toe aan: "),
+                                           p(i18n$t("expl_add_sensor_to_group")),
                                            single_text_output("name_group")))
 
                          )
@@ -159,6 +168,15 @@ shinyUI(
         p(i18n$t("tool_intro_data_expl")),br(),
         h4(i18n$t("word_cal_values")),
         p(i18n$t("tool_intro_cal_values_expl")),br(),
+      h4(i18n$t("word_confident_interval")),
+      p(i18n$t("tool_confident_interval_1_expl")),
+      p(i18n$t("tool_confident_interval_2_expl")),
+      p(i18n$t("tool_confident_interval_3_expl")),
+      p(i18n$t("tool_confident_interval_4_expl")),br(),
+      h4(i18n$t("word_variation_whisker")),
+      p(i18n$t("tool_variation_whisker_1_expl")),
+      p(i18n$t("tool_variation_whisker_2_expl")),
+      p(i18n$t("tool_variation_whisker_3_expl")),br(),
       h4(i18n$t("word_opensource")),
       p(i18n$t("tool_intro_opensource_expl")), br(),
       h4(i18n$t("word_links")),
@@ -170,8 +188,18 @@ shinyUI(
         a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
         br(),i18n$t("expl_link_to_KNMI"),
         a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
-        br(),i18n$t("expl_link_to_projecten"),
+        br(),
+        i18n$t("expl_link_to_projecten"),
         a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
+        br(),
+        i18n$t("expl_link_to_benb_artikel"),
+        a("link", href ='https://www.mdpi.com/1424-8220/22/20/8053', target = 'blank'),
+        br(),
+        i18n$t("expl_link_to_kalibration"),
+        a("link", href ='https://samenmeten.nl/dataportaal/kalibratie-van-fijnstofsensoren', target = 'blank'),
+        br(),
+        "Contact: ",
+        a("link", href ='https://samenmeten.nl/contact', target = 'blank'),
         style = "font-size:13px")
     )
 
