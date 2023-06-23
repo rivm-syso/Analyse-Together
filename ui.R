@@ -67,7 +67,7 @@ shinyUI(
                tabPanel(
 
                  value = "Select data",
-                 title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
+                 title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
 
                  fluidRow(
@@ -98,7 +98,7 @@ shinyUI(
                tabPanel(
 
                  value = "Visualise data",
-                 title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
+                 title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
                  fluidRow(column(12, class = "col-lg-12",
                           wellPanel(component_selection_output("select_component"),
@@ -111,7 +111,7 @@ shinyUI(
                ),
                tabPanel(
                  value = "Advanced",
-                 title = HTML(paste0(i18n$t("title_advanced")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> BETA </span> </strong>")),
+                 title = HTML(paste0(i18n$t("title_advanced")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
                  fluidRow(
                    wellPanel(h4(i18n$t("expl_download_to_pc")),
