@@ -11,6 +11,14 @@
 	      "en": "Information tool",
 	      "nl": "Informatie over de tool"
 	  },
+	  {"tag" : "expl_link_to_benb_artikel",
+	      "en": "Article about Farmers and Local residents project:",
+	      "nl": "Artikel over Boeren en Buren project: "
+	  },
+	  {"tag" : "expl_link_to_kalibration",
+	      "en": "Calibration explanation:",
+	      "nl": "Uitleg kalibratie: "
+	  },
 	   {"tag" : "expl_link_to_samenmeten",
 	      "en": "Real-time measurements of the sensors are available on the Measure Together Dataportal:",
 	      "nl": "Real-time metingen van de sensoren kun je vinden op het Samen Meten Dataportaal: "
@@ -63,33 +71,45 @@
 	      "en": "The downloaded data contains raw and calibrated data. Details about the calibration procedure can be found on the Samen Meten Knowledge Portal. The calibration of sensor data is done using secondary data, which may not always be available. Therefore, it is possible that calibrated values are not present in the database for certain time periods. We are gaining more understanding of situations in which the sensors, even after calibration, provide less reliable values. These situations include high humidity conditions (as from 97-98% as measured at KNMI stations). Particularly during the winter months, in the night and early morning, humidity can be very high. Additionally, these sensors may consistently or frequently deviate from the patterns observed by other sensors. At present, it is not yet possible to filter out the measurement values from these hours or sensors in the data. However, we are working on it.",
 	      "nl": " De gedownloade data bevat ruwe én gekalibreerde data. Details over de kalibratieprocedure zijn te vinden op het Samen Meten Kennisportaal. De kalibratie van sensordata wordt gedaan met behulp van secundaire data die niet altijd beschikbaar zijn. Het kan daarom voorkomen dat voor sommige tijdsperioden geen gekalibreerde waarden in de database aanwezig zijn. We krijgen steeds meer begrip van situaties waarin de sensoren – ook na kalibratie – minder betrouwbare waarden geven. Dit zijn bijvoorbeeld situaties met zeer hoge luchtvochtigheid (vanaf 97 à 98% zoals gemeten op KNMI stations). Met name in de wintermaanden in de nacht en vroege ochtend kan de luchtvochtigheid zeer hoog kan zijn. Daarnaast kan het zijn dat deze sensoren altijd of vaak afwijken van de patronen die andere sensoren laten zien. Het is op dit moment nog niet mogelijk om de meetwaarden van deze uren of sensoren uit de gegevens te filteren. Daar werken we wel aan."
 	  },
-	  {"tag" : "word_variation_stick",
-	      "en": "See Dutch",
+	  {"tag" : "word_variation_whisker",
+	      "en": "Whiskers for variations within a time period",
 	      "nl": "Spreidingsbalken voor variatie binnen een tijdsperiode"
 	  },
-      {"tag" : "tool_variation_stick_expl",
-	      "en": "See Dutch",
-	      "nl": "Voor het maken van de figuren met het wekelijkse en dagelijkse patroon wordt het gemiddelde over gegroepeerde metingen berekend. Daarnaast wordt de standaard deviatie bepaald: deze waarde kan je wat vertellen over de spreiding van de meetwaardes in de periode. Bijvoorbeeld op 8 maandagen zijn de meetwaardes: 10, 2, 6, 8, 12, 12, 9, 13;  op 8 dinsdagen is er gemeten 20, 12, 16, 18, 36, 4, 9, 12. Op de dinsdagen is de spreiding groter dan op de maandagen. Dit kun je in het figuur terugzien door een langere spreidingsbalk rond het gemiddelde. Voor het berekenen van het gemiddelde en de standaard deviatie is het aantal sensoren in de groep gebruikt als weegfactor. De meetonzekerheden zijn in deze situatie minder relevant, in deze figuren ligt de focus op de spreiding gedurende de specifieke dag of het uur."
+      {"tag" : "tool_variation_whisker_1_expl",
+	      "en": "For the figures showing the daily and weekly concentration patterns, we make use of the sensor group average over a particular time period (for instance, a specific day or hour). You can use these measurements to determine the standard deviation, which is a measure of the spread between individual concentration measurements. This spread is not a measurement error, but shows the variation of measured values for that period. Afterall, the real concentration can be higher one day than the other. ",
+	      "nl": "Voor het maken van de figuren met het wekelijkse en dagelijkse patroon nemen we het gemiddelde van een groep sensoren over een bepaalde periode (een dag of een uur). Je kunt daarvan dan de  standaarddeviatie bepalen, deze waarde zegt je iets over de spreiding van de meetwaardes. De spreiding is dus geen meetfout, maar geeft de variatie van de meetwaardes aan in de periode. De ene dag zijn de concentraties nu eenmaal hoger of lager dan de andere."
+	  },
+	  {"tag" : "tool_variation_whisker_2_expl",
+	      "en": "For example, on eight Mondays the measured values may have been 10, 2, 6, 8, 12, 9, and 13; on eight Tuesdays the concentrations might have been 20, 12, 16, 18, 36, 4, 9, 12. On Tuesdays the values range from 4 to 36. This spread is larger than on Mondays, which shows a range from 2 to 13. This result is apparent in the figure through taller vertical whiskers around the average measurement. It does happen that some sensors in a group do not have measurements in all time periods. We account for this difference by using the number of sensors measurements as a weight when calculating both the average and the standard deviation. ",
+	      "nl": "Bijvoorbeeld op acht maandagen zijn de meetwaardes: 10, 2, 6, 8, 12, 12, 9, 13;  op acht dinsdagen is er gemeten 20, 12, 16, 18, 36, 4, 9, 12. Op de dinsdagen liggen de waarden tussen 4 en de 36 en is de spreiding groter dan op de maandagen, want dan liggen de waarden tussen de 2 en de 13. Dit kun je in het figuur terugzien door een langere spreidingsbalk rond het gemiddelde. Het komt voor dat niet alle sensoren in de groep de hele periode gemeten hebben. Om daar rekening mee te houden is het aantal sensoren in de groep gebruikt als weegfactor voor het berekenen van het gemiddelde en de standaarddeviatie."
+	  },
+	   {"tag" : "tool_variation_whisker_3_expl",
+	      "en": "The uncertainty of concentration measurements is less relevant in this case, because they are often smaller than differences in concentration from day to day, or hour to hour. This is why we do not show the uncertainties in these figures. ",
+	      "nl": "De meetonzekerheden zijn in deze situatie voor de Samen Analyseren Tool minder belangrijk, want die zijn meestal veel kleiner dan het verschil van dag tot dag of uur tot uur. Daarom hoeven we voor deze figuren de meetonzekerheid niet mee te nemen."
 	  },
 	  {"tag" : "word_confident_interval",
-	      "en": "See Dutch",
-	      "nl": "Betrouwbaarheidsbanden voor geschatte meetonzekerheid sensoren"
+	      "en": "Confidence intervals for sensor uncertainties",
+	      "nl": "Onzekerheidsbanden voor meetonzekerheid sensoren"
 	  },
       {"tag" : "tool_confident_interval_1_expl",
-	      "en": "See Dutch",
-	      "nl": "De meetresultaten van een lowcost-sensor zijn niet zo betrouwbaar als die van de referentie-apparatuur. De referentie-apparatuur wordt in detail gekalibreerd en gecontroleerd waardoor ook de meetonzekerheden kunnen worden bepaald. Voor de sensoren is dat lastiger, waardoor de meetonzekerheden groter zijn. In de Samen Analyseren tool is de geschatte meetonzekerheid gevisualiseerd met een lichtgekleurde band om de meetwaardes heen. Een eerste stap in het verbeteren van de betrouwbaarheid van de sensormeting is het uitvoeren van een kalibratie (referentie uitleg kalibratie). Hiermee kan een deel van de meetonzekerheid worden verklaard en verwijderd. Door de kalibratie wordt de betrouwbaarheidsband dus smaller. "
+	      "en": "(Low-cost) Sensors have a measurement uncertainty; every sensor measures slightly differently, for instance due variations in their production or the presence of a fan. By looking at multiple sensors together, you can lower this uncertainty. We want to show these uncertainties in the Analyse Together tool. Below you can read about the basic procedure we use to estimate the uncertainty. ",
+	      "nl": "(Goedkope) Sensoren hebben een meetonzekerheid,; elke sensor meet net een beetje anders o.a. door verschil in fabricage of verschil in wel/geen ventilator. Als je meerdere sensoren samen bekijkt, verklein je deze onzekerheid. We willen de meetonzekerheid ook in de Samen Analyseren Tool laten zien. Hieronder kun je lezen met welke simpele procedure we de meetonzekerheid bepaald hebben."
 	  },
 	  {"tag" : "tool_confident_interval_2_expl",
-	      "en": "See Dutch",
-	      "nl": "De meetonzekerheid van de sensor is geschat op 20% van de meetwaarde, met een minimale onzekerheid van 5,3 µg/m3 voor pm2,5 en 8,5 µg/m3 voor pm10. Deze minimale waardes zijn bepaald als de intersensor onzekerheid en voor nu aangenomen als eerste schatting. "
+	      "en": "The first step in improving the accuracy of a sensor measurement is to apply a calibration procedure (see reference below). With this calibration step a part of the measurement error can be removed. For instance, we can correct for the error that occurs when relative humidity is high. In the Analyse Together tool, the difference between the raw and calibrated sensor measurements is visualized with a light colored ribbon around the measurements. The calibrated values still have a measurement uncertainty, for example because each sensors reacts slightly differently to the concentration of particular matter in the air. We have estimated these uncertainties.",
+	      "nl": "Een eerste stap in het vergroten van de betrouwbaarheid van de sensormeting is het uitvoeren van een kalibratie (zie verwijzing bij de links). Hiermee kunnen we  een deel van de meetfout weghalen. Dat gaat dan bijvoorbeeld om de meetfout die veroorzaakt wordt door een hoge luchtvochtigheid.  In de Samen Analyseren tool kun je het verschil tussen ruwe en gekalibreerde sensormetingen zien als een lichtgekleurde band om de meetwaardes heen. Er blijft een meetonzekerheid over voor de gekalibreerde waardes, bijvoorbeeld omdat alle sensoren een klein beetje anders reageren op de hoeveelheid fijnstof in de lucht. Deze onzekerheid hebben we geschat."
 	  },
 	  {"tag" : "tool_confident_interval_3_expl",
-	      "en": "See Dutch",
-	      "nl": "Wanneer meerdere sensoren worden gegroepeerd, dan nemen we aan dat het groepsgemiddelde een betrouwbaardere concentratie weergeeft dan de individuele sensoren. De betrouwbaarheidsband voor de groepsgemiddeldes is berekend door de onzekerheid van de individuele sensoren te middelen en te delen door de wortel van het aantal sensoren. Ook hierbij is de minimale onzekerheid aangehouden. "
+	      "en": "The measurement uncertainty of a sensor is estimated at 20% of the measured concentration. If the measured values are very low, then 20% of that value will be a small number as well. This is why we also estimated a minimal uncertainty of 5.3 µg/m3 for pm2.5 and 8.5 µg/m3 for pm10 (see reference below). These estimated uncertainties can be thought of as a confidence interval around the measurement. In approximately 19 out of 20 cases the true concentration in the air will be within this interval.",
+	      "nl": "De meetonzekerheid van een sensor is geschat op 20% van de meetwaarde. Als de meetwaardes heel laag zijn wordt 20% daarvan ook heel klein, daarom hebben we ook een minimale onzekerheid geschat van 5,3 µg/m3 voor pm2,5 en 8,5 µg/m3 voor pm10 (zie verwijzing bij de links). Deze geschatte onzekerheid kun je zien als een betrouwbaarheidsband om de meetwaardes. In ongeveer 19 uit 20 gevallen zal de werkelijke concentratie in deze band vallen."
 	  },
 	  {"tag" : "tool_confident_interval_4_expl",
-	      "en": "See Dutch",
-	      "nl": "Op deze manier kan er in de Samen Analyseren Tool ontdekt worden hoe de onzekerheid van sensoren onderling kan verschillen en wat het effect is van het groeperen van de sensoren. Voor een statistische analyse zijn deze schattingen van de onzekerheid niet geschikt. Daarvoor is een uitgebreidere analyse nodig in combinatie van de individuele sensoren en referentiemetingen."
+	      "en": "We can obtain a more reliable measurement by grouping multiple sensors and taking their average measurement. In this case we assume that every sensor in the group is exposed to the same concentrations. If you group sensors in this way, then the average measurement has a smaller uncertainty than the individual sensors. De confidence interval of the group average is calculated using a standard method. That is, by dividing the average uncertainty of the individual sensors by the square root of the number of sensors in the group. Here we again used the minimum uncertainties.  ",
+	      "nl": "We kunnen de concentraties ook betrouwbaarder maken door meerdere sensoren bij elkaar te nemen en te middelen. We nemen dan wel aan dat alle sensoren in de groep ook aan dezelfde concentraties zijn blootgesteld. Wanneer je zo meerdere sensoren groepeert, dan geeft dit groepsgemiddelde een betrouwbaardere concentratie dan de individuele sensoren. In grote lijnen, hoe meer sensormetingen je middelt, hoe kleiner de meetonzekerheid van dit gemiddelde is. De betrouwbaarheidsband voor de groepsgemiddeldes is berekend op de standaard manier. Namelijk, door de gemiddelde onzekerheid van een individuele sensoren te delen door de wortel van het aantal sensoren in de groep. Ook hierbij is de minimale onzekerheid aangehouden."
+	  },
+	  {"tag" : "tool_confident_interval_5_expl",
+	      "en": "The confidence intervals are used in the Analyse Together tool to illustrate how the uncertainties can differ between individual sensors, and what the effect is of grouping sensors together. These estimates are not suited for a statistical analysis of sensor measurements. Such an analysis requires a more detailed treatment of the uncertainty of individual sensors and the reference measurements.",
+	      "nl": "Op deze manier geeft de Samen Analyseren Tool een voorbeeld van hoe de onzekerheid van sensoren onderling kan verschillen en wat het effect is van het groeperen van de sensoren. Voor een statistische analyse zijn deze schattingen van de onzekerheid niet geschikt. Daarvoor is een uitgebreidere analyse nodig in combinatie van de individuele sensoren en referentiemetingen."
 	  },
     {"tag" : "word_opensource",
 	      "en": "Open source",
@@ -340,17 +360,16 @@
         "nl" : "Download data naar pc"
       },
       {"tag" : "expl_download_to_pc_expl",
-        "en" : "See Dutch",
+        "en" : "Press the button to download the data to your own computer. The download contains a .zip-file with a README file to explain the columns and data source and an csv file containing the data. Source: KNMI measurements from knmi.nl; reference measurements from luchtmeetnet.nl; sensor data from samenmeten. NB: the reference measurements are unvalidated values.",
         "nl" : "Klik op onderstaande button om de gegevens vanuit de tool naar uw eigen computer te downloaden. De download bevat een zip-bestand met daarin een csv-bestand met de gegevens en een txt-bestand met informatie over de kolommen. Bronvermelding: KNMI-gegevens komen vanaf knmi.nl, de referentiemeetwaarden van luchtmeetnet.nl en de sensormetingen van SamenMeten. LET OP: voor de meetwaarden van luchtmeetnet gaat het om ongevalideerde gegevens."
       },
     {"tag" : "expl_download_to_pc_readme",
-        "en" : "See Dutch",
+        "en" : " Bronvermelding: KNMI-gegevens komen vanaf knmi.nl, de referentiemeetwaarden van luchtmeetnet.nl en de sensormetingen van SamenMeten. LET OP: voor de meetwaarden van luchtmeetnet gaat het om ongevalideerde gegevens. The .csv file has the folowwing columns: 'station' name of station/sensor; 'date' date and time in timezone Europe/Amsterdam the end time of the hour; 'wd' wind direction (missing data: -999, no wind = 0, changing wind = 990); 'ws' wind speed in m/s; 'pm10' the concentration pm10 in ug/m3; 'pm10_kal' calibrated concentration pm10 in ug/m3; 'pm25' the concentration pm2.5 in ug/m3; 'pm25_kal' de calibrated concentration pm2.5 in ug/m3; 'lat' latitude of the location; 'lon' the longitude of the location. No data is given NA.",
         "nl" : "Bronvermelding: KNMI-gegevens komen vanaf knmi.nl, de referentiemeetwaarden van luchtmeetnet.nl en de sensormetingen van SamenMeten. LET OP: voor de meetwaarden van luchtmeetnet gaat het om ongevalideerde gegevens. Het csv-bestand heeft de volgende kolommen: 'station' de naam erin van het station/sensor; 'date' de datum en tijd in tijdszone Europe/Amsterdam van de eindtijd van het uur; 'wd' de windrichting (missing data: -999, windstil = 0, veranderlijk = 990); 'ws' de windsnelheid in m/s; 'pm10' de concentratie pm10 in ug/m3; 'pm10_kal' de gekalibreerde concentratie pm10 in ug/m3; 'pm25' de concentratie pm2,5 in ug/m3; 'pm25_kal' de gekalibreerde concentratie pm2,5 in ug/m3; 'lat' de latitude van de locatie; 'lon' de longitude van de locatie. Wanneer een waarde niet beschikbaar is, is 'NA' meegegeven."
       },
       {"tag": "btn_pc",
         "en" : "Download to pc",
         "nl": "Download naar pc"
       }
-
     ]
 }
