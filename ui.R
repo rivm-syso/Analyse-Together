@@ -189,6 +189,8 @@ shinyUI(
       h4(i18n$t("word_links")),
       p(i18n$t("expl_link_to_samenmeten"),
         a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
+        br(), i18n$t("expl_link_to_samenmeten_info"),
+        a("link", href ='https://samenmeten.nl/dataportaal/samen-analyseren-tool', target = 'blank'),
         br(), i18n$t("expl_link_github"),
         a("github", href ='https://github.com/rivm-syso/Analyse-Together', target = 'blank'),
         br(),i18n$t("expl_link_to_LML"),

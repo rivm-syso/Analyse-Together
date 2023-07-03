@@ -23,6 +23,10 @@
 	      "en": "Real-time measurements of the sensors are available on the Measure Together Dataportal:",
 	      "nl": "Real-time metingen van de sensoren kun je vinden op het Samen Meten Dataportaal: "
 	  },
+    {"tag" : "expl_link_to_samenmeten_info",
+	      "en": "More information about the Analyse Together Tool:",
+	      "nl": "Meer informatie over de Samen Analyseren Tool: "
+	  },
 	  {"tag" : "expl_link_to_LML",
 	      "en": "Real-time measurements of the stations are available on the National Air Monitoring Network website:",
 	      "nl": "Real-time metingen van de referentiemeetstations kun je vinden op de Landelijk Luchtmeetnet website:"
