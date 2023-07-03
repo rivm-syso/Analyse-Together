@@ -148,8 +148,8 @@
 	      "nl": "Hier kun je de gegevens gaan ontdekken. We hebben verschillende visualisaties gekozen om te helpen bij het bekijken van de gegevens. Zo kun je de tijdreeks bekijken, de gegevens in een tabel of met de windgegevens in een windroos. Bij elke visualisatie staat een korte toelichting. "
 	      },
 	      {"tag": "infotext_vis_2_expl",
-	      "en": "On the map, you can select sensors, which will be grouped together. By grouping and averaging a group of sensors, the measurement data becomes more reliable. You can view individual sensors in the time series of each sensor. There are two ways to create a group: by selecting a group of sensors using the square on the map ('Draw a rectangle'), or by clicking on individual sensors. To create a new group, use the button below the map. Each time you click the button, a new group ID will appear. To modify a group, click the trash can icon ('Delete layers'). Press save to apply the changes.",
-	      "nl": "Op de kaart maak je een selectie van de sensoren, deze worden gelijk gegroepeerd. Door een groep sensoren te groeperen en te middelen worden de meetgegevens betrouwbaarder. De individuele sensoren kun je bekijken in de tijdreeks van individuele sensor. Het maken van een groep kan op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. Om een nieuwe groep te maken, kies de button onder de kaart. Elke keer dat je op de button klikt, verschijnt er een nieuw groeps ID. Wil je een groep wijzigen, dan klik je op het prullenbak 'Delete layers'. Druk op save om de wijziging door te voeren."
+	      "en": "On the map, you can select sensors, which will be grouped together. By grouping and averaging a group of sensors, the measurement data becomes more reliable. You can view individual sensors in the time series of each sensor. See tab 'Create group' for more information.",
+	      "nl": "Op de kaart maak je een selectie van de sensoren, deze worden gelijk gegroepeerd. Door een groep sensoren te groeperen en te middelen worden de meetgegevens betrouwbaarder. De individuele sensoren kun je bekijken in de tijdreeks van individuele sensor. Zie het tabblad 'Maak groep' voor het maken van een groep."
 	      },
       {"tag" : "sel_knmi",
 	    	"en": "Show KNMI stations",
@@ -252,8 +252,8 @@
         "nl": "Maak groep"
       },
       {"tag" : "expl_meta_table",
-        "en": "In the table below, you can see the data availability of the sensors and stations.",
-        "nl": "In onderstaande tabel kunt u de databeschikbaarheid van de sensoren en stations zien."
+        "en": "In the table below, you can see the data availability of the sensors and stations. It also gives you an overview which sensors are assigned to which group. There are two ways to create a group: by selecting a group of sensors using the square on the map ('Draw a rectangle'), or by clicking on individual sensors. To create a new group, use the button below the map. Each time you click the button, a new group ID will appear. To modify a group, click the trash can icon ('Delete layers'). Press save to apply the changes.",
+        "nl": "In onderstaande tabel kunt u de databeschikbaarheid van de sensoren en stations zien. Ook kun je zien welke sensoren in welke groep zitten. Het maken van een groep kan op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. Om een nieuwe groep te maken, kies de button onder de kaart. Elke keer dat je op de button klikt, verschijnt er een nieuw groeps ID. Wil je een groep wijzigen, dan klik je op het prullenbak 'Delete layers'. Druk op save om de wijziging door te voeren."
       },
       {"tag" : "expl_meta_table_expl",
         "en": "For each sensor, the data capture is determined, indicating the percentage of selected time for which the sensor has data. You can also see the time of the first and last measurement. To determine a reliable average, it is preferable for the sensors to have measured during the same period and have a high data capture.",
