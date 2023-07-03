@@ -7,6 +7,14 @@ shinyServer(function(global, input, output, session) {
     shiny.i18n::update_lang(session = session, language = input$selected_language)
   })
 
+  # To keep the app activated in container
+  output$currentTime <- renderText({
+
+    shiny::invalidateLater(60000, session)
+    format(Sys.time(), "%Y-%m-%d %H:%M")
+
+  })
+
   ############### ReactiveValues #############
   # ReactiveValues to store the data
   # Store the data points (all and filtered)

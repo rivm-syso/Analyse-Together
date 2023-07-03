@@ -38,6 +38,7 @@ shinyUI(
 
     ),
 
+
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
     selected    = "Home",
@@ -58,6 +59,12 @@ shinyUI(
                                         style = "margin-bottom: -10px;",
                                         style = "margin-right: 20px;",
                                         style = "margin-top: -10px;")),
+      fluidRow(
+        # 'Show' time to keep the app activated (not visible)
+        h1(
+          textOutput("currentTime", container = span), style = "font-size:12px; text-align:right; color:#ffffff;"
+        )
+      ),
 
       fluidRow(
         column(width = 6,
