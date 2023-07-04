@@ -85,6 +85,14 @@ shinyServer(function(global, input, output, session) {
                                        parameter = reactive(data_other$parameter),
                                        overview_component,
                                        theme_plots)
+  
+  # The calender plot ----
+  calender_plot <- calender_server("calender_plot",
+                                   data_measurements =  reactive(data_measurements$data_grouped),
+                                   data_measurements_knmi =  reactive(data_measurements$data_filtered_knmi),
+                                   parameter = reactive(data_other$parameter),
+                                   overview_component)
+  
   # The pollutionrose plot ----
   pollrose_plot <- pollrose_server("pollrose_plot",
                                    data_measurements =  reactive(data_measurements$data_grouped),

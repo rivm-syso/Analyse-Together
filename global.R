@@ -188,6 +188,7 @@ source("modules/add_single_text_message.R")
 # Source modules visualisation
 source("modules/add_bar_plot.R")
 source("modules/add_timeseries_plot.R")
+source("modules/add_calenderplot.R")
 source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_weekly_plot.R")
 source("modules/add_timevariation_daily_plot.R")

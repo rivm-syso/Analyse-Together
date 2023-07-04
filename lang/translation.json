@@ -331,6 +331,18 @@
         "en": "After selecting different sensors on the map, you can choose a sensor from the dropdown menu. The timeseries of the selected sensor will be displayed. The x-axis represents the selected time period, and the y-axis represents the concentration of PM10 or PM2.5 in μg/m³.",
         "nl": "Nadat je op de kaart verschillende sensoren heeft geselecteerd, kun je door middel van het dropdownmenu een sensor kiezen. De tijdreeks van deze enkele sensor wordt dan getoond. De band rondom de meetlijn is de betrouwbaarheidsband, meer informatie daarover vind je onder het 'Informatie'-tabblad. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
+      {"tag" : "word_cal_plot",
+        "en" : "Calender plot",
+        "nl" : "Kalender plot"
+      },
+      {"tag" : "expl_calplot",
+        "en": "This graph shows the daily average concentration of the measurements for the selected component, for all selected sensors or groups.",
+        "nl": "Deze grafiek toont de dagelijkse gemiddelde concentratie van de metingen voor de geselecteerde component, voor alle sensoren of groepen."
+      },
+      {"tag" : "expl_calplot_expl",
+        "en": "If you click on a sensor, an average concentration per day is calculated. This can be displayed in a graph or, as shown here, in a calender representation. The color assigned to each date corresponds to an average value. This may reveal a pattern. For example, it could be observed that on weekdays (Monday to Friday) the measurements are consistently slightly higher than on weekends.",
+        "nl": "Als je een sensor aanklikt, wordt een gemiddelde concentratie per dag berekend. Deze kan worden weergegeven in een grafiek of, zoals hier, in een kalender weergave. De kleur die elke datum krijgt, correspondeert met een gemiddelde waarde. Het kan zijn dat er zo een patroon zichtbaar wordt. Zo kunnen bijvoorbeeld op de weekdagen (maandag t/m vrijdag) de meetwaarden altijd net wat hoger zijn dan op de weekenddagen."
+      },
       {"tag" : "word_conc_rose",
         "en": "Concentration rose (%)",
         "nl": "Concentratieroos (%)"
