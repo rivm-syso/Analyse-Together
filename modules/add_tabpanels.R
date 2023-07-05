@@ -12,6 +12,7 @@ tpAnalyse <- function(){
                            tpTimevariationWeekly(),
                            tpTimevariationDaily(),
                            #tpPercentileRose(),
+                           tpCalenderPlot(),
                            tpPollutionRose(),
                            #tpWindRose(),
 
@@ -138,6 +139,26 @@ tpPercentileRose<- function(){
                     )
   )
 
+  return(tp)
+}
+
+tpCalenderPlot <- function(){
+  tp <-  shiny::tabPanel(i18n$t("word_cal_plot"),
+                         helpText(i18n$t("expl_calplot"), style = "margin-left: 20px;"),
+                         
+                         fluidRow(
+                           
+                           # Render pollutionrose plot.
+                           
+                           column(12, class = "col-lg-12",
+                                  wellPanel(calender_output("calender_plot"))),
+                           
+                         ),
+                         h4(i18n$t("title_expl"), style = "margin-left: 20px"),
+                         p(i18n$t("expl_calplot_expl"),
+                           style = "font-size:12px; margin-left: 20px")
+  )
+  
   return(tp)
 }
 
