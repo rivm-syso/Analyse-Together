@@ -38,6 +38,7 @@ shinyUI(
 
     ),
 
+
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
     selected    = "Home",
@@ -58,6 +59,12 @@ shinyUI(
                                         style = "margin-bottom: -10px;",
                                         style = "margin-right: 20px;",
                                         style = "margin-top: -10px;")),
+      fluidRow(
+        # 'Show' time to keep the app activated (not visible)
+        h1(
+          textOutput("currentTime", container = span), style = "font-size:12px; text-align:right; color:#ffffff;"
+        )
+      ),
 
       fluidRow(
         column(width = 6,
@@ -182,6 +189,8 @@ shinyUI(
       h4(i18n$t("word_links")),
       p(i18n$t("expl_link_to_samenmeten"),
         a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
+        br(), i18n$t("expl_link_to_samenmeten_info"),
+        a("link", href ='https://samenmeten.nl/dataportaal/samen-analyseren-tool', target = 'blank'),
         br(), i18n$t("expl_link_github"),
         a("github", href ='https://github.com/rivm-syso/Analyse-Together', target = 'blank'),
         br(),i18n$t("expl_link_to_LML"),
@@ -199,8 +208,7 @@ shinyUI(
         a("link", href ='https://samenmeten.nl/dataportaal/kalibratie-van-fijnstofsensoren', target = 'blank'),
         br(),
         "Contact: ",
-        a("link", href ='https://samenmeten.nl/contact', target = 'blank'),
-        style = "font-size:13px")
+        a("link", href ='https://samenmeten.nl/contact', target = 'blank'))
     )
 
   )

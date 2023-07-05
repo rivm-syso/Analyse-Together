@@ -8,7 +8,6 @@
 ######################################################################
 download_api_button_output <- function(id) {
 
-  useShinyalert()
   ns <- NS(id)
   actionButton(ns("download_api_button"), i18n$t("btn_external_source"))
 }
@@ -62,7 +61,7 @@ download_api_button_server <- function(id,
                                time_end = time_end,
                                conn = pool,
                                max_requests = 100)
-           
+
 
          }
      })
