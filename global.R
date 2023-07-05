@@ -4,7 +4,7 @@
 # that the application uses, and the sourcing of custom functions.
 
 # Define the version of your application                                    ====
-application_version <- "0.99.0"
+application_version <- "1.0.0"
 install_github <- FALSE # we run into API rate limits
 
 # Read in the necessary libraries                                           ====
@@ -188,6 +188,7 @@ source("modules/add_single_text_message.R")
 # Source modules visualisation
 source("modules/add_bar_plot.R")
 source("modules/add_timeseries_plot.R")
+source("modules/add_calenderplot.R")
 source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_weekly_plot.R")
 source("modules/add_timevariation_daily_plot.R")

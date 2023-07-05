@@ -71,7 +71,7 @@ get_data_button_server <- function(id,
 
       # Estimate the download time, if sensors exists in selection
       if(is.null(stations_name)){
-        message_data$download_estimation <- c(paste0("No sensors in selection."))
+        message_data$download_estimation <- c(paste0("No information available yet, please press the get data button (right button)."))
       }else{
         estimate_time <- ceiling((length(stations_name) * 7 + 30)/60)
         message_data$download_estimation <- c(paste0("Estimated load time from external source: ", estimate_time, " minutes."))

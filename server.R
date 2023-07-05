@@ -7,6 +7,14 @@ shinyServer(function(global, input, output, session) {
     shiny.i18n::update_lang(session = session, language = input$selected_language)
   })
 
+  # To keep the app activated in container
+  output$currentTime <- renderText({
+
+    shiny::invalidateLater(60000, session)
+    format(Sys.time(), "%Y-%m-%d %H:%M")
+
+  })
+
   ############### ReactiveValues #############
   # ReactiveValues to store the data
   # Store the data points (all and filtered)
@@ -77,6 +85,14 @@ shinyServer(function(global, input, output, session) {
                                        parameter = reactive(data_other$parameter),
                                        overview_component,
                                        theme_plots)
+  
+  # The calender plot ----
+  calender_plot <- calender_server("calender_plot",
+                                   data_measurements =  reactive(data_measurements$data_grouped),
+                                   data_measurements_knmi =  reactive(data_measurements$data_filtered_knmi),
+                                   parameter = reactive(data_other$parameter),
+                                   overview_component)
+  
   # The pollutionrose plot ----
   pollrose_plot <- pollrose_server("pollrose_plot",
                                    data_measurements =  reactive(data_measurements$data_grouped),
