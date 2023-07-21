@@ -33,11 +33,13 @@ download_pc_button_server <- function(id,
         # geef de filename op, zou via interactieve kunnen
         filename = function(){
           # Create file name
-          paste0('data_', name_munproj(),'_', selected_start_date(),
+          f <- paste0('data_', name_munproj(),'_', selected_start_date(),
                  '_', selected_end_date(), '.zip')
+          log_trace("download_pc_button: filename set at {f}")
+          return(f)
         },
         # bepaal de content van de download
-        content = function(file) {
+        content = function(file = tempfile()) {
           # Get the data in wide for download
           data_to_download <- data_measurements() %>%
             dplyr::filter(parameter %in% c("pm10_kal", "pm10", "pm25_kal", "pm25", "wd", "ws", "temp", "pres", "rh")) %>%
@@ -66,7 +68,8 @@ download_pc_button_server <- function(id,
           # Write output to user
           write.table(data_to_download, file_csv, sep = ',', row.names = FALSE, append = F)
 
-          zip(zipfile=file, files=c(file_csv, file_readme))
+          log_trace("download_pc_button: Creating of zipfile {file} started")
+          zip(zipfile=file, files=c(file_csv, file_readme), zip = 'zip')
         },
         contentType = "application/zip"
       )
