@@ -56,10 +56,10 @@ download_pc_button_server <- function(id,
             dplyr::left_join(data_locations, by = "station")
 
           # Filenames in zip
-          file_readme <- paste0('README_data_', name_munproj(),'_', selected_start_date(),
+          file_readme <- paste0(tempdir(),'/README_data_', name_munproj(),'_', selected_start_date(),
                                 '_', selected_end_date(), '.txt')
 
-          file_csv <- paste0('data_', name_munproj(),'_', selected_start_date(),
+          file_csv <- paste0(tempdir(),'/data_', name_munproj(),'_', selected_start_date(),
                                 '_', selected_end_date(), '.csv')
 
           # Add some explanation and source to the file
@@ -69,7 +69,7 @@ download_pc_button_server <- function(id,
           write.table(data_to_download, file_csv, sep = ',', row.names = FALSE, append = F)
 
           log_trace("download_pc_button: Creating of zipfile {file} started")
-          zip(zipfile=file, files=c(file_csv, file_readme), zip = 'zip')
+          zip(zipfile=file, files=c(file_csv, file_readme), flags = '-j', zip = 'zip')
         },
         contentType = "application/zip"
       )
