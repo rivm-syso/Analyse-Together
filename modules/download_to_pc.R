@@ -68,7 +68,7 @@ download_pc_button_server <- function(id,
           # Write output to user
           write.table(data_to_download, file_csv, sep = ',', row.names = FALSE, append = F)
 
-          log_trace("Creating of zipfile {file} started")
+          log_trace("download_pc_button: Creating of zipfile {file} started")
           zip(zipfile=file, files=c(file_csv, file_readme), zip = 'zip')
         },
         contentType = "application/zip"
