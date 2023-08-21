@@ -1,20 +1,19 @@
 # Analyse Together
 
-With this tool you can compare the sensordata of the Dutch [Measure Together](https://www.samenmeten.nl/node/721) 
+With this tool you can explore the sensordata of the Dutch [Measure Together](https://www.samenmeten.nl/node/721) 
 project with official measurement data from the National Air
-Monitoring Network, or, for example, compare your municipality with
-a municipality nearby. 
+Monitoring Network, or, for example, compare your neighbourhood with
+a neighbourhood nearby. 
 
 This tool is an [R Shiny](https://shiny.rstudio.com/) application and
 still under heavy development. So, expect that things change often.
-For running this tool, please see below
+For running this tool, please see below.
 
 # Accessing the tool
 
 To access the tool go to this
-[link](https://acc-analyseren.samenmeten.nl/). We appreciate your
-feedback about the tool but bear in mind that the tool still has a lot
-issues that we are working on.
+[link](https://analyseren.samenmeten.nl/). We appreciate your
+feedback, use the issues or our [forum](https://forum.samenmeten.nl/t/feedback-samen-analyseren-tool/423).
 
 # Versions and branches
 
