@@ -65,44 +65,44 @@ shinyUI(
           textOutput("currentTime", container = span), style = "font-size:12px; text-align:right; color:#ffffff;"
         )
       ),
+      # Secret button to call the browser() function during testing
+      fluidRow(
+        actionButton("browser", "browser"),
+        tags$script("$('#browser').hide();")
+      ),
 
       fluidRow(
         column(width = 6,
 
            tabsetPanel(id = "second_order_tabs",
 
-               tabPanel(
+            tabPanel(
 
-                 value = "Select data",
-                 title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
+               value = "Start",
+               title = HTML(paste0(i18n$t("title_start")," <strong><span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
 
-                 fluidRow(
+               fluidRow(
 
-                   column(width = 12,
-                          wellPanel(
-                            div(h3(i18n$t("tool_welcome")),
-                            p(i18n$t("tool_welcome_1_expl")),
-                            p(i18n$t("tool_welcome_2_expl")),
-                            p(i18n$t("tool_welcome_3_expl")),
-                            p(i18n$t("tool_welcome_4_expl")),
-                            p(i18n$t("tool_welcome_5_expl")),
+                 column(width = 12,
+                        wellPanel(
 
-                            p(i18n$t("expl_link_to_samenmeten"),
-                              a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-                              br(),i18n$t("expl_link_to_LML"),
-                              a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-                              br(),i18n$t("expl_link_to_KNMI"),
-                              a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
-                              br(),i18n$t("expl_link_to_projecten"),
-                              a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
-                              style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))
-                   )
-                 )
+                        # Text for the user
+                          div(h3(i18n$t("tool_welcome")),
+                              p(i18n$t("tool_welcome_1_expl")),
+                              actionButton("to_visualise_tab", "klik voor visualisatie"),
+                              actionButton("to_select_tab", "Selecteer zelf data"),
 
-               ),
+                              info_sensor_output("info_sensor")
+                        )
+                        )
+                     )
+               )
 
-               tabPanel(
+                  ),
+
+
+              tabPanel(
 
                  value = "Visualise data",
                  title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
@@ -116,6 +116,36 @@ shinyUI(
                           tabsetPanel(tpAnalyse(), id = "tabsanalyse")
                  )
                ),
+            tabPanel(
+
+              value = "Select data",
+              title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
+
+
+              fluidRow(
+
+                column(width = 12,
+                       wellPanel(
+                         div(h3(i18n$t("tool_welcome")),
+                             p(i18n$t("tool_welcome_1_expl")),
+                             p(i18n$t("tool_welcome_2_expl")),
+                             p(i18n$t("tool_welcome_3_expl")),
+                             p(i18n$t("tool_welcome_4_expl")),
+                             p(i18n$t("tool_welcome_5_expl")),
+
+                             p(i18n$t("expl_link_to_samenmeten"),
+                               a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
+                               br(),i18n$t("expl_link_to_LML"),
+                               a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
+                               br(),i18n$t("expl_link_to_KNMI"),
+                               a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
+                               br(),i18n$t("expl_link_to_projecten"),
+                               a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
+                               style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))
+                )
+              )
+
+            ),
                tabPanel(
                  value = "Advanced",
                  title = HTML(paste0(i18n$t("title_advanced")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
@@ -132,6 +162,7 @@ shinyUI(
         ),
 
         # Conditional panels for the right side of the page:
+
         conditionalPanel(condition="input.second_order_tabs=='Select data'",
                            column(width = 6,
                                   wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
@@ -149,7 +180,7 @@ shinyUI(
                            )
 
                          ),
-        conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
+        conditionalPanel(condition="input.second_order_tabs=='Visualise data' | input.second_order_tabs=='Start' ",
                          column(width = 6,
                                 style = "margin-top: 30px;",
                                 style = "margin-bottom: 30px;",

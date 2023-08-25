@@ -72,6 +72,10 @@ shinyServer(function(global, input, output, session) {
                          group_name_none
                          )
 
+  # Info about the sensor plot
+  info_sensor <- info_sensor_server("info_sensor",
+                                    data_measurements = reactive(data_measurements$data_all))
+
   # The bar plot ----
   barplot <- barplot_server("barplot_plot",
                             data_measurements = reactive(data_measurements$data_grouped),
@@ -85,14 +89,14 @@ shinyServer(function(global, input, output, session) {
                                        parameter = reactive(data_other$parameter),
                                        overview_component,
                                        theme_plots)
-  
+
   # The calender plot ----
   calender_plot <- calender_server("calender_plot",
                                    data_measurements =  reactive(data_measurements$data_grouped),
                                    data_measurements_knmi =  reactive(data_measurements$data_filtered_knmi),
                                    parameter = reactive(data_other$parameter),
                                    overview_component)
-  
+
   # The pollutionrose plot ----
   pollrose_plot <- pollrose_server("pollrose_plot",
                                    data_measurements =  reactive(data_measurements$data_grouped),
@@ -261,6 +265,18 @@ shinyServer(function(global, input, output, session) {
   })
 
 
+  # Observe to change tabs
+  observeEvent(input$to_visualise_tab,{
+    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Visualise data")
+  })
+  observeEvent(input$to_select_tab,{
+    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
+  })
+
+  # Observe secret observer button
+  observeEvent(input$browser, {
+    browser()
+  })
   ################# overig ##################
   #view_que_server("view_que", que)
   # keep queue running

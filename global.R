@@ -184,6 +184,7 @@ source("modules/choose_mun_or_proj.R")
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
 source("modules/add_single_text_message.R")
+source("modules/add_info_sensor_plot.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")
