@@ -149,7 +149,7 @@ shinyServer(function(global, input, output, session) {
                                                     pool = pool)
 
   # Get the data from the database ----
-  get_data_cache_dbs <- get_data_cache_server("get_data_dbs_button",
+  get_data_cache_dbs_start <- get_data_cache_server("get_data_dbs_button_start",
                                             text_button = i18n$t({"title_start"}),
                                               data_measurements = data_measurements,
                                             data_stations = data_stations,
@@ -173,7 +173,7 @@ shinyServer(function(global, input, output, session) {
                                             group_name_none
                                             )
 
-  get_data_cache_dbs_next <- get_data_cache_server("get_data_dbs_button_next",
+  get_data_cache_dbs_select <- get_data_cache_server("get_data_dbs_button_select",
                                               text_button = i18n$t({"btn_get_data"}),
                                               data_measurements = data_measurements,
                                               data_stations = data_stations,

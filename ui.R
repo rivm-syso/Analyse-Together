@@ -101,7 +101,7 @@ shinyUI(
                                 om aan de slag te gaan."),
                               actionButton("to_visualise_tab", "klik voor visualisatie"),
                               actionButton("to_select_tab", "Selecteer zelf data"),
-                              get_data_cache_output("get_data_dbs_button"),
+                              get_data_cache_output("get_data_dbs_button_start"),
 
                               info_sensor_output("info_sensor")
                         )
@@ -177,7 +177,7 @@ shinyUI(
                                             choice_selection_output("choice_select"),
                                             date_range_output("select_date_range"),
                                             component_selection_output("select_component"),
-                                            column(6, get_data_cache_output("get_data_dbs_button_next")),
+                                            column(6, get_data_cache_output("get_data_dbs_button_select")),
                                             column(6, download_api_button_output("dl_btn_pushed")),
                                             single_text_output("text_data_available"),
                                             br(),
