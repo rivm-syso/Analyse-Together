@@ -142,19 +142,11 @@ shinyUI(
                              p(i18n$t("tool_select_6_expl")),
                              download_api_button_output("dl_btn_pushed"),
                              p(i18n$t("tool_select_7_expl")),
-                             actionButton("to_start_tab", "Ga naar Start"),
-                             br(),
-                             br(),
-                             p(i18n$t("expl_link_to_samenmeten"),
-                               a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-                               br(),i18n$t("expl_link_to_LML"),
-                               a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-                               br(),i18n$t("expl_link_to_KNMI"),
-                               a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
-                               br(),i18n$t("expl_link_to_projecten"),
-                               a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
-                               style = "font-size:13px"), style='text-align: left;margin-top: -10px;'))
+                             actionButton("to_start_tab", "Ga naar Start")
+                             )
+
                 )
+              )
               )
 
             ),
