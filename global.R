@@ -176,8 +176,9 @@ source("modules/communication_module.R")
 source("modules/select_date_range.R")
 # Source module for the component selection
 source("modules/select_component.R")
-# Source module for the component selection
+# Source module for the map
 source("modules/show_map.R")
+source("modules/show_map_no_interaction.R")
 
 # Source modules selections
 source("modules/select_date_range.R")

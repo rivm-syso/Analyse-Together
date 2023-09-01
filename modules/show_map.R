@@ -218,12 +218,13 @@ show_map_server <- function(id,
       data_snsrs_col <- isolate(get_locations()$station_loc) %>%
         dplyr::filter(station_type == "sensor")
 
-      if(nrow(data_snsrs_col)>0){
+
       # Update map with new markers to show selected
       proxy <- leafletProxy('map') # set up proxy map
       proxy %>% clearGroup("sensoren") # Clear sensor markers
 
-      leafletProxy("map") %>%
+      if(nrow(data_snsrs_col)>0){
+        proxy %>%
         addCircleMarkers(data = data_snsrs_col, ~lon, ~lat,
                          stroke = TRUE,
                          weight = 2,

@@ -81,7 +81,11 @@ shinyServer(function(global, input, output, session) {
                          group_name_none
                          )
 
-  # Info about the sensor plot
+  # The map on the startpage ----
+  show_map_no_server("map_start",
+                     data_stations = reactive(data_stations$data))
+
+  # Info about the sensor plot on start page ----
   info_sensor <- info_sensor_server("info_sensor",
                                     data_measurements = reactive(data_measurements$data_all))
 

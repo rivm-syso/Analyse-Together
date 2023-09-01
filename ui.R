@@ -97,10 +97,9 @@ shinyUI(
                                 voor u klaar. In de kalender zie je hoeveel sensoren
                                 er gedurende deze periode beschikbaar zijn.
 
-                                Klik op een van de buttons hieronder
+                                Klik op 'Start'
                                 om aan de slag te gaan."),
-                              actionButton("to_visualise_tab", "klik voor visualisatie"),
-                              actionButton("to_select_tab", "Selecteer zelf data"),
+
                               get_data_cache_output("get_data_dbs_button_start"),
 
                               info_sensor_output("info_sensor")
@@ -189,7 +188,7 @@ shinyUI(
                            )
 
                          ),
-        conditionalPanel(condition="input.second_order_tabs=='Visualise data' | input.second_order_tabs=='Start' ",
+        conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
                          column(width = 6,
                                 style = "margin-top: 30px;",
                                 style = "margin-bottom: 30px;",
@@ -203,7 +202,16 @@ shinyUI(
                                            single_text_output("name_group")))
 
                          )
-                        )
+                        ),
+        conditionalPanel(condition="input.second_order_tabs=='Start' ",
+                         column(width = 6,
+                                style = "margin-top: 30px;",
+                                style = "margin-bottom: 30px;",
+                                fluidRow(
+                                  show_map_no_output("map_start"))
+
+                         )
+        )
       )
     ),
 
