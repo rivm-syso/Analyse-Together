@@ -89,20 +89,16 @@ shinyUI(
 
                         # Text for the user
                           div(h3(i18n$t("tool_welcome")),
-                              p("Welkom bij deze tool om de gegevens van de
-                                luchtkwaliteitssensoren te ontdekken.
-                                In deze tool combineren we de gegevens van
-                                SamenMeten, het Luchtmeetnet en het KNMI.  "),
-                              p("De gegevens van gemeente Almere staan alvast
-                                voor u klaar. In de kalender zie je hoeveel sensoren
-                                er gedurende deze periode beschikbaar zijn.
-
-                                Klik op 'Start'
-                                om aan de slag te gaan."),
+                              p(i18n$t("tool_welcome_1_expl")),
+                              p(i18n$t("tool_welcome_2_expl")),
 
                               get_data_cache_output("get_data_dbs_button_start"),
 
-                              info_sensor_output("info_sensor")
+                              info_sensor_output("info_sensor"),
+                              actionButton("to_visualise_tab", "Vervolg naar de visualisatie"),
+                              actionButton("to_select_tab", "Kies zelf dataset"),
+                              actionButton("to_info_tab", "Meer informatie")
+
                         )
                         )
                      )
@@ -133,13 +129,22 @@ shinyUI(
 
                 column(width = 12,
                        wellPanel(
-                         div(h3(i18n$t("tool_welcome")),
-                             p(i18n$t("tool_welcome_1_expl")),
-                             p(i18n$t("tool_welcome_2_expl")),
-                             p(i18n$t("tool_welcome_3_expl")),
-                             p(i18n$t("tool_welcome_4_expl")),
-                             p(i18n$t("tool_welcome_5_expl")),
-
+                         div(h3(i18n$t("tool_select")),
+                             p(i18n$t("tool_select_1_expl")),
+                             p(i18n$t("tool_select_2_expl")),
+                             project_or_mun_selection_output("proj_or_mun_select"),
+                             p(i18n$t("tool_select_3_expl")),
+                             choice_selection_output("choice_select"),
+                             p(i18n$t("tool_select_4_expl")),
+                             date_range_output("select_date_range"),
+                             p(i18n$t("tool_select_5_expl")),
+                             component_selection_output("select_component"),
+                             p(i18n$t("tool_select_6_expl")),
+                             download_api_button_output("dl_btn_pushed"),
+                             p(i18n$t("tool_select_7_expl")),
+                             actionButton("to_start_tab", "Ga naar Start"),
+                             br(),
+                             br(),
                              p(i18n$t("expl_link_to_samenmeten"),
                                a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
                                br(),i18n$t("expl_link_to_LML"),
@@ -169,25 +174,28 @@ shinyUI(
         ),
 
         # Conditional panels for the right side of the page:
-
-        conditionalPanel(condition="input.second_order_tabs=='Select data'",
-                           column(width = 6,
-                                  wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
-                                            choice_selection_output("choice_select"),
-                                            date_range_output("select_date_range"),
-                                            component_selection_output("select_component"),
-                                            column(6, get_data_cache_output("get_data_dbs_button_select")),
-                                            column(6, download_api_button_output("dl_btn_pushed")),
-                                            single_text_output("text_data_available"),
-                                            br(),
-                                            single_text_output("text_check_visualisation"),
-                                            br(),
-                                            single_text_output("text_download_estimation")
-                                  )
-
-                           )
-
-                         ),
+#
+#         conditionalPanel(condition="input.second_order_tabs=='Select data'",
+#                            column(width = 6,
+#                                   wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
+#                                             choice_selection_output("choice_select"),
+#                                             date_range_output("select_date_range"),
+#                                             component_selection_output("select_component"),
+#                                             h4("6. klik data button"),
+#                                             # column(6, get_data_cache_output("get_data_dbs_button_select")),
+#                                             download_api_button_output("dl_btn_pushed"),
+#                                             h4("7. Ga naar Start"),
+#                                             actionButton("to_start_tab", "Ga naar Start")
+#                                             # single_text_output("text_data_available"),
+#                                             # br(),
+#                                             # single_text_output("text_check_visualisation"),
+#                                             # br(),
+#                                             # single_text_output("text_download_estimation")
+#                                   )
+#
+#                            )
+#
+#                          ),
         conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
                          column(width = 6,
                                 style = "margin-top: 30px;",
@@ -216,6 +224,7 @@ shinyUI(
     ),
 
     tabPanel(
+      value = "Information",
       title = i18n$t("title_infotool"),
         h4(i18n$t("word_ATTool")),
         p(i18n$t("tool_intro_expl")),br(),

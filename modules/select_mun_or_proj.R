@@ -32,13 +32,11 @@ project_or_mun_selection_server <- function(id,
       # Create the component picker with a list of possible choices
       tagList(
 
-        pickerInput(
+        radioButtons(
           ns("proj_or_mun_select"),
           label    = i18n$t("sel_basedon"),
           choices  = select_choices,
-          selected = pre_select,
-          multiple = TRUE,
-          options = pickerOptions(maxOptions = 1)
+          selected = pre_select
         )
       )
     })
@@ -52,4 +50,3 @@ project_or_mun_selection_server <- function(id,
   })
 
 }
-
