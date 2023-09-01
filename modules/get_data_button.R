@@ -2,54 +2,61 @@
 ### Get data button ###
 ###############################################
 
-# This is a module which get the data from the database
+# This is a module which get the data from the (cache)database
 ######################################################################
 # Output Module
 ######################################################################
 
-get_data_button_output <- function(id) {
+get_data_cache_output <- function(id) {
 
   ns <- NS(id)
-  tagList(
-  actionButton(ns("get_data_button"), i18n$t("btn_get_data"), style="background-color: #ffe9b7")
-  )
+  uiOutput(ns("get_dbs_cache"))
+
 }
 
 ######################################################################
 # Server Module
 ######################################################################
 
-get_data_button_server <- function(id,
-                                   data_measurements,
-                                   data_stations,
-                                   message_data,
-                                   proj_or_mun,
-                                   name_munproj,
-                                   selected_start_date,
-                                   selected_end_date,
-                                   pool,
-                                   measurements_con,
-                                   stations_con,
-                                   # Options for the colors
-                                   col_cat,
-                                   col_default,
-                                   col_overload,
-                                   # Options for the linetype
-                                   line_cat,
-                                   line_default,
-                                   line_overload,
-                                   # DEfault group name
-                                   group_name_none
-                                  ) {
+get_data_cache_server <- function(id,
+                                  text_button,
+                                  data_measurements,
+                                  data_stations,
+                                  message_data,
+                                  mun_or_proj,
+                                  name_munproj,
+                                  selected_start_date,
+                                  selected_end_date,
+                                  pool,
+                                  measurements_con,
+                                  stations_con,
+                                  # Options for the colors
+                                  col_cat,
+                                  col_default,
+                                  col_overload,
+                                  # Options for the linetype
+                                  line_cat,
+                                  line_default,
+                                  line_overload,
+                                  # DEfault group name
+                                  group_name_none
+) {
 
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 
-    # Observe if the get_data_button is clicked ----
-    observeEvent(input$get_data_button, {
+    output$get_dbs_cache <- renderUI({
+      tagList(
+        actionButton(ns("get_dbs_cache"), text_button, style="background-color: #ffe9b7")
+
+      )
+    })
+
+    # Observe if the get_dbs_cache is clicked ----
+    observeEvent(input$get_dbs_cache, {
       # Get the selected choice
-      type_choice <- proj_or_mun()
+      type_choice <- mun_or_proj()
       # Name of municipality/project
       name_choice <- name_munproj()
 
@@ -63,6 +70,11 @@ get_data_button_server <- function(id,
       start_time <- selected_start_date()
       end_time <- selected_end_date()
 
+      # Check if there is selected start/end time
+      shiny::validate(
+        need(!is_empty((start_time)),"Please, select periode"),
+        need(!is_empty((end_time)),"Please, select periode")
+      )
       # Load the data from the caching database
       # Get the station names in the selected Municipality/project
       stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
@@ -129,14 +141,8 @@ get_data_button_server <- function(id,
 
       log_info("get mod: Data available in tool. ")
 
-    })
 
-    return(list(
-      data_measurements = reactive({data_measurements$data_all}),
-      data_stations_all = reactive({data_stations$data_all}),
-      data_stations_filtered = reactive({data_stations$data}),
-      message_data = reactive({message_data$data_in_dbs})
-    ))
+    })
 
   })
 }

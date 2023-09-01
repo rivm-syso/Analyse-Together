@@ -143,6 +143,10 @@ uc_min_pm10 <- 8.5
 # Minimal sd value sensor pm25
 uc_min_pm25 <- 5.3
 
+# Defualt for start selection
+default_munproj <- "municipality"
+default_munproj_name <- "Almere"
+
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 

@@ -89,9 +89,19 @@ shinyUI(
 
                         # Text for the user
                           div(h3(i18n$t("tool_welcome")),
-                              p(i18n$t("tool_welcome_1_expl")),
+                              p("Welkom bij deze tool om de gegevens van de
+                                luchtkwaliteitssensoren te ontdekken.
+                                In deze tool combineren we de gegevens van
+                                SamenMeten, het Luchtmeetnet en het KNMI.  "),
+                              p("De gegevens van gemeente Almere staan alvast
+                                voor u klaar. In de kalender zie je hoeveel sensoren
+                                er gedurende deze periode beschikbaar zijn.
+
+                                Klik op een van de buttons hieronder
+                                om aan de slag te gaan."),
                               actionButton("to_visualise_tab", "klik voor visualisatie"),
                               actionButton("to_select_tab", "Selecteer zelf data"),
+                              get_data_cache_output("get_data_dbs_button"),
 
                               info_sensor_output("info_sensor")
                         )
@@ -108,12 +118,10 @@ shinyUI(
                  title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
                  fluidRow(column(12, class = "col-lg-12",
-                          wellPanel(component_selection_output("select_component"),
-                                    style = "margin-bottom: -10px"))
-                          ,
 
                           # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
                           tabsetPanel(tpAnalyse(), id = "tabsanalyse")
+                 )
                  )
                ),
             tabPanel(
@@ -168,7 +176,8 @@ shinyUI(
                                   wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
                                             choice_selection_output("choice_select"),
                                             date_range_output("select_date_range"),
-                                            column(6, get_data_button_output("get_btn_pushed")),
+                                            component_selection_output("select_component"),
+                                            column(6, get_data_cache_output("get_data_dbs_button_next")),
                                             column(6, download_api_button_output("dl_btn_pushed")),
                                             single_text_output("text_data_available"),
                                             br(),

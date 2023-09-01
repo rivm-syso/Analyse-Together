@@ -231,6 +231,10 @@
         "en": "Check data availability",
         "nl": "Check de beschikbaarheid"
       },
+    {"tag" : "btn_start_get_data",
+        "en": "Start",
+        "nl": "Start"
+      },
       {"tag" : "btn_external_source",
         "en": "Get the data from external source",
         "nl": "Data ophalen van externe bron"
