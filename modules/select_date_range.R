@@ -19,6 +19,7 @@ date_range_output <- function(id) {
 ######################################################################
 
 date_range_server <- function(id,
+                              data_other,
                               list_start_end
                               ) {
 
@@ -47,15 +48,13 @@ date_range_server <- function(id,
 
               )})
 
-               observe({
-                   x1 <- input$date_range[1]
-                   x2 <- input$date_range[2]
-                   log_trace("mod data_range: date selected {x1} - {x2}")
+
+               observeEvent(input$date_range,{
+
+                 data_other$start_date <- input$date_range[1]
+                 data_other$end_date <- input$date_range[2]
+
                })
 
-               return(list(
-                 selected_start_date = reactive({input$date_range[1]}),
-                 selected_end_date = reactive({input$date_range[2]}))
-               )
       })
 }

@@ -38,6 +38,7 @@ shinyServer(function(global, input, output, session) {
 
   # The dateRangeInput for date range selection ----
   select_date_range <- date_range_server("select_date_range",
+                                         data_other = data_other,
                                          list(start_time = default_time$start_time,
                                               end_time = default_time$end_time))
 
@@ -248,14 +249,6 @@ shinyServer(function(global, input, output, session) {
       shiny::validate(need(!is.null(select_component()), "No parameter yet."))
       parameter <- select_component()
       data_other$parameter <- parameter
-    })
-
-    # Observe the time period ----
-    observe({
-      start_date_set <- select_date_range$selected_start_date()
-      end_date_set <- select_date_range$selected_end_date()
-      data_other$start_date <- lubridate::as_datetime(start_date_set, tz = "Europe/Amsterdam")
-      data_other$end_date <- lubridate::as_datetime(end_date_set, tz = "Europe/Amsterdam")
     })
 
     # Observe if the station locations changes (colour) ----
