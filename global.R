@@ -146,6 +146,9 @@ uc_min_pm10 <- 8.5
 # Minimal sd value sensor pm25
 uc_min_pm25 <- 5.3
 
+# default parameter
+default_parameter <- "pm25_kal"
+
 # Defualt for start selection
 default_munproj <- "municipality"
 default_munproj_name <- "Almere"

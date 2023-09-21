@@ -27,14 +27,17 @@ shinyServer(function(global, input, output, session) {
                                mun_or_proj = default_munproj,
                                name_munproj = default_munproj_name,
                                start_date = default_time[[1]],
-                               end_date = default_time[[2]])
+                               end_date = default_time[[2]],
+                               parameter = default_parameter)
   # Store messages to communicate with user
   message_data <- reactiveValues()
 
   ########### Modules ################
   # The pickerInput for component selection ----
   select_component <- component_selection_server("select_component",
-                                                 comp_choices)
+                                                 data_other = data_other,
+                                                 comp_choices,
+                                                 default_parameter = default_parameter)
 
   # The dateRangeInput for date range selection ----
   select_date_range <- date_range_server("select_date_range",
@@ -140,7 +143,7 @@ shinyServer(function(global, input, output, session) {
                                               data_measurements = reactive(data_measurements$data_all),
                                               data_stations = reactive(data_stations$data),
                                               meta, # TODO willen we hier wat mee?
-                                              selected_parameter = select_component,
+                                              selected_parameter = reactive(data_other$parameter),
                                               selected_start_date = reactive(data_other$start_date),
                                               selected_end_date = reactive(data_other$end_date)
                                               )
@@ -242,13 +245,6 @@ shinyServer(function(global, input, output, session) {
     observe({
       data_filtered_knmi <- communication_stuff$knmi_measurements()
       data_measurements$data_filtered_knmi <- data_filtered_knmi
-    })
-
-    # Observe the parameter ----
-    observe({
-      shiny::validate(need(!is.null(select_component()), "No parameter yet."))
-      parameter <- select_component()
-      data_other$parameter <- parameter
     })
 
     # Observe if the station locations changes (colour) ----
