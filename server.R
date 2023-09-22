@@ -165,7 +165,8 @@ shinyServer(function(global, input, output, session) {
                                               meta, # TODO willen we hier wat mee?
                                               selected_parameter = reactive(data_other$parameter),
                                               selected_start_date = reactive(data_other$start_date),
-                                              selected_end_date = reactive(data_other$end_date)
+                                              selected_end_date = reactive(data_other$end_date),
+                                              selected_cutoff = reactive(data_other$cutoff)
                                               )
 
   # Download data from external source to database ----
