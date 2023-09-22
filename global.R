@@ -231,7 +231,6 @@ source("modules/add_individual_timeseries_plot.R")
 # Source layout
 source("funs/ui_tab_grouping.R")
 source("funs/ui_tab_checkdata.R")
-source("funs/ui_tab_plots.R")
 
 # Source buttons
 source("modules/set_groupname_button.R")
