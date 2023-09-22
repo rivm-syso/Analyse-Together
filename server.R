@@ -28,7 +28,9 @@ shinyServer(function(global, input, output, session) {
                                name_munproj = default_munproj_name,
                                start_date = default_time[[1]],
                                end_date = default_time[[2]],
-                               parameter = default_parameter)
+                               parameter = default_parameter,
+                               cutoff = default_cutoff,
+                               plot = default_plot)
   # Store messages to communicate with user
   message_data <- reactiveValues()
 
@@ -38,6 +40,19 @@ shinyServer(function(global, input, output, session) {
                                                  data_other = data_other,
                                                  comp_choices,
                                                  default_parameter = default_parameter)
+
+  # The outlier cutoff value
+  outlier_cutoff_server("select_cutoff",
+                        data_other = data_other,
+                        default_cutoff = default_cutoff
+                        )
+
+  # the selected plot for the visualisation
+  plot_selection_server("select_plot",
+                        plot_choices = plot_choices,
+                        data_other = data_other,
+                        default_plot = default_plot
+  )
 
   # The dateRangeInput for date range selection ----
   select_date_range <- date_range_server("select_date_range",
@@ -70,7 +85,7 @@ shinyServer(function(global, input, output, session) {
 
   # The Map ----
   map <- show_map_server("map",
-                         data_stations,
+                         data_stations = data_stations,
                          reactive(data_other$group_name),
                          reactive(data_other$tab_choice),
                          # Options for the colors
@@ -84,6 +99,11 @@ shinyServer(function(global, input, output, session) {
                          #Default group name
                          group_name_none
                          )
+
+  # The plots ----
+  show_plot_server("show_plot",
+                   pick_plot = reactive(data_other$plot)
+                   )
 
   # The map on the startpage ----
   show_map_no_server("map_start",

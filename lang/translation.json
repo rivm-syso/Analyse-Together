@@ -221,6 +221,14 @@
         "en": "4. Select component:",
         "nl": "4. Selecteer component:"
       },
+      {"tag" : "sel_plot",
+        "en": "Select visualisation:",
+        "nl": "Selecteer visualisatie:"
+      },
+      {"tag" : "sel_cutoff",
+        "en": "Select maximum value to use in analyses:",
+        "nl": "Selecteer de maximale waarde voor de analyse:"
+      },
 	    {"tag" : "title_time",
         "en": "Timeseries",
         "nl": "Tijdreeks"

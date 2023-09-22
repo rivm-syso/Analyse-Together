@@ -65,6 +65,7 @@ source("funs/queue_fun.R")
 source("funs/download_fun.R")
 source("funs/data_to_tool_fun.R")
 source("funs/logging_fun.R")
+source("funs/ui_create_plots_funs.R")
 set_loglevel()
 
 # launch queue manager
@@ -146,12 +147,19 @@ uc_min_pm10 <- 8.5
 # Minimal sd value sensor pm25
 uc_min_pm25 <- 5.3
 
+# default parameter to cutoff the values
+# used to set outlier limit
+default_cutoff <- 9999
+
 # default parameter
 default_parameter <- "pm25_kal"
 
 # Defualt for start selection
 default_munproj <- "municipality"
 default_munproj_name <- "Almere"
+
+#default plot:
+default_plot = "barplot"
 
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
@@ -172,6 +180,15 @@ mun_choices  = sort(municipalities$X2)
 overview_select_choices <- data.frame('type' = c("project","municipality"), 'label'=c("project","gemeente"))
 select_choices = setNames(overview_select_choices$type, overview_select_choices$label)
 
+# plot choices
+plot_choices <- data.frame('plot' = c("barplot", "timeplot", "timevariation_weekly",
+                                      "timevariation_daily",
+                                      "calender", "pollutionrose"),
+                           'label'=c("Bar plot","Timeseries plot", "Timevariation Weekly plot",
+                                     "Timevariation Daily plot", "Calender plot",
+                                     "Pollution rose plot"))
+plot_choices = setNames(plot_choices$plot, plot_choices$label)
+
 
 ### APP SPECIFIC SETTINGS                                                   ====
 
@@ -182,6 +199,10 @@ source("modules/communication_module.R")
 source("modules/select_date_range.R")
 # Source module for the component selection
 source("modules/select_component.R")
+# source moduel to choose the plot visualisation
+source("modules/select_plot.R")
+source("modules/show_plot.R")
+
 # Source module for the map
 source("modules/show_map.R")
 source("modules/show_map_no_interaction.R")
@@ -191,6 +212,7 @@ source("modules/select_date_range.R")
 source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
+source("modules/select_outlier_cutoff.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
@@ -207,7 +229,9 @@ source("modules/add_timevariation_daily_plot.R")
 source("modules/add_individual_timeseries_plot.R")
 
 # Source layout
-source("modules/add_tabpanels.R")
+source("funs/ui_tab_grouping.R")
+source("funs/ui_tab_checkdata.R")
+source("funs/ui_tab_plots.R")
 
 # Source buttons
 source("modules/set_groupname_button.R")

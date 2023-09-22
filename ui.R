@@ -6,7 +6,6 @@ shinyUI(
 
     # For the top two headers
     tags$head(
-
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
 
@@ -18,10 +17,10 @@ shinyUI(
 
                tags$img(src = "images/Banner_2018.png",
                         style = "height: 120px;
-                        width: 450px;
-                        margin-bottom: 0px;
-                        margin-top: 0px;
-                        margin-right: 10px")
+                          width: 450px;
+                          margin-bottom: 0px;
+                          margin-top: 0px;
+                          margin-right: 10px")
 
       ),
 
@@ -35,15 +34,13 @@ shinyUI(
                        style = "margin-bottom: -10px"),
                tags$p("")
       )
-
-    ),
-
+    ), # end of tags$head
 
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
     selected    = "Home",
 
-    tabPanel(
+    tabPanel( # tabpanel "HOME" ----
       title = "Home",
 
       fluidRow(column(width = 1, offset = 10,
@@ -55,175 +52,139 @@ shinyUI(
                                         label = NULL,
                                         choices = i18n$get_languages()[!i18n$get_languages() %in% grep("tag", i18n$get_languages(), value = T)],
                                         selected = i18n$get_key_translation(), direction = 'horizontal'),
-                                        align = "left",
-                                        style = "margin-bottom: -10px;",
-                                        style = "margin-right: 20px;",
-                                        style = "margin-top: -10px;")),
+                      align = "left",
+                      style = "margin-bottom: -10px;",
+                      style = "margin-right: 20px;",
+                      style = "margin-top: -10px;")),
       fluidRow(
         # 'Show' time to keep the app activated (not visible)
         h1(
           textOutput("currentTime", container = span), style = "font-size:12px; text-align:right; color:#ffffff;"
         )
       ),
-      # Secret button to call the browser() function during testing
-      fluidRow(
-        actionButton("browser", "browser"),
-        tags$script("$('#browser').hide();")
-      ),
 
-      fluidRow(
-        column(width = 6,
+      tabsetPanel(
+        id = "second_order_tabs",
 
-           tabsetPanel(id = "second_order_tabs",
+        tabPanel(
+          value = "Start",
+          title = HTML(paste0(i18n$t("title_start")," <strong><span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
-            tabPanel(
+          fluidRow(
 
-               value = "Start",
-               title = HTML(paste0(i18n$t("title_start")," <strong><span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
+            column(width = 6,
+                   wellPanel(
 
+                     # Text for the user
+                     div(h3(i18n$t("tool_welcome")),
+                         p(i18n$t("tool_welcome_1_expl")),
+                         p(i18n$t("tool_welcome_2_expl")),
 
-               fluidRow(
+                         get_data_cache_output("get_data_dbs_button_start"),
 
-                 column(width = 12,
-                        wellPanel(
+                         info_sensor_output("info_sensor"),
+                         actionButton("to_visualise_tab", "Vervolg naar de visualisatie"),
+                         actionButton("to_select_tab", "Kies zelf dataset"),
+                         actionButton("to_info_tab", "Meer informatie")
 
-                        # Text for the user
-                          div(h3(i18n$t("tool_welcome")),
-                              p(i18n$t("tool_welcome_1_expl")),
-                              p(i18n$t("tool_welcome_2_expl")),
-
-                              get_data_cache_output("get_data_dbs_button_start"),
-
-                              info_sensor_output("info_sensor"),
-                              actionButton("to_visualise_tab", "Vervolg naar de visualisatie"),
-                              actionButton("to_select_tab", "Kies zelf dataset"),
-                              actionButton("to_info_tab", "Meer informatie")
-
-                        )
-                        )
                      )
-               )
-
-                  ),
-
-
-              tabPanel(
-
-                 value = "Visualise data",
-                 title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
-
-                 fluidRow(column(12, class = "col-lg-12",
-
-                          # Output: Tabset voor openair plots, zie voor de inhoud het script: add_tabpanels.R
-                          tabsetPanel(tpAnalyse(), id = "tabsanalyse")
-                 )
-                 )
-               ),
-            tabPanel(
-
-              value = "Select data",
-              title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
-
-
-              fluidRow(
-
-                column(width = 12,
-                       wellPanel(
-                         div(h3(i18n$t("tool_select")),
-                             p(i18n$t("tool_select_1_expl")),
-                             p(i18n$t("tool_select_2_expl")),
-                             project_or_mun_selection_output("proj_or_mun_select"),
-                             p(i18n$t("tool_select_3_expl")),
-                             choice_selection_output("choice_select"),
-                             p(i18n$t("tool_select_4_expl")),
-                             date_range_output("select_date_range"),
-                             p(i18n$t("tool_select_5_expl")),
-                             component_selection_output("select_component"),
-                             p(i18n$t("tool_select_6_expl")),
-                             download_api_button_output("dl_btn_pushed"),
-                             p(i18n$t("tool_select_7_expl")),
-                             actionButton("to_start_tab", "Ga naar Start")
-                             )
-
-                )
-              )
-              )
-
+                   )
             ),
-               tabPanel(
-                 value = "Advanced",
-                 title = HTML(paste0(i18n$t("title_advanced")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
+            column(width = 6,
+                   style = "margin-top: 8px;",
+                   show_map_no_output("map_start")
+                   )
 
-                 fluidRow(
-                   wellPanel(h4(i18n$t("expl_download_to_pc")),
-                             p(i18n$t("expl_download_to_pc_expl")),
-                             download_pc_button_output("download_pc"))
+          )
+        ), # end of tabpanel "START"
 
-                 )
+        tabPanel(
+          value = "Visualise data",
+          title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
-               )
-           )
-        ),
+          fluidRow(
+            column(width = 6,
+                   tabsetPanel(
+                     tabPanel(
+                       value = "stap1",
+                       title = "stap1",
+                       tpGrouping()
+                     ),
+                     tabPanel(
+                       value = "stap2",
+                       title = "stap2",
+                       tpCheckdata()
+                     ),
+                     tabPanel(
+                       value = "stap3",
+                       title = "stap3",
+                       plot_selection_output("select_plot"),
+                       show_plot_output("show_plot")
+                     )
+                   )
 
-        # Conditional panels for the right side of the page:
-#
-#         conditionalPanel(condition="input.second_order_tabs=='Select data'",
-#                            column(width = 6,
-#                                   wellPanel(project_or_mun_selection_output("proj_or_mun_select"),
-#                                             choice_selection_output("choice_select"),
-#                                             date_range_output("select_date_range"),
-#                                             component_selection_output("select_component"),
-#                                             h4("6. klik data button"),
-#                                             # column(6, get_data_cache_output("get_data_dbs_button_select")),
-#                                             download_api_button_output("dl_btn_pushed"),
-#                                             h4("7. Ga naar Start"),
-#                                             actionButton("to_start_tab", "Ga naar Start")
-#                                             # single_text_output("text_data_available"),
-#                                             # br(),
-#                                             # single_text_output("text_check_visualisation"),
-#                                             # br(),
-#                                             # single_text_output("text_download_estimation")
-#                                   )
-#
-#                            )
-#
-#                          ),
-        conditionalPanel(condition="input.second_order_tabs=='Visualise data'",
-                         column(width = 6,
-                                style = "margin-top: 30px;",
-                                style = "margin-bottom: 30px;",
-                                fluidRow(
-                                  show_map_output("map")),
-                                br(),
-                                  fluidRow(
-                                    column(width = 3, set_group_button_output("set_group_pushed")),
-                                    column(width = 8, offset = 1,
-                                           p(i18n$t("expl_add_sensor_to_group")),
-                                           single_text_output("name_group")))
+                   ),
+            column(width = 6,
+                   style = "margin-top: 8px;",
+                   show_map_output("map"))
 
-                         )
-                        ),
-        conditionalPanel(condition="input.second_order_tabs=='Start' ",
-                         column(width = 6,
-                                style = "margin-top: 30px;",
-                                style = "margin-bottom: 30px;",
-                                fluidRow(
-                                  show_map_no_output("map_start"))
+          )
+        ), # end of tabpanel "VISUALISE DATA"
 
-                         )
-        )
-      )
-    ),
+        tabPanel(
+          value = "Select data",
+          title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
-    tabPanel(
+          fluidRow(
+
+            column(width = 12,
+                   wellPanel(
+                     div(h3(i18n$t("tool_select")),
+                         p(i18n$t("tool_select_1_expl")),
+                         p(i18n$t("tool_select_2_expl")),
+                         project_or_mun_selection_output("proj_or_mun_select"),
+                         p(i18n$t("tool_select_3_expl")),
+                         choice_selection_output("choice_select"),
+                         p(i18n$t("tool_select_4_expl")),
+                         date_range_output("select_date_range"),
+                         p(i18n$t("tool_select_5_expl")),
+                         component_selection_output("select_component"),
+                         p(i18n$t("tool_select_6_expl")),
+                         download_api_button_output("dl_btn_pushed"),
+                         p(i18n$t("tool_select_7_expl")),
+                         actionButton("to_start_tab", "Ga naar Start")
+                     )
+
+                   )
+            )
+          )
+        ), # end tabpanel "SELECT DATA"
+
+        tabPanel(
+          value = "Advanced",
+          title = HTML(paste0(i18n$t("title_advanced")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
+
+          fluidRow(
+            wellPanel(h4(i18n$t("expl_download_to_pc")),
+                      p(i18n$t("expl_download_to_pc_expl")),
+                      download_pc_button_output("download_pc"))
+
+          )
+        ) # end tabpanel "ADVANCED"
+
+      ) # end of tabsetpanel "second_order"
+
+    ), # end tabpanel "HOME"
+
+    tabPanel( # tabpanel "INFORMATION" ----
       value = "Information",
       title = i18n$t("title_infotool"),
-        h4(i18n$t("word_ATTool")),
-        p(i18n$t("tool_intro_expl")),br(),
-        h4(i18n$t("word_data")),
-        p(i18n$t("tool_intro_data_expl")),br(),
-        h4(i18n$t("word_cal_values")),
-        p(i18n$t("tool_intro_cal_values_expl")),br(),
+      h4(i18n$t("word_ATTool")),
+      p(i18n$t("tool_intro_expl")),br(),
+      h4(i18n$t("word_data")),
+      p(i18n$t("tool_intro_data_expl")),br(),
+      h4(i18n$t("word_cal_values")),
+      p(i18n$t("tool_intro_cal_values_expl")),br(),
       h4(i18n$t("word_confident_interval")),
       p(i18n$t("tool_confident_interval_1_expl")),
       p(i18n$t("tool_confident_interval_2_expl")),
@@ -258,9 +219,11 @@ shinyUI(
         br(),
         "Contact: ",
         a("link", href ='https://samenmeten.nl/contact', target = 'blank'))
-    )
 
-  )
+    ) # end of tabpanel "INFORMATION"
 
-)
 
+    # ----
+  ) # end of navbarpage
+
+) # end of shinyui
