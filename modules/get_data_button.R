@@ -31,11 +31,8 @@ get_data_cache_server <- function(id,
                                   measurements_con,
                                   stations_con,
                                   # Options for the colors
-                                  col_cat,
                                   col_default,
-                                  col_overload,
                                   # Options for the linetype
-                                  line_cat,
                                   line_default,
                                   line_overload,
                                   # DEfault group name

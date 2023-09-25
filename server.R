@@ -191,40 +191,13 @@ shinyServer(function(global, input, output, session) {
                                             measurements_con = measurements_con,
                                             stations_con = stations_con,
                                             # Options for the colors
-                                            col_cat,
                                             col_default,
-                                            col_overload,
                                             # Options for the linetype
-                                            line_cat,
                                             line_default,
                                             line_overload,
                                             # Default group name
                                             group_name_none
                                             )
-
-  get_data_cache_dbs_select <- get_data_cache_server("get_data_dbs_button_select",
-                                              text_button = i18n$t({"btn_get_data"}),
-                                              data_measurements = data_measurements,
-                                              data_stations = data_stations,
-                                              message_data = message_data,
-                                              mun_or_proj = reactive(data_other$mun_or_proj) ,
-                                              name_munproj = reactive(data_other$name_munproj),
-                                              selected_start_date = reactive(data_other$start_date),
-                                              selected_end_date = reactive(data_other$end_date),
-                                              pool = pool,
-                                              measurements_con = measurements_con,
-                                              stations_con = stations_con,
-                                              # Options for the colors
-                                              col_cat,
-                                              col_default,
-                                              col_overload,
-                                              # Options for the linetype
-                                              line_cat,
-                                              line_default,
-                                              line_overload,
-                                              # Default group name
-                                              group_name_none
-  )
 
   # Download to pc user ----
   download_pc_button_server("download_pc",
