@@ -30,7 +30,8 @@ shinyServer(function(global, input, output, session) {
                                end_date = default_time[[2]],
                                parameter = default_parameter,
                                cutoff = default_cutoff,
-                               plot = default_plot)
+                               plot = default_plot,
+                               col_select = default_col_select)
   # Store messages to communicate with user
   message_data <- reactiveValues()
 
@@ -89,9 +90,8 @@ shinyServer(function(global, input, output, session) {
                          reactive(data_other$group_name),
                          reactive(data_other$tab_choice),
                          # Options for the colors
-                         col_cat,
                          col_default,
-                         col_overload,
+                         col_select = reactive(data_other$col_select),
                          # Options for the linetype
                          line_cat,
                          line_default,
@@ -236,7 +236,10 @@ shinyServer(function(global, input, output, session) {
 
   # Create a new group ----
   set_new_group_button <- set_group_button_server("set_group_pushed",
-                                                  data_other = data_other)
+                                                  data_stns = reactive(data_stations$data),
+                                                  data_other = data_other,
+                                                  col_names,
+                                                  col_overload)
 
   single_text_server("name_group", reactive(data_other$group_name))
 
@@ -273,15 +276,6 @@ shinyServer(function(global, input, output, session) {
       data_stations_adjust <- map$data_stations()
       data_stations$data <- data_stations_adjust
     })
-
-  # Observe if new group is created ----
-  observe({
-    new_group_name <- set_new_group_button$group_name()
-    new_group_number <- set_new_group_button$group_number()
-
-    data_other$group_name <- new_group_name
-    data_other$group_number <- new_group_number
-  })
 
 
   # Observe to change tabs

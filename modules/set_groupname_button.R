@@ -20,7 +20,10 @@ set_group_button_output <- function(id) {
 ######################################################################
 
 set_group_button_server <- function(id,
-                                   data_other) {
+                                    data_stns,
+                                    data_other,
+                                    col_names,
+                                    col_overload) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -28,18 +31,11 @@ set_group_button_server <- function(id,
 
     # When the button is pushed then set new groupname
     observeEvent(input$set_new_group,{
-      # Get number of the previous group and add 1
-      previous_number <- data_other$group_number
-      new_number <- previous_number + 1
-      data_other$group_number <- new_number
-
-      # Create the new group, with a default name and the new number
-      data_other$group_name <- paste0("group_", new_number)
+      col_label_picked <- pick_color(data_stns(), col_names, col_overload)
+      data_other$col_select <- col_label_picked$col_picked
+      data_other$group_name <- col_label_picked$col_label
     })
 
-  return(list(
-    group_number = reactive({data_other$group_number}),
-    group_name = reactive({data_other$group_name})
-  ))
+
   })
 }

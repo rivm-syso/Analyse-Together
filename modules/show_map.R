@@ -27,9 +27,8 @@ show_map_server <- function(id,
                             group_name,# class: "reactiveExpr" "reactive" "function"
                             tab_choice,# class: "reactiveExpr" "reactive" "function"
                             # Options for the colors
-                            col_cat,
                             col_default,
-                            col_overload,
+                            col_select,
                             # Options for the linetype
                             line_cat,
                             line_default,
@@ -153,14 +152,13 @@ show_map_server <- function(id,
                                           ifelse(station == id_selected & station_type != "sensor",
                                                  station,
                                                  group_name)),
+                      # Change the color to the col_select
+                      col = ifelse(station == id_selected, col_select(), col),
                       label = ifelse(station == id_selected & station_type == "sensor",
                                      get_group_name,
                                      ifelse(station == id_selected & station_type != "sensor",
                                             station,
                                             label)))
-
-      # Assign colors -> sensor
-      data_stns <- assign_color_stations_group(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
 
       # Assign linetype -> reference station
       data_stns <- assign_linetype_stations(data_stns, line_cat, line_default, line_overload, line_station_type = "ref")
