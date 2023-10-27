@@ -17,10 +17,6 @@ shinyServer(function(global, input, output, session) {
 
   ############### ReactiveValues #############
   # ReactiveValues to store the data
-  # Store the data points (all and filtered)
-  data_measurements <- reactiveValues()
-  # Store the station locations and plotcolor etc
-  data_stations <- reactiveValues()
   # Store other information
   data_other <- reactiveValues(group_name = group_name_default,
                                group_number = 1,
@@ -32,6 +28,11 @@ shinyServer(function(global, input, output, session) {
                                cutoff = default_cutoff,
                                plot = default_plot,
                                col_select = default_col_select)
+  # Store the data points (all and filtered)
+  data_measurements <- reactiveValues(data_all = measurements_all)
+  # Store the station locations and plotcolor etc
+  data_stations <- reactiveValues(data_all = data_stations_list$data_all,
+                                  data = data_stations_list$data)
   # Store messages to communicate with user
   message_data <- reactiveValues()
 
