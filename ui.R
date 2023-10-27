@@ -83,9 +83,9 @@ shinyUI(
                          get_data_cache_output("get_data_dbs_button_start"),
 
                          info_sensor_output("info_sensor"),
-                         actionButton("to_visualise_tab", "Vervolg naar de visualisatie"),
-                         actionButton("to_select_tab", "Kies zelf dataset"),
-                         actionButton("to_info_tab", "Meer informatie")
+
+                         actionButton("to_visualise_tab", i18n$t("btn_figures")),
+                         actionButton("to_select_tab", i18n$t("btn_own_data"))
 
                      )
                    )

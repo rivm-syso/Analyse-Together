@@ -262,10 +262,6 @@ shinyServer(function(global, input, output, session) {
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
   })
 
-  observeEvent(input$to_info_tab,{
-    updateNavbarPage(inputId = "navbar", selected = "Information")
-  })
-
   # Observe secret observer button
   observeEvent(input$browser, {
     browser()

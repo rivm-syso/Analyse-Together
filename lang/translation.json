@@ -229,6 +229,14 @@
         "en": "Select maximum value to use in analyses:",
         "nl": "Selecteer de maximale waarde voor de analyse:"
       },
+      {"tag" : "btn_figures",
+        "en": "Figures",
+        "nl": "Plaatjes"
+      },
+      {"tag" : "btn_own_data",
+        "en": "Other data",
+        "nl": "Andere data"
+      },
 	    {"tag" : "title_time",
         "en": "Timeseries",
         "nl": "Tijdreeks"
