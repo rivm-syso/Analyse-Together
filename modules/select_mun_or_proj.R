@@ -20,30 +20,32 @@ project_or_mun_selection_output <- function(id) {
 ######################################################################
 
 project_or_mun_selection_server <- function(id,
-                                            select_choices) {
+                                            data_other,
+                                            select_choices,
+                                            pre_select ) {
 
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 
     output$proj_or_mun_select <- renderUI({
-
       # Create the component picker with a list of possible choices
       tagList(
 
-        pickerInput(
+        radioButtons(
           ns("proj_or_mun_select"),
           label    = i18n$t("sel_basedon"),
           choices  = select_choices,
-          selected = NULL,
-          multiple = TRUE,
-          options = pickerOptions(maxOptions = 1)
+          selected = pre_select
         )
       )
     })
 
-    # Return the chosen component
-    return(selected_proj_or_mun = reactive({input$proj_or_mun_select}))
+    observeEvent(input$proj_or_mun_select,{
+
+      data_other$mun_or_proj <- input$proj_or_mun_select
+
+    })
 
   })
 

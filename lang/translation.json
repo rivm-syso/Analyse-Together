@@ -3,9 +3,13 @@
   "languages": ["tag","en", "nl"],
   "translation": [
 
-      {"tag" : "title_infotool",
+    {"tag" : "title_infotool",
 	      "en": "Information tool",
 	      "nl": "Informatie over de tool"
+	  },
+	  {"tag" : "title_start",
+	      "en": "Start",
+	      "nl": "Start"
 	  },
 	    {"tag" : "tool_title",
 	      "en": "Information tool",
@@ -128,24 +132,46 @@
 	      "nl": "Welkom bij de Samen Analyseren tool"
 	  },
 	    {"tag" : "tool_welcome_1_expl",
-	      "en": "Welcome to this tool for exploring air quality sensor data. In this tool, we combine data from SamenMeten, the Air Quality Monitoring Network, and the KNMI. You can view the data per project or per municipality. Here's how it works:",
-	      "nl": "Welkom bij deze tool om de gegevens van de luchtkwaliteitssensoren te ontdekken. In deze tool combineren we de gegevens van SamenMeten, het Luchtmeetnet en het KNMI. Je kunt de gegevens per project of per gemeente bekijken. Dit gaat als volgt:"
+	      "en": "",
+	      "nl": "Welkom bij deze tool om de gegevens van de luchtkwaliteitssensoren te ontdekken. In deze tool combineren we de gegevens van SamenMeten, het Luchtmeetnet en het KNMI."
 	      	  },
     {"tag" : "tool_welcome_2_expl",
-	      "en": "1. Choose whether you want to view the data from a specific project or within a particular municipality, and select the corresponding project or municipality. You can also define the time period.",
-	      "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken, en selecteer het betreffende project of gemeente. Ook kun je de tijdsperiode kiezen. "
+    "en" : "",
+    "nl" : "De gegevens staan voor u klaar.  Klik op 'Start' om aan de slag te gaan. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart ziet u welke sensoren op dit moment beschikbaar zijn."
+    },
+    {"tag" : "tool_select",
+      "en" : "Choose the data yourself",
+      "nl" : "Kies zelf de data"
+    },
+    {"tag" : "tool_select_1_expl",
+      "en" : "",
+      "nl" : "In dit tabblad kun je zelf een dataset selecteren. De data wordt dan voor je opgehaald uit de databases van SamenMeten, het KNMI en Luchtmeetnet. Vervolgens kun je bij 'START' de data in de tool laden en verder bekijken."
+      },
+    {"tag" : "tool_select_2_expl",
+	      "en": "1. Choose whether you want to view the data from a specific project or within a particular municipality.",
+	      "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken."
 	  },
-	 {"tag" : "tool_welcome_3_expl",
-	      "en": "2. Then, press the left button 'Check availability' to load the data into the tool. Once the data is loaded into the tool, you can proceed to explore the data in the other tabs.",
-	      "nl": "2. Druk vervolgens op de linkerbutton 'Check de beschikbaarheid', dan worden de gegevens in de tool geladen. Nadat de gegevens in de tool zijn geladen, kun je in de andere tabbladen aan de slag met het bekijken van de gegevens."
+
+    {"tag" : "tool_select_3_expl",
+	      "en": "2. Select the name of the corresponding project or municipality. ",
+	      "nl": "2. Kies de naam van het betreffende project of gemeente."
 	  },
-	  {"tag" : "tool_welcome_4_expl",
-	      "en": "3. If the data is not yet available, click on the right button 'Retrieve data from external source'. The data will then be fetched from SamenMeten, the Air Quality Monitoring Network, and the KNMI in the background. This process may take some time, so we advise you to check back later.",
-	      "nl": "3. Mochten de gegevens nog niet beschikbaar zijn, klik dan op de rechterbutton 'Data ophalen van externe bron'. De gegevens worden dan op de achtergrond opgehaald van SamenMeten, het Luchtmeetnet en het KNMI. Dit kan een tijdje duren, ons advies is om later terug te komen."
+
+    {"tag" : "tool_select_4_expl",
+	      "en": "3. Define the time period.",
+	      "nl": "3. Kies de tijdsperiode. "
 	  },
-  {"tag" : "tool_welcome_5_expl",
-	      "en": "4. To view the data, always click (once again) on the left button and proceed to the 'Visualize data' tab.",
-	      "nl": "4. Om de gegevens te gaan bekijken, klik altijd (nog eens) op de linkerbutton en ga verder naar het tabblad 'Visualiseer data'."
+	  {"tag" : "tool_select_5_expl",
+	      "en": "4. Choose in which component you are interested.",
+	      "nl": "4. Geef aan in welke component je geinteresseerd bent. "
+	  },
+	 {"tag" : "tool_select_6_expl",
+	      "en": "5. Click on the data button. The data will then be fetched from SamenMeten, the Air Quality Monitoring Network, and the KNMI in the background. This process may take some time, so we advise you to check back later.",
+	      "nl": "5. Klik op de databutton. De gegevens worden dan op de achtergrond opgehaald van SamenMeten, het Luchtmeetnet en het KNMI. Dit kan een tijdje duren, ons advies is om later terug te komen."
+	  },
+	  {"tag" : "tool_select_7_expl",
+	      "en": "6. ",
+	      "nl": "6. Ga terug naar 'START'. Daar kun je de gegevens in de tool laden en bekijken."
 	  },
 	      {"tag": "infotext_vis_1_expl",
 	      "en": "Here you can explore the data. We have selected various visualizations to assist in viewing the data. You can view the time series, the data in a table, or the wind data in a wind rose. Each visualization is accompanied by a brief explanation.",
@@ -172,28 +198,36 @@
         "nl": "Advanced"
       },
       {"tag" : "sel_basedon",
-        "en": "Selection based on:",
-        "nl": "Selectie gebaseerd op:"
+        "en": "1. Selection based on:",
+        "nl": "1. Selectie gebaseerd op:"
       },
 	    {"tag" : "word_muni",
         "en": "Municipality",
         "nl": "Gemeente"
       },
       {"tag" : "sel_option",
-        "en": "Choose one option:",
-        "nl": "Maak een keuze:"
+        "en": "2. Choose one option:",
+        "nl": "2. Maak een keuze:"
       },
       {"tag" : "sel_language",
         "en": "Change language",
         "nl": "Wijzig taal"
       },
 	    {"tag" : "sel_date",
-        "en": "Select date range:",
-        "nl": "Selecteer een periode:"
+        "en": "3. Select date range:",
+        "nl": "3. Selecteer een periode:"
       },
       {"tag" : "sel_comp",
-        "en": "Select component:",
-        "nl": "Selecteer component:"
+        "en": "4. Select component:",
+        "nl": "4. Selecteer component:"
+      },
+      {"tag" : "sel_plot",
+        "en": "Select visualisation:",
+        "nl": "Selecteer visualisatie:"
+      },
+      {"tag" : "sel_cutoff",
+        "en": "Select maximum value to use in analyses:",
+        "nl": "Selecteer de maximale waarde voor de analyse:"
       },
 	    {"tag" : "title_time",
         "en": "Timeseries",
@@ -226,6 +260,10 @@
       {"tag" : "btn_get_data",
         "en": "Check data availability",
         "nl": "Check de beschikbaarheid"
+      },
+    {"tag" : "btn_start_get_data",
+        "en": "Start",
+        "nl": "Start"
       },
       {"tag" : "btn_external_source",
         "en": "Get the data from external source",

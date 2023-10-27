@@ -65,6 +65,7 @@ source("funs/queue_fun.R")
 source("funs/download_fun.R")
 source("funs/data_to_tool_fun.R")
 source("funs/logging_fun.R")
+source("funs/ui_create_plots_funs.R")
 set_loglevel()
 
 # launch queue manager
@@ -80,7 +81,8 @@ Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 theme_plots <- theme_bw(base_size = 18) +
   theme(strip.text.x = element_text(size = 14, colour = "black"),
         axis.text.y = element_text(face = "bold",color = "black", size = 16),
-        axis.text.x = element_text(color = "black", size = 16, angle = 45, hjust = 1, vjust = 1),
+        axis.text.x = element_text(color = "black", size = 16, angle = 45,
+                                   hjust = 1, vjust = 1),
         axis.title = element_text(color = "black", size = 16),
         text = element_text(family = 'sans'),
         title = element_text(color = "black", size = 16),
@@ -100,12 +102,16 @@ pool <- dbPool(
 pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 
 
-## Initiate some variables                                                 ====
+## Initiate some variables                                                  ====
 # Default start and end time for the date picker
-default_time <- list(start_time = lubridate::today() - days(10), end_time = lubridate::today())
+# default_time <- list(start_time = lubridate::today() - days(65),
+#                      end_time = lubridate::today())
+default_time <- list(start_time = lubridate::ymd("20230101"),
+                     end_time = lubridate::ymd("20230501"))
 
 # store lists with projects and municipalities
-municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F, col_types = c("d", "c"))
+municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F,
+                           col_types = c("d", "c"))
 projects <- read_csv("./prepped_data/projects.csv", col_types = c("c"))
 
 # add_doc doesn't work, see ATdatabase #8
@@ -122,10 +128,22 @@ stations_con <- tbl(pool, "location")
 
 # Define colors, line types,choices etc.                                   ====
 # Colours for the sensors
-col_cat <- list('#e17000','#007bc7','#673327','#39870c','#ffb612','#42145f','#777c00', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e','#8fcae7','#ca005d','#275937','#f092cd')
-# col_cat <- rev(col_cat) # the saturated colours first
+col_cat <- list('#e17000','#007bc7','#673327','#39870c','#ffb612','#42145f',
+                '#777c00', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e',
+                '#8fcae7','#ca005d','#275937','#f092cd')
+# col_cat <- rev(col_cat) # the saturated colours firs
 col_default <- '#000000'
 col_overload <- '#111111'
+
+# set names to the colors for using as group name
+col_names <- data.frame('color' = c('#e17000','#007bc7','#673327','#39870c','#ffb612',
+                        '#42145f','#777c00', '#94710a','#01689b','#f9e11e','#76d2b6',
+                        '#d52b1e','#8fcae7','#ca005d','#275937','#f092cd'),
+                        'label'=c("orange","blue","brown" ,"green", "yellow",
+                                  "purple","grey", "beige", "dark blue", "sunflower", "mint",
+                                  "red", "baby blue", "magenta", "dark green", "pink"))
+col_names = setNames( col_names$label , col_names$color)
+default_col_select = names(col_names)[[1]]
 
 # Linetype for the reference stations
 line_cat <- list('dashed', 'dotted', 'dotdash', 'longdash', 'twodash')
@@ -133,7 +151,7 @@ line_default <- 'solid'
 line_overload <- 'dotted'
 
 # First name of the group
-group_name_default <- "groep_1"
+group_name_default <- col_names[[default_col_select]]
 # Default for no group
 group_name_none <- ""
 
@@ -142,6 +160,20 @@ uc_min_pm10 <- 8.5
 
 # Minimal sd value sensor pm25
 uc_min_pm25 <- 5.3
+
+# default parameter to cutoff the values
+# used to set outlier limit
+default_cutoff <- 9999
+
+# default parameter
+default_parameter <- "pm25_kal"
+
+# Defualt for start selection
+default_munproj <- "municipality"
+default_munproj_name <- "Almere"
+
+#default plot:
+default_plot = "barplot"
 
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
@@ -154,13 +186,25 @@ stations_con <- tbl(pool, "location")
 
 
 # Component choices
-overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"), 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
+overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"),
+                                 'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
 comp_choices = setNames(overview_component$component, overview_component$label)
 proj_choices = sort(projects$project)
 mun_choices  = sort(municipalities$X2)
 
-overview_select_choices <- data.frame('type' = c("project","municipality"), 'label'=c("project","gemeente"))
+overview_select_choices <- data.frame('type' = c("project","municipality"),
+                                      'label'=c("project","gemeente"))
 select_choices = setNames(overview_select_choices$type, overview_select_choices$label)
+
+# plot choices
+plot_choices <- data.frame('plot' = c("barplot", "timeplot", "timevariation_weekly",
+                                      "timevariation_daily",
+                                      "calender", "pollutionrose"),
+                           'label'=c("Bar plot","Timeseries plot",
+                                     "Timevariation Weekly plot",
+                                     "Timevariation Daily plot", "Calender plot",
+                                     "Pollution rose plot"))
+plot_choices = setNames(plot_choices$plot, plot_choices$label)
 
 
 ### APP SPECIFIC SETTINGS                                                   ====
@@ -172,18 +216,25 @@ source("modules/communication_module.R")
 source("modules/select_date_range.R")
 # Source module for the component selection
 source("modules/select_component.R")
-# Source module for the component selection
+# source moduel to choose the plot visualisation
+source("modules/select_plot.R")
+source("modules/show_plot.R")
+
+# Source module for the map
 source("modules/show_map.R")
+source("modules/show_map_no_interaction.R")
 
 # Source modules selections
 source("modules/select_date_range.R")
 source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
+source("modules/select_outlier_cutoff.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
 source("modules/add_single_text_message.R")
+source("modules/add_info_sensor_plot.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")
@@ -195,7 +246,8 @@ source("modules/add_timevariation_daily_plot.R")
 source("modules/add_individual_timeseries_plot.R")
 
 # Source layout
-source("modules/add_tabpanels.R")
+source("funs/ui_tab_grouping.R")
+source("funs/ui_tab_checkdata.R")
 
 # Source buttons
 source("modules/set_groupname_button.R")
