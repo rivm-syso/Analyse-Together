@@ -252,7 +252,7 @@ shinyServer(function(global, input, output, session) {
   })
 
   # Observe if there is new data selected from the caching, then move to the
-  # start=page
+  # start-page
   observe({
     data_changed <- message_data$to_start_page
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
