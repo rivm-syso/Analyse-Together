@@ -93,28 +93,40 @@ show_map_no_server <- function(id,
     set_view_stations <- function(){
       # Check if there is data
       data_snsrs_col <- try(isolate(get_locations()$station_loc))
-      shiny::validate(
-        need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
-      )
-      # calculate mean location
-      mean_lat <- mean(data_snsrs_col$lat)
-      mean_lon <- mean(data_snsrs_col$lon)
 
-      # create proxy of the map
-      proxy <- leafletProxy('map') # set up proxy map
-      proxy %>% setView(mean_lon, mean_lat, zoom = 10)
+      # If there are stations then zoom to them
+      if(class(data_snsrs_col) != "try-error" ){
+        # calculate mean location
+        mean_lat <- mean(data_snsrs_col$lat)
+        mean_lon <- mean(data_snsrs_col$lon)
+
+        # create proxy of the map
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>% setView(mean_lon, mean_lat, zoom = 10)
+      }else{
+        # Zoom to the default
+
+        # create proxy of the map
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>% setView(5.384214, 52.153708 , zoom = 7)
+    }
     }
 
     # Add knmi stations to the map
     add_knmi_map <- function(){
       # Get the data
-      data_snsrs <- isolate(get_locations()$station_loc) %>%
+      data_snsrs <- try(isolate(get_locations()$station_loc))
+
+      if(class(data_snsrs) == "try-error"){
+        # clear all weather stations from the map
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>%
+          # Clear weather markers
+          clearGroup("weather")
+      }else{
+        # Get the station data
+        data_snsrs <- data_snsrs %>%
         dplyr::filter(station_type == "KNMI")
-
-      shiny::validate(
-        need(class(data_snsrs) != "try-error", "Not yet selected any data.")
-      )
-
         # Update map with new markers to show selected
         proxy <- leafletProxy('map') # set up proxy map
         proxy %>% clearGroup("weather") # Clear  markers
@@ -128,20 +140,25 @@ show_map_no_server <- function(id,
                        layerId = ~station,
                        group = "weather")
         }
+      }
 
     }
 
     # Add the sensors to the map
     add_sensors_map <- function(){
-      # Check if there is data
+      # # Check if there is data
       data_snsrs <- try(isolate(get_locations()$station_loc))
-      shiny::validate(
-        need(class(data_snsrs) != "try-error", "Error, no data selected.")
-      )
+      if(class(data_snsrs) == "try-error"){
+        #Clear all sensors from the map
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>%
+          # Clear sensoren markers
+          clearGroup("sensoren")
+      }else{
+        # Get the sensor data
+        data_snsrs <- data_snsrs %>%
+          dplyr::filter(station_type == "sensor")
 
-      # Get the sensor data
-      data_snsrs <- data_snsrs %>%
-        dplyr::filter(station_type == "sensor")
         # Update map with new markers to show selected
         proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
@@ -162,35 +179,41 @@ show_map_no_server <- function(id,
                            group = "sensoren"
           )
         }
+      }
 
     }
 
     # Add reference stations to the map
     add_lmls_map <- function(){
-      # Check if there is data
+      # # Check if there is data
       data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
-      shiny::validate(
-        need(class(data_snsrs) != "try-error", "Not yet selected any data.")
-      )
-
-      # Get the reference stations
-      data_snsrs <- data_snsrs %>%
-        dplyr::filter(station_type == "ref")
-
-      # Update map with new markers to show selected
-      proxy <- leafletProxy('map') # set up proxy map
-      proxy %>%
-        # Clear reference markers
-        clearGroup("reference")
-
-      # Add the stations to the map
-      if(nrow(data_snsrs) > 0){
+      if(class(data_snsrs) == "try-error"){
+        # Clear all reference stations from the map
+        proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
-          addMarkers(data = data_snsrs, ~lon, ~lat,
-                     icon = icons_stations["lml_deselected"],
-                     label = lapply(as.list(data_snsrs$station), HTML),
-                     layerId = ~station,
-                     group = "reference")
+          # Clear reference markers
+          clearGroup("reference")
+      }else{
+
+        # Get the reference stations
+        data_snsrs <- data_snsrs %>%
+          dplyr::filter(station_type == "ref")
+
+        # Update map with new markers to show selected
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>%
+          # Clear reference markers
+          clearGroup("reference")
+
+        # Add the stations to the map
+        if(nrow(data_snsrs) > 0){
+          proxy %>%
+            addMarkers(data = data_snsrs, ~lon, ~lat,
+                       icon = icons_stations["lml_deselected"],
+                       label = lapply(as.list(data_snsrs$station), HTML),
+                       layerId = ~station,
+                       group = "reference")
+      }
       }
     }
 
