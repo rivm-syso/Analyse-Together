@@ -63,7 +63,6 @@ show_map_no_server <- function(id,
 
       ns("map")
       leaflet() %>%
-        setView(5.384214, 52.153708 , zoom = 6) %>%
         # addTiles() %>%
         addProviderTiles(
           'Esri.WorldGrayCanvas' # option 1
@@ -103,7 +102,7 @@ show_map_no_server <- function(id,
 
       # create proxy of the map
       proxy <- leafletProxy('map') # set up proxy map
-      proxy %>% setView(mean_lon, mean_lat, zoom = 8)
+      proxy %>% setView(mean_lon, mean_lat, zoom = 10)
     }
 
     # Add knmi stations to the map

@@ -137,7 +137,7 @@
 	      	  },
     {"tag" : "tool_welcome_2_expl",
     "en" : "",
-    "nl" : "De gegevens staan voor u klaar.  Klik op 'Start' om aan de slag te gaan. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart ziet u welke sensoren op dit moment beschikbaar zijn."
+    "nl" : "De gegevens staan voor u klaar. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart ziet u welke sensoren op dit moment beschikbaar zijn."
     },
     {"tag" : "tool_select",
       "en" : "Choose the data yourself",

@@ -12,18 +12,6 @@ shinyUI(
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
 
-      # White header with logo
-      tags$div(class = "header-white",
-
-               tags$img(src = "images/Banner_2018.png",
-                        style = "height: 120px;
-                          width: 450px;
-                          margin-bottom: 0px;
-                          margin-top: 0px;
-                          margin-right: 10px")
-
-      ),
-
       # Colored header with text
       tags$div(class = "header-color",
 
@@ -72,7 +60,7 @@ shinyUI(
 
           fluidRow(
 
-            column(width = 6,
+            column(width = 4,
                    wellPanel(
 
                      # Text for the user
@@ -80,20 +68,22 @@ shinyUI(
                          p(i18n$t("tool_welcome_1_expl")),
                          p(i18n$t("tool_welcome_2_expl")),
 
-                         get_data_cache_output("get_data_dbs_button_start"),
-
-                         info_sensor_output("info_sensor"),
-
                          actionButton("to_visualise_tab", i18n$t("btn_figures")),
                          actionButton("to_select_tab", i18n$t("btn_own_data"))
 
                      )
                    )
             ),
-            column(width = 6,
+            column(width = 4,
+                   style = "margin-top: 8px;",
+                   info_sensor_output("info_sensor")
+                   ),
+
+            column(width = 4,
                    style = "margin-top: 8px;",
                    show_map_no_output("map_start")
-                   )
+            )
+
 
           )
         ), # end of tabpanel "START"

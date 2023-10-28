@@ -54,11 +54,12 @@ info_sensor_server <- function(id,
                        type = 'label',
                        local.tz = "Europe/Amsterdam",
                        cols = "Oranges",
-                       breaks = c(0,5,10,15,20,30,50,100, 800),
+                       breaks = c(0,10,30,100, 800),
                        par.settings = list(fontsize=list(text=15)),
                        key.header = "Number of stations",
                        key.footer = '',
-                       labels = c('0 to 5', '5 to 10', '10 to 15', '15 to 20', '20 to 30', '30 to 50', '50 to 100', '100 or more')))
+                       key.position = 'bottom',
+                       labels = c('0-10', '10-30', '30-100',  '100+')))
 
     })
 
