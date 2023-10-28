@@ -142,7 +142,7 @@ shinyUI(
                          p(i18n$t("tool_select_6_expl")),
                          download_api_button_output("dl_btn_pushed"),
                          p(i18n$t("tool_select_7_expl")),
-                         actionButton("to_start_tab", "Ga naar Start")
+                         get_data_cache_output("get_data_dbs_button_start")
                      )
 
                    )

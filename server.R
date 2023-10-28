@@ -230,27 +230,33 @@ shinyServer(function(global, input, output, session) {
     })
 
 
-    # Observe filtered data from stations and groups ----
-    observe({
-      data_filtered <- communication_stuff$selected_measurements()
-      data_measurements$data_filtered <- data_filtered
+  # Observe filtered data from stations and groups ----
+  observe({
+    data_filtered <- communication_stuff$selected_measurements()
+    data_measurements$data_filtered <- data_filtered
 
-      data_grouped <- communication_stuff$grouped_measurements()
-      data_measurements$data_grouped <- data_grouped
-    })
+    data_grouped <- communication_stuff$grouped_measurements()
+    data_measurements$data_grouped <- data_grouped
+  })
 
-    # Observe filtered data from knmi ----
-    observe({
-      data_filtered_knmi <- communication_stuff$knmi_measurements()
-      data_measurements$data_filtered_knmi <- data_filtered_knmi
-    })
+  # Observe filtered data from knmi ----
+  observe({
+    data_filtered_knmi <- communication_stuff$knmi_measurements()
+    data_measurements$data_filtered_knmi <- data_filtered_knmi
+  })
 
-    # Observe if the station locations changes (colour) ----
-    observe({
-      data_stations_adjust <- map$data_stations()
-      data_stations$data <- data_stations_adjust
-    })
+  # Observe if the station locations changes (colour) ----
+  observe({
+    data_stations_adjust <- map$data_stations()
+    data_stations$data <- data_stations_adjust
+  })
 
+  # Observe if there is new data selected from the caching, then move to the
+  # start=page
+  observe({
+    data_changed <- message_data$to_start_page
+    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
+  })
 
   # Observe to change tabs
   observeEvent(input$to_visualise_tab,{
@@ -258,9 +264,6 @@ shinyServer(function(global, input, output, session) {
   })
   observeEvent(input$to_select_tab,{
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
-  })
-  observeEvent(input$to_start_tab,{
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
   })
 
   # Observe secret observer button

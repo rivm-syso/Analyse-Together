@@ -171,7 +171,7 @@
 	  },
 	  {"tag" : "tool_select_7_expl",
 	      "en": "6. ",
-	      "nl": "6. Ga terug naar 'START'. Daar kun je de gegevens in de tool laden en bekijken."
+	      "nl": "6. Laadt de gegevens in deze tool en ga verder naar Start."
 	  },
 	      {"tag": "infotext_vis_1_expl",
 	      "en": "Here you can explore the data. We have selected various visualizations to assist in viewing the data. You can view the time series, the data in a table, or the wind data in a wind rose. Each visualization is accompanied by a brief explanation.",

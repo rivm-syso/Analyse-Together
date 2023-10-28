@@ -77,6 +77,7 @@ get_data_cache_server <- function(id,
       stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
 
       log_info("get mod: Get data from caching database: {name_choice} ; {start_time} ; {end_time}... ")
+      message_data$to_start_page <- c(paste0("To start page if:  ", type_choice, " ", name_choice," " , start_time, end_time, "has changed."))
 
       # Estimate the download time, if sensors exists in selection
       if(is.null(stations_name)){
@@ -137,7 +138,6 @@ get_data_cache_server <- function(id,
                       size = ifelse(station_type == "ref", 2,1))
 
       log_info("get mod: Data available in tool. ")
-
 
     })
 
