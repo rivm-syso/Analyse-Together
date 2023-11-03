@@ -140,9 +140,13 @@ col_overload <- '#111111'
 col_names <- data.frame('color' = c('#e17000','#007bc7','#673327','#39870c','#ffb612',
                         '#42145f','#777c00', '#94710a','#01689b','#f9e11e','#76d2b6',
                         '#d52b1e','#8fcae7','#ca005d','#275937','#f092cd'),
-                        'label'=c("orange","blue","brown" ,"green", "yellow",
-                                  "purple","grey", "beige", "dark blue", "sunflower", "mint",
-                                  "red", "baby blue", "magenta", "dark green", "pink"))
+                        'label'=c("Group orange","Group blue","Group brown" ,
+                                  "Group green", "Group yellow",
+                                  "Group purple","Group grey", "Group beige",
+                                  "Group dark blue", "Group sunflower",
+                                  "Group mint", "Group red", "Group baby blue",
+                                  "Group magenta", "Group dark green",
+                                  "Group pink"))
 col_names = setNames( col_names$label , col_names$color)
 default_col_select = names(col_names)[[1]]
 
