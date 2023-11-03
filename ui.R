@@ -97,17 +97,17 @@ shinyUI(
                    tabsetPanel(
                      tabPanel(
                        value = "stap1",
-                       title = "stap1",
+                       title = "stap1: selecteren",
                        tpGrouping()
                      ),
                      tabPanel(
                        value = "stap2",
-                       title = "stap2",
+                       title = "stap2: checken",
                        tpCheckdata()
                      ),
                      tabPanel(
                        value = "stap3",
-                       title = "stap3",
+                       title = "stap3: kijken",
                        plot_selection_output("select_plot"),
                        show_plot_output("show_plot")
                      )

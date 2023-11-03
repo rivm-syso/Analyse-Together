@@ -186,8 +186,8 @@
 	      "nl": "Toon KNMI-stations"
 	  },
       {"tag" : "title_selectdata",
-        "en": "Select data",
-        "nl": "Selecteer data"
+        "en": "Other data",
+        "nl": "Andere data"
     },
       {"tag" : "title_visualisedata",
         "en": "Visualise data",

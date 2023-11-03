@@ -178,7 +178,7 @@ default_munproj <- "municipality"
 default_munproj_name <- "Almere"
 
 #default plot:
-default_plot = "barplot"
+default_plot = "timeplot"
 
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
