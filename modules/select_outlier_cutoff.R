@@ -37,7 +37,7 @@ outlier_cutoff_server <- function(id,
         numericInput(
           ns("outlier_cutoff"),
           label  = i18n$t("sel_cutoff"),
-          value  = default_cutoff,
+          value  = default_cutoff(),
           min = 0.1
         )
       )

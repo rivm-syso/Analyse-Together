@@ -15,6 +15,7 @@ shinyServer(function(global, input, output, session) {
 
   })
 
+
   ############### ReactiveValues #############
   # ReactiveValues to store the data
   # Store other information
@@ -46,7 +47,7 @@ shinyServer(function(global, input, output, session) {
   # The outlier cutoff value
   outlier_cutoff_server("select_cutoff",
                         data_other = data_other,
-                        default_cutoff = default_cutoff
+                        default_cutoff = reactive({data_other$cutoff})
                         )
 
   # the selected plot for the visualisation
@@ -256,11 +257,15 @@ shinyServer(function(global, input, output, session) {
   observe({
     data_changed <- message_data$to_start_page
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
+    # If you loaded new data, get the cut off value based on this new data
+    data_other$cutoff <- isolate(communication_stuff$cut_off_value())
+
   })
 
   # Observe to change tabs
   observeEvent(input$to_visualise_tab,{
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Visualise data")
+    updateTabsetPanel(inputId = "second_order_tabs" ,
+                      selected = "Visualise data")
   })
   observeEvent(input$to_select_tab,{
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
