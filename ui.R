@@ -93,7 +93,7 @@ shinyUI(
           title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
           fluidRow(
-            column(width = 6,
+            column(width = 8,
                    tabsetPanel(
                      tabPanel(
                        value = "stap1",
@@ -114,7 +114,7 @@ shinyUI(
                    )
 
                    ),
-            column(width = 6,
+            column(width = 4,
                    style = "margin-top: 8px;",
                    show_map_output("map"))
 
