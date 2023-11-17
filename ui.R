@@ -75,16 +75,20 @@ shinyUI(
                    )
             ),
             column(width = 4,
-                   style = "margin-top: 8px;",
-                   info_sensor_output("info_sensor")
+                   wellPanel(
+                     div(
+                       h4(i18n$t("title_calendar_start")))),
+                    info_sensor_output("info_sensor")
+
                    ),
 
             column(width = 4,
-                   style = "margin-top: 8px;",
+                   wellPanel(
+                     div(
+                   h4(i18n$t("title_map_start")))),
                    show_map_no_output("map_start")
+
             )
-
-
           )
         ), # end of tabpanel "START"
 

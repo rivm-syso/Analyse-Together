@@ -15,6 +15,14 @@
 	      "en": "Information tool",
 	      "nl": "Informatie over de tool"
 	  },
+	  	{"tag" : "title_calendar_start",
+	      "en": "Sensor availability",
+	      "nl": "Beschikbaarheid van de sensoren"
+	  },
+	  	{"tag" : "title_map_start",
+	      "en": "Sensor locations",
+	      "nl": "Locaties van de sensoren"
+	  },
 	  {"tag" : "expl_link_to_benb_artikel",
 	      "en": "Article about Farmers and Local residents project:",
 	      "nl": "Artikel over Boeren en Buren project: "
@@ -133,7 +141,7 @@
 	  },
 	    {"tag" : "tool_welcome_1_expl",
 	      "en": "",
-	      "nl": "Welkom bij deze tool om de gegevens van de luchtkwaliteitssensoren te ontdekken. In deze tool combineren we de gegevens van SamenMeten, het Luchtmeetnet en het KNMI."
+	      "nl": "In deze tool kun je de gegevens van de luchtkwaliteitssensoren  ontdekken. We combineren de gegevens van SamenMeten, het Luchtmeetnet en het KNMI. Voor een eerste blik op de gegevens ga naar het Dataportaal."
 	      	  },
     {"tag" : "tool_welcome_2_expl",
     "en" : "",
