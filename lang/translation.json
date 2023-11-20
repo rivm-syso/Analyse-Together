@@ -198,12 +198,12 @@
         "nl": "Andere data"
     },
       {"tag" : "title_visualisedata",
-        "en": "Visualise data",
-        "nl": "Visualiseer data"
+        "en": "Figures",
+        "nl": "Plaatjes"
       },
       {"tag" : "title_advanced",
-        "en": "Advanced",
-        "nl": "Advanced"
+        "en": "Download",
+        "nl": "Download"
       },
       {"tag" : "sel_basedon",
         "en": "1. Selection based on:",

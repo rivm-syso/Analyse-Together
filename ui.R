@@ -66,12 +66,15 @@ shinyUI(
                      # Text for the user
                      div(h3(i18n$t("tool_welcome")),
                          p(i18n$t("tool_welcome_1_expl")),
-                         p(i18n$t("tool_welcome_2_expl")),
+                         p(i18n$t("tool_welcome_2_expl"))
+                         ),
 
-                         actionButton("to_visualise_tab", i18n$t("btn_figures")),
-                         actionButton("to_select_tab", i18n$t("btn_own_data"))
+                     actionButton("to_visualise_tab", i18n$t("btn_figures"), width = "100px"),
+                     br(),
+                     br(),
+                     actionButton("to_select_tab", i18n$t("btn_own_data"), width = "100px")
 
-                     )
+
                    )
             ),
             column(width = 4,
