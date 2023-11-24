@@ -247,6 +247,7 @@ source("modules/show_plot.R")
 # Source module for the map
 source("modules/show_map.R")
 source("modules/show_map_no_interaction.R")
+source("modules/show_map_no_interaction_selected.R")
 
 # Source modules selections
 source("modules/select_date_range.R")

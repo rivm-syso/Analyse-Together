@@ -47,7 +47,8 @@ shinyUI(
       fluidRow(
         # 'Show' time to keep the app activated (not visible)
         h1(
-          textOutput("currentTime", container = span), style = "font-size:12px; text-align:right; color:#ffffff;"
+          textOutput("currentTime", container = span),
+          style = "font-size:12px; text-align:right; color:rgb(221, 221, 221);"
         )
       ),
 
@@ -99,18 +100,25 @@ shinyUI(
           value = "Visualise data",
           title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
-          fluidRow(
-            column(width = 8,
                    tabsetPanel(
+                     id = "tab_figures",
                      tabPanel(
                        value = "stap1",
                        title = "stap1: selecteren",
-                       tpGrouping()
+                       column(width = 4,
+                              tpGrouping()),
+                       column(width = 8,
+                              style = "margin-top: 8px;",
+                              show_map_output("map")
+                              )
                      ),
                      tabPanel(
                        value = "stap2",
-                       title = "stap2: checken",
-                       tpCheckdata()
+                       title = "stap2: filteren",
+                       column(width = 8,
+                              tpCheckdata()),
+                       column(width = 4,
+                              show_map_no_select_output("map_no_select"))
                      ),
                      tabPanel(
                        value = "stap3",
@@ -118,12 +126,6 @@ shinyUI(
                        plot_selection_output("select_plot"),
                        show_plot_output("show_plot")
                      )
-                   )
-
-                   ),
-            column(width = 4,
-                   style = "margin-top: 8px;",
-                   show_map_output("map"))
 
           )
         ), # end of tabpanel "VISUALISE DATA"

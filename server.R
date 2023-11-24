@@ -111,10 +111,15 @@ shinyServer(function(global, input, output, session) {
   show_map_no_server("map_start",
                      data_stations = reactive(data_stations$data))
 
+
   # Info about the sensor plot on start page ----
   info_sensor <- info_sensor_server("info_sensor",
                                     data_measurements = reactive(data_measurements$data_all))
 
+  # The map on the filter page
+  show_map_no_select_server("map_no_select",
+                            data_stations = reactive(data_stations$data),
+                            change_tab = reactive(data_other$change_tab_figures))
   # The bar plot ----
   barplot <- barplot_server("barplot_plot",
                             data_measurements = reactive(data_measurements$data_grouped),
@@ -229,6 +234,10 @@ shinyServer(function(global, input, output, session) {
     observeEvent(input$second_order_tabs,{
       data_other$tab_choice <- input$second_order_tabs
     })
+  # Observe if you change tab (visualise/plaatjes section) and store the tabname ----
+  observeEvent(input$tab_figures,{
+    data_other$change_tab_figures <- input$tab_figures
+  })
 
 
   # Observe filtered data from stations and groups ----
