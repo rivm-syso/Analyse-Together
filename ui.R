@@ -118,7 +118,7 @@ shinyUI(
                        column(width = 8,
                               tpCheckdata()),
                        column(width = 4,
-                              show_map_no_select_output("map_no_select"))
+                       show_map_no_select_output("map_no_select_step2"))
                      ),
                      tabPanel(
                        value = "stap3",

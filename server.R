@@ -117,7 +117,11 @@ shinyServer(function(global, input, output, session) {
                                     data_measurements = reactive(data_measurements$data_all))
 
   # The map on the filter page
-  show_map_no_select_server("map_no_select",
+  show_map_no_select_server("map_no_select_step2",
+                            data_stations = reactive(data_stations$data),
+                            change_tab = reactive(data_other$change_tab_figures))
+  # The map on the show page
+  show_map_no_select_server("map_no_select_step3",
                             data_stations = reactive(data_stations$data),
                             change_tab = reactive(data_other$change_tab_figures))
   # The bar plot ----
