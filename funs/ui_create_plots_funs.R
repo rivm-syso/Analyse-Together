@@ -11,7 +11,8 @@ tpTimeplot <- function(){
 
                            # Render timeseries plot.
                            column(12,class = "col-lg-12",
-                                  wellPanel(timeseries_output("timeseries_plot"))),
+                                  wellPanel(timeseries_output("timeseries_plot"),
+                                            slider_zoom_output("slider_zoom"))),
 
                          ),
                          h4(i18n$t("title_expl"), style = "margin-left: 20px"),

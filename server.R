@@ -136,7 +136,11 @@ shinyServer(function(global, input, output, session) {
                                        data_measurements = reactive(data_measurements$data_grouped),
                                        parameter = reactive(data_other$parameter),
                                        overview_component,
-                                       theme_plots)
+                                       theme_plots,
+                                       zoom_in = list(
+                                         start_slider_zoom = reactive(data_other$start_slider_zoom),
+                                         end_slider_zoom = reactive(data_other$end_slider_zoom))
+                                       )
 
   # The calender plot ----
   calender_plot <- calender_server("calender_plot",
@@ -168,6 +172,12 @@ shinyServer(function(global, input, output, session) {
                                                   parameter = reactive(data_other$parameter),
                                                   overview_component = overview_component,
                                                   theme_plots)
+
+  # Slider zoom for on the timeseries
+  slider_zoom_server("slider_zoom",
+                     data_other = data_other,
+                     min_date = reactive(data_other$start_date),
+                     max_date = reactive(data_other$end_date))
 
   # The communication module ----
   communication_stuff <- communication_server("test_comm_output",
