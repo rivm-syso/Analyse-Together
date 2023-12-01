@@ -25,7 +25,8 @@ timeseries_server <- function(id,
                               data_measurements,
                               parameter,
                               overview_component,
-                              theme_plots){
+                              theme_plots,
+                              zoom_in = NA){
 
   moduleServer(id, function(input, output, session) {
 
@@ -58,8 +59,14 @@ timeseries_server <- function(id,
                          ribbon_max = ifelse(ribbon_max < 0, 0, ribbon_max))
 
          # Calculate stats for the axis
-         max_time <- max(data_timeseries$date)
-         min_time <- min(data_timeseries$date)
+         if(!is.list(zoom_in)){ # Check if the functionality of the zoom is used
+           max_time <- max(data_timeseries$date)
+           min_time <- min(data_timeseries$date)}
+         else{ # Use the min/max of the zoom input
+           max_time <- zoom_in$end_slider_zoom()
+           min_time <- zoom_in$start_slider_zoom()
+         }
+
          n_days_in_plot <- round(as.numeric(max_time - min_time))
          date_breaks_in_plot <- paste0(as.character(dplyr::case_when(n_days_in_plot < 8 ~ 1, T ~ n_days_in_plot/7))," day")
          n_stat_in_plot <- length(unique(data_timeseries$label))
@@ -113,7 +120,8 @@ timeseries_server <- function(id,
                                      labels = names(names_linetype_plot)) +
                scale_x_datetime(date_breaks = date_breaks_in_plot,
                                 date_minor_breaks = "1 day") +
-               coord_cartesian(ylim = c(0, max_meas  + (steps/2))) +
+               coord_cartesian(ylim = c(0, max_meas  + (steps/2)),
+                               xlim = c(min_time, max_time)) +
                labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
                     title = paste0('Timeseries for: ', parameter_label)) +
                theme_plots +
