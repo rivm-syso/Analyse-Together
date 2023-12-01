@@ -87,6 +87,7 @@ timevar_weekly_server <- function(id,
         facet_wrap(~ daynumber, nrow = 1, labeller = labeller(daynumber = labels_weekdays_plot)) +
         scale_color_manual(values = plot_all$col,
                            breaks = plot_all$label) +
+        coord_cartesian(ylim = c(0,NA)) +
         # scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
         #                    minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2),
         #                                       by = steps/2),
