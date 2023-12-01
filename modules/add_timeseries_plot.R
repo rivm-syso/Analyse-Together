@@ -119,7 +119,8 @@ timeseries_server <- function(id,
                scale_linetype_manual(values =  names_linetype_plot,
                                      labels = names(names_linetype_plot)) +
                scale_x_datetime(date_breaks = date_breaks_in_plot,
-                                date_minor_breaks = "1 day") +
+                                date_minor_breaks = "1 day",
+                                date_labels = "%d/%b/%y") +
                coord_cartesian(ylim = c(0, max_meas  + (steps/2)),
                                xlim = c(min_time, max_time)) +
                labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
