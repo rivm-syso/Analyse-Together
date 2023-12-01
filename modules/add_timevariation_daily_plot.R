@@ -79,6 +79,7 @@ timevar_daily_server <- function(id,
                           position=pd) +
             scale_color_manual(values = plot_all$col,
                                    breaks = plot_all$label) +
+            coord_cartesian(ylim = c(0,NA)) +
             # # If you want to use this, please check the min_meas to change to
             # # include the errorbars too
             # scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
