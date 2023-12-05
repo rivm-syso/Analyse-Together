@@ -12,9 +12,9 @@ tpCheckdata <- function(){
 
       # Render individual timeseries plot.
       column(12,class = "col-lg-12",
-             wellPanel(
+
                outlier_cutoff_output("select_cutoff"),
-               individual_timeseries_output("indu_timeseries"))),
+               individual_timeseries_map_output("indu_timeseries")),
 
     ),
     h4(i18n$t("title_expl"), style = "margin-left: 20px"),

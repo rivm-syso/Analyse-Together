@@ -74,6 +74,7 @@ show_map_server <- function(id,
     output$map <- renderLeaflet({
 
       ns("map")
+
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
         # addTiles() %>%
@@ -129,6 +130,7 @@ show_map_server <- function(id,
                       label = ifelse(station == id_selected, station, label),
                       # Change the color to the default
                       col = ifelse(station == id_selected, col_default, col),
+                      stroke = col,
                       # Change the linetype to the default
                       linetype = ifelse(station == id_selected, line_default, linetype))
 
@@ -154,6 +156,7 @@ show_map_server <- function(id,
                                                  group_name)),
                       # Change the color to the col_select
                       col = ifelse(station == id_selected, col_select(), col),
+                      stroke = col,
                       label = ifelse(station == id_selected & station_type == "sensor",
                                      get_group_name,
                                      ifelse(station == id_selected & station_type != "sensor",

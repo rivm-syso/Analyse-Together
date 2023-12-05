@@ -271,6 +271,7 @@ source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_weekly_plot.R")
 source("modules/add_timevariation_daily_plot.R")
 source("modules/add_individual_timeseries_plot.R")
+source("modules/add_individual_timeseries_plot_with_map.R")
 
 # Source layout
 source("funs/ui_tab_grouping.R")

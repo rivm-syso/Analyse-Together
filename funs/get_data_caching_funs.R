@@ -82,7 +82,7 @@ get_stations_cleaned <- function(stations_con,
     # Add some specific info for the tool
     dplyr::mutate(selected = F, col = col_default, linetype = line_default,
                   station_type = "sensor", group_name = group_name_none,
-                  label = station) %>%
+                  label = station, stroke = col) %>%
     dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI",
                                         ifelse(grepl("^NL.[0-9].", station) == T, "ref",
                                                station_type))) %>%

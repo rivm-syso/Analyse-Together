@@ -116,11 +116,7 @@ shinyServer(function(global, input, output, session) {
   info_sensor <- info_sensor_server("info_sensor",
                                     data_measurements = reactive(data_measurements$data_all))
 
-  # The map on the filter page
-  show_map_no_select_server("map_no_select_step2",
-                            data_stations = reactive(data_stations$data),
-                            change_tab = reactive(data_other$change_tab_figures))
-  # The map on the show page
+   # The map on the show page
   show_map_no_select_server("map_no_select_step3",
                             data_stations = reactive(data_stations$data),
                             change_tab = reactive(data_other$change_tab_figures))
@@ -167,11 +163,13 @@ shinyServer(function(global, input, output, session) {
                                              overview_component)
 
   # Individual timeseries plot ----
-  indu_timeseries <- individual_timeseries_server("indu_timeseries",
-                                                  data_measurements = reactive(data_measurements$data_filtered),
-                                                  parameter = reactive(data_other$parameter),
-                                                  overview_component = overview_component,
-                                                  theme_plots)
+  indu_timeseries <- individual_timeseries_map_server("indu_timeseries",
+                                                      data_stations = data_stations,
+                                                      data_measurements = reactive(data_measurements$data_filtered),
+                                                      parameter = reactive(data_other$parameter),
+                                                      overview_component = overview_component,
+                                                      theme_plots,
+                                                      change_tab = reactive(data_other$change_tab_figures) )
 
   # Slider zoom for on the timeseries
   slider_zoom_server("slider_zoom",
