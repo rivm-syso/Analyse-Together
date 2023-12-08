@@ -104,13 +104,13 @@ show_map_no_select_server <- function(id,
 
         # create proxy of the map
         proxy <- leafletProxy('map_select') # set up proxy map
-        proxy %>% setView(mean_lon, mean_lat, zoom = 10)
+        proxy %>% setView(mean_lon, mean_lat, zoom = 8)
       }else{
         # Zoom to the default
 
         # create proxy of the map
         proxy <- leafletProxy('map_select') # set up proxy map
-        proxy %>% setView(5.384214, 52.153708 , zoom = 10)
+        proxy %>% setView(5.384214, 52.153708 , zoom = 8)
       }
     }
 
