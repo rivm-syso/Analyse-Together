@@ -121,8 +121,13 @@ shinyUI(
                      tabPanel(
                        value = "stap3",
                        title = "stap3: kijken",
-                       plot_selection_output("select_plot"),
-                       show_plot_output("show_plot")
+                       column(width = 4,
+                              plot_selection_output("select_plot"),
+                              show_map_no_select_output("map_no_select_step3")
+                              ),
+                       column(width = 8,
+                              show_plot_output("show_plot")
+                              )
                      )
 
           )

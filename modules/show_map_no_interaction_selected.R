@@ -13,7 +13,7 @@ show_map_no_select_output <- function(id) {
   ns <- NS(id)
 
   tagList(
-    leafletOutput(ns('map'))
+    leafletOutput(ns('map_select'))
   )
 
 }
@@ -63,9 +63,9 @@ show_map_no_select_server <- function(id,
     })
 
     # Generate base map ----
-    output$map <- renderLeaflet({
+    output$map_select <- renderLeaflet({
 
-      ns("map")
+      ns("map_select")
       leaflet() %>%
         # addTiles() %>%
         addProviderTiles(
@@ -86,10 +86,8 @@ show_map_no_select_server <- function(id,
           rectangleOptions = FALSE
         ) %>%
 
-        addEasyButton(easyButton(
-          icon="fa-globe", title="Back to default view",
-          onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
         addScaleBar(position = "bottomleft")
+
     })
 
 
@@ -105,13 +103,13 @@ show_map_no_select_server <- function(id,
         mean_lon <- mean(data_snsrs_col$lon)
 
         # create proxy of the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>% setView(mean_lon, mean_lat, zoom = 10)
       }else{
         # Zoom to the default
 
         # create proxy of the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>% setView(5.384214, 52.153708 , zoom = 10)
       }
     }
@@ -123,7 +121,7 @@ show_map_no_select_server <- function(id,
 
       if(class(data_snsrs) == "try-error"){
         # clear all weather stations from the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear weather markers
           clearGroup("weather")
@@ -133,7 +131,7 @@ show_map_no_select_server <- function(id,
           # Only show the selected
           dplyr::filter(station_type == "KNMI", selected)
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>% clearGroup("weather") # Clear  markers
 
         # Put stations on map
@@ -155,7 +153,7 @@ show_map_no_select_server <- function(id,
       data_snsrs <- try(isolate(get_locations()$station_loc))
       if(class(data_snsrs) == "try-error"){
         #Clear all sensors from the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear sensoren markers
           clearGroup("sensoren")
@@ -166,7 +164,7 @@ show_map_no_select_server <- function(id,
           dplyr::filter(station_type == "sensor", selected)
 
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear sensor markers
           clearGroup("sensoren")
@@ -195,7 +193,7 @@ show_map_no_select_server <- function(id,
       data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
       if(class(data_snsrs) == "try-error"){
         # Clear all reference stations from the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear reference markers
           clearGroup("reference")
@@ -207,7 +205,7 @@ show_map_no_select_server <- function(id,
           dplyr::filter(station_type == "ref", selected)
 
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear reference markers
           clearGroup("reference")
@@ -232,12 +230,14 @@ show_map_no_select_server <- function(id,
     })
     # Observe if new data is available-> redraw map
     observeEvent(tolisten(),{
-      # Add the new situation to the map
-      isolate(add_lmls_map())
-      isolate(add_sensors_map())
-      isolate(add_knmi_map())
-      # Zoom to the stations
-      set_view_stations()
+        # Add the new situation to the map
+        isolate(add_lmls_map())
+        isolate(add_sensors_map())
+        isolate(add_knmi_map())
+        # Zoom to the stations
+        set_view_stations()
+    #     }
+    # }
 
     })
 

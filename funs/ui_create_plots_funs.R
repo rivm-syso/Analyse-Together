@@ -182,22 +182,4 @@ tpInfotext <- function(){
   return(tp)
 }
 
-tpMapplot <- function(){
-  tp <-  shiny::tabPanel("Mooie kaart",
-                         helpText("Uitleg van de kaart", style = "margin-left: 20px; "),
-                         fluidRow(
 
-                           # Render map
-                           column(12,class = "col-lg-12",
-                                  show_map_no_select_output("map_no_select_step3")
-
-
-                         )
-                         ),
-                         h4("Zomaar wat tekst", style = "margin-left: 20px"),
-                         p("zomaar wat tekst",
-                           style = "font-size:12px; margin-left: 20px")
-  )
-
-  return(tp)
-}

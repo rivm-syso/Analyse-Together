@@ -12,7 +12,7 @@ show_map_no_output <- function(id) {
   ns <- NS(id)
 
   tagList(
-    leafletOutput(ns('map'))
+    leafletOutput(ns('map_no'))
   )
 
 }
@@ -59,9 +59,8 @@ show_map_no_server <- function(id,
     })
 
     # Generate base map ----
-    output$map <- renderLeaflet({
-
-      ns("map")
+    output$map_no <- renderLeaflet({
+      ns("map_no")
       leaflet() %>%
         # addTiles() %>%
         addProviderTiles(
@@ -82,10 +81,7 @@ show_map_no_server <- function(id,
           rectangleOptions = FALSE
           ) %>%
 
-        addEasyButton(easyButton(
-          icon="fa-globe", title="Back to default view",
-          onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
-        addScaleBar(position = "bottomleft")
+          addScaleBar(position = "bottomleft")
     })
 
 
@@ -101,13 +97,13 @@ show_map_no_server <- function(id,
         mean_lon <- mean(data_snsrs_col$lon)
 
         # create proxy of the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>% setView(mean_lon, mean_lat, zoom = 10)
       }else{
         # Zoom to the default
 
         # create proxy of the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>% setView(5.384214, 52.153708 , zoom = 7)
     }
     }
@@ -119,7 +115,7 @@ show_map_no_server <- function(id,
 
       if(class(data_snsrs) == "try-error"){
         # clear all weather stations from the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>%
           # Clear weather markers
           clearGroup("weather")
@@ -128,7 +124,7 @@ show_map_no_server <- function(id,
         data_snsrs <- data_snsrs %>%
         dplyr::filter(station_type == "KNMI")
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>% clearGroup("weather") # Clear  markers
 
         # Put stations on map
@@ -150,7 +146,7 @@ show_map_no_server <- function(id,
       data_snsrs <- try(isolate(get_locations()$station_loc))
       if(class(data_snsrs) == "try-error"){
         #Clear all sensors from the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>%
           # Clear sensoren markers
           clearGroup("sensoren")
@@ -160,7 +156,7 @@ show_map_no_server <- function(id,
           dplyr::filter(station_type == "sensor")
 
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>%
           # Clear sensor markers
           clearGroup("sensoren")
@@ -189,7 +185,7 @@ show_map_no_server <- function(id,
       data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
       if(class(data_snsrs) == "try-error"){
         # Clear all reference stations from the map
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>%
           # Clear reference markers
           clearGroup("reference")
@@ -200,7 +196,7 @@ show_map_no_server <- function(id,
           dplyr::filter(station_type == "ref")
 
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map') # set up proxy map
+        proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>%
           # Clear reference markers
           clearGroup("reference")

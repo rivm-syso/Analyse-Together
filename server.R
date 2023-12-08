@@ -116,7 +116,7 @@ shinyServer(function(global, input, output, session) {
   info_sensor <- info_sensor_server("info_sensor",
                                     data_measurements = reactive(data_measurements$data_all))
 
-   # The map on the show page
+   # The map on the show page ----
   show_map_no_select_server("map_no_select_step3",
                             data_stations = reactive(data_stations$data),
                             change_tab = reactive(data_other$change_tab_figures))

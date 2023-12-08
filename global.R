@@ -204,12 +204,12 @@ select_choices = setNames(overview_select_choices$type, overview_select_choices$
 # plot choices
 plot_choices <- data.frame('plot' = c("barplot", "timeplot", "timevariation_weekly",
                                       "timevariation_daily",
-                                      "calender", "pollutionrose","map",
+                                      "calender", "pollutionrose",
                                       "table"),
                            'label'= c("Bar plot","Timeseries plot",
                                      "Timevariation Weekly plot",
                                      "Timevariation Daily plot", "Calender plot",
-                                     "Pollution rose plot","Map", "Table"))
+                                     "Pollution rose plot", "Table"))
 plot_choices = setNames(plot_choices$plot, plot_choices$label)
 
 
