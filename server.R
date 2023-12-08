@@ -47,7 +47,7 @@ shinyServer(function(global, input, output, session) {
   # The outlier cutoff value
   outlier_cutoff_server("select_cutoff",
                         data_other = data_other,
-                        default_cutoff = reactive({data_other$cutoff})
+                        default_cutoff = data_other$cutoff
                         )
 
   # the selected plot for the visualisation
