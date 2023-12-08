@@ -201,6 +201,29 @@ show_map_server <- function(id,
                        label = lapply(as.list(data_selected$station), HTML),
                        layerId = ~station,
                        group = "weather")
+        }else{
+          # NB there will always be a KNMI station selected!
+          # Select random station
+          random_station <- data_snsrs$station[1]
+          change_state_to_selected(random_station)
+
+          # Get all newer data info
+          # Get the data
+          data_snsrs <- try(isolate(get_locations()$station_loc))
+          # get the stations only knmi
+          data_snsrs <- data_snsrs %>%
+            dplyr::filter(station_type == "KNMI")
+          # Put selected stations on map
+          data_selected <- data_snsrs %>%
+            dplyr::filter(selected)
+
+          # add marker to map
+          proxy %>%
+            addMarkers(data = data_selected, ~lon, ~lat,
+                       icon = icons_knmis["knmi_selected"],
+                       label = lapply(as.list(data_selected$station), HTML),
+                       layerId = ~station,
+                       group = "weather")
         }
 
         # Put deselected stations on map
@@ -275,6 +298,27 @@ show_map_server <- function(id,
       data_selected <- data_snsrs %>% dplyr::filter(selected)
 
       if(nrow(data_selected > 0)){
+        proxy %>%
+          addMarkers(data = data_selected, ~lon, ~lat,
+                     icon = icons_stations["lml_selected"],
+                     label = lapply(as.list(data_selected$station), HTML),
+                     layerId = ~station,
+                     group = "reference")
+      }else{
+        # NB there will always be a reference station selected!
+        # Select random station
+        random_station <- data_snsrs$station[2]
+        change_state_to_selected(random_station)
+
+        # Get all newer data info
+        # Get the reference stations
+        data_snsrs <- isolate(get_locations()$station_loc) %>%
+          dplyr::filter(station_type == "ref")
+        # Put selected stations on map
+        data_selected <- data_snsrs %>%
+          dplyr::filter(selected)
+
+        # add marker to map
         proxy %>%
           addMarkers(data = data_selected, ~lon, ~lat,
                      icon = icons_stations["lml_selected"],
