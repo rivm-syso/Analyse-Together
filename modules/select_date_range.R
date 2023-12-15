@@ -43,7 +43,8 @@ date_range_server <- function(id,
                      start = date_total$start_time,
                      end = date_total$end_time,
                      format = "dd-mm-yyyy",
-                     separator = " - "
+                     separator = " - ",
+                     width= "300px"
                    )
 
               )})

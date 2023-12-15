@@ -36,7 +36,8 @@ project_or_mun_selection_server <- function(id,
           ns("proj_or_mun_select"),
           label    = i18n$t("sel_basedon"),
           choices  = select_choices,
-          selected = pre_select
+          selected = pre_select,
+          width = '300px'
         )
       )
     })

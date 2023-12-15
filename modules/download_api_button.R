@@ -9,7 +9,8 @@
 download_api_button_output <- function(id) {
 
   ns <- NS(id)
-  actionButton(ns("download_api_button"), i18n$t("btn_external_source"))
+  actionButton(ns("download_api_button"), i18n$t("btn_external_source"),
+               width = '300px')
 }
 
 

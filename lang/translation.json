@@ -145,7 +145,7 @@
 	      	  },
     {"tag" : "tool_welcome_2_expl",
     "en" : "",
-    "nl" : "De gegevens staan voor u klaar. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart ziet u welke sensoren op dit moment beschikbaar zijn."
+    "nl" : "De gegevens staan voor jou klaar. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart zie je welke sensoren op dit moment beschikbaar zijn."
     },
     {"tag" : "tool_select",
       "en" : "Choose the data yourself",
@@ -179,7 +179,7 @@
 	  },
 	  {"tag" : "tool_select_7_expl",
 	      "en": "6. ",
-	      "nl": "6. Laadt de gegevens in deze tool en ga verder naar Start."
+	      "nl": "6. Klik op de Start-button. De gegevens worden in deze tool geladen en jij gaat verder naar Start."
 	  },
 	      {"tag": "infotext_vis_1_expl",
 	      "en": "Here you can explore the data. We have selected various visualizations to assist in viewing the data. You can view the time series, the data in a table, or the wind data in a wind rose. Each visualization is accompanied by a brief explanation.",
@@ -207,7 +207,7 @@
       },
       {"tag" : "sel_basedon",
         "en": "1. Selection based on:",
-        "nl": "1. Selectie gebaseerd op:"
+        "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken."
       },
 	    {"tag" : "word_muni",
         "en": "Municipality",
@@ -215,7 +215,7 @@
       },
       {"tag" : "sel_option",
         "en": "2. Choose one option:",
-        "nl": "2. Maak een keuze:"
+        "nl": "2. Kies de naam van jouw project of gemeente."
       },
       {"tag" : "sel_language",
         "en": "Change language",
@@ -227,7 +227,7 @@
       },
       {"tag" : "sel_comp",
         "en": "4. Select component:",
-        "nl": "4. Selecteer component:"
+        "nl": "4. Geef aan in welke component je geinteresseerd bent."
       },
       {"tag" : "sel_plot",
         "en": "Select visualisation:",
@@ -309,13 +309,21 @@
         "en": "Create group",
         "nl": "Maak groep"
       },
+      {"tag" : "expl_group",
+        "en": "TODO In the table below, you can see the data availability of the sensors and stations. It also gives you an overview which sensors are assigned to which group. There are two ways to create a group: by selecting a group of sensors using the square on the map ('Draw a rectangle'), or by clicking on individual sensors. To create a new group, use the button below the map. Each time you click the button, a new group ID will appear. To modify a group, click the trash can icon ('Delete layers'). Press save to apply the changes.",
+        "nl": "Maak hier jouw selectie van de sensoren die je wilt bekijken. De sensoren kun je selecteren op de kaart op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. De sensoren worden gelijk geclusterd in een groep. Om een nieuwe groep te maken, kies de button 'Maak nieuwe groep'. Elke keer dat je op de button klikt, verschijnt er een nieuw groeps ID. Wil je een groep wijzigen, dan klik je op het prullenbak 'Delete layers'. Druk op save om de wijziging door te voeren."
+      },
+      {"tag" : "expl_group_expl",
+        "en": "See Dutch. ",
+        "nl": "Wat voor toelichting is hierbij nodig? Welke tekst zetten we bovenaan?"
+      },
       {"tag" : "expl_meta_table",
-        "en": "In the table below, you can see the data availability of the sensors and stations. It also gives you an overview which sensors are assigned to which group. There are two ways to create a group: by selecting a group of sensors using the square on the map ('Draw a rectangle'), or by clicking on individual sensors. To create a new group, use the button below the map. Each time you click the button, a new group ID will appear. To modify a group, click the trash can icon ('Delete layers'). Press save to apply the changes.",
-        "nl": "In onderstaande tabel kunt u de databeschikbaarheid van de sensoren en stations zien. Ook kun je zien welke sensoren in welke groep zitten. Het maken van een groep kan op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. Om een nieuwe groep te maken, kies de button onder de kaart. Elke keer dat je op de button klikt, verschijnt er een nieuw groeps ID. Wil je een groep wijzigen, dan klik je op het prullenbak 'Delete layers'. Druk op save om de wijziging door te voeren."
+        "en": "TODO ",
+        "nl": "In onderstaande tabel kun je van de geselecteerde sensoren zien wat  de databeschikbaarheid en de start- en einddatum van de metingen zijn."
       },
       {"tag" : "expl_meta_table_expl",
-        "en": "For each sensor, the data capture is determined, indicating the percentage of selected time for which the sensor has data. You can also see the time of the first and last measurement. To determine a reliable average, it is preferable for the sensors to have measured during the same period and have a high data capture.",
-        "nl": "Per sensor is de datacapture bepaald, dit houdt in hoeveel procent van de geselecteerde tijd de sensor gegevens heeft. Ook kun je het moment van de eerste en laatste meting zien. Om een goed gemiddelde te bepalen wil je het liefste dat de sensoren dezelfde periode gemeten hebben en een hoge datacapture hebben."
+        "en": "See Dutch. ",
+        "nl": "De datacapture laat je de databeschikbaarheid zien, hoe hoger het getal, hoe meer er gemeten is. Wanneer een sensor de hele periode gemeten heeft, zul je 100 zien. Als de waarde heel laag is, kun je ervoor kiezen om deze sensor niet mee te nemen in de analyse. Ga hiervoor weer een stap terug. Let op: het zijn de metingen voor het geselecteerd component en de periode. De windgegevens hebben daardoor geen getal."
       },
       {"tag" : "word_timeseries",
         "en": "Timeseries",
@@ -326,8 +334,8 @@
         "nl": "Deze grafiek laat de tijdreeks van geselecteerde groep(en) zien."
       },
       {"tag" : "expl_timeplot_expl",
-        "en": "When you click on one or more sensors, you will see a timeseries of hourly values for the selected period. The values are averaged per group. You can compare these values with measurements from the official air quality monitoring station (Luchtmeetnet). You can add the official station by clicking on it on the map. The x-axis represents the selected time period, and the y-axis represents the concentration of PM10 or PM2.5 in µg/m³.",
-        "nl": "Als je een of meerdere sensoren aanklikt, zie je een tijdreeks van de uurlijkse waarden in de geselecteerde periode. De waarden zijn gemiddeld per groep. De band rondom de meetlijn is de betrouwbaarheidsband, meer informatie daarover vind je onder het 'Informatie'-tabblad. Deze waarden kan je vergelijken met metingen van het officiele meetstation van het Luchtmeetnet. Deze kun je zelf toevoegen door deze aan te klikken op de kaart. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "en": "TODO When you click on one or more sensors, you will see a timeseries of hourly values for the selected period. The values are averaged per group. You can compare these values with measurements from the official air quality monitoring station (Luchtmeetnet). You can add the official station by clicking on it on the map. The x-axis represents the selected time period, and the y-axis represents the concentration of PM10 or PM2.5 in µg/m³.",
+        "nl": "Hier zie je de uurlijkse meetwaarden van de geselecteerde sensoren en referentiestations. De waarden zijn gemiddeld per groep. De band rondom de meetlijn is de betrouwbaarheidsband, meer informatie daarover vind je onder het 'Informatie'-tabblad. Deze waarden kan je vergelijken met metingen van het officiele meetstation van het Luchtmeetnet. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3. Met de slider onderaan kun je inzoomen in de tijd."
       },
       {"tag" : "word_barplot",
         "en": "Barplot",
@@ -350,8 +358,8 @@
         "nl": "Deze grafiek laat het uurlijkse gemiddelde zien groep/station per dag."
       },
       {"tag" : "expl_overviewplot_expl_weekly",
-        "en": "When you click on a sensor, the average concentration is shown for each weekday and hour. This provides an overview of the average concentration at each hour of the day, separated by weekdays. It shows the average daily variation in concentrations for each weekday. The x-axis represents the day of the week and each hour of the day, while the y-axis represents the concentration of PM10 or PM2.5 in µg/m³.",
-        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplitst naar alle dagen van de week. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag. De staafjes geven de spreidng weer, meer informatie is te vinden onder het 'Informatie'-tabblad. Op de x-as zie je de dag van de week met elk uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "en": "TODO When you click on a sensor, the average concentration is shown for each weekday and hour. This provides an overview of the average concentration at each hour of the day, separated by weekdays. It shows the average daily variation in concentrations for each weekday. The x-axis represents the day of the week and each hour of the day, while the y-axis represents the concentration of PM10 or PM2.5 in µg/m³.",
+        "nl": "Per groep wordt de gemiddelde concentratie per per weekdag, per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag, uitgesplitst naar alle dagen van de week. Dit levert een gemiddelde dagelijkse gang van de concentraties op per weekdag. De staafjes geven de spreidng weer, meer informatie is te vinden onder het 'Informatie'-tabblad. Op de x-as zie je de dag van de week met elk uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_daypattern",
         "en": "Daily pattern",
@@ -367,23 +375,23 @@
       },
       {"tag" : "expl_overviewplot_daily",
         "en": "This graph shows the hourly average per group/station per hour of the day. It is calculated over all selected days, resulting in an average daily pattern of concentrations.",
-        "nl": "Deze grafiek laat het uurlijkse gemiddelde zien per groep/station per uur van de dag. Dit is uitgerekend over alle dagen die u heeft geselecteerd. Dit levert een gemiddelde dagelijkse gang van de concentraties op."
+        "nl": "Deze grafiek laat het uurlijkse gemiddelde zien per groep/station per uur van de dag. Dit is uitgerekend over alle dagen die je hebt geselecteerd. Dit levert een gemiddelde dagelijkse gang van de concentraties op."
       },
       {"tag" : "expl_overviewplot_expl_daily",
-        "en": "If you click on a sensor, the average concentration per hour will be displayed. This allows you to see the average concentration at each hour of the day. The x-axis represents the hour of the day, and the y-axis represents the concentration of PM10 or PM2.5 in μg/m³.",
-        "nl": "Als je een sensor aanklikt, wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag. De staafjes geven de spreidng weer, meer informatie is te vinden onder het 'Informatie'-tabblad. Op de x-as zie je het uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "en": "TODO If you click on a sensor, the average concentration per hour will be displayed. This allows you to see the average concentration at each hour of the day. The x-axis represents the hour of the day, and the y-axis represents the concentration of PM10 or PM2.5 in μg/m³.",
+        "nl": "Per groep wordt de gemiddelde concentratie per uur getoond. Hierdoor zie je de gemiddelde concentratie op elk uur van de dag. De staafjes geven de spreidng weer, meer informatie is te vinden onder het 'Informatie'-tabblad. Op de x-as zie je het uur van de dag; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_indu_timeseries",
         "en": "Individual timeseries",
         "nl": "Individuele tijdreeks"
       },
       {"tag" : "expl_indu_timeplot",
-        "en": "Here you can view the timeseries of the individual sensor.",
-        "nl": "Hier kunt u de tijdreeks van de individuele sensor bekijken."
+        "en": "TODO Here you can view the timeseries of the individual sensor.",
+        "nl": "Hier kun je de tijdreeks van de individuele sensor bekijken door op de sensor te klikken. Zie je geen sensoren, selecteer dan eerst sensoren bij de vorige stap. In het invoerveld kun je aangeven wat de maximale waarde is die je voor je analyse wilt meenemen. Wanneer een sensor niet goed functioneert, kan de sensor hoge meetwaardes sturen bijvoorbeeld 300, deze meetwaardes geven geen beeld van de concentratie maar een foutieve waarde. Met het invullen van een maximale waarde, worden de meetwaardes boven die waarde verwijderd."
       },
       {"tag" : "expl_indu_timeplot_expl",
-        "en": "After selecting different sensors on the map, you can choose a sensor from the dropdown menu. The timeseries of the selected sensor will be displayed. The x-axis represents the selected time period, and the y-axis represents the concentration of PM10 or PM2.5 in μg/m³.",
-        "nl": "Nadat je op de kaart verschillende sensoren heeft geselecteerd, kun je door middel van het dropdownmenu een sensor kiezen. De tijdreeks van deze enkele sensor wordt dan getoond. De band rondom de meetlijn is de betrouwbaarheidsband, meer informatie daarover vind je onder het 'Informatie'-tabblad. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "en": "Click on a sensor on the map. The timeseries of the selected sensor will be displayed. The x-axis represents the selected time period, and the y-axis represents the concentration of PM10 or PM2.5 in μg/m³.",
+        "nl": "Klik op een sensor op de kaart. De tijdreeks van deze enkele sensor wordt dan getoond. De band rondom de meetlijn is de betrouwbaarheidsband, meer informatie daarover vind je onder het 'Informatie'-tabblad. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
       },
       {"tag" : "word_cal_plot",
         "en" : "Calender plot",
@@ -394,8 +402,8 @@
         "nl": "Deze grafiek toont de dagelijkse gemiddelde concentratie van de metingen voor de geselecteerde component, voor alle sensoren of groepen."
       },
       {"tag" : "expl_calplot_expl",
-        "en": "If you click on a sensor, an average concentration per day is calculated. This can be displayed in a graph or, as shown here, in a calender representation. The color assigned to each date corresponds to an average value. This may reveal a pattern. For example, it could be observed that on weekdays (Monday to Friday) the measurements are consistently slightly higher than on weekends.",
-        "nl": "Als je een sensor aanklikt, wordt een gemiddelde concentratie per dag berekend. Deze kan worden weergegeven in een grafiek of, zoals hier, in een kalender weergave. De kleur die elke datum krijgt, correspondeert met een gemiddelde waarde. Het kan zijn dat er zo een patroon zichtbaar wordt. Zo kunnen bijvoorbeeld op de weekdagen (maandag t/m vrijdag) de meetwaarden altijd net wat hoger zijn dan op de weekenddagen."
+        "en": "TODO If you click on a sensor, an average concentration per day is calculated. This can be displayed in a graph or, as shown here, in a calender representation. The color assigned to each date corresponds to an average value. This may reveal a pattern. For example, it could be observed that on weekdays (Monday to Friday) the measurements are consistently slightly higher than on weekends.",
+        "nl": "Per groep wordt een gemiddelde concentratie per dag berekend. Deze kan worden weergegeven in een grafiek of, zoals hier, in een kalender weergave. De kleur die elke datum krijgt, correspondeert met een gemiddelde waarde. Het kan zijn dat er zo een patroon zichtbaar wordt. Zo kunnen bijvoorbeeld op de weekdagen (maandag t/m vrijdag) de meetwaarden altijd net wat hoger zijn dan op de weekenddagen. De pijltjes geven de windrichting aan."
       },
       {"tag" : "word_conc_rose",
         "en": "Concentration rose (%)",
@@ -406,12 +414,12 @@
         "nl": "Deze grafiek toont per windrichting de relatieve bijdrage aan de totale gemiddelde concentratie per groep of station."
       },
       {"tag" : "expl_concplot%_expl",
-        "en": "When you click on a sensor, a weighted concentration rose plot is displayed. This calculates the percentage contribution of each wind direction to the total average concentration. The average concentration per wind direction is weighted based on the frequency of occurrence. For example, if there is a triangle located in the bottom left of the gray line with a 15% value and a large light fill area along with a very small dark fill area, it means that the wind blows from the southwest approximately 15% of the time, mostly bringing low concentrations (light fill) and occasionally high concentrations (dark fill).",
-        "nl": "Als je een sensor aanklikt, wordt een gewogen concentratieroos getoond. Deze berekent per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde concentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
+        "en": "TODO When you click on a sensor, a weighted concentration rose plot is displayed. This calculates the percentage contribution of each wind direction to the total average concentration. The average concentration per wind direction is weighted based on the frequency of occurrence. For example, if there is a triangle located in the bottom left of the gray line with a 15% value and a large light fill area along with a very small dark fill area, it means that the wind blows from the southwest approximately 15% of the time, mostly bringing low concentrations (light fill) and occasionally high concentrations (dark fill).",
+        "nl": "Per groep wordt een gewogen concentratieroos getoond. Deze berekent per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde concentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
       },
     {"tag" : "expl_add_sensor_to_group",
         "en": "The selected sensors will be added to group:",
-        "nl": "U voegt nu sensoren toe aan groep: "
+        "nl": "Voeg sensoren toe aan groep: "
       },
       {"tag" : "expl_no_data_available",
         "en": "No data available.",

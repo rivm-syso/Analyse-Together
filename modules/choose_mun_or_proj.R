@@ -45,7 +45,8 @@ choice_selection_server <- function(id,
                   choices  = mun_choices,
                   selected = pre_select,
                   multiple = TRUE,
-                  options = pickerOptions(maxOptions = 1)
+                  options = pickerOptions(maxOptions = 1),
+                  width = '300px'
                 )
               )}
           else{
@@ -57,7 +58,8 @@ choice_selection_server <- function(id,
                   choices  = proj_choices,
                   selected = pre_select,
                   multiple = TRUE,
-                  options = pickerOptions(maxOptions = 1)
+                  options = pickerOptions(maxOptions = 1),
+                  width = '300px'
                 ))}}
     })
 

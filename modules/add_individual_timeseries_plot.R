@@ -66,7 +66,8 @@ individual_timeseries_server <- function(id,
               choices  = stations_select,
               selected = FALSE,
               multiple = FALSE,
-              options = pickerOptions(maxOptions = 1)
+              options = pickerOptions(maxOptions = 1),
+              width = '500px'
             )
           )}
 
