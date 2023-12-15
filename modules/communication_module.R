@@ -194,12 +194,31 @@ communication_server <- function(id,
                    return(measurements_filt_knmi)
                  })
 
+                 # Calculate the cutoff value depending on the sensor data ----
+                 # distribution
+                 calc_cut_off <- reactive({
+                   # take all the sensor measurements
+                   names_snsrs <- data_stations() %>%
+                     dplyr::filter(station_type == "sensor" )
+
+                   # take all the sensor measurements
+                   data_snsrs <- data_measurements() %>%
+                     dplyr::filter(station %in% names_snsrs$station)
+
+                   # Calculate the cut-off value
+                   # take the upper 10%percentile
+                   cut_off_value <- quantile(data_snsrs$value, .9, na.rm = T)
+
+                   return(cut_off_value)
+                 })
+
 
                  # Return ----
                  return(list(
                    selected_measurements = reactive({filter_data_measurements()}),
                    knmi_measurements = reactive({get_knmi_measurements()}),
-                   grouped_measurements = reactive({calc_group_mean()})
+                   grouped_measurements = reactive({calc_group_mean()}),
+                   cut_off_value = reactive({calc_cut_off()})
 
                  ))
 

@@ -15,12 +15,9 @@ shinyServer(function(global, input, output, session) {
 
   })
 
+
   ############### ReactiveValues #############
   # ReactiveValues to store the data
-  # Store the data points (all and filtered)
-  data_measurements <- reactiveValues()
-  # Store the station locations and plotcolor etc
-  data_stations <- reactiveValues()
   # Store other information
   data_other <- reactiveValues(group_name = group_name_default,
                                group_number = 1,
@@ -32,6 +29,11 @@ shinyServer(function(global, input, output, session) {
                                cutoff = default_cutoff,
                                plot = default_plot,
                                col_select = default_col_select)
+  # Store the data points (all and filtered)
+  data_measurements <- reactiveValues(data_all = measurements_all)
+  # Store the station locations and plotcolor etc
+  data_stations <- reactiveValues(data_all = data_stations_list$data_all,
+                                  data = data_stations_list$data)
   # Store messages to communicate with user
   message_data <- reactiveValues()
 
@@ -45,7 +47,7 @@ shinyServer(function(global, input, output, session) {
   # The outlier cutoff value
   outlier_cutoff_server("select_cutoff",
                         data_other = data_other,
-                        default_cutoff = default_cutoff
+                        default_cutoff = data_other$cutoff
                         )
 
   # the selected plot for the visualisation
@@ -109,10 +111,15 @@ shinyServer(function(global, input, output, session) {
   show_map_no_server("map_start",
                      data_stations = reactive(data_stations$data))
 
+
   # Info about the sensor plot on start page ----
   info_sensor <- info_sensor_server("info_sensor",
                                     data_measurements = reactive(data_measurements$data_all))
 
+   # The map on the show page ----
+  show_map_no_select_server("map_no_select_step3",
+                            data_stations = reactive(data_stations$data),
+                            change_tab = reactive(data_other$change_tab_figures))
   # The bar plot ----
   barplot <- barplot_server("barplot_plot",
                             data_measurements = reactive(data_measurements$data_grouped),
@@ -125,7 +132,11 @@ shinyServer(function(global, input, output, session) {
                                        data_measurements = reactive(data_measurements$data_grouped),
                                        parameter = reactive(data_other$parameter),
                                        overview_component,
-                                       theme_plots)
+                                       theme_plots,
+                                       zoom_in = list(
+                                         start_slider_zoom = reactive(data_other$start_slider_zoom),
+                                         end_slider_zoom = reactive(data_other$end_slider_zoom))
+                                       )
 
   # The calender plot ----
   calender_plot <- calender_server("calender_plot",
@@ -152,11 +163,19 @@ shinyServer(function(global, input, output, session) {
                                              overview_component)
 
   # Individual timeseries plot ----
-  indu_timeseries <- individual_timeseries_server("indu_timeseries",
-                                                  data_measurements = reactive(data_measurements$data_filtered),
-                                                  parameter = reactive(data_other$parameter),
-                                                  overview_component = overview_component,
-                                                  theme_plots)
+  indu_timeseries <- individual_timeseries_map_server("indu_timeseries",
+                                                      data_stations = data_stations,
+                                                      data_measurements = reactive(data_measurements$data_filtered),
+                                                      parameter = reactive(data_other$parameter),
+                                                      overview_component = overview_component,
+                                                      theme_plots,
+                                                      change_tab = reactive(data_other$change_tab_figures) )
+
+  # Slider zoom for on the timeseries
+  slider_zoom_server("slider_zoom",
+                     data_other = data_other,
+                     min_date = reactive(data_other$start_date),
+                     max_date = reactive(data_other$end_date))
 
   # The communication module ----
   communication_stuff <- communication_server("test_comm_output",
@@ -227,43 +246,50 @@ shinyServer(function(global, input, output, session) {
     observeEvent(input$second_order_tabs,{
       data_other$tab_choice <- input$second_order_tabs
     })
+  # Observe if you change tab (visualise/plaatjes section) and store the tabname ----
+  observeEvent(input$tab_figures,{
+    data_other$change_tab_figures <- input$tab_figures
+  })
 
 
-    # Observe filtered data from stations and groups ----
-    observe({
-      data_filtered <- communication_stuff$selected_measurements()
-      data_measurements$data_filtered <- data_filtered
+  # Observe filtered data from stations and groups ----
+  observe({
+    data_filtered <- communication_stuff$selected_measurements()
+    data_measurements$data_filtered <- data_filtered
 
-      data_grouped <- communication_stuff$grouped_measurements()
-      data_measurements$data_grouped <- data_grouped
-    })
+    data_grouped <- communication_stuff$grouped_measurements()
+    data_measurements$data_grouped <- data_grouped
+  })
 
-    # Observe filtered data from knmi ----
-    observe({
-      data_filtered_knmi <- communication_stuff$knmi_measurements()
-      data_measurements$data_filtered_knmi <- data_filtered_knmi
-    })
+  # Observe filtered data from knmi ----
+  observe({
+    data_filtered_knmi <- communication_stuff$knmi_measurements()
+    data_measurements$data_filtered_knmi <- data_filtered_knmi
+  })
 
-    # Observe if the station locations changes (colour) ----
-    observe({
-      data_stations_adjust <- map$data_stations()
-      data_stations$data <- data_stations_adjust
-    })
+  # Observe if the station locations changes (colour) ----
+  observe({
+    data_stations_adjust <- map$data_stations()
+    data_stations$data <- data_stations_adjust
+  })
 
+  # Observe if there is new data selected from the caching, then move to the
+  # start-page
+  observe({
+    data_changed <- message_data$to_start_page
+    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
+    # If you loaded new data, get the cut off value based on this new data
+    data_other$cutoff <- isolate(communication_stuff$cut_off_value())
+
+  })
 
   # Observe to change tabs
   observeEvent(input$to_visualise_tab,{
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Visualise data")
+    updateTabsetPanel(inputId = "second_order_tabs" ,
+                      selected = "Visualise data")
   })
   observeEvent(input$to_select_tab,{
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
-  })
-  observeEvent(input$to_start_tab,{
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
-  })
-
-  observeEvent(input$to_info_tab,{
-    updateNavbarPage(inputId = "navbar", selected = "Information")
   })
 
   # Observe secret observer button

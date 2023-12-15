@@ -77,6 +77,7 @@ get_data_cache_server <- function(id,
       stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
 
       log_info("get mod: Get data from caching database: {name_choice} ; {start_time} ; {end_time}... ")
+      message_data$to_start_page <- c(paste0("To start page if:  ", type_choice, " ", name_choice," " , start_time, end_time, "has changed."))
 
       # Estimate the download time, if sensors exists in selection
       if(is.null(stations_name)){
@@ -87,57 +88,33 @@ get_data_cache_server <- function(id,
       }
 
       # Get the data measurements of the selected Municipality/project in the period
-      data_measurements$data_all <- get_measurements(measurements_con, stations_name, start_time, end_time)
+      # and do some data cleaning
+      data_measurements$data_all <- get_measurements_cleaned(measurements_con,
+                                                             stations_name,
+                                                             start_time,
+                                                             end_time)
+
+      # Get the data of the stations and put colours etc to it
+      data_stations_list <- get_stations_cleaned(stations_con,
+                                                 stations_name,
+                                                 data_measurements$data_all,
+                                                 col_default,
+                                                 line_default,
+                                                 group_name_none,
+                                                 line_overload)
+      # Put the station data in the reactivevalues
+      data_stations$data <- data_stations_list$data
+      data_stations$data_all <- data_stations_list$data_all
 
       # Check if there is data in de caching, otherwise stop and give message
       if(nrow(data_measurements$data_all) == 0){
         message_data$data_in_dbs <- c(paste0("No data in ", type_choice, " ", name_choice))
         shiny::validate(need(F,message = paste0("No data in ", type_choice, " ", name_choice)))
       }
+
       message_data$data_in_dbs <- c(paste0("Data available in ", type_choice, " ", name_choice))
 
-      # Remove duplicates
-      data_measurements$data_all <- data_measurements$data_all %>%
-        # drop the ID column
-        dplyr::select(-c(id)) %>%
-        dplyr::distinct()
-
-      # Remove NA values
-      data_measurements$data_all <- data_measurements$data_all[!is.na(data_measurements$data_all$value), ]
-
-      # Create a pm10_kal and pm25_kl for reference stations
-      data_measurements$data_all <- add_ref_kal(data_measurements$data_all)
-
-      # Add uncertainty to the measurements of the sensors
-      data_measurements$data_all <- add_uncertainty_sensor_percent(data_measurements$data_all)
-
-      # Add bias to the uncertainty sensors raw data
-      data_measurements$data_all <- add_uncertainty_bias_sensor(data_measurements$data_all)
-
-      # Get the information from the stations
-      data_stations$data_all <- get_locations(stations_con, stations_name)
-
-      # Select only the station containing data
-      stations_with_data <- data_measurements$data_all %>%
-        dplyr::select(station) %>%
-        unique() %>% pull()
-
-      # Take for each sensor 1 location and add the plot-colours etc.
-      data_stations$data <- data_stations$data_all %>%
-        dplyr::filter(station %in% stations_with_data) %>%
-        dplyr::distinct(station, .keep_all = T) %>%
-        # Add some specific info for the tool
-        dplyr::mutate(selected = F, col = col_default, linetype = line_default,
-                      station_type = "sensor", group_name = group_name_none,
-                      label = station) %>%
-        dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI",
-                                            ifelse(grepl("^NL.[0-9].", station) == T, "ref",
-                                                   station_type))) %>%
-        dplyr::mutate(linetype = ifelse(station_type == "ref", line_overload, linetype),
-                      size = ifelse(station_type == "ref", 2,1))
-
       log_info("get mod: Data available in tool. ")
-
 
     })
 

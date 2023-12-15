@@ -84,6 +84,9 @@ metadata_param_server <- function(id,
         dplyr::select(c(station, group_name, per_obs, max_obs, first_m, last_m,
                         station_type, selected, col))
 
+      # Only show selected station
+      metadata_table <- metadata_table %>% dplyr::filter(selected)
+
       # Reorder so the selected are on top of the table
       metadata_table <- metadata_table %>%
         dplyr::arrange(desc(selected), group_name, station)

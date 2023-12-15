@@ -1,35 +1,44 @@
 ###############################################
-#### Module for the map without interaction ####
+### Individual sensor Time Series Plot Module ###
 ###############################################
 
-# This is a map module, for only visualisation, no interaction with the user
-######################################################################
-# Output Module ----
-######################################################################
+# Choose 1 sensor of the selection on the map and Creates a time series plot
 
-show_map_no_output <- function(id) {
+###################################################################
+### Output Module ####
+#################################################################
+
+individual_timeseries_map_output <- function(id) {
 
   ns <- NS(id)
 
   tagList(
-    leafletOutput(ns('map_no'))
+    column(width = 4,
+    leafletOutput(ns("map"))),
+    column(width = 8,
+           wellPanel(
+              timeseries_output(ns("individual_timeseries_plot"))
+           )
+    )
   )
-
 }
 
 
 ######################################################################
-# Server Module ----
+# Server Module
 ######################################################################
 
-show_map_no_server <- function(id,
-                            data_stations
-) {
+individual_timeseries_map_server <- function(id,
+                                             data_stations,
+                                             data_measurements,
+                                             parameter,
+                                             overview_component,
+                                             theme_plots,
+                                             change_tab){
 
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
-
     # Initialisation icons ----
     # Icons for the reference stations
     icons_stations <- iconList(
@@ -44,12 +53,12 @@ show_map_no_server <- function(id,
     # Get the locations from the stations and convert to spatialcoordinates ----
     get_locations <- reactive({
       # Check if there is data
-      shiny::validate(need(!is.null(data_stations()), "Error, no data yet."))
+      shiny::validate(need(!is.null(data_stations$data), "Error, no data yet."))
 
       # Get the location of the stations
-      station_loc <- data_stations() %>%
+      station_loc <- data_stations$data %>%
         dplyr::distinct(station, .keep_all = T) %>%
-        dplyr::filter(lon > 0 & lat >0)
+        dplyr::filter(lon > 0 & lat > 0)
 
       # Convert to spatialploints
       station_loc_coord <- SpatialPointsDataFrame(station_loc[,c('lon','lat')],station_loc)
@@ -59,8 +68,10 @@ show_map_no_server <- function(id,
     })
 
     # Generate base map ----
-    output$map_no <- renderLeaflet({
-      ns("map_no")
+    output$map <- renderLeaflet({
+
+      ns("map")
+
       leaflet() %>%
         # addTiles() %>%
         addProviderTiles(
@@ -79,9 +90,12 @@ show_map_no_server <- function(id,
           circleOptions = FALSE,
           circleMarkerOptions = FALSE,
           rectangleOptions = FALSE
-          ) %>%
+        ) %>%
 
-          addScaleBar(position = "bottomleft")
+        addEasyButton(easyButton(
+          icon="fa-globe", title="Back to default view",
+          onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
+        addScaleBar(position = "bottomleft")
     })
 
 
@@ -97,15 +111,15 @@ show_map_no_server <- function(id,
         mean_lon <- mean(data_snsrs_col$lon)
 
         # create proxy of the map
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map') # set up proxy map
         proxy %>% setView(mean_lon, mean_lat, zoom = 10)
       }else{
         # Zoom to the default
 
         # create proxy of the map
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map') # set up proxy map
         proxy %>% setView(5.384214, 52.153708 , zoom = 7)
-    }
+      }
     }
 
     # Add knmi stations to the map
@@ -115,16 +129,17 @@ show_map_no_server <- function(id,
 
       if(class(data_snsrs) == "try-error"){
         # clear all weather stations from the map
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
           # Clear weather markers
           clearGroup("weather")
       }else{
         # Get the station data
         data_snsrs <- data_snsrs %>%
-        dplyr::filter(station_type == "KNMI")
+          dplyr::filter(station_type == "KNMI" &
+                          selected)
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map') # set up proxy map
         proxy %>% clearGroup("weather") # Clear  markers
 
         # Put stations on map
@@ -146,17 +161,18 @@ show_map_no_server <- function(id,
       data_snsrs <- try(isolate(get_locations()$station_loc))
       if(class(data_snsrs) == "try-error"){
         #Clear all sensors from the map
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
           # Clear sensoren markers
           clearGroup("sensoren")
       }else{
         # Get the sensor data
         data_snsrs <- data_snsrs %>%
-          dplyr::filter(station_type == "sensor")
+          dplyr::filter(station_type == "sensor" &
+                          selected)
 
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
           # Clear sensor markers
           clearGroup("sensoren")
@@ -164,16 +180,17 @@ show_map_no_server <- function(id,
         # Add the sensors to the map
         if(nrow(data_snsrs) > 0){
           proxy %>%
-          addCircleMarkers(data = data_snsrs, ~lon, ~lat,
-                           stroke = TRUE,
-                           weight = 2,
-                           label = lapply(data_snsrs$station, HTML),
-                           layerId = ~station,
-                           fillOpacity = 0.7,
-                           radius = 5,
-                           color = "black",
-                           group = "sensoren"
-          )
+            addCircleMarkers(data = data_snsrs, ~lon, ~lat,
+                             stroke = TRUE,
+                             weight = 3,
+                             label = lapply(data_snsrs$station, HTML),
+                             layerId = ~station,
+                             fillOpacity = 0.7,
+                             radius = 5,
+                             color = data_snsrs$stroke, #== stroke color
+                             fillColor =  data_snsrs$col,
+                             group = "sensoren"
+            )
         }
       }
 
@@ -185,7 +202,7 @@ show_map_no_server <- function(id,
       data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
       if(class(data_snsrs) == "try-error"){
         # Clear all reference stations from the map
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
           # Clear reference markers
           clearGroup("reference")
@@ -193,10 +210,11 @@ show_map_no_server <- function(id,
 
         # Get the reference stations
         data_snsrs <- data_snsrs %>%
-          dplyr::filter(station_type == "ref")
+          dplyr::filter(station_type == "ref" &
+                          selected)
 
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
           # Clear reference markers
           clearGroup("reference")
@@ -209,27 +227,66 @@ show_map_no_server <- function(id,
                        label = lapply(as.list(data_snsrs$station), HTML),
                        layerId = ~station,
                        group = "reference")
-      }
+        }
       }
     }
+
+    # Observe the clicks of an user -> draw plot
+    observeEvent({input$map_marker_click$id}, {
+
+      # Get the id of the selected marker
+      selected_snsr <- input$map_marker_click$id
+      log_trace("indu time map module: click id {selected_snsr}")
+
+      # Check if there is clicked
+      if (!is.null(click)){
+        # Get the name of the station
+        indu_station_name <- selected_snsr
+
+        # Get the measurements of the station
+        measurements <- data_measurements() %>%
+          dplyr::filter(station == indu_station_name)
+
+        # Change stroke colour for selected station
+        data_snsrs <- try(isolate(get_locations()$station_loc))
+        data_snsrs <- data_snsrs %>%
+          dplyr::mutate(stroke = ifelse(station == indu_station_name, "black", col))
+
+        # Set the updated data from the stations in the reactiveValues
+        data_stations$data <- data_snsrs
+
+        # Create timeseries plot
+        timeseries_server("individual_timeseries_plot",
+                          data_measurements = reactive(measurements),
+                          parameter = parameter,
+                          overview_component = overview_component,
+                          theme_plots = theme_plots)
+        }
+      else{done}
+
+      # add the updated markers on the map
+      isolate(add_sensors_map())
+      isolate(add_lmls_map())
+      isolate(add_knmi_map())
+    })
 
     # Observers and ObserveEvents ----
 
     # Create list where to observe changes to react on
     tolisten <- reactive({
-      list(data_stations())
+      list(change_tab())
     })
     # Observe if new data is available-> redraw map
     observeEvent(tolisten(),{
-          # Add the new situation to the map
-          isolate(add_lmls_map())
-          isolate(add_sensors_map())
-          isolate(add_knmi_map())
-          # Zoom to the stations
-          set_view_stations()
+      # Add the new situation to the map
+      isolate(add_lmls_map())
+      isolate(add_sensors_map())
+      isolate(add_knmi_map())
+      # Zoom to the stations
+      set_view_stations()
 
     })
 
-  })
 
+  })
 }

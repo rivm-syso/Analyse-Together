@@ -66,6 +66,7 @@ source("funs/download_fun.R")
 source("funs/data_to_tool_fun.R")
 source("funs/logging_fun.R")
 source("funs/ui_create_plots_funs.R")
+source("funs/get_data_caching_funs.R")
 set_loglevel()
 
 # launch queue manager
@@ -139,9 +140,13 @@ col_overload <- '#111111'
 col_names <- data.frame('color' = c('#e17000','#007bc7','#673327','#39870c','#ffb612',
                         '#42145f','#777c00', '#94710a','#01689b','#f9e11e','#76d2b6',
                         '#d52b1e','#8fcae7','#ca005d','#275937','#f092cd'),
-                        'label'=c("orange","blue","brown" ,"green", "yellow",
-                                  "purple","grey", "beige", "dark blue", "sunflower", "mint",
-                                  "red", "baby blue", "magenta", "dark green", "pink"))
+                        'label'=c("Group orange","Group blue","Group brown" ,
+                                  "Group green", "Group yellow",
+                                  "Group purple","Group grey", "Group beige",
+                                  "Group dark blue", "Group sunflower",
+                                  "Group mint", "Group red", "Group baby blue",
+                                  "Group magenta", "Group dark green",
+                                  "Group pink"))
 col_names = setNames( col_names$label , col_names$color)
 default_col_select = names(col_names)[[1]]
 
@@ -173,7 +178,7 @@ default_munproj <- "municipality"
 default_munproj_name <- "Almere"
 
 #default plot:
-default_plot = "barplot"
+default_plot = "timeplot"
 
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
@@ -199,12 +204,32 @@ select_choices = setNames(overview_select_choices$type, overview_select_choices$
 # plot choices
 plot_choices <- data.frame('plot' = c("barplot", "timeplot", "timevariation_weekly",
                                       "timevariation_daily",
-                                      "calender", "pollutionrose"),
-                           'label'=c("Bar plot","Timeseries plot",
+                                      "calender", "pollutionrose",
+                                      "table"),
+                           'label'= c("Bar plot","Timeseries plot",
                                      "Timevariation Weekly plot",
                                      "Timevariation Daily plot", "Calender plot",
-                                     "Pollution rose plot"))
+                                     "Pollution rose plot", "Table"))
 plot_choices = setNames(plot_choices$plot, plot_choices$label)
+
+
+# Get start data set
+stations_name <- get_stations_from_selection(default_munproj_name,
+                                             default_munproj,
+                                             conn = pool)
+
+measurements_all <- get_measurements_cleaned(measurements_con,
+                                             stations_name,
+                                             start_time = default_time$start_time,
+                                             end_time = default_time$end_time)
+
+data_stations_list <- get_stations_cleaned(stations_con,
+                                      stations_name,
+                                      measurements_all,
+                                      col_default,
+                                      line_default,
+                                      group_name_none,
+                                      line_overload)
 
 
 ### APP SPECIFIC SETTINGS                                                   ====
@@ -223,6 +248,7 @@ source("modules/show_plot.R")
 # Source module for the map
 source("modules/show_map.R")
 source("modules/show_map_no_interaction.R")
+source("modules/show_map_no_interaction_selected.R")
 
 # Source modules selections
 source("modules/select_date_range.R")
@@ -230,6 +256,7 @@ source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
 source("modules/select_outlier_cutoff.R")
+source("modules/select_slider_zoom.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
@@ -244,6 +271,7 @@ source("modules/add_pollutionrose_plot.R")
 source("modules/add_timevariation_weekly_plot.R")
 source("modules/add_timevariation_daily_plot.R")
 source("modules/add_individual_timeseries_plot.R")
+source("modules/add_individual_timeseries_plot_with_map.R")
 
 # Source layout
 source("funs/ui_tab_grouping.R")

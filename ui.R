@@ -12,18 +12,6 @@ shinyUI(
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
 
-      # White header with logo
-      tags$div(class = "header-white",
-
-               tags$img(src = "images/Banner_2018.png",
-                        style = "height: 120px;
-                          width: 450px;
-                          margin-bottom: 0px;
-                          margin-top: 0px;
-                          margin-right: 10px")
-
-      ),
-
       # Colored header with text
       tags$div(class = "header-color",
 
@@ -59,7 +47,8 @@ shinyUI(
       fluidRow(
         # 'Show' time to keep the app activated (not visible)
         h1(
-          textOutput("currentTime", container = span), style = "font-size:12px; text-align:right; color:#ffffff;"
+          textOutput("currentTime", container = span),
+          style = "font-size:12px; text-align:right; color:rgb(221, 221, 221);"
         )
       ),
 
@@ -72,29 +61,38 @@ shinyUI(
 
           fluidRow(
 
-            column(width = 6,
+            column(width = 4,
                    wellPanel(
 
                      # Text for the user
                      div(h3(i18n$t("tool_welcome")),
                          p(i18n$t("tool_welcome_1_expl")),
-                         p(i18n$t("tool_welcome_2_expl")),
+                         p(i18n$t("tool_welcome_2_expl"))
+                         ),
 
-                         get_data_cache_output("get_data_dbs_button_start"),
+                     actionButton("to_visualise_tab", i18n$t("btn_figures"), width = "100px"),
+                     br(),
+                     br(),
+                     actionButton("to_select_tab", i18n$t("btn_own_data"), width = "100px")
 
-                         info_sensor_output("info_sensor"),
-                         actionButton("to_visualise_tab", "Vervolg naar de visualisatie"),
-                         actionButton("to_select_tab", "Kies zelf dataset"),
-                         actionButton("to_info_tab", "Meer informatie")
 
-                     )
                    )
             ),
-            column(width = 6,
-                   style = "margin-top: 8px;",
-                   show_map_no_output("map_start")
-                   )
+            column(width = 4,
+                   wellPanel(
+                     div(
+                       h4(i18n$t("title_calendar_start")))),
+                    info_sensor_output("info_sensor")
 
+                   ),
+
+            column(width = 4,
+                   wellPanel(
+                     div(
+                   h4(i18n$t("title_map_start")))),
+                   show_map_no_output("map_start")
+
+            )
           )
         ), # end of tabpanel "START"
 
@@ -102,31 +100,35 @@ shinyUI(
           value = "Visualise data",
           title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
 
-          fluidRow(
-            column(width = 6,
                    tabsetPanel(
+                     id = "tab_figures",
                      tabPanel(
                        value = "stap1",
-                       title = "stap1",
-                       tpGrouping()
+                       title = "stap1: selecteren",
+                       column(width = 4,
+                              tpGrouping()),
+                       column(width = 8,
+                              style = "margin-top: 8px;",
+                              show_map_output("map")
+                              )
                      ),
                      tabPanel(
                        value = "stap2",
-                       title = "stap2",
-                       tpCheckdata()
+                       title = "stap2: filteren",
+                       column(width = 12,
+                              tpCheckdata())
                      ),
                      tabPanel(
                        value = "stap3",
-                       title = "stap3",
-                       plot_selection_output("select_plot"),
-                       show_plot_output("show_plot")
+                       title = "stap3: kijken",
+                       column(width = 4,
+                              plot_selection_output("select_plot"),
+                              show_map_no_select_output("map_no_select_step3")
+                              ),
+                       column(width = 8,
+                              show_plot_output("show_plot")
+                              )
                      )
-                   )
-
-                   ),
-            column(width = 6,
-                   style = "margin-top: 8px;",
-                   show_map_output("map"))
 
           )
         ), # end of tabpanel "VISUALISE DATA"
@@ -152,7 +154,7 @@ shinyUI(
                          p(i18n$t("tool_select_6_expl")),
                          download_api_button_output("dl_btn_pushed"),
                          p(i18n$t("tool_select_7_expl")),
-                         actionButton("to_start_tab", "Ga naar Start")
+                         get_data_cache_output("get_data_dbs_button_start")
                      )
 
                    )

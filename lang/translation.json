@@ -15,6 +15,14 @@
 	      "en": "Information tool",
 	      "nl": "Informatie over de tool"
 	  },
+	  	{"tag" : "title_calendar_start",
+	      "en": "Sensor availability",
+	      "nl": "Beschikbaarheid van de sensoren"
+	  },
+	  	{"tag" : "title_map_start",
+	      "en": "Sensor locations",
+	      "nl": "Locaties van de sensoren"
+	  },
 	  {"tag" : "expl_link_to_benb_artikel",
 	      "en": "Article about Farmers and Local residents project:",
 	      "nl": "Artikel over Boeren en Buren project: "
@@ -133,11 +141,11 @@
 	  },
 	    {"tag" : "tool_welcome_1_expl",
 	      "en": "",
-	      "nl": "Welkom bij deze tool om de gegevens van de luchtkwaliteitssensoren te ontdekken. In deze tool combineren we de gegevens van SamenMeten, het Luchtmeetnet en het KNMI."
+	      "nl": "In deze tool kun je de gegevens van de luchtkwaliteitssensoren  ontdekken. We combineren de gegevens van SamenMeten, het Luchtmeetnet en het KNMI. Voor een eerste blik op de gegevens ga naar het Dataportaal."
 	      	  },
     {"tag" : "tool_welcome_2_expl",
     "en" : "",
-    "nl" : "De gegevens staan voor u klaar.  Klik op 'Start' om aan de slag te gaan. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart ziet u welke sensoren op dit moment beschikbaar zijn."
+    "nl" : "De gegevens staan voor u klaar. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart ziet u welke sensoren op dit moment beschikbaar zijn."
     },
     {"tag" : "tool_select",
       "en" : "Choose the data yourself",
@@ -171,7 +179,7 @@
 	  },
 	  {"tag" : "tool_select_7_expl",
 	      "en": "6. ",
-	      "nl": "6. Ga terug naar 'START'. Daar kun je de gegevens in de tool laden en bekijken."
+	      "nl": "6. Laadt de gegevens in deze tool en ga verder naar Start."
 	  },
 	      {"tag": "infotext_vis_1_expl",
 	      "en": "Here you can explore the data. We have selected various visualizations to assist in viewing the data. You can view the time series, the data in a table, or the wind data in a wind rose. Each visualization is accompanied by a brief explanation.",
@@ -186,16 +194,16 @@
 	      "nl": "Toon KNMI-stations"
 	  },
       {"tag" : "title_selectdata",
-        "en": "Select data",
-        "nl": "Selecteer data"
+        "en": "Other data",
+        "nl": "Andere data"
     },
       {"tag" : "title_visualisedata",
-        "en": "Visualise data",
-        "nl": "Visualiseer data"
+        "en": "Figures",
+        "nl": "Plaatjes"
       },
       {"tag" : "title_advanced",
-        "en": "Advanced",
-        "nl": "Advanced"
+        "en": "Download",
+        "nl": "Download"
       },
       {"tag" : "sel_basedon",
         "en": "1. Selection based on:",
@@ -228,6 +236,14 @@
       {"tag" : "sel_cutoff",
         "en": "Select maximum value to use in analyses:",
         "nl": "Selecteer de maximale waarde voor de analyse:"
+      },
+      {"tag" : "btn_figures",
+        "en": "Figures",
+        "nl": "Plaatjes"
+      },
+      {"tag" : "btn_own_data",
+        "en": "Other data",
+        "nl": "Andere data"
       },
 	    {"tag" : "title_time",
         "en": "Timeseries",

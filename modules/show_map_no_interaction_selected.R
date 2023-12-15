@@ -1,18 +1,19 @@
 ###############################################
-#### Module for the map without interaction ####
+#### Module for the map without interaction only selected ####
 ###############################################
 
 # This is a map module, for only visualisation, no interaction with the user
+# Only shows the selected stations
 ######################################################################
 # Output Module ----
 ######################################################################
 
-show_map_no_output <- function(id) {
+show_map_no_select_output <- function(id) {
 
   ns <- NS(id)
 
   tagList(
-    leafletOutput(ns('map_no'))
+    leafletOutput(ns('map_select'))
   )
 
 }
@@ -22,8 +23,9 @@ show_map_no_output <- function(id) {
 # Server Module ----
 ######################################################################
 
-show_map_no_server <- function(id,
-                            data_stations
+show_map_no_select_server <- function(id,
+                               data_stations,
+                               change_tab
 ) {
 
   moduleServer(id, function(input, output, session) {
@@ -33,13 +35,13 @@ show_map_no_server <- function(id,
     # Initialisation icons ----
     # Icons for the reference stations
     icons_stations <- iconList(
-      lml_selected = makeIcon(iconUrl = "images/lml_selected_txt.png", iconWidth = 24, iconHeight = 16),
-      lml_deselected = makeIcon(iconUrl = "images/lml_deselected_txt.png",  iconWidth = 24, iconHeight = 16))
+      lml_selected = makeIcon(iconUrl = "images/lml_selected_txt.png",
+                              iconWidth = 24, iconHeight = 16))
 
     # Icons for the knmi stations
     icons_knmis <- iconList(
-      knmi_selected = makeIcon(iconUrl = "images/knmi_selected_txt.png", iconWidth = 30, iconHeight = 16),
-      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected_txt.png", iconWidth = 30, iconHeight = 16))
+      knmi_selected = makeIcon(iconUrl = "images/knmi_selected_txt.png",
+                               iconWidth = 30, iconHeight = 16))
 
     # Get the locations from the stations and convert to spatialcoordinates ----
     get_locations <- reactive({
@@ -49,18 +51,21 @@ show_map_no_server <- function(id,
       # Get the location of the stations
       station_loc <- data_stations() %>%
         dplyr::distinct(station, .keep_all = T) %>%
-        dplyr::filter(lon > 0 & lat >0)
+        dplyr::filter(lon > 0 & lat > 0)
 
       # Convert to spatialploints
-      station_loc_coord <- SpatialPointsDataFrame(station_loc[,c('lon','lat')],station_loc)
+      station_loc_coord <- SpatialPointsDataFrame(station_loc[,c('lon','lat')],
+                                                  station_loc)
 
-      return(list(station_loc = station_loc, station_loc_coord = station_loc_coord))
+      return(list(station_loc = station_loc,
+                  station_loc_coord = station_loc_coord))
 
     })
 
     # Generate base map ----
-    output$map_no <- renderLeaflet({
-      ns("map_no")
+    output$map_select <- renderLeaflet({
+
+      ns("map_select")
       leaflet() %>%
         # addTiles() %>%
         addProviderTiles(
@@ -79,9 +84,10 @@ show_map_no_server <- function(id,
           circleOptions = FALSE,
           circleMarkerOptions = FALSE,
           rectangleOptions = FALSE
-          ) %>%
+        ) %>%
 
-          addScaleBar(position = "bottomleft")
+        addScaleBar(position = "bottomleft")
+
     })
 
 
@@ -97,15 +103,15 @@ show_map_no_server <- function(id,
         mean_lon <- mean(data_snsrs_col$lon)
 
         # create proxy of the map
-        proxy <- leafletProxy('map_no') # set up proxy map
-        proxy %>% setView(mean_lon, mean_lat, zoom = 10)
+        proxy <- leafletProxy('map_select') # set up proxy map
+        proxy %>% setView(mean_lon, mean_lat, zoom = 8)
       }else{
         # Zoom to the default
 
         # create proxy of the map
-        proxy <- leafletProxy('map_no') # set up proxy map
-        proxy %>% setView(5.384214, 52.153708 , zoom = 7)
-    }
+        proxy <- leafletProxy('map_select') # set up proxy map
+        proxy %>% setView(5.384214, 52.153708 , zoom = 8)
+      }
     }
 
     # Add knmi stations to the map
@@ -115,23 +121,24 @@ show_map_no_server <- function(id,
 
       if(class(data_snsrs) == "try-error"){
         # clear all weather stations from the map
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear weather markers
           clearGroup("weather")
       }else{
         # Get the station data
         data_snsrs <- data_snsrs %>%
-        dplyr::filter(station_type == "KNMI")
+          # Only show the selected
+          dplyr::filter(station_type == "KNMI", selected)
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>% clearGroup("weather") # Clear  markers
 
         # Put stations on map
         if(nrow(data_snsrs) > 0){
           proxy %>%
             addMarkers(data = data_snsrs, ~lon, ~lat,
-                       icon = icons_knmis["knmi_deselected"],
+                       icon = icons_knmis["knmi_selected"],
                        label = lapply(as.list(data_snsrs$station), HTML),
                        layerId = ~station,
                        group = "weather")
@@ -146,17 +153,18 @@ show_map_no_server <- function(id,
       data_snsrs <- try(isolate(get_locations()$station_loc))
       if(class(data_snsrs) == "try-error"){
         #Clear all sensors from the map
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear sensoren markers
           clearGroup("sensoren")
       }else{
         # Get the sensor data
         data_snsrs <- data_snsrs %>%
-          dplyr::filter(station_type == "sensor")
+          # Only show the selected
+          dplyr::filter(station_type == "sensor", selected)
 
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear sensor markers
           clearGroup("sensoren")
@@ -164,16 +172,16 @@ show_map_no_server <- function(id,
         # Add the sensors to the map
         if(nrow(data_snsrs) > 0){
           proxy %>%
-          addCircleMarkers(data = data_snsrs, ~lon, ~lat,
-                           stroke = TRUE,
-                           weight = 2,
-                           label = lapply(data_snsrs$station, HTML),
-                           layerId = ~station,
-                           fillOpacity = 0.7,
-                           radius = 5,
-                           color = "black",
-                           group = "sensoren"
-          )
+            addCircleMarkers(data = data_snsrs, ~lon, ~lat,
+                             stroke = TRUE,
+                             weight = 2,
+                             label = lapply(data_snsrs$station, HTML),
+                             layerId = ~station,
+                             fillOpacity = 0.7,
+                             radius = 5,
+                             color = data_snsrs$col,
+                             group = "sensoren"
+            )
         }
       }
 
@@ -185,7 +193,7 @@ show_map_no_server <- function(id,
       data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
       if(class(data_snsrs) == "try-error"){
         # Clear all reference stations from the map
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear reference markers
           clearGroup("reference")
@@ -193,10 +201,11 @@ show_map_no_server <- function(id,
 
         # Get the reference stations
         data_snsrs <- data_snsrs %>%
-          dplyr::filter(station_type == "ref")
+          # Only show the selected
+          dplyr::filter(station_type == "ref", selected)
 
         # Update map with new markers to show selected
-        proxy <- leafletProxy('map_no') # set up proxy map
+        proxy <- leafletProxy('map_select') # set up proxy map
         proxy %>%
           # Clear reference markers
           clearGroup("reference")
@@ -205,11 +214,11 @@ show_map_no_server <- function(id,
         if(nrow(data_snsrs) > 0){
           proxy %>%
             addMarkers(data = data_snsrs, ~lon, ~lat,
-                       icon = icons_stations["lml_deselected"],
+                       icon = icons_stations["lml_selected"],
                        label = lapply(as.list(data_snsrs$station), HTML),
                        layerId = ~station,
                        group = "reference")
-      }
+        }
       }
     }
 
@@ -217,16 +226,18 @@ show_map_no_server <- function(id,
 
     # Create list where to observe changes to react on
     tolisten <- reactive({
-      list(data_stations())
+      list(change_tab())
     })
     # Observe if new data is available-> redraw map
     observeEvent(tolisten(),{
-          # Add the new situation to the map
-          isolate(add_lmls_map())
-          isolate(add_sensors_map())
-          isolate(add_knmi_map())
-          # Zoom to the stations
-          set_view_stations()
+        # Add the new situation to the map
+        isolate(add_lmls_map())
+        isolate(add_sensors_map())
+        isolate(add_knmi_map())
+        # Zoom to the stations
+        set_view_stations()
+    #     }
+    # }
 
     })
 

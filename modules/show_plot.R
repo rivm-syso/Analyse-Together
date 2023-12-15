@@ -41,6 +41,8 @@ show_plot_server <- function(id,
         tpCalenderPlot()
       }else if(pick_plot() == "pollutionrose"){
         tpPollutionRose()
+      }else if(pick_plot() == "table"){
+        tpMetadata()
       }
 
     })
