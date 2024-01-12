@@ -12,7 +12,12 @@ tpGrouping <- function(){
         switch_group_output("switch_group")
       ),
       fluidRow(
-        set_group_button_output("set_group_pushed"))
+        set_group_button_output("set_group_pushed"),
+        br()
+      ),
+      fluidRow(
+        rename_group_button_output("rename_group")
+      )
     ),
 
     h4(i18n$t("title_expl"), style = "margin-left: 20px"),

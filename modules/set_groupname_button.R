@@ -11,7 +11,11 @@ set_group_button_output <- function(id) {
 
   ns <- NS(id)
   tagList(
-    actionButton(ns("set_new_group"), i18n$t("btn_create_group"), style="background-color: #ffe9b7")
+    actionButton(ns("set_new_group"),
+                 i18n$t("btn_create_group"),
+                 style="background-color: #ffe9b7",
+                 width = "200px",
+                 icon = icon("plus"))
   )
 }
 

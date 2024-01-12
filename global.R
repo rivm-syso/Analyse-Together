@@ -280,6 +280,7 @@ source("funs/ui_tab_checkdata.R")
 
 # Source buttons
 source("modules/set_groupname_button.R")
+source("modules/set_rename_group_button.R")
 source("modules/download_api_button.R")
 source("modules/get_data_button.R")
 source("modules/download_to_pc.R")

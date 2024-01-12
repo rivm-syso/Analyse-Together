@@ -28,7 +28,8 @@ switch_group_server <- function(id,
       tagList(
         pickerInput(
           ns("switch_menu"),
-          choices = data_other$combi_col_name
+          choices = data_other$combi_col_name,
+          width = "200px"
         )
       )
     })

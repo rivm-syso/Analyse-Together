@@ -239,6 +239,11 @@ shinyServer(function(global, input, output, session) {
   switch_group_server("switch_group",
                       data_other = data_other)
 
+  # Rename group ----
+  rename_group_button_server("rename_group",
+                             data_stations = data_stations,
+                             data_other = data_other)
+
   # Text elements ----
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
   single_text_server("text_download_estimation", text_message = reactive(message_data$download_estimation))
@@ -296,6 +301,7 @@ shinyServer(function(global, input, output, session) {
   observeEvent(input$to_select_tab,{
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
   })
+
 
   # Observe secret observer button
   observeEvent(input$browser, {
