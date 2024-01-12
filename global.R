@@ -156,7 +156,7 @@ line_default <- 'solid'
 line_overload <- 'dotted'
 
 # First name of the group
-group_name_default <- col_names[[default_col_select]]
+default_group_name <- col_names[[default_col_select]]
 # Default for no group
 group_name_none <- ""
 
@@ -257,6 +257,7 @@ source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
 source("modules/select_outlier_cutoff.R")
 source("modules/select_slider_zoom.R")
+source("modules/select_group_name_switch.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")

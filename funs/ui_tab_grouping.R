@@ -9,7 +9,7 @@ tpGrouping <- function(){
     wellPanel(
       fluidRow(
         p(i18n$t("expl_add_sensor_to_group")),
-        single_text_output("name_group")
+        switch_group_output("switch_group")
       ),
       fluidRow(
         set_group_button_output("set_group_pushed"))
