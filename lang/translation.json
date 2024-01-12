@@ -289,6 +289,10 @@
         "en": "Create new group",
         "nl": "Maak nieuwe groep"
       },
+      {"tag" : "btn_rename_group",
+        "en": "Remane group",
+        "nl": "Hernoem groep"
+      },
       {"tag" : "word_table",
         "en": "Table for",
         "nl": "Tabel voor"

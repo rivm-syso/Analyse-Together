@@ -70,10 +70,18 @@ shinyUI(
                          p(i18n$t("tool_welcome_2_expl"))
                          ),
 
-                     actionButton("to_visualise_tab", i18n$t("btn_figures"), width = "100px"),
+                     actionButton("to_visualise_tab",
+                                  i18n$t("btn_figures"),
+                                  width = "200px",
+                                  icon = icon("chart-line")
+                                  ),
                      br(),
                      br(),
-                     actionButton("to_select_tab", i18n$t("btn_own_data"), width = "100px")
+                     actionButton("to_select_tab",
+                                  i18n$t("btn_own_data"),
+                                  width = "200px",
+                                  icon = icon("window-restore")
+                                  )
 
 
                    )
