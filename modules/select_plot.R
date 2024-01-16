@@ -40,7 +40,8 @@ plot_selection_server <- function(id,
           choices  = plot_choices,
           selected = default_plot,
           multiple = FALSE,
-          options = pickerOptions(maxOptions = 1)
+          options = pickerOptions(maxOptions = 1),
+          width = "200px"
         )
       )
     })

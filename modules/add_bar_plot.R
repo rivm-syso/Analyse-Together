@@ -63,7 +63,10 @@ barplot_server <- function(id,
             geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black',
                      size = data_barplot$size/2) +
             labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
-                 title=paste0('Barplot for: ', parameter_label)) +
+                 title=paste0('Barplot for: ', parameter_label,
+                              "  ",  min(data_plot$date) %>% format("%d/%b/%Y"),
+                              " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
+                              )) +
             expand_limits(y=0) + # Make sure no negative values are shown
             theme_plots
         )
