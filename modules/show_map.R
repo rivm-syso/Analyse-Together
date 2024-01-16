@@ -96,14 +96,9 @@ show_map_server <- function(id,
           rectangleOptions = drawRectangleOptions(shapeOptions=drawShapeOptions(fillOpacity = 0
                                                                                 ,color = 'black'
                                                                                 ,weight = 1.5)),
-          editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
+          editOptions = editToolbarOptions(edit = FALSE,
+                                           selectedPathOptions = selectedPathOptions())) %>%
 
-        addEasyButton(easyButton(
-          icon="fa-globe", title="Back to default view",
-          onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
-        addEasyButton(easyButton(
-          icon="fa-crosshairs", title="Locate Me",
-          onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
         addScaleBar(position = "bottomleft")
     })
 
