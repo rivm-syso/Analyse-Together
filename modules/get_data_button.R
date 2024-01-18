@@ -72,6 +72,14 @@ get_data_cache_server <- function(id,
         need(!is_empty((start_time)),"Please, select periode"),
         need(!is_empty((end_time)),"Please, select periode")
       )
+
+      # Set up notification
+      showNotification(i18n$t("expl_waiting_start"),
+                       duration = NULL,
+                       id = ns("notification"),
+                       closeButton = F
+                       )
+
       # Load the data from the caching database
       # Get the station names in the selected Municipality/project
       stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
@@ -105,6 +113,9 @@ get_data_cache_server <- function(id,
       # Put the station data in the reactivevalues
       data_stations$data <- data_stations_list$data
       data_stations$data_all <- data_stations_list$data_all
+
+      # remove notification
+      removeNotification(id = ns("notification"))
 
       # Check if there is data in de caching, otherwise stop and give message
       if(nrow(data_measurements$data_all) == 0){

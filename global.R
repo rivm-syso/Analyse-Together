@@ -26,6 +26,9 @@ library(shinyWidgets)
 library(shinyjs)
 library(shinyalert)
 
+# Package for the loading spinning wheel
+library("shinybusy")
+
 # For the translation
 library(shiny.i18n)
 
