@@ -171,6 +171,15 @@ shinyServer(function(global, input, output, session) {
                                                       theme_plots,
                                                       change_tab = reactive(data_other$change_tab_figures) )
 
+  # Overview timeseries plot ----
+  overview_timeseries_server("overview_timeseries",
+                             data_stations = reactive(data_stations$data),
+                             data_measurements = reactive(data_measurements$data_all),
+                             parameter = reactive(data_other$parameter),
+                             overview_component = overview_component,
+                             theme_plots,
+                             change_tab = reactive(data_other$change_tab_figures)   )
+
   # Slider zoom for on the timeseries
   slider_zoom_server("slider_zoom",
                      data_other = data_other,

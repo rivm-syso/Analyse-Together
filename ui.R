@@ -119,6 +119,17 @@ shinyUI(
                    tabsetPanel(
                      id = "tab_figures",
                      tabPanel(
+                       value = "Overview",
+                       title = "Overview",
+                       wellPanel(
+                         div(p("Hier wat tekst me wat je ziet. Overzicht van de
+                               metingen van de sensoren. De zwarte lijn is het
+                               gemiddelde van de sensoren.")),
+                        overview_timeseries_output("overview_timeseries")
+
+                       )
+                     ),
+                     tabPanel(
                        value = "stap1",
                        title = "stap1: selecteren",
                        column(width = 4,
