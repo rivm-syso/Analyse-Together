@@ -343,7 +343,7 @@ show_map_server <- function(id,
       tab_info <- tab_choice()
       if(!purrr::is_null(tab_info)){
         # If you arrive on this tabpanel then redraw the map.
-        if(tab_info == "Visualise data"){
+        if(tab_info == "stap1"){
           # Add the new situation to the map
           isolate(add_lmls_map())
           isolate(add_sensors_map())

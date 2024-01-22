@@ -90,7 +90,7 @@ shinyServer(function(global, input, output, session) {
   map <- show_map_server("map",
                          data_stations = data_stations,
                          reactive(data_other$group_name),
-                         reactive(data_other$tab_choice),
+                         reactive(data_other$tab_choice_figures),
                          # Options for the colors
                          col_default,
                          col_select = reactive(data_other$col_select),
@@ -255,6 +255,10 @@ shinyServer(function(global, input, output, session) {
     observeEvent(input$second_order_tabs,{
       data_other$tab_choice <- input$second_order_tabs
     })
+  # Observe if you change tab and store the tabname ----
+  observeEvent(input$tab_figures,{
+    data_other$tab_choice_figures <- input$tab_figures
+  })
   # Observe if you change tab (visualise/plaatjes section) and store the tabname ----
   observeEvent(input$tab_figures,{
     data_other$change_tab_figures <- input$tab_figures
