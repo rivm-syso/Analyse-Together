@@ -245,9 +245,14 @@ shinyServer(function(global, input, output, session) {
 
   single_text_server("name_group", reactive(data_other$group_name))
 
-  single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
-  single_text_server("text_download_estimation", text_message = reactive(message_data$download_estimation))
-  single_text_server("text_check_visualisation", text_message = reactive("Please, check with the visualisations if all expected data is available."))
+  single_text_server("text_data_available",
+                     text_message = reactive(message_data$data_in_dbs))
+  single_text_server("text_download_estimation",
+                     text_message = reactive(message_data$download_estimation))
+  single_text_server("text_check_visualisation",
+                     text_message = reactive("Please, check with the visualisations if all expected data is available."))
+  single_text_server("text_selected_sensors",
+                     text_message = reactive(message_data$selected_sensors))
 
 
 
@@ -265,7 +270,6 @@ shinyServer(function(global, input, output, session) {
     data_other$change_tab_figures <- input$tab_figures
   })
 
-
   # Observe filtered data from stations and groups ----
   observe({
     data_filtered <- communication_stuff$selected_measurements()
@@ -273,6 +277,8 @@ shinyServer(function(global, input, output, session) {
 
     data_grouped <- communication_stuff$grouped_measurements()
     data_measurements$data_grouped <- data_grouped
+
+    message_data$selected_sensors <- communication_stuff$message_selected()
   })
 
   # Observe filtered data from knmi ----
