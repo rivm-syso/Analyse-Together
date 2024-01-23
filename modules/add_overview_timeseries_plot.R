@@ -25,6 +25,7 @@ overview_timeseries_server <- function(id,
                                        data_stations,
                                       data_measurements_all,
                                       parameter,
+                                      selected_cutoff,
                                       overview_component,
                                       theme_plots,
                                       change_tab,
@@ -63,7 +64,9 @@ overview_timeseries_server <- function(id,
         # Show only the sensors
         dplyr::filter(station_type == "sensor") %>%
         # Select only the selected parameter
-        dplyr::filter(parameter == parameter())
+        dplyr::filter(parameter == parameter()) %>%
+        # Remove values above cutoff value
+        dplyr::filter(value < selected_cutoff())
 
       # Calc mean of the sensors
       mean_measurements <- measurements %>%
@@ -92,7 +95,7 @@ overview_timeseries_server <- function(id,
                         overview_component = overview_component,
                         theme_plots = theme_plots,
                         remove_legend = TRUE,
-                        manual_ylim = c(0,100))
+                        manual_ylim = c(0,selected_cutoff() + 5))
 
     })
 

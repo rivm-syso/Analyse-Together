@@ -174,8 +174,9 @@ shinyServer(function(global, input, output, session) {
   # Overview timeseries plot ----
   overview_timeseries_server("overview_timeseries",
                              data_stations = reactive(data_stations$data),
-                             data_measurements = reactive(data_measurements$data_all),
+                             data_measurements_all = reactive(data_measurements$data_all),
                              parameter = reactive(data_other$parameter),
+                             selected_cutoff = reactive(data_other$cutoff),
                              overview_component = overview_component,
                              theme_plots,
                              change_tab = reactive(data_other$change_tab_figures)   )
