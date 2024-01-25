@@ -10,10 +10,15 @@ tpGrouping <- function(){
       fluidRow(
         p(single_text_output("text_selected_sensors")),
         p(i18n$t("expl_add_sensor_to_group")),
-        single_text_output("name_group")
+        switch_group_output("switch_group")
       ),
       fluidRow(
-        set_group_button_output("set_group_pushed"))
+        set_group_button_output("set_group_pushed"),
+        br()
+      ),
+      fluidRow(
+        rename_group_button_output("rename_group")
+      )
     ),
 
     h4(i18n$t("title_expl"), style = "margin-left: 20px"),

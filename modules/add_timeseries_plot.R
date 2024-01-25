@@ -67,6 +67,8 @@ timeseries_server <- function(id,
          else{ # Use the min/max of the zoom input
            max_time <- zoom_in$end_slider_zoom()
            min_time <- zoom_in$start_slider_zoom()
+           # Extra check, somehow the reactive wil be available a moment later
+           shiny::validate(need(!is.null(max_time), "Please, try other figure."))
          }
 
          n_days_in_plot <- round(as.numeric(max_time - min_time))
