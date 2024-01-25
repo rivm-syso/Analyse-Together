@@ -20,8 +20,8 @@ get_measurements_cleaned <- function(measurements_con,
   # get the measurements from the caching dbs
   data_all <- get_measurements(measurements_con,
                                stations_name,
-                               default_time$start_time,
-                               default_time$end_time)
+                               start_time,
+                               end_time)
   # Remove duplicates
   data_all <- data_all %>%
     # drop the ID column

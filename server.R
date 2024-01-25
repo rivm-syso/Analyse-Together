@@ -19,7 +19,7 @@ shinyServer(function(global, input, output, session) {
   ############### ReactiveValues #############
   # ReactiveValues to store the data
   # Store other information
-  data_other <- reactiveValues(group_name = group_name_default,
+  data_other <- reactiveValues(group_name = default_group_name,
                                group_number = 1,
                                mun_or_proj = default_munproj,
                                name_munproj = default_munproj_name,
@@ -28,7 +28,11 @@ shinyServer(function(global, input, output, session) {
                                parameter = default_parameter,
                                cutoff = default_cutoff,
                                plot = default_plot,
-                               col_select = default_col_select)
+                               col_select = default_col_select,
+                               combi_col_name = setNames(default_col_select,
+                                                         default_group_name),
+                               indu_station_index = 1)
+
   # Store the data points (all and filtered)
   data_measurements <- reactiveValues(data_all = measurements_all)
   # Store the station locations and plotcolor etc
@@ -169,7 +173,8 @@ shinyServer(function(global, input, output, session) {
                                                       parameter = reactive(data_other$parameter),
                                                       overview_component = overview_component,
                                                       theme_plots,
-                                                      change_tab = reactive(data_other$change_tab_figures) )
+                                                      change_tab = reactive(data_other$change_tab_figures),
+                                                      data_other = data_other)
 
   # Slider zoom for on the timeseries
   slider_zoom_server("slider_zoom",
@@ -232,9 +237,16 @@ shinyServer(function(global, input, output, session) {
                                                   data_other = data_other,
                                                   col_names,
                                                   col_overload)
+  # Switch group ----
+  switch_group_server("switch_group",
+                      data_other = data_other)
 
-  single_text_server("name_group", reactive(data_other$group_name))
+  # Rename group ----
+  rename_group_button_server("rename_group",
+                             data_stations = data_stations,
+                             data_other = data_other)
 
+  # Text elements ----
   single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
   single_text_server("text_download_estimation", text_message = reactive(message_data$download_estimation))
   single_text_server("text_check_visualisation", text_message = reactive("Please, check with the visualisations if all expected data is available."))
@@ -291,6 +303,7 @@ shinyServer(function(global, input, output, session) {
   observeEvent(input$to_select_tab,{
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
   })
+
 
   # Observe secret observer button
   observeEvent(input$browser, {
