@@ -26,7 +26,9 @@ timeseries_server <- function(id,
                               parameter,
                               overview_component,
                               theme_plots,
-                              zoom_in = NA){
+                              zoom_in = NA,
+                              remove_legend = FALSE,
+                              manual_ylim = NULL){
 
   moduleServer(id, function(input, output, session) {
 
@@ -105,7 +107,8 @@ timeseries_server <- function(id,
          names_col_plot <- names_col_plot[order(names(names_col_plot))]
 
          # Make a plot ====
-         try(ggplot(data = data_timeseries) +
+         plot_timeseries <-
+           ggplot(data = data_timeseries) +
                geom_rect(data = background_colours_df,
                          aes(xmin = min_time, xmax = max_time,
                          ymin = y_min, ymax = y_max, fill = label),
@@ -126,12 +129,28 @@ timeseries_server <- function(id,
                coord_cartesian(ylim = c(0, max_meas  + (steps/2)),
                                xlim = c(min_time, max_time)) +
                labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
-                    title = paste0('Timeseries for: ', parameter_label)) +
+                    title = paste0('Timeseries for: ', parameter_label,
+                                   "  ",  min(data_plot$date) %>% format("%d/%b/%Y"),
+                                   " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
+                                   )) +
                theme_plots +
-               theme(legend.text=element_text(size = paste0(16-log(n_stat_in_plot)*2)),
-                     legend.position="top",
-                     legend.title=element_blank())
-         )
+           theme(legend.text=element_text(size = paste0(16-log(n_stat_in_plot)*2)),
+                 legend.position="top",
+                 legend.title=element_blank())
+
+         if(remove_legend){
+           plot_timeseries <- plot_timeseries +
+             theme(legend.position="none")
+         }
+
+         if(!is.null(manual_ylim)){
+           plot_timeseries <- plot_timeseries +
+             coord_cartesian(ylim = manual_ylim)
+         }
+
+         plot_timeseries
+
+
 
      })
 

@@ -94,7 +94,10 @@ timevar_weekly_server <- function(id,
         #                    limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
         scale_x_continuous(breaks = c(0, 6, 12, 18)) +
         labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
-             title=paste0('Weekly pattern for: ', parameter_label)) +
+             title=paste0('Weekly pattern for: ', parameter_label,
+                          "  ",  min(data_plot$date) %>% format("%d/%b/%Y"),
+                          " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
+                          )) +
         #expand_limits(y=0) +
         theme_plots +
         theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),

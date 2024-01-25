@@ -100,6 +100,7 @@ shinyUI(
 
                    )
             ),
+
             column(width = 4,
                    wellPanel(
                      div(
@@ -115,6 +116,7 @@ shinyUI(
                    show_map_no_output("map_start")
 
             )
+
           )
         ), # end of tabpanel "START"
 
@@ -124,6 +126,17 @@ shinyUI(
 
                    tabsetPanel(
                      id = "tab_figures",
+                     tabPanel(
+                       value = "Overview",
+                       title = "Overview",
+                       wellPanel(
+                         div(p("Hier wat tekst me wat je ziet. Overzicht van de
+                               metingen van de sensoren. De zwarte lijn is het
+                               gemiddelde van de sensoren.")),
+                        overview_timeseries_output("overview_timeseries")
+
+                       )
+                     ),
                      tabPanel(
                        value = "stap1",
                        title = "stap1: selecteren",
@@ -143,13 +156,14 @@ shinyUI(
                      tabPanel(
                        value = "stap3",
                        title = "stap3: kijken",
-                       column(width = 4,
-                              plot_selection_output("select_plot"),
-                              show_map_no_select_output("map_no_select_step3")
-                              ),
                        column(width = 8,
+                              plot_selection_output("select_plot"),
                               show_plot_output("show_plot")
-                              )
+                              ),
+                       column(width = 4,
+                              br(),
+                              show_map_no_select_output("map_no_select_step3")
+                       )
                      )
 
           )
