@@ -54,7 +54,7 @@
 	  {
 	    "tag" : "expl_waiting_start",
 	    "en" : "Please wait a moment, the data is loaded to the tool. In a moment you will be back to start.",
-	    "nl" : "Even geduld, de gegevens worden geladen, u gaat zo weer naar start"
+	    "nl" : "Even geduld, de gegevens worden geladen, je gaat zo vanzelf weer naar start"
 	  },
 	  {"tag" : "expl_link_github",
 	      "en": "For a closer look at the programming code, see the GitHub-page:",
@@ -466,7 +466,7 @@
       },
       {"tag" : "expl_download_to_pc_expl",
         "en" : "Press the button to download the data to your own computer. The download contains a .zip-file with a README file to explain the columns and data source and an csv file containing the data. Source: KNMI measurements from knmi.nl; reference measurements from luchtmeetnet.nl; sensor data from samenmeten. NB: the reference measurements are unvalidated values.",
-        "nl" : "Klik op onderstaande button om de gegevens vanuit de tool naar uw eigen computer te downloaden. De download bevat een zip-bestand met daarin een csv-bestand met de gegevens en een txt-bestand met informatie over de kolommen. Bronvermelding: KNMI-gegevens komen vanaf knmi.nl, de referentiemeetwaarden van luchtmeetnet.nl en de sensormetingen van SamenMeten. LET OP: voor de meetwaarden van luchtmeetnet gaat het om ongevalideerde gegevens."
+        "nl" : "Klik op onderstaande button om de gegevens vanuit de tool naar jouw eigen computer te downloaden. De download bevat een zip-bestand met daarin een csv-bestand met de gegevens en een txt-bestand met informatie over de kolommen. Bronvermelding: KNMI-gegevens komen vanaf knmi.nl, de referentiemeetwaarden van luchtmeetnet.nl en de sensormetingen van SamenMeten. LET OP: voor de meetwaarden van luchtmeetnet gaat het om ongevalideerde gegevens."
       },
     {"tag" : "expl_download_to_pc_readme",
         "en" : " Bronvermelding: KNMI-gegevens komen vanaf knmi.nl, de referentiemeetwaarden van luchtmeetnet.nl en de sensormetingen van SamenMeten. LET OP: voor de meetwaarden van luchtmeetnet gaat het om ongevalideerde gegevens. The .csv file has the folowwing columns: 'station' name of station/sensor; 'date' date and time in timezone Europe/Amsterdam the end time of the hour; 'wd' wind direction (missing data: -999, no wind = 0, changing wind = 990); 'ws' wind speed in m/s; 'pm10' the concentration pm10 in ug/m3; 'pm10_kal' calibrated concentration pm10 in ug/m3; 'pm25' the concentration pm2.5 in ug/m3; 'pm25_kal' de calibrated concentration pm2.5 in ug/m3; 'lat' latitude of the location; 'lon' the longitude of the location. No data is given NA.",
