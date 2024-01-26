@@ -282,7 +282,6 @@ source("modules/add_overview_timeseries_plot.R")
 
 # Source layout
 source("funs/ui_tab_grouping.R")
-source("funs/ui_tab_checkdata.R")
 
 # Source buttons
 source("modules/set_groupname_button.R")
