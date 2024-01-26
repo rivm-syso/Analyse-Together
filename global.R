@@ -239,6 +239,7 @@ data_stations_list <- get_stations_cleaned(stations_con,
 
 # Source module for the communication
 source("modules/communication_module.R")
+source("modules/info_popup.R")
 
 # Source module for the date range selection
 source("modules/select_date_range.R")
