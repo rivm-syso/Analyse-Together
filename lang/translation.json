@@ -146,11 +146,15 @@
 	  },
 	    {"tag" : "tool_welcome_1_expl",
 	      "en": "",
-	      "nl": "In deze tool kun je de gegevens van de luchtkwaliteitssensoren  ontdekken. We combineren de gegevens van SamenMeten, het Luchtmeetnet en het KNMI. Voor een eerste blik op de gegevens ga naar het Dataportaal."
+	      	      "nl": "In deze tool kun je de metingen van de luchtkwaliteitssensoren ontdekken. Zo is het mogelijk verschillende sensoren te vergelijken met een referentiestation, de sensoren te groeperen en gemiddeldes per dag/week te maken."
 	      	  },
     {"tag" : "tool_welcome_2_expl",
     "en" : "",
-    "nl" : "De gegevens staan voor u klaar. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart ziet u welke sensoren op dit moment beschikbaar zijn."
+    "nl" : "We hebben al een selectie voor je gemaakt. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart zie je met welke sensoren je aan de slag kunt gaan. Klik op 'Ontdekken' om te beginnen."
+    },
+    {"tag" : "tool_welcome_3_expl",
+    "en" : "",
+    "nl" : "Wil je zelf de metingen en de gemeente kiezen? Ga dan naar 'Kiezen' en kom terug om die data te ontdekken."
     },
     {"tag" : "tool_select",
       "en" : "Choose the data yourself",
@@ -186,25 +190,18 @@
 	      "en": "6. ",
 	      "nl": "6. Laadt de gegevens in deze tool en ga verder naar Start."
 	  },
-	      {"tag": "infotext_vis_1_expl",
-	      "en": "Here you can explore the data. We have selected various visualizations to assist in viewing the data. You can view the time series, the data in a table, or the wind data in a wind rose. Each visualization is accompanied by a brief explanation.",
-	      "nl": "Hier kun je de gegevens gaan ontdekken. We hebben verschillende visualisaties gekozen om te helpen bij het bekijken van de gegevens. Zo kun je de tijdreeks bekijken, de gegevens in een tabel of met de windgegevens in een windroos. Bij elke visualisatie staat een korte toelichting. "
-	      },
-	      {"tag": "infotext_vis_2_expl",
-	      "en": "On the map, you can select sensors, which will be grouped together. By grouping and averaging a group of sensors, the measurement data becomes more reliable. You can view individual sensors in the time series of each sensor. See tab 'Create group' for more information.",
-	      "nl": "Op de kaart maak je een selectie van de sensoren, deze worden gelijk gegroepeerd. Door een groep sensoren te groeperen en te middelen worden de meetgegevens betrouwbaarder. De individuele sensoren kun je bekijken in de tijdreeks van individuele sensor. Zie het tabblad 'Maak groep' voor het maken van een groep."
-	      },
+
       {"tag" : "sel_knmi",
 	    	"en": "Show KNMI stations",
 	      "nl": "Toon KNMI-stations"
 	  },
       {"tag" : "title_selectdata",
-        "en": "Other data",
-        "nl": "Andere data"
+        "en": "Choose",
+        "nl": "Kiezen"
     },
       {"tag" : "title_visualisedata",
-        "en": "Figures",
-        "nl": "Plaatjes"
+        "en": "Explore",
+        "nl": "Ontdekken"
       },
       {"tag" : "title_advanced",
         "en": "Download",
@@ -318,9 +315,38 @@
         "en": "Create group",
         "nl": "Maak groep"
       },
+    {"tag" : "word_step1",
+        "en": "",
+        "nl": "Stap 1: Selecteren"
+      },
+          {"tag" : "word_step2",
+        "en": "",
+        "nl": "Stap 2: Filteren"
+      },
+          {"tag" : "word_step3",
+        "en": "",
+        "nl": "Stap 3: Kijken"
+      },
+    {"tag" : "infotext_overview",
+        "en": "",
+        "nl": "Op deze pagina zie je de metingen van alle sensoren in de gekozen gemeente of project. De zwarte lijn is de gemiddelde waarde. In de volgende stappen kun je zelf kiezen welke sensoren je wilt bekijken. Ook kun je de metingen van de sensoren combineren met de metingen van een referentiestation of met de windgegevens van het KNMI."
+      },
+          {"tag" : "infotext_overview_expl",
+        "en": "",
+        "nl": "In dit figuur zie je alle meetgegevens van de sensoren in het grijs en het gemiddelde van de metingen in het zwart. Voor het maken van dit figuur zijn alle waardes boven de maximale waarde niet meegenomen. Soms geeft een sensor een hoge waarde door, bijvoorbeeld 300, maar is dat niet de daadwerkelijke concentratie in de lucht. In zo'n situatie is de sensor bijvoorbeeld verstopt of vies. Deze situatie wil je liever niet meenemen in je analyse, want in de analyse wil je patronen ontdekken van hoe de luchtkwaliteit is. Wil je alle meetwaardes bekijken, dan kan je de maximale waarde aanpassen in 'Stap 2'. De achtergrondkleuren geven je een richting van welke concentraties hoog zijn. "
+      },
+      {"tag": "infotext_step1_select",
+        "en":"",
+        "nl": "Hier kun je zelf kiezen welke sensoren je wilt bekijken. We raden je aan om meerdere sensoren te groeperen, zo vergroot je de betrouwbaarheid van de meting. Groepeer bijvoorbeeld de sensoren in 1 wijk."
+      },
+    {"tag": "infotext_step1_select_expl",
+        "en":"",
+        "nl": "Het maken van een groep kan op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. Om een nieuwe groep te maken, kies de button met de plus, de naam van de groep kun je wijzigen via de button 'hernoem groep'. Wil je de selectie van de kaart verwijderen, dan klik je op het prullenbak 'Delete layers'of op de individuele sensoren. Druk op save om de wijziging door te voeren."
+      },
+
       {"tag" : "expl_meta_table",
         "en": "In the table below, you can see the data availability of the sensors and stations. It also gives you an overview which sensors are assigned to which group. There are two ways to create a group: by selecting a group of sensors using the square on the map ('Draw a rectangle'), or by clicking on individual sensors. To create a new group, use the button below the map. Each time you click the button, a new group ID will appear. To modify a group, click the trash can icon ('Delete layers'). Press save to apply the changes.",
-        "nl": "In onderstaande tabel kunt u de databeschikbaarheid van de sensoren en stations zien. Ook kun je zien welke sensoren in welke groep zitten. Het maken van een groep kan op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. Om een nieuwe groep te maken, kies de button onder de kaart. Elke keer dat je op de button klikt, verschijnt er een nieuw groeps ID. Wil je een groep wijzigen, dan klik je op het prullenbak 'Delete layers'. Druk op save om de wijziging door te voeren."
+        "nl": "In onderstaande tabel kunt u de databeschikbaarheid van de sensoren en stations zien."
       },
       {"tag" : "expl_meta_table_expl",
         "en": "For each sensor, the data capture is determined, indicating the percentage of selected time for which the sensor has data. You can also see the time of the first and last measurement. To determine a reliable average, it is preferable for the sensors to have measured during the same period and have a high data capture.",
@@ -388,11 +414,11 @@
       },
       {"tag" : "expl_indu_timeplot",
         "en": "Here you can view the timeseries of the individual sensor.",
-        "nl": "Hier kunt u de tijdreeks van de individuele sensor bekijken."
+        "nl": "Op deze pagina kun je de metingen van losse sensoren bekijken uit de selectie die je net gemaakt hebt. Daarnaast kun je de maximale waarde instellen, meetwaardes boven deze waarde worden dan niet meer getoond. Vaak zijn de hoge metingen gemeten met een vieze of stukke sensor. Hierdoor niet realistisch voor de buitenlucht."
       },
       {"tag" : "expl_indu_timeplot_expl",
         "en": "After selecting different sensors on the map, you can choose a sensor from the dropdown menu. The timeseries of the selected sensor will be displayed. The x-axis represents the selected time period, and the y-axis represents the concentration of PM10 or PM2.5 in μg/m³.",
-        "nl": "Nadat je op de kaart verschillende sensoren heeft geselecteerd, kun je door middel van het dropdownmenu een sensor kiezen. De tijdreeks van deze enkele sensor wordt dan getoond. De band rondom de meetlijn is de betrouwbaarheidsband, meer informatie daarover vind je onder het 'Informatie'-tabblad. Op de x-as zie je de geselecteerde tijdsperiode; op de y-as staat de concentratie PM10 of PM2,5 in ug/m3."
+        "nl": "Klik op een bolletje op de kaart om de grafiek van die sensor te bekijken. De gekleurde band is een mate voor betrouwbaarheid, meer informatie daarover vind je onder het 'Informatie'-tabblad."
       },
       {"tag" : "word_cal_plot",
         "en" : "Calender plot",

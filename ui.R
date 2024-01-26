@@ -85,14 +85,15 @@ shinyUI(
                          ),
 
                      actionButton("to_visualise_tab",
-                                  i18n$t("btn_figures"),
+                                  i18n$t("title_visualisedata"),
                                   width = "200px",
                                   icon = icon("chart-line")
                                   ),
                      br(),
                      br(),
+                     div(p(i18n$t("tool_welcome_3_expl"))),
                      actionButton("to_select_tab",
-                                  i18n$t("btn_own_data"),
+                                  i18n$t("title_selectdata"),
                                   width = "200px",
                                   icon = icon("window-restore")
                                   )
@@ -130,16 +131,17 @@ shinyUI(
                        value = "Overview",
                        title = "Overview",
                        wellPanel(
-                         div(p("Hier wat tekst me wat je ziet. Overzicht van de
-                               metingen van de sensoren. De zwarte lijn is het
-                               gemiddelde van de sensoren.")),
+                         column(width = 10,
+                          helpText(i18n$t("infotext_overview"))),
+                         column(width = 2,
+                          info_button_output("text_overview")),
                         overview_timeseries_output("overview_timeseries")
 
                        )
                      ),
                      tabPanel(
                        value = "stap1",
-                       title = "stap1: selecteren",
+                       title = i18n$t("word_step1"),
                        column(width = 4,
                               tpGrouping()),
                        column(width = 8,
@@ -149,13 +151,26 @@ shinyUI(
                      ),
                      tabPanel(
                        value = "stap2",
-                       title = "stap2: filteren",
-                       column(width = 12,
-                              tpCheckdata())
+                       title = i18n$t("word_step2"),
+                       fluidRow(
+                         column(width = 4,
+                                outlier_cutoff_output("select_cutoff")),
+                         column(width = 8,
+                                style = "margin-left: 20px; ",
+                                column(width = 10,
+                                  helpText(i18n$t("expl_indu_timeplot"))
+                                ),
+                                column(width = 2,
+                                  info_button_output("text_step2"))
+                         )
+                         ),
+                       br(),
+                       fluidRow(
+                         individual_timeseries_map_output("indu_timeseries"))
                      ),
                      tabPanel(
                        value = "stap3",
-                       title = "stap3: kijken",
+                       title = i18n$t("word_step3"),
                        column(width = 8,
                               plot_selection_output("select_plot"),
                               show_plot_output("show_plot")

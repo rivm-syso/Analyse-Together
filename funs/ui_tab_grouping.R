@@ -5,25 +5,32 @@
 tpGrouping <- function(){
 
   fluidRow(
-    helpText(i18n$t("expl_meta_table"), style = "margin-left: 20px; "),
+
     wellPanel(
       fluidRow(
+        style = "margin-left: 20px;",
+        column(width = 10,helpText(i18n$t("infotext_step1_select"))
+              ),
+        column(width = 2,
+          info_button_output("text_step1" )
+        ),
+      ),
+      fluidRow(
+        style = "margin-left: 20px;",
         p(single_text_output("text_selected_sensors")),
         p(i18n$t("expl_add_sensor_to_group")),
         switch_group_output("switch_group")
       ),
       fluidRow(
-        set_group_button_output("set_group_pushed"),
-        br()
+        style = "margin-left: 20px;",
+        set_group_button_output("set_group_pushed")
       ),
+      br(),
       fluidRow(
+        style = "margin-left: 20px;",
         rename_group_button_output("rename_group")
       )
-    ),
-
-    h4(i18n$t("title_expl"), style = "margin-left: 20px"),
-    p(i18n$t("expl_meta_table_expl"),
-      style = "font-size:12px; margin-left: 20px")
+    )
   )
 
 }
