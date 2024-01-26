@@ -212,13 +212,29 @@ communication_server <- function(id,
                    return(cut_off_value)
                  })
 
+                 # To generate a message for the user
+                 generate_message <- reactive({
+                   # Check the number of sensors
+                   sensor_count <- data_stations() %>%
+                     dplyr::filter(selected == T &
+                                     station_type == "sensor") %>%
+                     count(station)
+
+                    # give message if none are selected
+                    if(purrr::is_empty(sensor_count$n)){
+                     return("Je hebt nu niets geselecteerd.")
+                   }
+                   # give empty message nothing to be shown needed
+                   return(" ")
+                 })
 
                  # Return ----
                  return(list(
                    selected_measurements = reactive({filter_data_measurements()}),
                    knmi_measurements = reactive({get_knmi_measurements()}),
                    grouped_measurements = reactive({calc_group_mean()}),
-                   cut_off_value = reactive({calc_cut_off()})
+                   cut_off_value = reactive({calc_cut_off()}),
+                   message_selected = reactive({generate_message()})
 
                  ))
 

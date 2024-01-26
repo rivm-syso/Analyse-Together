@@ -30,7 +30,8 @@ shinyServer(function(global, input, output, session) {
                                plot = default_plot,
                                col_select = default_col_select,
                                combi_col_name = setNames(default_col_select,
-                                                         default_group_name))
+                                                         default_group_name),
+                               indu_station_index = 1)
 
   # Store the data points (all and filtered)
   data_measurements <- reactiveValues(data_all = measurements_all)
@@ -93,7 +94,7 @@ shinyServer(function(global, input, output, session) {
   map <- show_map_server("map",
                          data_stations = data_stations,
                          reactive(data_other$group_name),
-                         reactive(data_other$tab_choice),
+                         reactive(data_other$tab_choice_figures),
                          # Options for the colors
                          col_default,
                          col_select = reactive(data_other$col_select),
@@ -172,7 +173,18 @@ shinyServer(function(global, input, output, session) {
                                                       parameter = reactive(data_other$parameter),
                                                       overview_component = overview_component,
                                                       theme_plots,
-                                                      change_tab = reactive(data_other$change_tab_figures) )
+                                                      change_tab = reactive(data_other$change_tab_figures),
+                                                      data_other = data_other)
+
+  # Overview timeseries plot ----
+  overview_timeseries_server("overview_timeseries",
+                             data_stations = reactive(data_stations$data),
+                             data_measurements_all = reactive(data_measurements$data_all),
+                             parameter = reactive(data_other$parameter),
+                             selected_cutoff = reactive(data_other$cutoff),
+                             overview_component = overview_component,
+                             theme_plots,
+                             change_tab = reactive(data_other$change_tab_figures)   )
 
   # Slider zoom for on the timeseries
   slider_zoom_server("slider_zoom",
@@ -244,23 +256,28 @@ shinyServer(function(global, input, output, session) {
                              data_stations = data_stations,
                              data_other = data_other)
 
-  # Text elements ----
-  single_text_server("text_data_available", text_message = reactive(message_data$data_in_dbs))
-  single_text_server("text_download_estimation", text_message = reactive(message_data$download_estimation))
-  single_text_server("text_check_visualisation", text_message = reactive("Please, check with the visualisations if all expected data is available."))
-
-
+  single_text_server("text_data_available",
+                     text_message = reactive(message_data$data_in_dbs))
+  single_text_server("text_download_estimation",
+                     text_message = reactive(message_data$download_estimation))
+  single_text_server("text_check_visualisation",
+                     text_message = reactive("Please, check with the visualisations if all expected data is available."))
+  single_text_server("text_selected_sensors",
+                     text_message = reactive(message_data$selected_sensors))
 
    ########### Observers ################
    # Observe if you change tab and store the tabname ----
     observeEvent(input$second_order_tabs,{
       data_other$tab_choice <- input$second_order_tabs
     })
+  # Observe if you change tab and store the tabname ----
+  observeEvent(input$tab_figures,{
+    data_other$tab_choice_figures <- input$tab_figures
+  })
   # Observe if you change tab (visualise/plaatjes section) and store the tabname ----
   observeEvent(input$tab_figures,{
     data_other$change_tab_figures <- input$tab_figures
   })
-
 
   # Observe filtered data from stations and groups ----
   observe({
@@ -269,6 +286,8 @@ shinyServer(function(global, input, output, session) {
 
     data_grouped <- communication_stuff$grouped_measurements()
     data_measurements$data_grouped <- data_grouped
+
+    message_data$selected_sensors <- communication_stuff$message_selected()
   })
 
   # Observe filtered data from knmi ----

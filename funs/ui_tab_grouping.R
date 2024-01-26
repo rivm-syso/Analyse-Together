@@ -8,6 +8,7 @@ tpGrouping <- function(){
     helpText(i18n$t("expl_group"), style = "margin-left: 20px; "),
     wellPanel(
       fluidRow(
+        p(single_text_output("text_selected_sensors")),
         p(i18n$t("expl_add_sensor_to_group")),
         switch_group_output("switch_group")
       ),

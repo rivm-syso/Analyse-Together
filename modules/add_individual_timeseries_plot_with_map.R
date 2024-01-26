@@ -34,7 +34,8 @@ individual_timeseries_map_server <- function(id,
                                              parameter,
                                              overview_component,
                                              theme_plots,
-                                             change_tab){
+                                             change_tab,
+                                             data_other){
 
   moduleServer(id, function(input, output, session) {
 
@@ -231,53 +232,69 @@ individual_timeseries_map_server <- function(id,
       }
     }
 
-    # Observe the clicks of an user -> draw plot
+    # reactive to draw figure
+    draw_figure <- reactive({
+      # Check if there is any data selected etc.
+      shiny::validate(need(!is.null(data_measurements()),
+                           "Please choose data and select station."))
+      # Get the name of the station
+      # NB from the selected stations
+      selected_station <- data_stations$data %>%
+        dplyr::filter(selected & station_type == "sensor")
+      indu_station_name <- selected_station$station[data_other$indu_station_index]
+
+      # Check if a sensor is selected
+      shiny::validate(need(!is.na(indu_station_name), "No station selected."))
+
+      # Get the measurements of the station
+      measurements <- data_measurements() %>%
+        dplyr::filter(station == indu_station_name)
+
+      # Change stroke colour for selected station
+      data_snsrs <- try(isolate(get_locations()$station_loc))
+      data_snsrs <- data_snsrs %>%
+        dplyr::mutate(stroke = ifelse(station == indu_station_name, "black", col))
+
+      # Set the updated data from the stations in the reactiveValues
+      data_stations$data <- data_snsrs
+
+      # Create timeseries plot
+      timeseries_server("individual_timeseries_plot",
+                        data_measurements = reactive(measurements),
+                        parameter = parameter,
+                        overview_component = overview_component,
+                        theme_plots = theme_plots)
+    })
+
+    # Observe the clicks of an user -> store index/rownumber
     observeEvent({input$map_marker_click$id}, {
 
       # Get the id of the selected marker
       selected_snsr <- input$map_marker_click$id
       log_trace("indu time map module: click id {selected_snsr}")
 
-      # Check if there is clicked
-      if (!is.null(click)){
-        # Get the name of the station
-        indu_station_name <- selected_snsr
+      # Get the rownumber of the sensor in stations$data
+      # NB from the selected stations
+      selected_station <- data_stations$data %>%
+        dplyr::filter(selected & station_type == "sensor") %>%
+        dplyr::select(station)
+      rownumber_station <- which(selected_station == selected_snsr)
 
-        # Get the measurements of the station
-        measurements <- data_measurements() %>%
-          dplyr::filter(station == indu_station_name)
+      # Store rownumber in data_other
+      data_other$indu_station_index <- rownumber_station
 
-        # Change stroke colour for selected station
-        data_snsrs <- try(isolate(get_locations()$station_loc))
-        data_snsrs <- data_snsrs %>%
-          dplyr::mutate(stroke = ifelse(station == indu_station_name, "black", col))
-
-        # Set the updated data from the stations in the reactiveValues
-        data_stations$data <- data_snsrs
-
-        # Create timeseries plot
-        timeseries_server("individual_timeseries_plot",
-                          data_measurements = reactive(measurements),
-                          parameter = parameter,
-                          overview_component = overview_component,
-                          theme_plots = theme_plots)
-        }
-      else{done}
-
-      # add the updated markers on the map
-      isolate(add_sensors_map())
-      isolate(add_lmls_map())
-      isolate(add_knmi_map())
     })
 
     # Observers and ObserveEvents ----
 
     # Create list where to observe changes to react on
     tolisten <- reactive({
-      list(change_tab())
+      list(change_tab(), data_other$indu_station_index)
     })
     # Observe if new data is available-> redraw map
     observeEvent(tolisten(),{
+      # Redraw the figure with the new selected station
+      draw_figure()
       # Add the new situation to the map
       isolate(add_lmls_map())
       isolate(add_sensors_map())

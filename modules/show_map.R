@@ -96,14 +96,9 @@ show_map_server <- function(id,
           rectangleOptions = drawRectangleOptions(shapeOptions=drawShapeOptions(fillOpacity = 0
                                                                                 ,color = 'black'
                                                                                 ,weight = 1.5)),
-          editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
+          editOptions = editToolbarOptions(edit = FALSE,
+                                           selectedPathOptions = selectedPathOptions())) %>%
 
-        addEasyButton(easyButton(
-          icon="fa-globe", title="Back to default view",
-          onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
-        addEasyButton(easyButton(
-          icon="fa-crosshairs", title="Locate Me",
-          onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
         addScaleBar(position = "bottomleft")
     })
 
@@ -184,18 +179,23 @@ show_map_server <- function(id,
           clearGroup("weather")
       }else{
 
-        # Update map with new markers to show selected
-        proxy <- leafletProxy('map') # set up proxy map
-        proxy %>% clearGroup("weather") # Clear  markers
-
-        # get the stations only knmi
+       # get the stations only knmi
         data_snsrs <- data_snsrs %>%
           dplyr::filter(station_type == "KNMI")
+
+        # Check if there are KNMI stations
+        shiny::validate(need(nrow(data_snsrs) > 0, "No KNMI data"))
+
         # Put selected stations on map
         data_selected <- data_snsrs %>%
           dplyr::filter(selected)
 
-        if(nrow(data_selected > 0)){
+        # Update map with new markers to show selected
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>% clearGroup("weather") # Clear  markers
+
+
+        if(nrow(data_selected) > 0){
           proxy %>%
             addMarkers(data = data_selected, ~lon, ~lat,
                        icon = icons_knmis["knmi_selected"],
@@ -291,6 +291,9 @@ show_map_server <- function(id,
       data_snsrs <- isolate(get_locations()$station_loc) %>%
         dplyr::filter(station_type == "ref")
 
+      # Check if there are Ref stations
+      shiny::validate(need(nrow(data_snsrs) > 0, "No reference data"))
+
       # Update map with new markers to show selected
       proxy <- leafletProxy('map') # set up proxy map
       proxy %>% clearGroup("reference") # Clear reference markers
@@ -348,7 +351,7 @@ show_map_server <- function(id,
       tab_info <- tab_choice()
       if(!purrr::is_null(tab_info)){
         # If you arrive on this tabpanel then redraw the map.
-        if(tab_info == "Visualise data"){
+        if(tab_info == "stap1"){
           # Add the new situation to the map
           isolate(add_lmls_map())
           isolate(add_sensors_map())

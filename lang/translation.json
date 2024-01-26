@@ -51,6 +51,11 @@
 	      "en": "For more information on the projects itself, see our website:",
 	      "nl": "Voor meer informatie over de projecten zelf, zie onze website:"
 	  },
+	  {
+	    "tag" : "expl_waiting_start",
+	    "en" : "Please wait a moment, the data is loaded to the tool. In a moment you will be back to start.",
+	    "nl" : "Even geduld, de gegevens worden geladen, u gaat zo weer naar start"
+	  },
 	  {"tag" : "expl_link_github",
 	      "en": "For a closer look at the programming code, see the GitHub-page:",
 	      "nl": "Voor de code zie op de GitHub-pagina:"

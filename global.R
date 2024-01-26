@@ -26,6 +26,9 @@ library(shinyWidgets)
 library(shinyjs)
 library(shinyalert)
 
+# Package for the loading spinning wheel
+library("shinybusy")
+
 # For the translation
 library(shiny.i18n)
 
@@ -273,6 +276,8 @@ source("modules/add_timevariation_weekly_plot.R")
 source("modules/add_timevariation_daily_plot.R")
 source("modules/add_individual_timeseries_plot.R")
 source("modules/add_individual_timeseries_plot_with_map.R")
+source("modules/add_overview_timeseries_plot.R")
+
 
 # Source layout
 source("funs/ui_tab_grouping.R")
