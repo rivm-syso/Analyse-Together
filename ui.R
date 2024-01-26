@@ -131,11 +131,13 @@ shinyUI(
                        value = "Overview",
                        title = "Overview",
                        wellPanel(
-                         column(width = 10,
+                         fluidRow(
+                         column(width = 11,
                           helpText(i18n$t("infotext_overview"))),
-                         column(width = 2,
-                          info_button_output("text_overview")),
-                        overview_timeseries_output("overview_timeseries")
+                         column(width = 1,
+                          info_button_output("text_overview"))),
+                         fluidRow(
+                        overview_timeseries_output("overview_timeseries"))
 
                        )
                      ),
@@ -152,16 +154,20 @@ shinyUI(
                      tabPanel(
                        value = "stap2",
                        title = i18n$t("word_step2"),
-                       fluidRow(
+                       wellPanel(
+                         fluidRow(
+
                          column(width = 4,
                                 outlier_cutoff_output("select_cutoff")),
                          column(width = 8,
                                 style = "margin-left: 20px; ",
-                                column(width = 10,
+                                column(width = 11,
                                   helpText(i18n$t("expl_indu_timeplot"))
                                 ),
-                                column(width = 2,
-                                  info_button_output("text_step2"))
+                                column(width = 1,
+                                  info_button_output("text_step2")
+                                  ),
+                         )
                          )
                          ),
                        br(),
