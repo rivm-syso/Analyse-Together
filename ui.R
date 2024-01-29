@@ -157,18 +157,18 @@ shinyUI(
                        wellPanel(
                          fluidRow(
 
-                         column(width = 4,
-                                outlier_cutoff_output("select_cutoff")),
-                         column(width = 8,
-                                style = "margin-left: 20px; ",
-                                column(width = 11,
-                                  helpText(i18n$t("expl_indu_timeplot"))
-                                ),
-                                column(width = 1,
-                                  info_button_output("text_step2")
-                                  ),
+                           fluidRow(
+                             column(width = 11,
+                                    helpText(i18n$t("expl_indu_timeplot"))
+                             ),
+                             column(width = 1,
+                                    info_button_output("text_step2")
+                             )),
+                                outlier_cutoff_output("select_cutoff"),
+
+
                          )
-                         )
+
                          ),
                        br(),
                        fluidRow(
@@ -249,6 +249,9 @@ shinyUI(
       p(i18n$t("tool_confident_interval_2_expl")),
       p(i18n$t("tool_confident_interval_3_expl")),
       p(i18n$t("tool_confident_interval_4_expl")),br(),
+      h4(i18n$t("word_maximum_value")),
+      p(i18n$t("tool_maximum_value_1_expl")),
+      br(),
       h4(i18n$t("word_variation_whisker")),
       p(i18n$t("tool_variation_whisker_1_expl")),
       p(i18n$t("tool_variation_whisker_2_expl")),
