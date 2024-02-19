@@ -18,6 +18,7 @@ individual_timeseries_map_output <- function(id) {
     column(width = 8,
            wellPanel(
               uiOutput(ns("btn_deselect_sensor")),
+              br(),
               timeseries_output(ns("individual_timeseries_plot"))
            )
     )
@@ -36,7 +37,11 @@ individual_timeseries_map_server <- function(id,
                                              overview_component,
                                              theme_plots,
                                              change_tab,
-                                             data_other){
+                                             data_other,
+                                             group_name_none,
+                                             col_default,
+                                             line_default
+                                             ){
 
   moduleServer(id, function(input, output, session) {
 
@@ -283,7 +288,6 @@ individual_timeseries_map_server <- function(id,
         icon = icon("trash")
         )
 
-
     })
 
 
@@ -311,28 +315,7 @@ individual_timeseries_map_server <- function(id,
 
     })
 
-    # Change the clicked_id stored - deselect and select
-    change_state_to_deselected <- function(id_selected){
-      # Get the data from the stations
-      data_stns <- data_stations$data
-
-      # Set the deselected station to select == F
-      data_stns <- data_stns %>%
-        dplyr::mutate(selected = ifelse(station == id_selected, F, selected),
-                      # Remove group name and label
-                      group_name = ifelse(station == id_selected, group_name_none, group_name),
-                      label = ifelse(station == id_selected, station, label),
-                      # Change the color to the default
-                      col = ifelse(station == id_selected, col_default, col),
-                      stroke = col,
-                      # Change the linetype to the default
-                      linetype = ifelse(station == id_selected, line_default, linetype))
-
-      # Set the updated data from the stations in the reactiveValues
-      data_stations$data <- data_stns
-    }
-
-    # Observe if user pushes deselect sensor button
+    # Observe if user pushes deselect sensor button ----
     observeEvent({input$btn_deselect_sensor}, {
 
       # Get the name and ID of the sensor to be deselected
@@ -343,7 +326,12 @@ individual_timeseries_map_server <- function(id,
       indu_station_name <- selected_station$station[data_other$indu_station_index]
 
       # Change the state of the sensor in data_stations
-      change_state_to_deselected(indu_station_name)
+      data_stations$data <- change_state_to_deselected(data_stations$data,
+                                                       indu_station_name,
+                                                       group_name_none,
+                                                       col_default,
+                                                       line_default
+                                                       )
 
       # Choose a new sensor to be selected, Store rownumber in data_other (default)
       data_other$indu_station_index <- 1

@@ -174,7 +174,10 @@ shinyServer(function(global, input, output, session) {
                                                       overview_component = overview_component,
                                                       theme_plots,
                                                       change_tab = reactive(data_other$change_tab_figures),
-                                                      data_other = data_other)
+                                                      data_other = data_other,
+                                                      default_group_name,
+                                                      col_default,
+                                                      line_default)
 
   # Overview timeseries plot ----
   overview_timeseries_server("overview_timeseries",
