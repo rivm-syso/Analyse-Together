@@ -19,7 +19,8 @@ individual_timeseries_map_output <- function(id) {
            wellPanel(
               uiOutput(ns("btn_deselect_sensor")),
               br(),
-              timeseries_output(ns("individual_timeseries_plot"))
+              timeseries_output(ns("individual_timeseries_plot")),
+              metadata_param_output(ns("meta_param_table_2"))
            )
     )
   )
@@ -33,6 +34,7 @@ individual_timeseries_map_output <- function(id) {
 individual_timeseries_map_server <- function(id,
                                              data_stations,
                                              data_measurements,
+                                             data_measurements_all,
                                              parameter,
                                              overview_component,
                                              theme_plots,
@@ -238,7 +240,7 @@ individual_timeseries_map_server <- function(id,
       }
     }
 
-    # reactive to draw figure
+    # reactive to draw figure ----
     draw_figure <- reactive({
       # Check if there is any data selected etc.
       shiny::validate(need(!is.null(data_measurements()),
@@ -270,6 +272,15 @@ individual_timeseries_map_server <- function(id,
                         parameter = parameter,
                         overview_component = overview_component,
                         theme_plots = theme_plots)
+
+      # Add metadata table
+      metadata_param_server("meta_param_table_2",
+                            data_measurements = data_measurements_all,
+                            data_stations = reactive(data_stations$data),
+                            parameter = reactive(data_other$parameter),
+                            selected_start_date = reactive(data_other$start_date),
+                            selected_end_date = reactive(data_other$end_date),
+                            name_munproj = reactive(data_other$name_munproj))
     })
 
     output$btn_deselect_sensor <- renderUI({
