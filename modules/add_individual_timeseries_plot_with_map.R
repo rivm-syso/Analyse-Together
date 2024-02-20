@@ -258,12 +258,16 @@ individual_timeseries_map_server <- function(id,
       # Set the updated data from the stations in the reactiveValues
       data_stations$data <- data_snsrs
 
+      # Set value for the y-ax
+      max_yvalue <- data_other$cutoff
+
       # Create timeseries plot
       timeseries_server("individual_timeseries_plot",
                         data_measurements = reactive(measurements),
                         parameter = parameter,
                         overview_component = overview_component,
-                        theme_plots = theme_plots)
+                        theme_plots = theme_plots,
+                        manual_ylim = c(0, max_yvalue))
     })
 
     # Observe the clicks of an user -> store index/rownumber
