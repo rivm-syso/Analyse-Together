@@ -293,7 +293,9 @@ individual_timeseries_map_server <- function(id,
 
     # Create list where to observe changes to react on
     tolisten <- reactive({
-      list(change_tab(), data_other$indu_station_index)
+      list(change_tab(),
+           data_other$indu_station_index,
+           data_other$cutoff)
     })
     # Observe if new data is available-> redraw map
     observeEvent(tolisten(),{
