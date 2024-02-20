@@ -17,11 +17,15 @@ individual_timeseries_map_output <- function(id) {
     leafletOutput(ns("map"))),
     column(width = 8,
            wellPanel(
-              uiOutput(ns("btn_deselect_sensor")),
-              br(),
-              timeseries_output(ns("individual_timeseries_plot")),
-              metadata_param_output(ns("meta_param_table_2"))
+            tabsetPanel(id = ns("step2_details"),
+              tabPanel(title = "Graph",
+                uiOutput(ns("btn_deselect_sensor")),
+                br(),
+                timeseries_output(ns("individual_timeseries_plot"))),
+              tabPanel(title = "table",
+                metadata_param_output(ns("meta_param_table_2"))
            )
+      ))
     )
   )
 }
