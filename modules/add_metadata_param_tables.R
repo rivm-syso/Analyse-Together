@@ -73,7 +73,8 @@ metadata_param_server <- function(id,
                          last_m = last_m,
                          n_obs = sum(!is.na(value)),
                          max_obs = as.numeric(timerange),
-                         per_obs = round(n_obs/max_obs*100) ) %>%
+                         per_obs = round(n_obs/max_obs*100),
+                         max_value = round(max(value),0)) %>%
         dplyr::distinct(station, .keep_all = T) %>%
         dplyr::ungroup()
 
@@ -81,7 +82,8 @@ metadata_param_server <- function(id,
       # Keep all stations from the station_data
       metadata_table <- data_stations_part %>%
         dplyr::left_join(metadata_table, by = "station") %>%
-        dplyr::select(c(station, group_name, per_obs, max_obs, first_m, last_m,
+        dplyr::select(c(station, group_name, per_obs, max_obs, max_value,
+                        first_m, last_m,
                         station_type, selected, col))
 
       # Only show selected station
@@ -142,6 +144,7 @@ metadata_param_server <- function(id,
                       colnames = c("Station" = "station",
                                    "Group" = "group_name",
                                    "Datacapture %" = "per_obs",
+                                   "Maximum value" = "max_value",
                                    "First measurements" = "first_m",
                                    "Last measurements" = "last_m",
                                    "Type" = "station_type"),
