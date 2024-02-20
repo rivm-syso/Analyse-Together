@@ -17,15 +17,10 @@ individual_timeseries_map_output <- function(id) {
     leafletOutput(ns("map"))),
     column(width = 8,
            wellPanel(
-            tabsetPanel(id = ns("step2_details"),
-              tabPanel(title = "Graph",
-                uiOutput(ns("btn_deselect_sensor")),
-                br(),
-                timeseries_output(ns("individual_timeseries_plot"))),
-              tabPanel(title = "table",
-                metadata_param_output(ns("meta_param_table_2"))
-           )
-      ))
+            br(),
+            uiOutput(ns("btn_deselect_sensor")),
+            br(),
+            timeseries_output(ns("individual_timeseries_plot")))
     )
   )
 }
@@ -277,14 +272,6 @@ individual_timeseries_map_server <- function(id,
                         overview_component = overview_component,
                         theme_plots = theme_plots)
 
-      # Add metadata table
-      metadata_param_server("meta_param_table_2",
-                            data_measurements = data_measurements_all,
-                            data_stations = reactive(data_stations$data),
-                            parameter = reactive(data_other$parameter),
-                            selected_start_date = reactive(data_other$start_date),
-                            selected_end_date = reactive(data_other$end_date),
-                            name_munproj = reactive(data_other$name_munproj))
     })
 
     output$btn_deselect_sensor <- renderUI({
@@ -295,7 +282,7 @@ individual_timeseries_map_server <- function(id,
       indu_station_name <- selected_station$station[data_other$indu_station_index]
 
       # Check if a sensor is selected
-      shiny::validate(need(!is.na(indu_station_name), "No station selected."))
+      shiny::validate(need(!is.na(indu_station_name), "No station selected. Please go back to step 1."))
 
       actionButton(
         ns("btn_deselect_sensor"),
