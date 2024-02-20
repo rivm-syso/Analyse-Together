@@ -133,9 +133,11 @@ shinyUI(
                        wellPanel(
                          fluidRow(
                          column(width = 11,
-                          helpText(i18n$t("infotext_overview"))),
+                          helpText(i18n$t("infotext_overview")),
+                          ),
                          column(width = 1,
-                          info_button_output("text_overview"))),
+                          info_button_output("text_overview"))
+                         ),
                          fluidRow(
                         overview_timeseries_output("overview_timeseries"))
 
@@ -164,15 +166,34 @@ shinyUI(
                              column(width = 1,
                                     info_button_output("text_step2")
                              )),
-                                outlier_cutoff_output("select_cutoff"),
-
-
                          )
-
                          ),
                        br(),
-                       fluidRow(
-                         individual_timeseries_map_output("indu_timeseries"))
+                       tabsetPanel(
+                         id = "third_order_tab_step2",
+                          tabPanel(
+                            value = "filter_input",
+                            title = "manual filter",
+                             wellPanel(
+                               fluidRow(
+                                 column(width = 6,
+                                        outlier_cutoff_output("select_cutoff")),
+                                 column(width = 6,
+                                        min_datacapture_output("select_capture"))
+                                  )
+                               ),
+                               wellPanel(
+                                 metadata_param_output(("meta_param_table"))
+                             )
+                            ),
+                        tabPanel(
+                          value = "Individual stations",
+                          title = "individual stations",
+                          fluidRow(
+                             individual_timeseries_map_output("indu_timeseries")
+                         )
+                     )
+                     )
                      ),
                      tabPanel(
                        value = "stap3",

@@ -174,6 +174,10 @@ uc_min_pm25 <- 5.3
 # used to set outlier limit
 default_cutoff <- 9999
 
+# default parameter to minimum data capture value
+# used to remove stations from selection
+default_capture <- 0
+
 # default parameter
 default_parameter <- "pm25_kal"
 
@@ -261,6 +265,7 @@ source("modules/select_component.R")
 source("modules/select_mun_or_proj.R")
 source("modules/choose_mun_or_proj.R")
 source("modules/select_outlier_cutoff.R")
+source("modules/select_min_datacapture.R")
 source("modules/select_slider_zoom.R")
 source("modules/select_group_name_switch.R")
 

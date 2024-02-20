@@ -27,6 +27,7 @@ shinyServer(function(global, input, output, session) {
                                end_date = default_time[[2]],
                                parameter = default_parameter,
                                cutoff = default_cutoff,
+                               min_capture = default_capture,
                                plot = default_plot,
                                col_select = default_col_select,
                                combi_col_name = setNames(default_col_select,
@@ -53,6 +54,11 @@ shinyServer(function(global, input, output, session) {
                         data_other = data_other,
                         default_cutoff = data_other$cutoff
                         )
+  # The minimum value for te data capture
+  min_datacapture_server("select_capture",
+                        data_other = data_other,
+                        default_capture = data_other$min_capture
+  )
 
   # the selected plot for the visualisation
   plot_selection_server("select_plot",
