@@ -422,7 +422,7 @@
       },
       {"tag" : "expl_indu_timeplot",
         "en": "Here you can view the timeseries of the individual sensor.",
-        "nl": "Op deze pagina kun je de metingen van losse sensoren bekijken uit de selectie die je net gemaakt hebt. Daarnaast kun je de maximale waarde instellen, meetwaardes boven deze waarde worden dan niet meer getoond. Vaak zijn de hoge metingen gemeten met een vieze of kapotte sensor. Hierdoor niet realistisch voor de buitenlucht."
+        "nl": "Op deze pagina kun je de metingen van losse sensoren bekijken uit de selectie die je net gemaakt hebt. Daarnaast kun je de maximale waarde instellen, meetwaardes boven deze waarde worden dan niet meer getoond. Vaak zijn de hoge metingen gemeten met een sensor die vies of stuk is. Hierdoor zijn de metingen niet realistisch voor de buitenlucht."
       },
       {"tag" : "expl_indu_timeplot_expl",
         "en": "After selecting different sensors on the map, you can choose a sensor from the dropdown menu. The timeseries of the selected sensor will be displayed. The x-axis represents the selected time period, and the y-axis represents the concentration of PM10 or PM2.5 in μg/m³.",
