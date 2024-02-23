@@ -209,7 +209,9 @@ shinyServer(function(global, input, output, session) {
                                                     name_munproj = reactive(data_other$name_munproj),
                                                     selected_start_date = reactive(data_other$start_date),
                                                     selected_end_date = reactive(data_other$end_date),
-                                                    pool = pool)
+                                                    pool = pool,
+                                                    pop_up_title = i18n$t("word_patient"),
+                                                    pop_up_message = i18n$t("infotext_patient"))
 
   # Get the data from the database ----
   get_data_cache_dbs_start <- get_data_cache_server("get_data_dbs_button_start",
@@ -256,6 +258,7 @@ shinyServer(function(global, input, output, session) {
                              data_stations = data_stations,
                              data_other = data_other)
 
+  # Single text items
   single_text_server("text_data_available",
                      text_message = reactive(message_data$data_in_dbs))
   single_text_server("text_download_estimation",
@@ -264,6 +267,36 @@ shinyServer(function(global, input, output, session) {
                      text_message = reactive("Please, check with the visualisations if all expected data is available."))
   single_text_server("text_selected_sensors",
                      text_message = reactive(message_data$selected_sensors))
+
+  # Pop up information
+  info_button_server("text_overview",
+                     i18n$t("infotext_overview_expl"))
+  info_button_server("text_step1",
+                     i18n$t("infotext_step1_select_expl"))
+  info_button_server("text_step2",
+                     i18n$t("expl_indu_timeplot_expl"))
+  info_button_server("plot_timeseries",
+                     i18n$t("expl_timeplot_expl"))
+
+  info_button_server("plot_barplot",
+                     i18n$t("expl_barplot_expl"))
+
+  info_button_server("plot_weekly",
+                     i18n$t("expl_overviewplot_expl_weekly"))
+
+  info_button_server("plot_daily",
+                     i18n$t("expl_overviewplot_expl_daily"))
+
+
+  info_button_server("plot_windcal",
+                     i18n$t("expl_calplot_expl"))
+
+  info_button_server("plot_conc_rose",
+                     i18n$t("expl_concplot%_expl"))
+
+  info_button_server("plot_table",
+                     i18n$t("expl_meta_table_expl"))
+
 
    ########### Observers ################
    # Observe if you change tab and store the tabname ----

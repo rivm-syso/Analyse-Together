@@ -239,6 +239,7 @@ data_stations_list <- get_stations_cleaned(stations_con,
 
 # Source module for the communication
 source("modules/communication_module.R")
+source("modules/info_popup.R")
 
 # Source module for the date range selection
 source("modules/select_date_range.R")
@@ -281,7 +282,6 @@ source("modules/add_overview_timeseries_plot.R")
 
 # Source layout
 source("funs/ui_tab_grouping.R")
-source("funs/ui_tab_checkdata.R")
 
 # Source buttons
 source("modules/set_groupname_button.R")

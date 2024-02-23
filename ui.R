@@ -71,7 +71,7 @@ shinyUI(
 
         tabPanel(
           value = "Start",
-          title = HTML(paste0(i18n$t("title_start")," <strong><span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
+          title = i18n$t("title_start"),
 
           fluidRow(
 
@@ -85,14 +85,15 @@ shinyUI(
                          ),
 
                      actionButton("to_visualise_tab",
-                                  i18n$t("btn_figures"),
+                                  i18n$t("title_visualisedata"),
                                   width = "200px",
                                   icon = icon("chart-line")
                                   ),
                      br(),
                      br(),
+                     div(p(i18n$t("tool_welcome_3_expl"))),
                      actionButton("to_select_tab",
-                                  i18n$t("btn_own_data"),
+                                  i18n$t("title_selectdata"),
                                   width = "200px",
                                   icon = icon("window-restore")
                                   )
@@ -122,24 +123,27 @@ shinyUI(
 
         tabPanel(
           value = "Visualise data",
-          title = HTML(paste0(i18n$t("title_visualisedata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
+          title = i18n$t("title_visualisedata"),
 
                    tabsetPanel(
                      id = "tab_figures",
                      tabPanel(
                        value = "Overview",
-                       title = "Overview",
+                       title = i18n$t("word_overview"),
                        wellPanel(
-                         div(p("Hier wat tekst me wat je ziet. Overzicht van de
-                               metingen van de sensoren. De zwarte lijn is het
-                               gemiddelde van de sensoren.")),
-                        overview_timeseries_output("overview_timeseries")
+                         fluidRow(
+                         column(width = 11,
+                          helpText(i18n$t("infotext_overview"))),
+                         column(width = 1,
+                          info_button_output("text_overview"))),
+                         fluidRow(
+                        overview_timeseries_output("overview_timeseries"))
 
                        )
                      ),
                      tabPanel(
                        value = "stap1",
-                       title = "stap1: selecteren",
+                       title = i18n$t("word_step1"),
                        column(width = 4,
                               tpGrouping()),
                        column(width = 8,
@@ -149,13 +153,30 @@ shinyUI(
                      ),
                      tabPanel(
                        value = "stap2",
-                       title = "stap2: filteren",
-                       column(width = 12,
-                              tpCheckdata())
+                       title = i18n$t("word_step2"),
+                       wellPanel(
+                         fluidRow(
+
+                           fluidRow(
+                             column(width = 11,
+                                    helpText(i18n$t("expl_indu_timeplot"))
+                             ),
+                             column(width = 1,
+                                    info_button_output("text_step2")
+                             )),
+                                outlier_cutoff_output("select_cutoff"),
+
+
+                         )
+
+                         ),
+                       br(),
+                       fluidRow(
+                         individual_timeseries_map_output("indu_timeseries"))
                      ),
                      tabPanel(
                        value = "stap3",
-                       title = "stap3: kijken",
+                       title = i18n$t("word_step3"),
                        column(width = 8,
                               plot_selection_output("select_plot"),
                               show_plot_output("show_plot")
@@ -171,7 +192,7 @@ shinyUI(
 
         tabPanel(
           value = "Select data",
-          title = HTML(paste0(i18n$t("title_selectdata")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
+          title = i18n$t("title_selectdata"),
 
           fluidRow(
 
@@ -200,7 +221,7 @@ shinyUI(
 
         tabPanel(
           value = "Advanced",
-          title = HTML(paste0(i18n$t("title_advanced")," <strong> <span style = 'color: #b2d7ee; font-size: 13px'> </span> </strong>")),
+          title = i18n$t("title_advanced"),
 
           fluidRow(
             wellPanel(h4(i18n$t("expl_download_to_pc")),
@@ -228,6 +249,9 @@ shinyUI(
       p(i18n$t("tool_confident_interval_2_expl")),
       p(i18n$t("tool_confident_interval_3_expl")),
       p(i18n$t("tool_confident_interval_4_expl")),br(),
+      h4(i18n$t("word_maximum_value")),
+      p(i18n$t("tool_maximum_value_1_expl")),
+      br(),
       h4(i18n$t("word_variation_whisker")),
       p(i18n$t("tool_variation_whisker_1_expl")),
       p(i18n$t("tool_variation_whisker_2_expl")),
