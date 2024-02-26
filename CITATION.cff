@@ -1,0 +1,48 @@
+cff-version: 1.2.0
+title: Analyse Together
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Elma 
+    family-names: Tenner
+    email: elma.tenner@rivm.nl
+    affiliation: >-
+      National Institute for Public Health and the
+      Environment
+  - given-names: Wouter
+    family-names: Hendricx
+    email: wouter.hendricx@rivm.nl
+    affiliation: >-
+      National Institute for Public Health and the
+      Environment
+  - given-names: Job
+    family-names: Spijker
+    email: job.spijker@rivm.nl
+    affiliation: >-
+      National Institute for Public Health and the
+      Environment
+    orcid: 'https://orcid.org/0000-0001-9276-2640'
+  - given-names: Sanne
+    family-names: Ypenburg
+    email: sanne.ypenburg@rivm.nl
+    affiliation: >-
+      National Institute for Public Health and the
+      Environment
+    orcid: 'https://orcid.org/000-0003-1114-1311'
+contact:
+  - email: samenmeten@rivm.nl
+    name: "National Institute for Public Health and the Environment"
+repository-code: 'https://github.com/rivm-syso/Analyse-Together'
+url: 'https://analyseren.samenmeten.nl/'
+abstract: With this tool you can explore the sensordata of the Dutch Measure Together project with official measurement data from the National Air Monitoring Network, or, for example, compare your neighbourhood with a neighbourhood nearby.
+keywords:
+  - citizens science
+  - air quality
+  - RIVM
+  - shiny
+  - sensor
+  - samenmeten
+license: GPL-3.0
+version: 1.0.0
