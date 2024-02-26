@@ -354,6 +354,11 @@ shinyServer(function(global, input, output, session) {
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
   })
 
+  # Observe change of tabs reset to overview
+  observeEvent(input$second_order_tabs == "Start",{
+    updateTabsetPanel(inputId = "tab_figures" ,
+                      selected = "Overview")
+  })
 
   # Observe secret observer button
   observeEvent(input$browser, {
