@@ -170,11 +170,15 @@ shinyServer(function(global, input, output, session) {
   indu_timeseries <- individual_timeseries_map_server("indu_timeseries",
                                                       data_stations = data_stations,
                                                       data_measurements = reactive(data_measurements$data_filtered),
+                                                      data_measurements_all = reactive(data_measurements$data_all),
                                                       parameter = reactive(data_other$parameter),
                                                       overview_component = overview_component,
                                                       theme_plots,
                                                       change_tab = reactive(data_other$change_tab_figures),
-                                                      data_other = data_other)
+                                                      data_other = data_other,
+                                                      default_group_name,
+                                                      col_default,
+                                                      line_default)
 
   # Overview timeseries plot ----
   overview_timeseries_server("overview_timeseries",

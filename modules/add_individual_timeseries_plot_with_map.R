@@ -17,8 +17,10 @@ individual_timeseries_map_output <- function(id) {
     leafletOutput(ns("map"))),
     column(width = 8,
            wellPanel(
-              timeseries_output(ns("individual_timeseries_plot"))
-           )
+            br(),
+            uiOutput(ns("btn_deselect_sensor")),
+            br(),
+            timeseries_output(ns("individual_timeseries_plot")))
     )
   )
 }
@@ -31,11 +33,16 @@ individual_timeseries_map_output <- function(id) {
 individual_timeseries_map_server <- function(id,
                                              data_stations,
                                              data_measurements,
+                                             data_measurements_all,
                                              parameter,
                                              overview_component,
                                              theme_plots,
                                              change_tab,
-                                             data_other){
+                                             data_other,
+                                             group_name_none,
+                                             col_default,
+                                             line_default
+                                             ){
 
   moduleServer(id, function(input, output, session) {
 
@@ -232,7 +239,7 @@ individual_timeseries_map_server <- function(id,
       }
     }
 
-    # reactive to draw figure
+    # reactive to draw figure ----
     draw_figure <- reactive({
       # Check if there is any data selected etc.
       shiny::validate(need(!is.null(data_measurements()),
@@ -264,7 +271,37 @@ individual_timeseries_map_server <- function(id,
                         parameter = parameter,
                         overview_component = overview_component,
                         theme_plots = theme_plots)
+
     })
+
+    output$btn_deselect_sensor <- renderUI({
+      # Get the name of the station
+      # NB from the selected stations
+      selected_station <- data_stations$data %>%
+        dplyr::filter(selected & station_type == "sensor")
+      indu_station_name <- selected_station$station[data_other$indu_station_index]
+
+      # Check if a sensor is selected
+      shiny::validate(need(!is.na(indu_station_name), "No station selected. Please go back to step 1."))
+
+      actionButton(
+        ns("btn_deselect_sensor"),
+        label = paste0("Verwijder van selectie: ",indu_station_name),
+        icon = icon("trash")
+        )
+
+    })
+
+
+    get_rownumber_station <- function(data_stations, selected_snsr){
+      # Get the rownumber of the sensor in stations$data
+      # NB from the selected stations
+      selected_station <- data_stations$data %>%
+        dplyr::filter(selected & station_type == "sensor") %>%
+        dplyr::select(station)
+      rownumber_station <- which(selected_station == selected_snsr)
+      return(rownumber_station)
+    }
 
     # Observe the clicks of an user -> store index/rownumber
     observeEvent({input$map_marker_click$id}, {
@@ -273,15 +310,33 @@ individual_timeseries_map_server <- function(id,
       selected_snsr <- input$map_marker_click$id
       log_trace("indu time map module: click id {selected_snsr}")
 
-      # Get the rownumber of the sensor in stations$data
-      # NB from the selected stations
-      selected_station <- data_stations$data %>%
-        dplyr::filter(selected & station_type == "sensor") %>%
-        dplyr::select(station)
-      rownumber_station <- which(selected_station == selected_snsr)
+      rownumber_station <- get_rownumber_station(data_stations, selected_snsr)
 
       # Store rownumber in data_other
       data_other$indu_station_index <- rownumber_station
+
+    })
+
+    # Observe if user pushes deselect sensor button ----
+    observeEvent({input$btn_deselect_sensor}, {
+
+      # Get the name and ID of the sensor to be deselected
+      # Get the name of the station
+      # NB from the selected stations
+      selected_station <- data_stations$data %>%
+        dplyr::filter(selected & station_type == "sensor")
+      indu_station_name <- selected_station$station[data_other$indu_station_index]
+
+      # Change the state of the sensor in data_stations
+      data_stations$data <- change_state_to_deselected(data_stations$data,
+                                                       indu_station_name,
+                                                       group_name_none,
+                                                       col_default,
+                                                       line_default
+                                                       )
+
+      # Choose a new sensor to be selected, Store rownumber in data_other (default)
+      data_other$indu_station_index <- 1
 
     })
 
@@ -289,7 +344,9 @@ individual_timeseries_map_server <- function(id,
 
     # Create list where to observe changes to react on
     tolisten <- reactive({
-      list(change_tab(), data_other$indu_station_index)
+      list(change_tab(),
+           data_other$indu_station_index,
+           input$btn_deselect_sensor)
     })
     # Observe if new data is available-> redraw map
     observeEvent(tolisten(),{
