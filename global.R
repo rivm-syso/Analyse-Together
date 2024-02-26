@@ -70,6 +70,7 @@ source("funs/data_to_tool_fun.R")
 source("funs/logging_fun.R")
 source("funs/ui_create_plots_funs.R")
 source("funs/get_data_caching_funs.R")
+source("funs/set_state_station_data_stations.R")
 set_loglevel()
 
 # launch queue manager
@@ -239,6 +240,7 @@ data_stations_list <- get_stations_cleaned(stations_con,
 
 # Source module for the communication
 source("modules/communication_module.R")
+source("modules/info_popup.R")
 
 # Source module for the date range selection
 source("modules/select_date_range.R")
@@ -281,7 +283,6 @@ source("modules/add_overview_timeseries_plot.R")
 
 # Source layout
 source("funs/ui_tab_grouping.R")
-source("funs/ui_tab_checkdata.R")
 
 # Source buttons
 source("modules/set_groupname_button.R")

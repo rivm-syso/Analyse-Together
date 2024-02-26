@@ -38,6 +38,7 @@ outlier_cutoff_server <- function(id,
           ns("outlier_cutoff"),
           label  = i18n$t("sel_cutoff"),
           value  = default_cutoff,
+          width = "200px",
           min = 0.1
         )
       )
