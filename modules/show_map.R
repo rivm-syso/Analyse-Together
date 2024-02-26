@@ -112,59 +112,6 @@ show_map_server <- function(id,
       return(selected)
     }
 
-    # Change the clicked_id stored - deselect and select
-    change_state_to_deselected <- function(id_selected){
-      # Get the data from the stations
-      data_stns <- data_stations$data
-
-      # Set the deselected station to select == F
-      data_stns <- data_stns %>%
-        dplyr::mutate(selected = ifelse(station == id_selected, F, selected),
-                      # Remove group name and label
-                      group_name = ifelse(station == id_selected, group_name_none, group_name),
-                      label = ifelse(station == id_selected, station, label),
-                      # Change the color to the default
-                      col = ifelse(station == id_selected, col_default, col),
-                      stroke = col,
-                      # Change the linetype to the default
-                      linetype = ifelse(station == id_selected, line_default, linetype))
-
-      # Set the updated data from the stations in the reactiveValues
-      data_stations$data <- data_stns
-    }
-
-    change_state_to_selected <- function(id_selected){
-
-      # Get the data from the stations
-      data_stns <- data_stations$data
-
-      # Get the group name
-      get_group_name <- group_name()
-
-      # Set the selected station to select == T
-      data_stns <- data_stns %>%
-        dplyr::mutate(selected = ifelse(station == id_selected, T, selected),
-                      group_name = ifelse(station == id_selected & station_type == "sensor",
-                                          get_group_name,
-                                          ifelse(station == id_selected & station_type != "sensor",
-                                                 station,
-                                                 group_name)),
-                      # Change the color to the col_select
-                      col = ifelse(station == id_selected  & station_type == "sensor",
-                                   col_select(), col),
-                      stroke = col,
-                      label = ifelse(station == id_selected & station_type == "sensor",
-                                     get_group_name,
-                                     ifelse(station == id_selected & station_type != "sensor",
-                                            station,
-                                            label)))
-
-      # Assign linetype -> reference station
-      data_stns <- assign_linetype_stations(data_stns, line_cat, line_default, line_overload, line_station_type = "ref")
-
-      # Set the updated data from the stations in the reactiveValues
-      data_stations$data <- data_stns
-    }
 
     # Add knmi stations to the map
     add_knmi_map <- function(){
@@ -206,7 +153,13 @@ show_map_server <- function(id,
           # NB there will always be a KNMI station selected!
           # Select random station
           random_station <- data_snsrs$station[1]
-          change_state_to_selected(random_station)
+          data_stations$data <- change_state_to_selected(data_stations$data,
+                                                         random_station,
+                                                         group_name(),
+                                                         col_select(),
+                                                         line_cat,
+                                                         line_default,
+                                                         line_overload)
 
           # Get all newer data info
           # Get the data
@@ -312,7 +265,13 @@ show_map_server <- function(id,
         # NB there will always be a reference station selected!
         # Select random station
         random_station <- data_snsrs$station[2]
-        change_state_to_selected(random_station)
+        data_stations$data <- change_state_to_selected(data_stations$data,
+                                                       random_station,
+                                                       group_name(),
+                                                       col_select(),
+                                                       line_cat,
+                                                       line_default,
+                                                       line_overload)
 
         # Get all newer data info
         # Get the reference stations
@@ -389,7 +348,11 @@ show_map_server <- function(id,
               done
             }
             else {
-              change_state_to_deselected(id_select)
+              data_stations$data <- change_state_to_deselected(data_stations$data,
+                                                               id_select,
+                                                               group_name_none,
+                                                               col_default,
+                                                               line_default)
             }
           }
         }
@@ -428,7 +391,13 @@ show_map_server <- function(id,
             done
           }
           else {
-            change_state_to_selected(id_select)
+            data_stations$data <- change_state_to_selected(data_stations$data,
+                                                           id_select,
+                                                           group_name(),
+                                                           col_select(),
+                                                           line_cat,
+                                                           line_default,
+                                                           line_overload)
           }
         }}
       else{done}
@@ -452,10 +421,20 @@ show_map_server <- function(id,
         selected <- check_state(selected_snsr)
         # If stations is already selected -> deselect
         if (selected == T){
-          change_state_to_deselected(selected_snsr)
+          data_stations$data <- change_state_to_deselected(data_stations$data,
+                                                           selected_snsr,
+                                                           group_name_none,
+                                                           col_default,
+                                                           line_default)
         }
         else { # If not yet selected -> select
-          change_state_to_selected(selected_snsr)
+          data_stations$data <- change_state_to_selected(data_stations$data,
+                                                         selected_snsr,
+                                                         group_name(),
+                                                         col_select(),
+                                                         line_cat,
+                                                         line_default,
+                                                         line_overload)
         }}
       else{done}
 
