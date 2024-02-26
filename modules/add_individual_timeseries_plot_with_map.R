@@ -107,7 +107,7 @@ individual_timeseries_map_server <- function(id,
     })
 
 
-    # Change view to centre stations
+    # Change view to centre stations ----
     set_view_stations <- function(){
       # Check if there is data
       data_snsrs_col <- try(isolate(get_locations()$station_loc))
@@ -130,7 +130,7 @@ individual_timeseries_map_server <- function(id,
       }
     }
 
-    # Add knmi stations to the map
+    # Add knmi stations to the map ----
     add_knmi_map <- function(){
       # Get the data
       data_snsrs <- try(isolate(get_locations()$station_loc))
@@ -163,7 +163,7 @@ individual_timeseries_map_server <- function(id,
 
     }
 
-    # Add the sensors to the map
+    # Add the sensors to the map ----
     add_sensors_map <- function(){
       # # Check if there is data
       data_snsrs <- try(isolate(get_locations()$station_loc))
@@ -204,7 +204,7 @@ individual_timeseries_map_server <- function(id,
 
     }
 
-    # Add reference stations to the map
+    # Add reference stations to the map ----
     add_lmls_map <- function(){
       # # Check if there is data
       data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
@@ -239,6 +239,24 @@ individual_timeseries_map_server <- function(id,
       }
     }
 
+
+    # Reactive to change stroke sensor ----
+    set_stroke_sensor <- reactive({
+      # Get the name of the station
+      # NB from the selected stations
+      selected_station <- data_stations$data %>%
+        dplyr::filter(selected & station_type == "sensor")
+      indu_station_name <- selected_station$station[data_other$indu_station_index]
+
+      # Change stroke colour for selected station
+      data_snsrs <- try(isolate(get_locations()$station_loc))
+      data_snsrs <- data_snsrs %>%
+        dplyr::mutate(stroke = ifelse(station == indu_station_name, "black", col))
+
+      # Set the updated data from the stations in the reactiveValues
+      data_stations$data <- data_snsrs
+    })
+
     # reactive to draw figure ----
     draw_figure <- reactive({
       # Check if there is any data selected etc.
@@ -250,20 +268,23 @@ individual_timeseries_map_server <- function(id,
         dplyr::filter(selected & station_type == "sensor")
       indu_station_name <- selected_station$station[data_other$indu_station_index]
 
+      # If there is no station selected, get the no sensor message of the plotting
+      if(is.na(indu_station_name)){
+        data_plot <- data_measurements() %>% dplyr::filter(station_type == "sensor")
+        # Create timeseries plot
+        timeseries_server("individual_timeseries_plot",
+                          data_measurements = reactive(data_plot),
+                          parameter = parameter,
+                          overview_component = overview_component,
+                          theme_plots = theme_plots)
+      }
+
       # Check if a sensor is selected
       shiny::validate(need(!is.na(indu_station_name), "No station selected."))
 
       # Get the measurements of the station
       measurements <- data_measurements() %>%
         dplyr::filter(station == indu_station_name)
-
-      # Change stroke colour for selected station
-      data_snsrs <- try(isolate(get_locations()$station_loc))
-      data_snsrs <- data_snsrs %>%
-        dplyr::mutate(stroke = ifelse(station == indu_station_name, "black", col))
-
-      # Set the updated data from the stations in the reactiveValues
-      data_stations$data <- data_snsrs
 
       # Set value for the y-ax
       max_yvalue <- data_other$cutoff
@@ -277,6 +298,8 @@ individual_timeseries_map_server <- function(id,
                         manual_ylim = c(0, max_yvalue))
     })
 
+
+    # generate button to manually delete sensor from selection ----
     output$btn_deselect_sensor <- renderUI({
       # Get the name of the station
       # NB from the selected stations
@@ -295,7 +318,7 @@ individual_timeseries_map_server <- function(id,
 
     })
 
-
+    # Function to get the rownumber from the datastations of the selected sensor ----
     get_rownumber_station <- function(data_stations, selected_snsr){
       # Get the rownumber of the sensor in stations$data
       # NB from the selected stations
@@ -306,6 +329,7 @@ individual_timeseries_map_server <- function(id,
       return(rownumber_station)
     }
 
+    # Observers and ObserveEvents ----
     # Observe the clicks of an user -> store index/rownumber
     observeEvent({input$map_marker_click$id}, {
 
@@ -320,7 +344,8 @@ individual_timeseries_map_server <- function(id,
 
     })
 
-    # Observe if user pushes deselect sensor button ----
+
+    # Observe if user pushes deselect sensor button
     observeEvent({input$btn_deselect_sensor}, {
 
       # Get the name and ID of the sensor to be deselected
@@ -343,7 +368,6 @@ individual_timeseries_map_server <- function(id,
 
     })
 
-    # Observers and ObserveEvents ----
 
     # Create list where to observe changes to react on
     tolisten <- reactive({
@@ -355,14 +379,22 @@ individual_timeseries_map_server <- function(id,
     })
     # Observe if new data is available-> redraw map
     observeEvent(tolisten(),{
-      # Redraw the figure with the new selected station
-      draw_figure()
-      # Add the new situation to the map
-      isolate(add_lmls_map())
-      isolate(add_sensors_map())
-      isolate(add_knmi_map())
-      # Zoom to the stations
-      set_view_stations()
+      tab_info <- change_tab()
+      if(!purrr::is_null(tab_info)){
+        # If you arrive on this tabpanel then redraw the map.
+        if(tab_info == "stap2"){
+          # Get the stroke colour selected station
+          set_stroke_sensor()
+          # Add the new situation to the map
+          isolate(add_lmls_map())
+          isolate(add_sensors_map())
+          isolate(add_knmi_map())
+          # Zoom to the stations
+          set_view_stations()
+          # Redraw the figure with the new selected station
+          draw_figure()
+        }
+      }
 
     })
 

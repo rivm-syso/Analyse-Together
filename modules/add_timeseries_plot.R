@@ -41,7 +41,7 @@ timeseries_server <- function(id,
 
          # Check if there is data to plot
          shiny::validate(
-           need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
+           need(!is_empty(data_plot) & !dim(data_plot)[1] == 0,
                 'Geen sensordata beschikbaar.')
            )
 
