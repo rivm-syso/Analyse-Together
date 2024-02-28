@@ -35,9 +35,11 @@ library(ATdatabase)
 ######################################################################
 
 # set time range
-time_start <- as_datetime("2022-08-01 00:00:00")
-time_end <- as_datetime("2022-10-31 23:59:59")
+time_start_default <- lubridate::ymd("20230101")
+time_end_default <- lubridate::ymd("20230501")
 
+time_end_today <- lubridate::today() - months(3)
+time_start_today <- lubridate::today()
 # time_start <- as_datetime("2023-01-01 00:00:00")
 # time_end <- as_datetime("2023-03-31 23:59:59")
 # 
@@ -79,8 +81,14 @@ for (i in download_municipalities) {
     kits <- get_stations_from_selection(i, type = "municipality")
 
     create_data_request(kits = kits,
-                        time_start = time_start,
-                        time_end = time_end,
+                        time_start = time_start_default,
+                        time_end = time_end_default,
+                        conn = pool,
+                        max_requests = 100)
+
+    create_data_request(kits = kits,
+                        time_start = time_start_today,
+                        time_end = time_end_today,
                         conn = pool,
                         max_requests = 100)
 }

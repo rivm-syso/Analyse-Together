@@ -2,54 +2,58 @@
 ### Get data button ###
 ###############################################
 
-# This is a module which get the data from the database
+# This is a module which get the data from the (cache)database
 ######################################################################
 # Output Module
 ######################################################################
 
-get_data_button_output <- function(id) {
+get_data_cache_output <- function(id) {
 
   ns <- NS(id)
-  tagList(
-  actionButton(ns("get_data_button"), i18n$t("btn_get_data"), style="background-color: #ffe9b7")
-  )
+  uiOutput(ns("get_dbs_cache"))
+
 }
 
 ######################################################################
 # Server Module
 ######################################################################
 
-get_data_button_server <- function(id,
-                                   data_measurements,
-                                   data_stations,
-                                   message_data,
-                                   proj_or_mun,
-                                   name_munproj,
-                                   selected_start_date,
-                                   selected_end_date,
-                                   pool,
-                                   measurements_con,
-                                   stations_con,
-                                   # Options for the colors
-                                   col_cat,
-                                   col_default,
-                                   col_overload,
-                                   # Options for the linetype
-                                   line_cat,
-                                   line_default,
-                                   line_overload,
-                                   # DEfault group name
-                                   group_name_none
-                                  ) {
+get_data_cache_server <- function(id,
+                                  text_button,
+                                  data_measurements,
+                                  data_stations,
+                                  message_data,
+                                  mun_or_proj,
+                                  name_munproj,
+                                  selected_start_date,
+                                  selected_end_date,
+                                  pool,
+                                  measurements_con,
+                                  stations_con,
+                                  # Options for the colors
+                                  col_default,
+                                  # Options for the linetype
+                                  line_default,
+                                  line_overload,
+                                  # DEfault group name
+                                  group_name_none
+) {
 
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 
-    # Observe if the get_data_button is clicked ----
-    observeEvent(input$get_data_button, {
+    output$get_dbs_cache <- renderUI({
+      tagList(
+        actionButton(ns("get_dbs_cache"), text_button, style="background-color: #ffe9b7")
+
+      )
+    })
+
+    # Observe if the get_dbs_cache is clicked ----
+    observeEvent(input$get_dbs_cache, {
       # Get the selected choice
-      type_choice <- proj_or_mun()
+      type_choice <- mun_or_proj()
       # Name of municipality/project
       name_choice <- name_munproj()
 
@@ -63,11 +67,25 @@ get_data_button_server <- function(id,
       start_time <- selected_start_date()
       end_time <- selected_end_date()
 
+      # Check if there is selected start/end time
+      shiny::validate(
+        need(!is_empty((start_time)),"Please, select periode"),
+        need(!is_empty((end_time)),"Please, select periode")
+      )
+
+      # Set up notification
+      showNotification(i18n$t("expl_waiting_start"),
+                       duration = NULL,
+                       id = ns("notification"),
+                       closeButton = F
+                       )
+
       # Load the data from the caching database
       # Get the station names in the selected Municipality/project
       stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
 
       log_info("get mod: Get data from caching database: {name_choice} ; {start_time} ; {end_time}... ")
+      message_data$to_start_page <- c(paste0("To start page if:  ", type_choice, " ", name_choice," " , start_time, end_time, "has changed."))
 
       # Estimate the download time, if sensors exists in selection
       if(is.null(stations_name)){
@@ -78,65 +96,38 @@ get_data_button_server <- function(id,
       }
 
       # Get the data measurements of the selected Municipality/project in the period
-      data_measurements$data_all <- get_measurements(measurements_con, stations_name, start_time, end_time)
+      # and do some data cleaning
+      data_measurements$data_all <- get_measurements_cleaned(measurements_con,
+                                                             stations_name,
+                                                             start_time,
+                                                             end_time)
+
+      # Get the data of the stations and put colours etc to it
+      data_stations_list <- get_stations_cleaned(stations_con,
+                                                 stations_name,
+                                                 data_measurements$data_all,
+                                                 col_default,
+                                                 line_default,
+                                                 group_name_none,
+                                                 line_overload)
+      # Put the station data in the reactivevalues
+      data_stations$data <- data_stations_list$data
+      data_stations$data_all <- data_stations_list$data_all
+
+      # remove notification
+      removeNotification(id = ns("notification"))
 
       # Check if there is data in de caching, otherwise stop and give message
       if(nrow(data_measurements$data_all) == 0){
         message_data$data_in_dbs <- c(paste0("No data in ", type_choice, " ", name_choice))
         shiny::validate(need(F,message = paste0("No data in ", type_choice, " ", name_choice)))
       }
+
       message_data$data_in_dbs <- c(paste0("Data available in ", type_choice, " ", name_choice))
-
-      # Remove duplicates
-      data_measurements$data_all <- data_measurements$data_all %>%
-        # drop the ID column
-        dplyr::select(-c(id)) %>%
-        dplyr::distinct()
-
-      # Remove NA values
-      data_measurements$data_all <- data_measurements$data_all[!is.na(data_measurements$data_all$value), ]
-
-      # Create a pm10_kal and pm25_kl for reference stations
-      data_measurements$data_all <- add_ref_kal(data_measurements$data_all)
-
-      # Add uncertainty to the measurements of the sensors
-      data_measurements$data_all <- add_uncertainty_sensor_percent(data_measurements$data_all)
-
-      # Add bias to the uncertainty sensors raw data
-      data_measurements$data_all <- add_uncertainty_bias_sensor(data_measurements$data_all)
-
-      # Get the information from the stations
-      data_stations$data_all <- get_locations(stations_con, stations_name)
-
-      # Select only the station containing data
-      stations_with_data <- data_measurements$data_all %>%
-        dplyr::select(station) %>%
-        unique() %>% pull()
-
-      # Take for each sensor 1 location and add the plot-colours etc.
-      data_stations$data <- data_stations$data_all %>%
-        dplyr::filter(station %in% stations_with_data) %>%
-        dplyr::distinct(station, .keep_all = T) %>%
-        # Add some specific info for the tool
-        dplyr::mutate(selected = F, col = col_default, linetype = line_default,
-                      station_type = "sensor", group_name = group_name_none,
-                      label = station) %>%
-        dplyr::mutate(station_type = ifelse(grepl("KNMI", station) == T, "KNMI",
-                                            ifelse(grepl("^NL.[0-9].", station) == T, "ref",
-                                                   station_type))) %>%
-        dplyr::mutate(linetype = ifelse(station_type == "ref", line_overload, linetype),
-                      size = ifelse(station_type == "ref", 2,1))
 
       log_info("get mod: Data available in tool. ")
 
     })
-
-    return(list(
-      data_measurements = reactive({data_measurements$data_all}),
-      data_stations_all = reactive({data_stations$data_all}),
-      data_stations_filtered = reactive({data_stations$data}),
-      message_data = reactive({message_data$data_in_dbs})
-    ))
 
   })
 }

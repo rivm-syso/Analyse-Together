@@ -87,13 +87,17 @@ timevar_weekly_server <- function(id,
         facet_wrap(~ daynumber, nrow = 1, labeller = labeller(daynumber = labels_weekdays_plot)) +
         scale_color_manual(values = plot_all$col,
                            breaks = plot_all$label) +
+        coord_cartesian(ylim = c(0,NA)) +
         # scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
         #                    minor_breaks = seq(min_meas-(steps/2),max_meas+(steps/2),
         #                                       by = steps/2),
         #                    limits = c(min_meas-(steps/2), max_meas+(steps/2))) +
         scale_x_continuous(breaks = c(0, 6, 12, 18)) +
         labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
-             title=paste0('Weekly pattern for: ', parameter_label)) +
+             title=paste0('Weekly pattern for: ', parameter_label,
+                          "  ",  min(data_plot$date) %>% format("%d/%b/%Y"),
+                          " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
+                          )) +
         #expand_limits(y=0) +
         theme_plots +
         theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),

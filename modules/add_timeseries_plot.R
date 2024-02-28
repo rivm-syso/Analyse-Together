@@ -25,7 +25,10 @@ timeseries_server <- function(id,
                               data_measurements,
                               parameter,
                               overview_component,
-                              theme_plots){
+                              theme_plots,
+                              zoom_in = NA,
+                              remove_legend = FALSE,
+                              manual_ylim = NULL){
 
   moduleServer(id, function(input, output, session) {
 
@@ -38,7 +41,7 @@ timeseries_server <- function(id,
 
          # Check if there is data to plot
          shiny::validate(
-           need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
+           need(!is_empty(data_plot) & !dim(data_plot)[1] == 0,
                 'Geen sensordata beschikbaar.')
            )
 
@@ -58,8 +61,16 @@ timeseries_server <- function(id,
                          ribbon_max = ifelse(ribbon_max < 0, 0, ribbon_max))
 
          # Calculate stats for the axis
-         max_time <- max(data_timeseries$date)
-         min_time <- min(data_timeseries$date)
+         if(!is.list(zoom_in)){ # Check if the functionality of the zoom is used
+           max_time <- max(data_timeseries$date)
+           min_time <- min(data_timeseries$date)}
+         else{ # Use the min/max of the zoom input
+           max_time <- zoom_in$end_slider_zoom()
+           min_time <- zoom_in$start_slider_zoom()
+           # Extra check, somehow the reactive wil be available a moment later
+           shiny::validate(need(!is.null(max_time), "Please, try other figure."))
+         }
+
          n_days_in_plot <- round(as.numeric(max_time - min_time))
          date_breaks_in_plot <- paste0(as.character(dplyr::case_when(n_days_in_plot < 8 ~ 1, T ~ n_days_in_plot/7))," day")
          n_stat_in_plot <- length(unique(data_timeseries$label))
@@ -96,7 +107,8 @@ timeseries_server <- function(id,
          names_col_plot <- names_col_plot[order(names(names_col_plot))]
 
          # Make a plot ====
-         try(ggplot(data = data_timeseries) +
+         plot_timeseries <-
+           ggplot(data = data_timeseries) +
                geom_rect(data = background_colours_df,
                          aes(xmin = min_time, xmax = max_time,
                          ymin = y_min, ymax = y_max, fill = label),
@@ -112,15 +124,33 @@ timeseries_server <- function(id,
                scale_linetype_manual(values =  names_linetype_plot,
                                      labels = names(names_linetype_plot)) +
                scale_x_datetime(date_breaks = date_breaks_in_plot,
-                                date_minor_breaks = "1 day") +
-               coord_cartesian(ylim = c(0, max_meas  + (steps/2))) +
+                                date_minor_breaks = "1 day",
+                                date_labels = "%d/%b/%y") +
+               coord_cartesian(ylim = c(0, max_meas  + (steps/2)),
+                               xlim = c(min_time, max_time)) +
                labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
-                    title = paste0('Timeseries for: ', parameter_label)) +
+                    title = paste0('Timeseries for: ', parameter_label,
+                                   "  ",  min(data_plot$date) %>% format("%d/%b/%Y"),
+                                   " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
+                                   )) +
                theme_plots +
-               theme(legend.text=element_text(size = paste0(16-log(n_stat_in_plot)*2)),
-                     legend.position="top",
-                     legend.title=element_blank())
-         )
+           theme(legend.text=element_text(size = paste0(16-log(n_stat_in_plot)*2)),
+                 legend.position="top",
+                 legend.title=element_blank())
+
+         if(remove_legend){
+           plot_timeseries <- plot_timeseries +
+             theme(legend.position="none")
+         }
+
+         if(!is.null(manual_ylim)){
+           plot_timeseries <- plot_timeseries +
+             coord_cartesian(ylim = manual_ylim)
+         }
+
+         plot_timeseries
+
+
 
      })
 

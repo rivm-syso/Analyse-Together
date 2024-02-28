@@ -76,7 +76,9 @@ calender_server <- function(id,
                        breaks = c(0,5,10,15,20,30,50,100, 300),
                        par.settings = list(fontsize=list(text=15)),
                        key.header = parameter_label,
-                       key.footer = '', 
+                       key.footer = '',
+                       main = paste0('Period: ', min(data_plot$date) %>% format("%d/%b/%Y"),
+                                      " - ",  max(data_plot$date) %>% format("%d/%b/%Y")),
                        labels = c('0 to 5', '5 to 10', '10 to 15', '15 to 20', '20 to 30', '30 to 50', '50 to 100', '100 or more')))
 
     })
