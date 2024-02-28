@@ -8,11 +8,11 @@
 ### Output Module ####
 #################################################################
 
-pollrose_output <- function(id) {
+calender_output <- function(id) {
 
   ns <- NS(id)
 
-  plotOutput(ns("pollrose_plot"))
+  plotOutput(ns("calender_plot"))
 
 }
 
@@ -21,7 +21,7 @@ pollrose_output <- function(id) {
 # Server Module
 ######################################################################
 
-pollrose_server <- function(id,
+calender_server <- function(id,
                             data_measurements,
                             data_measurements_knmi,
                             parameter,
@@ -31,7 +31,7 @@ pollrose_server <- function(id,
 
     ns <- session$ns
 
-    output$pollrose_plot <- renderPlot({
+    output$calender_plot <- renderPlot({
       # Get the data to plot - stations
       data_plot <- data_measurements()
 
@@ -52,7 +52,7 @@ pollrose_server <- function(id,
         dplyr::pull(label)
 
       # Get the stations data
-      data_pollrose <- data_plot
+      data_calender <- data_plot
 
       # Get the KNMI data
       knmidata <- data_plot_wind %>%
@@ -66,27 +66,20 @@ pollrose_server <- function(id,
       shiny::validate(need(knmi_number == 1, "Please select only 1 KNMI station."))
 
       # Merge KNMI data with the stations data
-      data_pollrose <- dplyr::left_join(data_pollrose, knmidata, by = 'date')
+      data_calender <- dplyr::left_join(data_calender, knmidata, by = 'date')
 
       # Make a plot ====
-      try(pollutionRose(data_pollrose,
-                        pollutant = "value",
-                        wd = "wd",
-                        ws = "ws",
-                        type = 'label',
-                        local.tz = "Europe/Amsterdam",
-                        cols = "Oranges",
-                        statistic = 'prop.mean',
-                        breaks = c(0,10,25,50,100,200),
-                        par.settings = list(fontsize=list(text=15)),
-                        main = paste0('Period: ', min(data_plot$date) %>% format("%d/%b/%Y"),
+      try(calendarPlot(data_calender, pollutant = "value", annotate = "ws",
+                       type = 'label',
+                       local.tz = "Europe/Amsterdam",
+                       cols = "Oranges",
+                       breaks = c(0,5,10,15,20,30,50,100, 300),
+                       par.settings = list(fontsize=list(text=15)),
+                       key.header = parameter_label,
+                       key.footer = '',
+                       main = paste0('Period: ', min(data_plot$date) %>% format("%d/%b/%Y"),
                                       " - ",  max(data_plot$date) %>% format("%d/%b/%Y")),
-
-                        key = list(header = parameter_label,
-                                   footer = '',
-                                   labels = c('0 to 10', '10 to 25',
-                                              '25 to 50','50 to 100', '100 or more')),
-                        between = list(x=0.5, y = 0.5)))
+                       labels = c('0 to 5', '5 to 10', '10 to 15', '15 to 20', '20 to 30', '30 to 50', '50 to 100', '100 or more')))
 
     })
 

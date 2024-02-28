@@ -7,6 +7,7 @@
 ###################################################################
 ### Output Module ####
 #################################################################
+
 barplot_output <- function(id) {
 
   ns <- NS(id)
@@ -17,72 +18,55 @@ barplot_output <- function(id) {
 
 
 ######################################################################
-# Server Module
+# Server Module ####
 ######################################################################
-#
-#
 
 barplot_server <- function(id,
-                           com_module,
+                           data_measurements,
+                           parameter,
                            overview_component,
                            theme_plots) {
 
   moduleServer(id, function(input, output, session) {
 
         ns <- session$ns
-    
-        # Determine parameter that needs to be plotted
-        # Get selected measurements from communication module
-        data_measurements <- reactive({
-          data_measurements <- com_module$selected_measurements() %>% dplyr::filter(!grepl("KNMI", station))
-          return(data_measurements)
-        })
-    
-        # Get selected stations from communication module
-        data_stations <- reactive({
-          data_stations <- com_module$station_locations() %>% 
-            dplyr::select(c(station, col, linetype, size)) %>% 
-            dplyr::distinct(station, .keep_all = T) %>% 
-            dplyr::filter(!grepl("KNMI", station))
-      
-          return(data_stations)
-        })
-    
+
         output$barplot_plot <- renderPlot({
-    
+
+          # Get the data to plot
+          data_plot <- data_measurements()
+
           # Check if there is data to plot
           shiny::validate(
-            need(!is_empty(data_measurements()),'Geen sensordata beschikbaar.'),
-            need(!dim(data_measurements())[1] == 0,'Geen sensordata beschikbaar.')
+            need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
+                 'Geen sensordata beschikbaar.')
           )
-    
+
           # Determine parameter for the label in the plot
-          parameter <- com_module$selected_parameter()$parameter
-    
+          parameter <- parameter()
+
           # Find the corresponding label
           parameter_label <- overview_component %>%
             dplyr::filter(component == parameter) %>%
             dplyr::pull(label)
-    
-          # Get the stations measurements
-          data_barplot <- data_measurements()
-          data_barplot <- data_barplot %>% dplyr::group_by(parameter, station) %>%
+
+          # Calculate the mean and standard deviation
+          data_barplot <- data_plot %>%
+            dplyr::group_by(parameter, label) %>%
             dplyr::mutate(gemiddelde = round(mean(value, na.rm=TRUE), 2),
                           standaarddev = sd(value, na.rm = T),
-                          n_obs = n()) %>% distinct(station, .keep_all = TRUE)
+                          n_obs = n()) %>%
+            distinct(label, .keep_all = TRUE)
 
-          data_barplot <- data_barplot %>%
-            dplyr::left_join(data_stations(), by = "station")
-          
-    
           # Make a plot
-    
-          try(ggplot(data = data_barplot, aes(y=gemiddelde, x=station)) +
-            geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black', size = data_barplot$size/2) +
-            geom_errorbar(aes(ymin=gemiddelde-standaarddev, ymax=gemiddelde+standaarddev), size = data_barplot$size/2, width=.2,
-                          position=position_dodge(.9), color='black') +
-            geom_text(aes(y = gemiddelde-gemiddelde+2, label = n_obs), colour = 'white', size = 9-2*log(length(unique(data_barplot$station)))) +
-            labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")), title=paste0('Barplot for: ', parameter_label)) +
+          try(ggplot(data = data_barplot, aes(y=gemiddelde, x=label)) +
+            geom_bar(stat="identity", fill=paste0(data_barplot$col), color = 'black',
+                     size = data_barplot$size/2) +
+            labs(x = element_blank(), y = expression(paste("Concentration (", mu, "g/",m^3,")")),
+                 title=paste0('Barplot for: ', parameter_label,
+                              "  ",  min(data_plot$date) %>% format("%d/%b/%Y"),
+                              " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
+                              )) +
             expand_limits(y=0) + # Make sure no negative values are shown
             theme_plots
         )

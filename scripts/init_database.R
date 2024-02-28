@@ -10,7 +10,8 @@ library(RSQLite)
 library(pool)
 library(ATdatabase)
 library(here)
-source(here("funs","database_fun.R"))
+library(logger)
+source(here::here("funs","database_fun.R"))
 
 
 db.path <- get_database_path()
@@ -26,16 +27,16 @@ pool <- dbPool(
 
 )
 
-create_database_tables(pool)
+ATdatabase::create_database_tables(pool)
 
 municipalities <- read_csv(here("prepped_data", "municipalities.csv"), 
                            col_names = F)
 projects <- read_csv(here("prepped_data", "projects.csv"), 
                            col_names = F)
 
-add_doc("application", "municipalities", municipalities, conn = pool,
+ATdatabase::add_doc("application", "municipalities", municipalities, conn = pool,
         overwrite = TRUE)
-add_doc("application", "projects", projects, conn = pool,
+ATdatabase::add_doc("application", "projects", projects, conn = pool,
         overwrite = TRUE)
 
 

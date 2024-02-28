@@ -1,8 +1,8 @@
 ###############################################
-### pickerInput - select component ###
+### pickerInput - to choose type either project or municipality ###
 ###############################################
 
-# This is a project selection module
+# This is a project selection module, to choose type either project or municipality
 ######################################################################
 # Output Module
 ######################################################################
@@ -10,7 +10,6 @@
 project_or_mun_selection_output <- function(id) {
 
   ns <- NS(id)
-
   uiOutput(ns("proj_or_mun_select"))
 
 }
@@ -20,32 +19,34 @@ project_or_mun_selection_output <- function(id) {
 # Server Module
 ######################################################################
 
-project_or_mun_selection_server <- function(id, select_choices) {
+project_or_mun_selection_server <- function(id,
+                                            data_other,
+                                            select_choices,
+                                            pre_select ) {
 
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 
     output$proj_or_mun_select <- renderUI({
-
       # Create the component picker with a list of possible choices
       tagList(
 
-        pickerInput(
+        radioButtons(
           ns("proj_or_mun_select"),
           label    = i18n$t("sel_basedon"),
           choices  = select_choices,
-          selected = NULL,
-          multiple = TRUE,
-          options = pickerOptions(maxOptions = 1)
+          selected = pre_select
         )
       )
     })
 
-    # Return the chosen component
-    return(selected_proj_or_mun = reactive({input$proj_or_mun_select}))
+    observeEvent(input$proj_or_mun_select,{
+
+      data_other$mun_or_proj <- input$proj_or_mun_select
+
+    })
 
   })
 
 }
-

@@ -19,6 +19,7 @@ RUN apt-get update \
     libproj-dev \
     libssl-dev \
     rsync \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # install R pkgs
@@ -35,21 +36,23 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
      sp \
      sf \
      DT \
-     plotly \
      latex2exp \
      openair \
      logger \
      remotes \
-     && rm -rf /tmp/downloaded_packages
-
-# install some more R pkgs (in a new layer)
-RUN install2.r --error --skipinstalled --ncpus -1 \
      plyr \
      shinyjs \
      shiny.i18n \
      dbplyr \
      here \
+     shinyalert \
+     datawizard \
+     shinybusy \
      && rm -rf /tmp/downloaded_packages
+
+# install some more R pkgs (in a new layer)
+# RUN install2.r --error --skipinstalled --ncpus -1 \
+#      && rm -rf /tmp/downloaded_packages
 
 # Create folder 
 # copy app
@@ -59,10 +62,8 @@ WORKDIR /app
 COPY . .
 
 ## install remotes packages
-RUN R -e "remotes::install_github('jspijker/samanapir', ref = 'Issue_2')"  && \
-# R -e "remotes::install_github('wschuc002/datafile', build_opts ='')"  && \
-# R -e "remotes::install_github('rivm-syso/samanapir', ref = 'Issue_2')"  && \
- R -e "remotes::install_github('rivm-syso/ATdatabase', ref = 'develop', build_opts ='')"
+RUN R -e "remotes::install_github('rivm-syso/samanapir', ref = 'main')"  && \
+ R -e "remotes::install_github('rivm-syso/ATdatabase', ref = 'main', build_opts ='')"
 
 
 ## expose app
