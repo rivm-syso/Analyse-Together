@@ -264,7 +264,7 @@ show_map_server <- function(id,
       }else{
         # NB there will always be a reference station selected!
         # Select random station
-        random_station <- data_snsrs$station[2]
+        random_station <- data_snsrs$station[1]
         data_stations$data <- change_state_to_selected(data_stations$data,
                                                        random_station,
                                                        group_name(),
@@ -305,8 +305,13 @@ show_map_server <- function(id,
 
     # Observers and ObserveEvents ----
 
+    # Create list where to observe changes to react on
+    tolisten <- reactive({
+      list(tab_choice(),
+           data_stations)
+    })
     # Observe if tabsetpanel is changed to the visualisation tab -> redraw map
-    observe({
+    observeEvent(tolisten(), {
       tab_info <- tab_choice()
       if(!purrr::is_null(tab_info)){
         # If you arrive on this tabpanel then redraw the map.
