@@ -187,13 +187,6 @@ default_plot = "timeplot"
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
 
-# Connections with the database tables
-measurements_con <- tbl(pool, "measurements")
-stations_con <- tbl(pool, "location")
-
-# log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
-
-
 # Component choices
 overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"),
                                  'label'=c("PM10","PM10 - calibrated","PM2.5" ,"PM2.5 - calibrated" ))
