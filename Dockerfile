@@ -1,6 +1,6 @@
 ######################################################################
 ## base image
-FROM rocker/shiny-verse:4.3.1
+FROM rocker/shiny-verse:4.3.2
 
 ENV TZ Europe/Amsterdam
 RUN cat /etc/os-release
