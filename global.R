@@ -111,8 +111,8 @@ pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 # Default start and end time for the date picker
 # default_time <- list(start_time = lubridate::today() - days(65),
 #                      end_time = lubridate::today())
-default_time <- list(start_time = lubridate::ymd("20230101"),
-                     end_time = lubridate::ymd("20230501"))
+default_time <- list(start_time = lubridate::ymd("20230901"),
+                     end_time = lubridate::ymd("20231201"))
 
 # store lists with projects and municipalities
 municipalities <- read_csv("./prepped_data/municipalities.csv", col_names = F,
@@ -186,13 +186,6 @@ default_plot = "timeplot"
 
 # Codes of KNMI stations
 knmi_stations <- as.vector(t(as.matrix(read.table(file = "prepped_data/knmi_stations.txt"))))
-
-# Connections with the database tables
-measurements_con <- tbl(pool, "measurements")
-stations_con <- tbl(pool, "location")
-
-# log_info("Database ready, contains {nrow(sensor)} locations/sensors and {nrow(measurements)} measurements")
-
 
 # Component choices
 overview_component <- data.frame('component' = c("pm10","pm10_kal","pm25","pm25_kal"),

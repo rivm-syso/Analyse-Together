@@ -1,7 +1,6 @@
 ######################################################################
 ## base image
-# FROM rocker/r-ver:4.2.1
-FROM rocker/shiny-verse:4.2.1
+FROM rocker/shiny-verse:4.3.1
 
 ENV TZ Europe/Amsterdam
 RUN cat /etc/os-release
@@ -9,7 +8,7 @@ RUN cat /etc/os-release
 ######################################################################
 # Create layers
 
-# Adding system level libs etc. 
+# Adding system level libs etc.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     libudunits2-dev \
@@ -25,7 +24,7 @@ RUN apt-get update \
 # install R pkgs
 RUN install2.r --error --skipinstalled --ncpus -1 \
      tidyverse \
-     lubridate \   
+     lubridate \
      shiny \
      shinycssloaders \
      shinyWidgets \
@@ -54,7 +53,7 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
 # RUN install2.r --error --skipinstalled --ncpus -1 \
 #      && rm -rf /tmp/downloaded_packages
 
-# Create folder 
+# Create folder
 # copy app
 
 RUN mkdir /app
