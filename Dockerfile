@@ -64,8 +64,6 @@ COPY . .
 RUN R -e "remotes::install_github('rivm-syso/samanapir', ref = 'main')"  && \
  R -e "remotes::install_github('rivm-syso/ATdatabase', ref = 'main', build_opts ='')"
 
-RUN Rscript ./scripts/container_data_prep.R
-
 ## expose app
 EXPOSE 3838
 
