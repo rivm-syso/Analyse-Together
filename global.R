@@ -73,6 +73,10 @@ source("funs/get_data_caching_funs.R")
 source("funs/set_state_station_data_stations.R")
 set_loglevel()
 
+# check if database must be renewed or created
+db_script <- here::here("scripts","container_data_prep.R")
+system2("Rscript", db_script, wait = TRUE)
+
 # launch queue manager
 qm_script <- here::here("scripts","queue_manager.R")
 system2("Rscript", qm_script, wait = FALSE)
