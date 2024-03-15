@@ -231,7 +231,14 @@ shinyUI(
           )
         ) # end tabpanel "ADVANCED"
 
-      ) # end of tabsetpanel "second_order"
+      ), # end of tabsetpanel "second_order"
+
+
+    # Text for footer
+    div(p(i18n$t("expl_indicative_data"),
+          actionLink(label = i18n$t("btn_link_information"),
+                     inputId = "link_to_information"))),
+
 
     ), # end tabpanel "HOME"
 

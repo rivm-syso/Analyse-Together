@@ -364,6 +364,12 @@ shinyServer(function(global, input, output, session) {
                       selected = "Overview")
   })
 
+
+  # Observe if user want to go to information tab
+  observeEvent(input$link_to_information, {
+    updateNavbarPage(inputId = "navbar" ,
+                      selected = "Information")
+  })
   # Observe secret observer button
   observeEvent(input$browser, {
     browser()
