@@ -166,7 +166,7 @@
       },
     {"tag" : "tool_select_2_expl",
 	      "en": "1. Choose whether you want to view the data from a specific project or within a particular municipality.",
-	      "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken."
+	      "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken. Check op het dataportaal of er sensoren binnen jouw gemeente zijn: "
 	  },
 
     {"tag" : "tool_select_3_expl",
