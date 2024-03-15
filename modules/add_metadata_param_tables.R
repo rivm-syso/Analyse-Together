@@ -45,6 +45,7 @@ metadata_param_server <- function(id,
         need(!dim(data_all)[1] == 0,'Geen sensordata beschikbaar.')
       )
 
+      browser()
       # Get the info of the stations
       data_stations_part <- data_stations() %>%
         dplyr::select(c(station, station_type, label, group_name, col, selected)) %>%
@@ -59,7 +60,9 @@ metadata_param_server <- function(id,
       # Prepare the data for the table - do some summarise
       metadata_table <- data_all %>%
         # Take the data of the chosen parameter
-        dplyr::filter(parameter == parameter()) %>%
+        dplyr::filter(parameter == parameter() |
+                        # To include the KNMI stations
+                        parameter == "wd") %>%
         dplyr::group_by(station) %>%
         # Check te date of the first and last measurement
         dplyr::mutate(first_m = as.POSIXct(as.numeric(min(timestamp)),
