@@ -32,18 +32,19 @@ slider_zoom_server <- function(id,
 
     ns <- session$ns
 
+
     output$slider_zoom <- renderUI({
 
       # Create the slider
       tagList(
-
+        chooseSliderSkin("Flat", "#ffb612"),
         sliderInput(
           ns("slider_zoom"),
           label = "",
           min = min_date() - days(1),
           max = max_date() + days(1),
           value = c(min_date(), max_date()),
-          timeFormat = "%d/%b/%y",
+          timeFormat = "%d/%b",
           timezone = tzone_man
         )
 

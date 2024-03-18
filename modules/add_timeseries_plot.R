@@ -71,10 +71,22 @@ timeseries_server <- function(id,
            shiny::validate(need(!is.null(max_time), "Please, try other figure."))
          }
 
+         browser()
+         # for the x-as the ticks and labels depending on number of days selected
          n_days_in_plot <- round(as.numeric(max_time - min_time))
-         date_breaks_in_plot <- paste0(as.character(dplyr::case_when(n_days_in_plot < 8 ~ 1, T ~ n_days_in_plot/7))," day")
+         date_breaks_in_plot <- dplyr::case_when(n_days_in_plot < 2 ~ "1 hour",
+                                                 n_days_in_plot < 4 ~ "6 hour",
+                                                 n_days_in_plot < 15 ~ "1 day",
+                                                 n_days_in_plot < 29 ~ "1 week",
+                                                 n_days_in_plot < 200 ~ "2 week",
+                                                 n_days_in_plot > 199 ~ "1 month")
+
+         label_in_plot <- dplyr::case_when(n_days_in_plot < 4 ~ "%d/%b/%y %H:00",
+                                           T ~ "%d/%b/%y")
+
          n_stat_in_plot <- length(unique(data_timeseries$label))
 
+         # For y-as, steps and maximum
          min_meas <- plyr::round_any(min(data_timeseries$value-data_timeseries$sd, na.rm = T), 5, f = floor)
          max_meas <- plyr::round_any(max(data_timeseries$value+data_timeseries$sd, na.rm = T), 5, f = ceiling)
          steps <- plyr::round_any(max_meas / 15, 10, f = ceiling) # to create interactive y-breaks
@@ -109,6 +121,7 @@ timeseries_server <- function(id,
          # Make a plot ====
          plot_timeseries <-
            ggplot(data = data_timeseries) +
+                # Add background colours
                geom_rect(data = background_colours_df,
                          aes(xmin = min_time, xmax = max_time,
                          ymin = y_min, ymax = y_max, fill = label),
@@ -116,7 +129,8 @@ timeseries_server <- function(id,
                geom_ribbon(aes(x = date, y = value, ymin = ribbon_min,
                                ymax = ribbon_max, fill = label),
                            alpha = .2, show.legend = F) +
-               geom_line(aes(x = date, y = value, color = label, linetype = label)) +
+               geom_line(aes(x = date, y = value, color = label,
+                             linetype = label)) +
                scale_color_manual(values = names_col_line_plot,
                                   labels = names(names_col_line_plot)) +
                scale_fill_manual(values = names_col_plot,
@@ -125,10 +139,11 @@ timeseries_server <- function(id,
                                      labels = names(names_linetype_plot)) +
                scale_x_datetime(date_breaks = date_breaks_in_plot,
                                 date_minor_breaks = "1 day",
-                                date_labels = "%d/%b/%y") +
+                                date_labels = label_in_plot) +
                coord_cartesian(ylim = c(0, max_meas  + (steps/2)),
                                xlim = c(min_time, max_time)) +
-               labs(x = "Date", y = expression(paste("Concentration (", mu, "g/",m^3,")")),
+               labs(x = "Date",
+                    y = expression(paste("Concentration (", mu, "g/",m^3,")")),
                     title = paste0('Timeseries for: ', parameter_label,
                                    "  ",  min(data_plot$date) %>% format("%d/%b/%Y"),
                                    " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
@@ -149,8 +164,6 @@ timeseries_server <- function(id,
          }
 
          plot_timeseries
-
-
 
      })
 
