@@ -116,7 +116,7 @@ metadata_param_server <- function(id,
 
     output$meta_table <-
 
-      renderDataTable({
+      DT::renderDataTable({
         # Get the data for the table
         data_for_table <- metadata_table()
 
