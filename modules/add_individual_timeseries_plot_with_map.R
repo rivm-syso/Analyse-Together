@@ -371,14 +371,27 @@ individual_timeseries_map_server <- function(id,
 
     # Create list where to observe changes to react on
     tolisten <- reactive({
-      list(change_tab(),
+      list(
            data_other$indu_station_index,
            data_other$cutoff,
            input$btn_deselect_sensor)
 
     })
-    # Observe if new data is available-> redraw map
+
+    # Observe if new data is available-> redraw map and figure
     observeEvent(tolisten(),{
+          # Get the stroke colour selected station
+          set_stroke_sensor()
+          # Add the new situation to the map
+          isolate(add_lmls_map())
+          isolate(add_sensors_map())
+          isolate(add_knmi_map())
+          # Redraw the figure with the new selected station
+          draw_figure()
+    })
+
+    # Observe if we enter the page, then also set zoom level
+    observeEvent(change_tab(),{
       tab_info <- change_tab()
       if(!purrr::is_null(tab_info)){
         # If you arrive on this tabpanel then redraw the map.
@@ -395,7 +408,6 @@ individual_timeseries_map_server <- function(id,
           draw_figure()
         }
       }
-
     })
 
 
