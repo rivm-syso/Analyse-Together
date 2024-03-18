@@ -71,7 +71,6 @@ timeseries_server <- function(id,
            shiny::validate(need(!is.null(max_time), "Please, try other figure."))
          }
 
-         browser()
          # for the x-as the ticks and labels depending on number of days selected
          n_days_in_plot <- round(as.numeric(max_time - min_time))
          date_breaks_in_plot <- dplyr::case_when(n_days_in_plot < 2 ~ "1 hour",

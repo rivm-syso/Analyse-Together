@@ -45,7 +45,6 @@ metadata_param_server <- function(id,
         need(!dim(data_all)[1] == 0,'Geen sensordata beschikbaar.')
       )
 
-      browser()
       # Get the info of the stations
       data_stations_part <- data_stations() %>%
         dplyr::select(c(station, station_type, label, group_name, col, selected)) %>%
