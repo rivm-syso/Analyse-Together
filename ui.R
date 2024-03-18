@@ -199,14 +199,13 @@ shinyUI(
             column(width = 12,
                    wellPanel(
                      div(h3(i18n$t("tool_select")),
-                         p(i18n$t("tool_select_1_expl")),
-                         p(i18n$t("tool_select_2_expl")),
+                         p(i18n$t("tool_select_1_expl"),
+                         a("samenmeten.rivm.nl",
+                           href ='https://samenmeten.rivm.nl/dataportaal/',
+                           target = 'blank')),
                          project_or_mun_selection_output("proj_or_mun_select"),
-                         p(i18n$t("tool_select_3_expl")),
                          choice_selection_output("choice_select"),
-                         p(i18n$t("tool_select_4_expl")),
                          date_range_output("select_date_range"),
-                         p(i18n$t("tool_select_5_expl")),
                          component_selection_output("select_component"),
                          p(i18n$t("tool_select_6_expl")),
                          download_api_button_output("dl_btn_pushed"),
@@ -231,7 +230,14 @@ shinyUI(
           )
         ) # end tabpanel "ADVANCED"
 
-      ) # end of tabsetpanel "second_order"
+      ), # end of tabsetpanel "second_order"
+
+
+    # Text for footer
+    div(p(i18n$t("expl_indicative_data"),
+          actionLink(label = i18n$t("btn_link_information"),
+                     inputId = "link_to_information"))),
+
 
     ), # end tabpanel "HOME"
 
@@ -271,7 +277,7 @@ shinyUI(
         a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
         br(),
         i18n$t("expl_link_to_projecten"),
-        a("samenmeten.nl/projecten", href ='https://samenmeten.nl/projecten', target = 'blank'),
+        a("samenmeten.nl/initiatieven", href ='https://www.samenmeten.nl/initiatieven', target = 'blank'),
         br(),
         i18n$t("expl_link_to_benb_artikel"),
         a("link", href ='https://www.mdpi.com/1424-8220/22/20/8053', target = 'blank'),
