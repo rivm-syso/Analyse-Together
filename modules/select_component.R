@@ -40,6 +40,7 @@ component_selection_server <- function(id,
           choices  = comp_choices,
           selected = default_parameter,
           multiple = TRUE,
+          width = "500px",
           options = pickerOptions(maxOptions = 1)
           )
         )

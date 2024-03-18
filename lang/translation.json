@@ -162,23 +162,26 @@
     },
     {"tag" : "tool_select_1_expl",
       "en" : "In this tab you can choose a dataset from the Measure Together database. The data will be retrieved from the databases of Measure Together, the KNMI, and the Air Quality Monitoring Network. Go to 'START' to load your data selection and start exploring.",
-      "nl" : "In dit tabblad kun je zelf een dataset kiezen uit de Samen Meten-database. De data wordt dan voor je opgehaald uit de databases van Samen Meten, het KNMI en Luchtmeetnet. Vervolgens kun je bij 'START' de data in de tool laden en gaan ontdekken."
+      "nl" : "In dit tabblad kun je zelf een dataset kiezen uit de Samen Meten-database. De data wordt dan voor je opgehaald uit de databases van Samen Meten, het KNMI en Luchtmeetnet. Vervolgens kun je bij 'START' de data in de tool laden en gaan ontdekken. Check op het dataportaal of er sensoren binnen jouw gemeente zijn: "
       },
-    {"tag" : "tool_select_2_expl",
+    {"tag" : "sel_basedon",
 	      "en": "1. Choose whether you want to view the data from a specific project or within a particular municipality.",
-	      "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken. Check op het dataportaal of er sensoren binnen jouw gemeente zijn: "
+	      "nl": "1. Kies of je de data van een bepaald project of binnen een bepaalde gemeente wilt bekijken. "
 	  },
-
-    {"tag" : "tool_select_3_expl",
+      {"tag" : "sel_language",
+        "en": "Change language",
+        "nl": "Wijzig taal"
+      },
+    {"tag" : "sel_option",
 	      "en": "2. Select the name of the corresponding project or municipality. ",
 	      "nl": "2. Kies de naam van het betreffende project of gemeente."
 	  },
 
-    {"tag" : "tool_select_4_expl",
+    {"tag" : "sel_date",
 	      "en": "3. Define the time period.",
 	      "nl": "3. Kies de tijdsperiode waarin je geinteresseerd bent. "
 	  },
-	  {"tag" : "tool_select_5_expl",
+	  {"tag" : "sel_comp",
 	      "en": "4. Choose in which component you are interested.",
 	      "nl": "4. Geef aan in welke component je wilt bekijken. "
 	  },
@@ -207,29 +210,9 @@
         "en": "Download",
         "nl": "Download"
       },
-      {"tag" : "sel_basedon",
-        "en": "1. Selection based on:",
-        "nl": "1. Selectie gebaseerd op:"
-      },
 	    {"tag" : "word_muni",
         "en": "Municipality",
         "nl": "Gemeente"
-      },
-      {"tag" : "sel_option",
-        "en": "2. Choose one option:",
-        "nl": "2. Maak een keuze:"
-      },
-      {"tag" : "sel_language",
-        "en": "Change language",
-        "nl": "Wijzig taal"
-      },
-	    {"tag" : "sel_date",
-        "en": "3. Select date range:",
-        "nl": "3. Selecteer een periode:"
-      },
-      {"tag" : "sel_comp",
-        "en": "4. Select component:",
-        "nl": "4. Selecteer component:"
       },
       {"tag" : "sel_plot",
         "en": "Select visualisation:",
