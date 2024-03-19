@@ -61,8 +61,8 @@ shinyUI(
       fluidRow(
         # 'Show' time to keep the app activated (not visible)
         h1(
-          textOutput("currentTime", container = span),
-          style = "font-size:12px; text-align:right; color:rgb(221, 221, 221);"
+          textOutput("currentTime", container = shiny::span),
+          style = "font-size:12px; text-align:right; color:rgb(243,243,243);"
         )
       ),
 
