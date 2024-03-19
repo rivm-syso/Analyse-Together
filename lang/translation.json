@@ -161,7 +161,7 @@
       "nl" : "Kies zelf de data"
     },
     {"tag" : "tool_select_1_expl",
-      "en" : "In this tab you can choose a dataset from the Measure Together database. The data will be retrieved from the databases of Measure Together, the KNMI, and the Air Quality Monitoring Network. Go to 'START' to load your data selection and start exploring.",
+      "en" : "In this tab you can choose a dataset from the Measure Together database. The data will be retrieved from the databases of Measure Together, the KNMI, and the Air Quality Monitoring Network. Go to 'START' to load your data selection and start exploring. Check the dataportaal if there are any sensors within your municipality: ",
       "nl" : "In dit tabblad kun je zelf een dataset kiezen uit de Samen Meten-database. De data wordt dan voor je opgehaald uit de databases van Samen Meten, het KNMI en Luchtmeetnet. Vervolgens kun je bij 'START' de data in de tool laden en gaan ontdekken. Check op het dataportaal of er sensoren binnen jouw gemeente zijn: "
       },
     {"tag" : "sel_basedon",
