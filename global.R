@@ -137,24 +137,24 @@ stations_con <- tbl(pool, "location")
 
 # Define colors, line types,choices etc.                                   ====
 # Colours for the sensors
-col_cat <- list('#e17000','#007bc7','#673327','#39870c','#ffb612','#42145f',
-                '#777c00', '#94710a','#01689b','#f9e11e','#76d2b6','#d52b1e',
-                '#8fcae7','#ca005d','#275937','#f092cd')
+col_cat <- list('#ca005d','#ffb612','#777c00','#007bc7','#673327','#39870c',
+                '#e17000','#94710a','#01689b','#42145f','#f9e11e','#76d2b6','#d52b1e',
+                '#8fcae7','#275937','#f092cd')
 # col_cat <- rev(col_cat) # the saturated colours firs
 col_default <- '#000000'
 col_overload <- '#111111'
 
 # set names to the colors for using as group name
-col_names <- data.frame('color' = c('#e17000','#007bc7','#673327','#39870c','#ffb612',
-                        '#42145f','#777c00', '#94710a','#01689b','#f9e11e','#76d2b6',
-                        '#d52b1e','#8fcae7','#ca005d','#275937','#f092cd'),
-                        'label'=c("Group orange","Group blue","Group brown" ,
-                                  "Group green", "Group yellow",
-                                  "Group purple","Group grey", "Group beige",
-                                  "Group dark blue", "Group sunflower",
-                                  "Group mint", "Group red", "Group baby blue",
-                                  "Group magenta", "Group dark green",
-                                  "Group pink"))
+col_names <- data.frame('color' = c('#ca005d','#ffb612','#777c00','#007bc7','#673327','#42145f','#39870c',
+                                    '#e17000','#94710a','#01689b','#f9e11e','#76d2b6',
+                        '#d52b1e','#8fcae7','#275937','#f092cd'),
+                        'label'=c("Group pink","Group yellow",  "Group green","Group blue","Group brown" ,
+                                  "Group purple","Group grassgreen", "Group orange",
+                                   "Group beige",
+                                  "Group dark blue", "Group sunflower", "Group turkoois",
+                                  "Group red", "Group baby blue",
+                                   "Group dark green",
+                                  "Group oldpink"))
 col_names = setNames( col_names$label , col_names$color)
 default_col_select = names(col_names)[[1]]
 
