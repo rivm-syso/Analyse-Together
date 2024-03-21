@@ -13,15 +13,6 @@ communication_output <- function(id) {
 
   ns <- NS(id)
 
-  tagList(
-    #     verbatimTextOutput(ns('Click_text')),
-
-    tableOutput(ns("test_data_select_time")),
-    tableOutput(ns("test_data_select_sensor")),
-    tableOutput(ns("test_stations_total")),
-    tableOutput(ns("test_startendtime"))
-  )
-
 }
 
 
@@ -37,7 +28,8 @@ communication_server <- function(id,
                                  data_meta,
                                  selected_parameter,
                                  selected_start_date,
-                                 selected_end_date
+                                 selected_end_date,
+                                 selected_cutoff
                                  )
   {
 
@@ -75,7 +67,8 @@ communication_server <- function(id,
                  })
 
                  # Filter data measurements ----
-                 # Reactive for the measurements to filter on input, time, stations, component
+                 # Reactive for the measurements to filter on input, time,
+                 # stations, component
                  filter_data_measurements <- reactive({
                    # Get the start and end time to filter on
                    start_time <- selected_start_date()
@@ -106,9 +99,11 @@ communication_server <- function(id,
                    measurements_filt_stns <- data_all %>%
                      dplyr::filter(date > start_time & date < end_time &
                                      station %in% selected_stations &
-                                     parameter == selected_parameter)
+                                     parameter == selected_parameter &
+                                     value < selected_cutoff())
 
-                   # Combine station_info with the measurements and keep relevant columns
+                   # Combine station_info with the measurements and keep relevant
+                   # columns
                    measurements_filt_stns <-
                      dplyr::left_join(measurements_filt_stns,
                                       station_info, by = "station") %>%
@@ -124,7 +119,7 @@ communication_server <- function(id,
                  })
 
                  # Calculate group mean ----
-                 # Reactive to colculate the mean for each group
+                 # Reactive to calculate the mean for each group
                  calc_group_mean <- reactive({
                    # Get the measurements of those stations
                    measurements <- filter_data_measurements()
@@ -137,7 +132,8 @@ communication_server <- function(id,
                    # Calculate group mean and sd
                    data_mean <- measurements %>%
                      # Set label to groupname
-                     dplyr::mutate(label = dplyr::case_when(station_type == "sensor" ~ group_name,
+                     dplyr::mutate(label = dplyr::case_when(station_type ==
+                                                              "sensor" ~ group_name,
                                                    T ~ station)) %>%
                      # Keep also the parameters for the plotting
                      dplyr::group_by(group_name, date, parameter, label, col,
@@ -198,12 +194,47 @@ communication_server <- function(id,
                    return(measurements_filt_knmi)
                  })
 
+                 # Calculate the cutoff value depending on the sensor data ----
+                 # distribution
+                 calc_cut_off <- reactive({
+                   # take all the sensor measurements
+                   names_snsrs <- data_stations() %>%
+                     dplyr::filter(station_type == "sensor" )
+
+                   # take all the sensor measurements
+                   data_snsrs <- data_measurements() %>%
+                     dplyr::filter(station %in% names_snsrs$station)
+
+                   # Calculate the cut-off value
+                   # take the upper 10%percentile
+                   cut_off_value <- quantile(data_snsrs$value, .9, na.rm = T)
+
+                   return(cut_off_value)
+                 })
+
+                 # To generate a message for the user
+                 generate_message <- reactive({
+                   # Check the number of sensors
+                   sensor_count <- data_stations() %>%
+                     dplyr::filter(selected == T &
+                                     station_type == "sensor") %>%
+                     count(station)
+
+                    # give message if none are selected
+                    if(purrr::is_empty(sensor_count$n)){
+                     return("Je hebt nu niets geselecteerd.")
+                   }
+                   # give empty message nothing to be shown needed
+                   return(" ")
+                 })
 
                  # Return ----
                  return(list(
                    selected_measurements = reactive({filter_data_measurements()}),
                    knmi_measurements = reactive({get_knmi_measurements()}),
-                   grouped_measurements = reactive({calc_group_mean()})
+                   grouped_measurements = reactive({calc_group_mean()}),
+                   cut_off_value = reactive({calc_cut_off()}),
+                   message_selected = reactive({generate_message()})
 
                  ))
 

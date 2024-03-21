@@ -57,6 +57,35 @@ assign_color_stations <- function(dataset, col_cat, col_default, col_overload, c
   return(dataset)
 }
 
+#' Pick color
+#'
+#' Pick the first unused color from the list and return value and name
+#' @param data_stns dataframe with at lest the column "col"
+#' @param col_names named character
+#' @param col_overload string
+#'
+#' @return  list with name of colour and value is color (hexan string)
+#' @export
+#'
+pick_color <- function(data_stns, col_names, col_overload){
+  # Split the actual color codes
+  col_cat <- names(col_names)
+  # Get the colors which are already in use
+  col_used <- data_stns %>% dplyr::select(col) %>% unique() %>% dplyr::pull()
+  # Get the available colors
+  col_avail <- col_cat[!(col_cat %in% col_used)]
+  # Check if there is still a color available
+  if(purrr::is_empty(col_avail)){
+    col_new <- col_overload # use color overload if no color is available
+  }else{
+    col_new <- col_avail[[1]]
+  }
+
+  # Get the label/name of the picked color
+  col_label <- col_names[[col_new]]
+
+  return(list(col_label = col_label, col_picked = col_new))
+}
 
 #' Assign color to group
 #'
@@ -74,7 +103,8 @@ assign_color_stations <- function(dataset, col_cat, col_default, col_overload, c
 #' @return dataset with the col column filled properly
 #' @export
 #'
-assign_color_stations_group <- function(dataset, col_cat, col_default, col_overload, col_station_type ){
+assign_color_stations_group <- function(dataset, col_cat, col_default, col_overload,
+                                        col_station_type ){
   # Take only the station_type
   dataset_type <- dataset %>% dplyr::filter(station_type == col_station_type)
 

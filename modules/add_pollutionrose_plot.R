@@ -77,12 +77,15 @@ pollrose_server <- function(id,
                         local.tz = "Europe/Amsterdam",
                         cols = "Oranges",
                         statistic = 'prop.mean',
-                        breaks = c(0,10,25,50,100,200),
+                        breaks = c(0,12,30,60,1000),
                         par.settings = list(fontsize=list(text=15)),
+                        main = paste0('Period: ', min(data_plot$date) %>% format("%d/%b/%Y"),
+                                      " - ",  max(data_plot$date) %>% format("%d/%b/%Y")),
+
                         key = list(header = parameter_label,
                                    footer = '',
-                                   labels = c('0 to 10', '10 to 25',
-                                              '25 to 50','50 to 100', '100 or more')),
+                                   labels = c('0 to 12', '12 to 30',
+                                              '30 to 60','60 or more')),
                         between = list(x=0.5, y = 0.5)))
 
     })

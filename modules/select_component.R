@@ -20,7 +20,10 @@ component_selection_output <- function(id) {
 # Server Module
 ######################################################################
 
-component_selection_server <- function(id, comp_choices) {
+component_selection_server <- function(id,
+                                       data_other,
+                                       comp_choices,
+                                       default_parameter) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -35,16 +38,19 @@ component_selection_server <- function(id, comp_choices) {
           ns("comp_select"),
           label    = i18n$t("sel_comp"),
           choices  = comp_choices,
-          selected = "pm25_kal",
+          selected = default_parameter,
           multiple = TRUE,
+          width = "500px",
           options = pickerOptions(maxOptions = 1)
           )
         )
       })
 
-    # Return the chosen component
-    return(selected_component = reactive({input$comp_select}))
+    observeEvent(input$comp_select,{
 
+      data_other$parameter <- input$comp_select
+
+    })
     })
 
   }

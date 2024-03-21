@@ -9,7 +9,9 @@
 download_api_button_output <- function(id) {
 
   ns <- NS(id)
-  actionButton(ns("download_api_button"), i18n$t("btn_external_source"))
+  actionButton(ns("download_api_button"),
+               i18n$t("btn_external_source"),
+               )
 }
 
 
@@ -22,7 +24,9 @@ download_api_button_server <- function(id,
                                        name_munproj,
                                        selected_start_date,
                                        selected_end_date,
-                                       pool)
+                                       pool,
+                                       pop_up_title = "",
+                                       pop_up_message = "")
   {
 
     moduleServer(id, function(input, output, session) {
@@ -47,7 +51,10 @@ download_api_button_server <- function(id,
              log_trace("mod download: create download queue")
 
            # Add message pop up to the user
-           shinyalert("Be patient!", "Data will be gathered, this can take some time. Please check the other button if data is available for usage.", type = "info")
+           shinyalert(pop_up_title,
+                      pop_up_message,
+                      type = "warning",
+                      confirmButtonCol = "#ffb612")
 
            # Download the metadata
            download_sensor_meta(name, type = type)

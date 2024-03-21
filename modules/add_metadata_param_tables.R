@@ -59,7 +59,9 @@ metadata_param_server <- function(id,
       # Prepare the data for the table - do some summarise
       metadata_table <- data_all %>%
         # Take the data of the chosen parameter
-        dplyr::filter(parameter == parameter()) %>%
+        dplyr::filter(parameter == parameter() |
+                        # To include the KNMI stations
+                        parameter == "wd") %>%
         dplyr::group_by(station) %>%
         # Check te date of the first and last measurement
         dplyr::mutate(first_m = as.POSIXct(as.numeric(min(timestamp)),
@@ -83,6 +85,9 @@ metadata_param_server <- function(id,
         dplyr::left_join(metadata_table, by = "station") %>%
         dplyr::select(c(station, group_name, per_obs, max_obs, first_m, last_m,
                         station_type, selected, col))
+
+      # Only show selected station
+      metadata_table <- metadata_table %>% dplyr::filter(selected)
 
       # Reorder so the selected are on top of the table
       metadata_table <- metadata_table %>%
@@ -110,7 +115,7 @@ metadata_param_server <- function(id,
 
     output$meta_table <-
 
-      renderDataTable({
+      DT::renderDataTable({
         # Get the data for the table
         data_for_table <- metadata_table()
 

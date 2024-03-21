@@ -79,6 +79,7 @@ timevar_daily_server <- function(id,
                           position=pd) +
             scale_color_manual(values = plot_all$col,
                                    breaks = plot_all$label) +
+            coord_cartesian(ylim = c(0,NA)) +
             # # If you want to use this, please check the min_meas to change to
             # # include the errorbars too
             # scale_y_continuous(breaks = seq(min_meas-steps,max_meas+steps, by = steps),
@@ -88,7 +89,10 @@ timevar_daily_server <- function(id,
             scale_x_continuous(breaks = seq(0,23,2), minor_breaks = seq(0,23,1)) +
             labs(x = i18n$t("xlab_dailypattern"),
                  y = expression(paste("Concentration (", mu, "g/",m^3,")")),
-                 title=paste0('Daily pattern for: ', parameter_label)) +
+                 title=paste0('Daily pattern for: ', parameter_label,
+                              "  ",  min(data_plot$date) %>% format("%d/%b/%Y"),
+                              " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
+                              )) +
             expand_limits(y=0) +
             theme_plots +
             theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),

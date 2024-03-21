@@ -27,9 +27,8 @@ show_map_server <- function(id,
                             group_name,# class: "reactiveExpr" "reactive" "function"
                             tab_choice,# class: "reactiveExpr" "reactive" "function"
                             # Options for the colors
-                            col_cat,
                             col_default,
-                            col_overload,
+                            col_select,
                             # Options for the linetype
                             line_cat,
                             line_default,
@@ -75,6 +74,7 @@ show_map_server <- function(id,
     output$map <- renderLeaflet({
 
       ns("map")
+
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
         # addTiles() %>%
@@ -96,14 +96,9 @@ show_map_server <- function(id,
           rectangleOptions = drawRectangleOptions(shapeOptions=drawShapeOptions(fillOpacity = 0
                                                                                 ,color = 'black'
                                                                                 ,weight = 1.5)),
-          editOptions = editToolbarOptions(edit = FALSE, selectedPathOptions = selectedPathOptions())) %>%
+          editOptions = editToolbarOptions(edit = FALSE,
+                                           selectedPathOptions = selectedPathOptions())) %>%
 
-        addEasyButton(easyButton(
-          icon="fa-globe", title="Back to default view",
-          onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
-        addEasyButton(easyButton(
-          icon="fa-crosshairs", title="Locate Me",
-          onClick=JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
         addScaleBar(position = "bottomleft")
     })
 
@@ -117,74 +112,66 @@ show_map_server <- function(id,
       return(selected)
     }
 
-    # Change the clicked_id stored - deselect and select
-    change_state_to_deselected <- function(id_selected){
-      # Get the data from the stations
-      data_stns <- data_stations$data
-
-      # Set the deselected station to select == F
-      data_stns <- data_stns %>%
-        dplyr::mutate(selected = ifelse(station == id_selected, F, selected),
-                      # Remove group name and label
-                      group_name = ifelse(station == id_selected, group_name_none, group_name),
-                      label = ifelse(station == id_selected, station, label),
-                      # Change the color to the default
-                      col = ifelse(station == id_selected, col_default, col),
-                      # Change the linetype to the default
-                      linetype = ifelse(station == id_selected, line_default, linetype))
-
-      # Set the updated data from the stations in the reactiveValues
-      data_stations$data <- data_stns
-    }
-
-    change_state_to_selected <- function(id_selected){
-
-      # Get the data from the stations
-      data_stns <- data_stations$data
-
-      # Get the group name
-      get_group_name <- group_name()
-
-      # Set the selected station to select == T
-      data_stns <- data_stns %>%
-        dplyr::mutate(selected = ifelse(station == id_selected, T, selected),
-                      group_name = ifelse(station == id_selected & station_type == "sensor",
-                                          get_group_name,
-                                          ifelse(station == id_selected & station_type != "sensor",
-                                                 station,
-                                                 group_name)),
-                      label = ifelse(station == id_selected & station_type == "sensor",
-                                     get_group_name,
-                                     ifelse(station == id_selected & station_type != "sensor",
-                                            station,
-                                            label)))
-
-      # Assign colors -> sensor
-      data_stns <- assign_color_stations_group(data_stns, col_cat, col_default, col_overload, col_station_type = "sensor")
-
-      # Assign linetype -> reference station
-      data_stns <- assign_linetype_stations(data_stns, line_cat, line_default, line_overload, line_station_type = "ref")
-
-      # Set the updated data from the stations in the reactiveValues
-      data_stations$data <- data_stns
-    }
 
     # Add knmi stations to the map
     add_knmi_map <- function(){
       # Get the data
-      data_snsrs <- isolate(get_locations()$station_loc) %>%
-        dplyr::filter(station_type == "KNMI")
+      data_snsrs <- try(isolate(get_locations()$station_loc))
 
-      # Check if there is data
-      if(nrow(data_snsrs > 0)){
+      if(class(data_snsrs) == "try-error"){
+        # clear all weather stations from the map
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>%
+          # Clear weather markers
+          clearGroup("weather")
+      }else{
+
+       # get the stations only knmi
+        data_snsrs <- data_snsrs %>%
+          dplyr::filter(station_type == "KNMI")
+
+        # Check if there are KNMI stations
+        shiny::validate(need(nrow(data_snsrs) > 0, "No KNMI data"))
+
+        # Put selected stations on map
+        data_selected <- data_snsrs %>%
+          dplyr::filter(selected)
 
         # Update map with new markers to show selected
         proxy <- leafletProxy('map') # set up proxy map
         proxy %>% clearGroup("weather") # Clear  markers
 
-        # Put selected stations on map
-        data_selected <- data_snsrs %>% dplyr::filter(selected)
-        if(nrow(data_selected > 0)){
+
+        if(nrow(data_selected) > 0){
+          proxy %>%
+            addMarkers(data = data_selected, ~lon, ~lat,
+                       icon = icons_knmis["knmi_selected"],
+                       label = lapply(as.list(data_selected$station), HTML),
+                       layerId = ~station,
+                       group = "weather")
+        }else{
+          # NB there will always be a KNMI station selected!
+          # Select random station
+          random_station <- data_snsrs$station[1]
+          data_stations$data <- change_state_to_selected(data_stations$data,
+                                                         random_station,
+                                                         group_name(),
+                                                         col_select(),
+                                                         line_cat,
+                                                         line_default,
+                                                         line_overload)
+
+          # Get all newer data info
+          # Get the data
+          data_snsrs <- try(isolate(get_locations()$station_loc))
+          # get the stations only knmi
+          data_snsrs <- data_snsrs %>%
+            dplyr::filter(station_type == "KNMI")
+          # Put selected stations on map
+          data_selected <- data_snsrs %>%
+            dplyr::filter(selected)
+
+          # add marker to map
           proxy %>%
             addMarkers(data = data_selected, ~lon, ~lat,
                        icon = icons_knmis["knmi_selected"],
@@ -203,37 +190,41 @@ show_map_server <- function(id,
                        layerId = ~station,
                        group = "weather")
         }
-    }
+      }
   }
 
     # Add the sensors to the map
     add_sensors_map <- function(){
       # Check if there is data
       data_snsrs_col <- try(isolate(get_locations()$station_loc))
-      shiny::validate(
-        need(class(data_snsrs_col) != "try-error", "Error, no data selected.")
-      )
-
+      if(class(data_snsrs_col) == "try-error"){
+        # clear all sensor stations from the map
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>%
+          # Clear sensor markers
+          clearGroup("sensoren")
+      }else{
       # Get the sensor data
       data_snsrs_col <- isolate(get_locations()$station_loc) %>%
         dplyr::filter(station_type == "sensor")
 
       if(nrow(data_snsrs_col)>0){
-      # Update map with new markers to show selected
-      proxy <- leafletProxy('map') # set up proxy map
-      proxy %>% clearGroup("sensoren") # Clear sensor markers
+        # Update map with new markers to show selected
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>% clearGroup("sensoren") # Clear sensor markers
 
-      leafletProxy("map") %>%
-        addCircleMarkers(data = data_snsrs_col, ~lon, ~lat,
-                         stroke = TRUE,
-                         weight = 2,
-                         label = lapply(data_snsrs_col$station, HTML),
-                         layerId = ~station,
-                         fillOpacity = 0.7,
-                         radius = 5,
-                         color = data_snsrs_col$col,
-                         group = "sensoren"
-        )
+        leafletProxy("map") %>%
+          addCircleMarkers(data = data_snsrs_col, ~lon, ~lat,
+                           stroke = TRUE,
+                           weight = 2,
+                           label = lapply(data_snsrs_col$station, HTML),
+                           layerId = ~station,
+                           fillOpacity = 0.7,
+                           radius = 5,
+                           color = data_snsrs_col$col,
+                           group = "sensoren"
+          )
+      }
       }
     }
 
@@ -241,13 +232,20 @@ show_map_server <- function(id,
     add_lmls_map <- function(){
       # Check if there is data
       data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
-      shiny::validate(
-        need(class(data_snsrs) != "try-error", "Not yet selected any data.")
-      )
+      if(class(data_snsrs) == "try-error"){
+        # Clear all reference stations from the map
+        proxy <- leafletProxy('map') # set up proxy map
+        proxy %>%
+          # Clear reference markers
+          clearGroup("reference")
+      }else{
 
       # Get the reference stations
       data_snsrs <- isolate(get_locations()$station_loc) %>%
         dplyr::filter(station_type == "ref")
+
+      # Check if there are Ref stations
+      shiny::validate(need(nrow(data_snsrs) > 0, "No reference data"))
 
       # Update map with new markers to show selected
       proxy <- leafletProxy('map') # set up proxy map
@@ -257,6 +255,33 @@ show_map_server <- function(id,
       data_selected <- data_snsrs %>% dplyr::filter(selected)
 
       if(nrow(data_selected > 0)){
+        proxy %>%
+          addMarkers(data = data_selected, ~lon, ~lat,
+                     icon = icons_stations["lml_selected"],
+                     label = lapply(as.list(data_selected$station), HTML),
+                     layerId = ~station,
+                     group = "reference")
+      }else{
+        # NB there will always be a reference station selected!
+        # Select random station
+        random_station <- data_snsrs$station[2]
+        data_stations$data <- change_state_to_selected(data_stations$data,
+                                                       random_station,
+                                                       group_name(),
+                                                       col_select(),
+                                                       line_cat,
+                                                       line_default,
+                                                       line_overload)
+
+        # Get all newer data info
+        # Get the reference stations
+        data_snsrs <- isolate(get_locations()$station_loc) %>%
+          dplyr::filter(station_type == "ref")
+        # Put selected stations on map
+        data_selected <- data_snsrs %>%
+          dplyr::filter(selected)
+
+        # add marker to map
         proxy %>%
           addMarkers(data = data_selected, ~lon, ~lat,
                      icon = icons_stations["lml_selected"],
@@ -275,6 +300,7 @@ show_map_server <- function(id,
                      layerId = ~station,
                      group = "reference")
       }
+      }
     }
 
     # Observers and ObserveEvents ----
@@ -284,7 +310,7 @@ show_map_server <- function(id,
       tab_info <- tab_choice()
       if(!purrr::is_null(tab_info)){
         # If you arrive on this tabpanel then redraw the map.
-        if(tab_info == "Visualise data"){
+        if(tab_info == "stap1"){
           # Add the new situation to the map
           isolate(add_lmls_map())
           isolate(add_sensors_map())
@@ -322,7 +348,11 @@ show_map_server <- function(id,
               done
             }
             else {
-              change_state_to_deselected(id_select)
+              data_stations$data <- change_state_to_deselected(data_stations$data,
+                                                               id_select,
+                                                               group_name_none,
+                                                               col_default,
+                                                               line_default)
             }
           }
         }
@@ -361,7 +391,13 @@ show_map_server <- function(id,
             done
           }
           else {
-            change_state_to_selected(id_select)
+            data_stations$data <- change_state_to_selected(data_stations$data,
+                                                           id_select,
+                                                           group_name(),
+                                                           col_select(),
+                                                           line_cat,
+                                                           line_default,
+                                                           line_overload)
           }
         }}
       else{done}
@@ -385,10 +421,20 @@ show_map_server <- function(id,
         selected <- check_state(selected_snsr)
         # If stations is already selected -> deselect
         if (selected == T){
-          change_state_to_deselected(selected_snsr)
+          data_stations$data <- change_state_to_deselected(data_stations$data,
+                                                           selected_snsr,
+                                                           group_name_none,
+                                                           col_default,
+                                                           line_default)
         }
         else { # If not yet selected -> select
-          change_state_to_selected(selected_snsr)
+          data_stations$data <- change_state_to_selected(data_stations$data,
+                                                         selected_snsr,
+                                                         group_name(),
+                                                         col_select(),
+                                                         line_cat,
+                                                         line_default,
+                                                         line_overload)
         }}
       else{done}
 

@@ -315,7 +315,7 @@ download_data_knmi <- function(x, station, conn) {
 
   knmi_all <- samanapir::GetKNMIAPI(station_nr, ts_api, te_api)
 
-  knmi_measurements <- knmi_all$data %>% as.data.frame() %>% select(-c('YYYYMMDD', 'H')) %>%
+  knmi_measurements <- knmi_all$data %>% as.data.frame() %>% select(-c('YYYYMMDD', 'HH')) %>%
     rename("station" = "STNS", "wd" = "DD", "ws" = "FF", "temp" = "TEMP", "rh" = "U", "timestamp" = "tijd")
 
   knmi_measurements$station <- paste0("KNMI_", knmi_measurements$station)

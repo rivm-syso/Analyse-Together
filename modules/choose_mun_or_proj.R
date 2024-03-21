@@ -19,25 +19,23 @@ choice_selection_output <- function(id) {
 ######################################################################
 
 choice_selection_server <- function(id,
-                                    proj_or_mun_select,
+                                    data_other,
                                     mun_choices,
-                                    proj_choices) {
+                                    proj_choices,
+                                    pre_select ) {
 
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
 
-    # Get whether a project of municipality is selected
-    get_choice_select <- reactive({
-      choice_select <- proj_or_mun_select()
-      return(choice_select)})
+      output$choice_select <- renderUI({
 
+      # Get if a mun or a proj is selected
+      proj_or_mun <- data_other$mun_or_proj
 
-    output$choice_select <- renderUI({
+      if (is.null(proj_or_mun) == FALSE){
 
-      if (is.null(get_choice_select()) == FALSE){
-
-          if (get_choice_select() == "municipality" ){
+          if (proj_or_mun == "municipality" ){
               # Create the component picker with a list of possible choices
               tagList(
 
@@ -45,8 +43,9 @@ choice_selection_server <- function(id,
                   ns("choice_select"),
                   label    = i18n$t("sel_option"),
                   choices  = mun_choices,
-                  selected = NULL,
+                  selected = pre_select,
                   multiple = TRUE,
+                  width = "500px",
                   options = pickerOptions(maxOptions = 1)
                 )
               )}
@@ -57,14 +56,19 @@ choice_selection_server <- function(id,
                   ns("choice_select"),
                   label    = i18n$t("sel_option"),
                   choices  = proj_choices,
-                  selected = NULL,
+                  selected = pre_select,
                   multiple = TRUE,
+                  width = "500px",
                   options = pickerOptions(maxOptions = 1)
                 ))}}
     })
 
-    # Return the chosen component
-    return(selected_choice = reactive({input$choice_select}))
+    observeEvent(input$choice_select,{
+
+      data_other$name_munproj <- input$choice_select
+
+    })
+
 
   })
 
