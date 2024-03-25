@@ -24,7 +24,6 @@ setwd(here::here())
 library(logger)
 log_threshold(TRACE)
 
-remotes::install_github('rivm-syso/samanapir', ref = 'main')
 library(samanapir)
 library(ATdatabase)
 
