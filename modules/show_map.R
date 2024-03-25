@@ -54,7 +54,6 @@ show_map_server <- function(id,
 
     # Get the locations from the stations and convert to spatialcoordinates ----
     get_locations <- reactive({
-
       # Check if there is data
       shiny::validate(need(!is.null(data_stations$data), "Error, no data yet."))
 
@@ -130,17 +129,18 @@ show_map_server <- function(id,
         data_snsrs <- data_snsrs %>%
           dplyr::filter(station_type == "KNMI")
 
-        # Check if there are KNMI stations
-        shiny::validate(need(nrow(data_snsrs) > 0, "No KNMI data"))
-
-        # Put selected stations on map
-        data_selected <- data_snsrs %>%
-          dplyr::filter(selected)
-
         # Update map with new markers to show selected
         proxy <- leafletProxy('map') # set up proxy map
         proxy %>% clearGroup("weather") # Clear  markers
 
+        # Check if there are KNMI stations
+        if(nrow(data_snsrs) == 0){
+          return(NULL)
+        }
+
+        # Put selected stations on map
+        data_selected <- data_snsrs %>%
+          dplyr::filter(selected)
 
         if(nrow(data_selected) > 0){
           proxy %>%
@@ -244,12 +244,14 @@ show_map_server <- function(id,
       data_snsrs <- isolate(get_locations()$station_loc) %>%
         dplyr::filter(station_type == "ref")
 
-      # Check if there are Ref stations
-      shiny::validate(need(nrow(data_snsrs) > 0, "No reference data"))
-
       # Update map with new markers to show selected
       proxy <- leafletProxy('map') # set up proxy map
       proxy %>% clearGroup("reference") # Clear reference markers
+
+      # Check if there are Ref stations
+      if(nrow(data_snsrs) == 0){
+        return(NULL)
+      }
 
       # Put selected stations on map
       data_selected <- data_snsrs %>% dplyr::filter(selected)
@@ -315,6 +317,10 @@ show_map_server <- function(id,
           isolate(add_lmls_map())
           isolate(add_sensors_map())
           isolate(add_knmi_map())
+          # Zoom to the default
+          # create proxy of the map
+          proxy <- leafletProxy('map') # set up proxy map
+          proxy %>% setView(5.384214, 52.153708 , zoom = 7)
         }
       }
     })
