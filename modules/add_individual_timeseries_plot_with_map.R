@@ -47,16 +47,6 @@ individual_timeseries_map_server <- function(id,
   moduleServer(id, function(input, output, session) {
 
     ns <- session$ns
-    # Initialisation icons ----
-    # Icons for the reference stations
-    icons_stations <- iconList(
-      lml_selected = makeIcon(iconUrl = "images/lml_selected_txt.png", iconWidth = 24, iconHeight = 16),
-      lml_deselected = makeIcon(iconUrl = "images/lml_deselected_txt.png",  iconWidth = 24, iconHeight = 16))
-
-    # Icons for the knmi stations
-    icons_knmis <- iconList(
-      knmi_selected = makeIcon(iconUrl = "images/knmi_selected_txt.png", iconWidth = 30, iconHeight = 16),
-      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected_txt.png", iconWidth = 30, iconHeight = 16))
 
     # Get the locations from the stations and convert to spatialcoordinates ----
     get_locations <- reactive({
@@ -130,38 +120,6 @@ individual_timeseries_map_server <- function(id,
       }
     }
 
-    # Add knmi stations to the map ----
-    add_knmi_map <- function(){
-      # Get the data
-      data_snsrs <- try(isolate(get_locations()$station_loc))
-
-      if(class(data_snsrs) == "try-error"){
-        # clear all weather stations from the map
-        proxy <- leafletProxy('map') # set up proxy map
-        proxy %>%
-          # Clear weather markers
-          clearGroup("weather")
-      }else{
-        # Get the station data
-        data_snsrs <- data_snsrs %>%
-          dplyr::filter(station_type == "KNMI" &
-                          selected)
-        # Update map with new markers to show selected
-        proxy <- leafletProxy('map') # set up proxy map
-        proxy %>% clearGroup("weather") # Clear  markers
-
-        # Put stations on map
-        if(nrow(data_snsrs) > 0){
-          proxy %>%
-            addMarkers(data = data_snsrs, ~lon, ~lat,
-                       icon = icons_knmis["knmi_deselected"],
-                       label = lapply(as.list(data_snsrs$station), HTML),
-                       layerId = ~station,
-                       group = "weather")
-        }
-      }
-
-    }
 
     # Add the sensors to the map ----
     add_sensors_map <- function(){
@@ -202,41 +160,6 @@ individual_timeseries_map_server <- function(id,
         }
       }
 
-    }
-
-    # Add reference stations to the map ----
-    add_lmls_map <- function(){
-      # # Check if there is data
-      data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
-      if(class(data_snsrs) == "try-error"){
-        # Clear all reference stations from the map
-        proxy <- leafletProxy('map') # set up proxy map
-        proxy %>%
-          # Clear reference markers
-          clearGroup("reference")
-      }else{
-
-        # Get the reference stations
-        data_snsrs <- data_snsrs %>%
-          dplyr::filter(station_type == "ref" &
-                          selected)
-
-        # Update map with new markers to show selected
-        proxy <- leafletProxy('map') # set up proxy map
-        proxy %>%
-          # Clear reference markers
-          clearGroup("reference")
-
-        # Add the stations to the map
-        if(nrow(data_snsrs) > 0){
-          proxy %>%
-            addMarkers(data = data_snsrs, ~lon, ~lat,
-                       icon = icons_stations["lml_deselected"],
-                       label = lapply(as.list(data_snsrs$station), HTML),
-                       layerId = ~station,
-                       group = "reference")
-        }
-      }
     }
 
 
@@ -383,9 +306,7 @@ individual_timeseries_map_server <- function(id,
           # Get the stroke colour selected station
           set_stroke_sensor()
           # Add the new situation to the map
-          isolate(add_lmls_map())
           isolate(add_sensors_map())
-          isolate(add_knmi_map())
           # Redraw the figure with the new selected station
           draw_figure()
     })
@@ -399,9 +320,7 @@ individual_timeseries_map_server <- function(id,
           # Get the stroke colour selected station
           set_stroke_sensor()
           # Add the new situation to the map
-          isolate(add_lmls_map())
           isolate(add_sensors_map())
-          isolate(add_knmi_map())
           # Zoom to the stations
           set_view_stations()
           # Redraw the figure with the new selected station
