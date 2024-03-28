@@ -36,7 +36,10 @@ get_data_cache_server <- function(id,
                                   line_default,
                                   line_overload,
                                   # DEfault group name
-                                  group_name_none
+                                  group_name_none,
+                                  #text for the popup
+                                  pop_up_title = "Warning",
+                                  pop_up_message = "Please wait a bit."
 ) {
 
   moduleServer(id, function(input, output, session) {
@@ -93,6 +96,25 @@ get_data_cache_server <- function(id,
       }else{
         estimate_time <- ceiling((length(stations_name) * 7 + 30)/60)
         message_data$download_estimation <- c(paste0("Estimated load time from external source: ", estimate_time, " minutes."))
+      }
+
+      # If there are no stations, just return and give a popup
+      if(is.null(stations_name)){
+        log_info("get mod: No stations known.")
+        # remove notification
+        removeNotification(id = ns("notification"))
+
+        # Add message pop up to the user
+        shinyalert(pop_up_title,
+                   pop_up_message,
+                   type = "warning",
+                   confirmButtonCol = "#ffb612")
+
+        # Stop continuing the rest of the module
+        shiny::validate(
+          need(F, "No data available")
+        )
+
       }
 
       # Get the data measurements of the selected Municipality/project in the period
