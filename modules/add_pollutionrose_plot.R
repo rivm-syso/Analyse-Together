@@ -69,7 +69,7 @@ pollrose_server <- function(id,
       data_pollrose <- dplyr::left_join(data_pollrose, knmidata, by = 'date')
 
       # Make a plot ====
-      try(pollutionRose(data_pollrose,
+      try(openair::pollutionRose(data_pollrose,
                         pollutant = "value",
                         wd = "wd",
                         ws = "ws",
