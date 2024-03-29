@@ -63,7 +63,7 @@ info_sensor_server <- function(id,
 
 
       # Make a plot ====
-      try(calendarPlot(data_calender, pollutant = "count_stations",
+      try(openair::calendarPlot(data_calender, pollutant = "count_stations",
                        type = 'label',
                        local.tz = "Europe/Amsterdam",
                        cols = c("#fff4dc","#ffe9b7","#ffb612","#c58800"),
