@@ -35,7 +35,7 @@ show_map_no_select_server <- function(id,
     # Initialisation icons ----
     # Icons for the reference stations
     icons_stations <- iconList(
-      lml_selected = makeIcon(iconUrl = "images/lml_selected_txt.png",
+      lml_selected = makeIcon(iconUrl = "images/ref_selected_txt.png",
                               iconWidth = 24, iconHeight = 16))
 
     # Icons for the knmi stations
