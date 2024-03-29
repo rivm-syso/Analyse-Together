@@ -275,6 +275,8 @@ shinyUI(
         a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
         br(),i18n$t("expl_link_to_KNMI"),
         a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
+        br(),i18n$t("expl_link_to_openair"),
+        a("openair", href ='https://davidcarslaw.github.io/openair/', target = 'blank'),
         br(),
         i18n$t("expl_link_to_projecten"),
         a("samenmeten.nl/initiatieven", href ='https://www.samenmeten.nl/initiatieven', target = 'blank'),
