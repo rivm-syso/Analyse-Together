@@ -43,6 +43,10 @@
 	      "en": "More information about the measurements from KNMI can be found on:",
 	      "nl": "Meer informatie over de metingen van het KNMI kun je vinden op:"
 	 	  },
+	 	  {"tag" : "expl_link_to_openair",
+	      "en": "More information about the openair package can be found on:",
+	      "nl": "Meer informatie over het openair-package kun je vinden op:"
+	 	  },
 	  {"tag" : "expl_link_to_projecten",
 	      "en": "For more information on the projects themselves, see our website:",
 	      "nl": "Voor meer informatie over de projecten zelf, zie onze website:"
@@ -420,8 +424,8 @@
         "nl": "In deze kalender zie je de gemiddelde fijnstofconcentratie per dag voor alle geselecteerde sensoren samen. De pijltjes geven de  windrichting aan."
       },
       {"tag" : "expl_calplot_expl",
-        "en": "If you click on a sensor, an average concentration per day is calculated. This can be displayed in a graph or, as shown here, in a calender representation. The color assigned to each date corresponds to an average value. This may reveal a pattern. For example, it could be observed that on weekdays (Monday to Friday) the measurements are consistently slightly higher than on weekends.",
-        "nl": "Voor alle geslecteerde sensoren is de gemiddelde fijnstofconcentratie per dag berekend. Deze kan worden weergegeven in een grafiek of, zoals hier, in een kalender. De kleur die elke datum krijgt, correspondeert met een gemiddelde waarde. Het kan zijn dat er zo een patroon zichtbaar wordt. Zo kunnen bijvoorbeeld op de weekdagen (maandag t/m vrijdag) de meetwaarden altijd net wat hoger zijn dan op de weekenddagen. De pijltjes geven de windrichting aan."
+        "en": "If you click on a sensor, an average concentration per day is calculated. This can be displayed in a graph or, as shown here, in a calender representation. The color assigned to each date corresponds to an average value. This may reveal a pattern. For example, it could be observed that on weekdays (Monday to Friday) the measurements are consistently slightly higher than on weekends. Created using openair: Carslaw, D. C. and K. Ropkins, (2012) openair --- an R package for air quality data analysis. Environmental Modelling & Software. Volume 27-28, 52-61.",
+        "nl": "Voor alle geslecteerde sensoren is de gemiddelde fijnstofconcentratie per dag berekend. Deze kan worden weergegeven in een grafiek of, zoals hier, in een kalender. De kleur die elke datum krijgt, correspondeert met een gemiddelde waarde. Het kan zijn dat er zo een patroon zichtbaar wordt. Zo kunnen bijvoorbeeld op de weekdagen (maandag t/m vrijdag) de meetwaarden altijd net wat hoger zijn dan op de weekenddagen. De pijltjes geven de windrichting aan. Gemaakt met openair: Carslaw, D. C. and K. Ropkins, (2012) openair --- an R package for air quality data analysis. Environmental Modelling & Software. Volume 27-28, 52-61."
       },
       {"tag" : "word_conc_rose",
         "en": "Concentration rose (%)",
@@ -432,8 +436,8 @@
         "nl": "Om een beeld te krijgen van waar de fijn stof vandaan komt, is de fijnstofconcentratie gecombineerd met de winddata van het KNMI."
       },
       {"tag" : "expl_concplot%_expl",
-        "en": "Here a weighted concentration rose plot is displayed. This figure shows the percentage contribution of each wind direction to the total average concentration. The average concentration per wind direction is weighted based on the frequency of occurrence. For example, if there is a triangle located in the bottom left of the gray line with a 15% value and a large light fill area along with a very small dark fill area, it means that the wind blows from the southwest approximately 15% of the time, mostly bringing low concentrations (light fill) and occasionally high concentrations (dark fill).",
-        "nl": "Hier zie je een gewogen concentratieroos. Deze toont per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde fijnstofconcentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling)."
+        "en": "Here a weighted concentration rose plot is displayed. This figure shows the percentage contribution of each wind direction to the total average concentration. The average concentration per wind direction is weighted based on the frequency of occurrence. For example, if there is a triangle located in the bottom left of the gray line with a 15% value and a large light fill area along with a very small dark fill area, it means that the wind blows from the southwest approximately 15% of the time, mostly bringing low concentrations (light fill) and occasionally high concentrations (dark fill). Created using openair: Carslaw, D. C. and K. Ropkins, (2012) openair --- an R package for air quality data analysis. Environmental Modelling & Software. Volume 27-28, 52-61.",
+        "nl": "Hier zie je een gewogen concentratieroos. Deze toont per windrichting het aandeel (in %) van deze windrichting in de totale gemiddelde fijnstofconcentratie. De gemiddelde concentratie per windrichting wordt hiervoor gewogen naar hoe vaak deze windrichting voorkomt. Voorbeeld: als er linksonder een driehoek ligt op de grijze lijn met 15% met een grote lichte vulling en een hele kleine donkere vulling, betekent dit dat de wind zo'n 15% van de tijd uit het zuidwesten waait en grotedeels lage concentraties (lichte vulling) brengt en slechts af en toe een hoge concentratie (donkere vulling). Gemaakt met openair: Carslaw, D. C. and K. Ropkins, (2012) openair --- an R package for air quality data analysis. Environmental Modelling & Software. Volume 27-28, 52-61."
       },
     {"tag" : "expl_add_sensor_to_group",
         "en": "The selected sensors will be added to group:",
@@ -487,6 +491,14 @@
             {"tag" : "infotext_patient",
         "en": "The data is gathered from the different sources. This can take 30 minutes. You can close the tool now. Please continue later or start with exploring the example data.",
         "nl": "De data wordt opgehaald van de verschillende bronhouders. Dit kan 30 minuten duren. Je kunt de tool afsluiten. Als je de tool eerst al wilt uitproberen, herstart de tool en ontdek deze met de al ingeladen data."
+      },
+        {"tag" : "word_helaas",
+        "en": "Unfortunately...",
+        "nl": "Helaas..."
+      },
+            {"tag" : "infotext_nodatayet",
+        "en": "There is not (yet) data available for the choosen selection. Please make another selection or press the button: 'Get the data from external source'. ",
+        "nl": "Voor de gekozen selectie zijn (nog) geen metingen beschikbaar. Maak een andere selectie of klik eerst op de knop 'Data ophalen van externe bron'."
       }
     ]
 }

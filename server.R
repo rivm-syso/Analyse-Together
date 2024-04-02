@@ -236,7 +236,9 @@ shinyServer(function(global, input, output, session) {
                                             line_default,
                                             line_overload,
                                             # Default group name
-                                            group_name_none
+                                            group_name_none,
+                                            pop_up_title = i18n$t("word_helaas"),
+                                            pop_up_message = i18n$t("infotext_nodatayet")
                                             )
 
   # Download to pc user ----

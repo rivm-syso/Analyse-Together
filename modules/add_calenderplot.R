@@ -69,7 +69,7 @@ calender_server <- function(id,
       data_calender <- dplyr::left_join(data_calender, knmidata, by = 'date')
 
       # Make a plot ====
-      try(calendarPlot(data_calender, pollutant = "value", annotate = "ws",
+      try(openair::calendarPlot(data_calender, pollutant = "value", annotate = "ws",
                        type = 'label',
                        local.tz = "Europe/Amsterdam",
                        cols = "Oranges",
