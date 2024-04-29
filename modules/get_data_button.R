@@ -140,6 +140,11 @@ get_data_cache_server <- function(id,
       # If there are no sensors in the database known (yet)
       if(is.null(stations_name)){
         message_data$download_estimation <- c(paste0("No information available yet, please press the get data button (right button)."))
+
+        # remove notification
+        removeNotification(id = ns("notification"))
+
+        # Start the download and show pop up message
         # Do the download functionalities from external source
         do_download_external(mun_or_proj,
                              name_munproj,
@@ -160,17 +165,25 @@ get_data_cache_server <- function(id,
 
         # Not all data for the choosen period is in the dbs, So download needed
         if(T %in% (timeranges_to_download > 0) ){
-          # if there is missing timeramges, then estimate time and do_download_external
+          # if there is missing timeranges, then estimate time and do_download_external
           # Shinyalert for estimated time.
           estimate_time <- ceiling((length(stations_name) * 7 + 30)/60)
           message_data$download_estimation <- c(paste0("Estimated load time from external source: ", estimate_time, " minutes."))
 
+          pop_up_message <- paste0(pop_up_message, " Geschatte download tijd: ",
+                                   estimate_time, ' minuten.')
+
+          # remove notification
+          removeNotification(id = ns("notification"))
+
+          # Start the download and show pop up message
           do_download_external(mun_or_proj,
                                name_munproj,
                                selected_start_date,
                                selected_end_date,
                                pop_up_title,
                                pop_up_message)
+
 
       }else{ # The data is available in the dbs, So load this in the tool
         # Get the data measurements of the selected Municipality/project in the period
