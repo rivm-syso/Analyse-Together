@@ -151,7 +151,7 @@ show_map_server <- function(id,
                        group = "weather")
         }else{
           # NB there will always be a KNMI station selected!
-          # Select random station
+          # Select first station
           random_station <- data_snsrs$station[1]
           data_stations$data <- change_state_to_selected(data_stations$data,
                                                          random_station,
@@ -265,8 +265,8 @@ show_map_server <- function(id,
                      group = "reference")
       }else{
         # NB there will always be a reference station selected!
-        # Select random station
-        random_station <- data_snsrs$station[2]
+        # Select first station
+        random_station <- data_snsrs$station[1]
         data_stations$data <- change_state_to_selected(data_stations$data,
                                                        random_station,
                                                        group_name(),
@@ -309,6 +309,7 @@ show_map_server <- function(id,
 
     # Observe if tabsetpanel is changed to the visualisation tab -> redraw map
     observe({
+
       tab_info <- tab_choice()
       if(!purrr::is_null(tab_info)){
         # If you arrive on this tabpanel then redraw the map.
