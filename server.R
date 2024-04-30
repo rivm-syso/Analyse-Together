@@ -225,6 +225,7 @@ shinyServer(function(global, input, output, session) {
                                             message_data = message_data,
                                             mun_or_proj = reactive(data_other$mun_or_proj) ,
                                             name_munproj = reactive(data_other$name_munproj),
+                                            selected_parameter = reactive(data_other$parameter),
                                             selected_start_date = reactive(data_other$start_date),
                                             selected_end_date = reactive(data_other$end_date),
                                             pool = pool,

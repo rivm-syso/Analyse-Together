@@ -214,7 +214,6 @@ plot_choices <- data.frame('plot' = c("barplot", "timeplot", "timevariation_week
                                      "Pollution rose plot", "Table"))
 plot_choices = setNames(plot_choices$plot, plot_choices$label)
 
-
 # Get start data set
 stations_name <- get_stations_from_selection(default_munproj_name,
                                              default_munproj,
@@ -222,6 +221,7 @@ stations_name <- get_stations_from_selection(default_munproj_name,
 
 measurements_all <- get_measurements_cleaned(measurements_con,
                                              stations_name,
+                                             parameter_input = default_parameter,
                                              start_time = default_time$start_time,
                                              end_time = default_time$end_time)
 
