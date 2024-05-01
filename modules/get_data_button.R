@@ -126,7 +126,7 @@ get_data_cache_server <- function(id,
                                                              start_time,
                                                              end_time)
 
-      data_measurements$data_all
+      
       # Get the data of the stations and put colours etc to it
       data_stations_list <- get_stations_cleaned(stations_con,
                                                  stations_name,
