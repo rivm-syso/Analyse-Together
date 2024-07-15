@@ -190,14 +190,9 @@
 	      "nl": "4. Geef aan in welke component je wilt bekijken. "
 	  },
 	 {"tag" : "tool_select_6_expl",
-	      "en": "5. Click on the data button. The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background.",
-	      "nl": "5. Klik op de 'Data ophalen van externe bron'-button. De gegevens worden dan op de achtergrond opgehaald van Samen Meten, het Luchtmeetnet en het KNMI. "
+	      "en": "5. Click on the data button. The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background. UPDATE TEXT",
+	      "nl": "5. Klik op de 'Haal data op'-button. De gegevens worden geladen in de tool. Mocht je de eerste zijn die deze gegevens in de tool gaat bekijken, dan worden de gegevens op de achtergrond opgehaald van Samen Meten, het Luchtmeetnet en het KNMI. Dit kan even duren. "
 	  },
-	  {"tag" : "tool_select_7_expl",
-	      "en": "6. Load the retrieved data in this tool and continue on to Start.",
-	      "nl": "6. Laad de opgehaalde data in deze tool en ga verder naar Start."
-	  },
-
       {"tag" : "sel_knmi",
 	    	"en": "Show KNMI stations",
 	      "nl": "Toon KNMI-stations"
@@ -234,6 +229,10 @@
         "en": "Other data",
         "nl": "Andere data"
       },
+      {"tag" : "btn_get_data",
+        "en": "Load data",
+        "nl": "Haal data op"
+      },
 	    {"tag" : "title_time",
         "en": "Time series",
         "nl": "Tijdreeks"
@@ -261,10 +260,6 @@
 	    {"tag" : "expl_expltool",
         "en": "This tool was build for citizens. The code is open-source.",
         "nl": "Deze tool is ontwikkeld voor burgers. De code is open-source."
-      },
-      {"tag" : "btn_get_data",
-        "en": "Check data availability",
-        "nl": "Check de beschikbaarheid"
       },
     {"tag" : "btn_start_get_data",
         "en": "Start",
@@ -484,7 +479,7 @@
 	    "en" : "Please wait a moment, the data is being loaded to the tool. In a moment you will be forwarded back to start.",
 	    "nl" : "Even geduld, de gegevens worden geladen, je gaat zo vanzelf weer naar Start."
 	  },
-            {"tag" : "word_patient",
+      {"tag" : "word_patient",
         "en": "Be patient, please!",
         "nl": "Even geduld"
       },
@@ -496,9 +491,9 @@
         "en": "Unfortunately...",
         "nl": "Helaas..."
       },
-            {"tag" : "infotext_nodatayet",
-        "en": "There is not (yet) data available for the choosen selection. Please make another selection or press the button: 'Get the data from external source'. ",
-        "nl": "Voor de gekozen selectie zijn (nog) geen metingen beschikbaar. Maak een andere selectie of klik eerst op de knop 'Data ophalen van externe bron'."
+      {"tag" : "infotext_nodatayet",
+        "en": "There is not (yet) data available for the choosen selection. Please make another selection or wait and try again.",
+        "nl": "Voor de gekozen selectie zijn (nog) geen metingen beschikbaar. Maak een andere selectie of wacht en probeer later nog eens."
       }
     ]
 }

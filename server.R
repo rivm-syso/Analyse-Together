@@ -39,7 +39,7 @@ shinyServer(function(global, input, output, session) {
   data_stations <- reactiveValues(data_all = data_stations_list$data_all,
                                   data = data_stations_list$data)
   # Store messages to communicate with user
-  message_data <- reactiveValues()
+  message_data <- reactiveValues(to_start_page = 0)
 
   ########### Modules ################
   # The pickerInput for component selection ----
@@ -240,7 +240,29 @@ shinyServer(function(global, input, output, session) {
                                             pop_up_title = i18n$t("word_helaas"),
                                             pop_up_message = i18n$t("infotext_nodatayet")
                                             )
-
+  get_data_cache_combiknop_server("test_combiknop",
+                                  text_button = i18n$t({"btn_get_data"}),
+                                  data_measurements = data_measurements,
+                                  data_other = data_other,
+                                  data_stations = data_stations,
+                                  message_data = message_data,
+                                  mun_or_proj = reactive(data_other$mun_or_proj) ,
+                                  name_munproj = reactive(data_other$name_munproj),
+                                  selected_start_date = reactive(data_other$start_date),
+                                  selected_end_date = reactive(data_other$end_date),
+                                  pool = pool,
+                                  measurements_con = measurements_con,
+                                  stations_con = stations_con,
+                                  # Options for the colors
+                                  col_default,
+                                  # Options for the linetype
+                                  line_default,
+                                  line_overload,
+                                  # Default group name
+                                  group_name_none,
+                                  pop_up_title = i18n$t("word_helaas"),
+                                  pop_up_message = i18n$t("infotext_nodatayet")
+  )
   # Download to pc user ----
   download_pc_button_server("download_pc",
                             data_measurements = reactive(data_measurements$data_all),
@@ -343,13 +365,11 @@ shinyServer(function(global, input, output, session) {
 
   # Observe if there is new data selected from the caching, then move to the
   # start-page
-  observe({
-    data_changed <- message_data$to_start_page
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
-    # If you loaded new data, get the cut off value based on this new data
-    data_other$cutoff <- isolate(communication_stuff$cut_off_value())
-
-  })
+  observeEvent(message_data$to_start_page, {
+               updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
+               # If you loaded new data, get the cut off value based on this new data
+               data_other$cutoff <- isolate(communication_stuff$cut_off_value())
+               })
 
   # Observe to change tabs
   observeEvent(input$to_visualise_tab,{
@@ -357,7 +377,8 @@ shinyServer(function(global, input, output, session) {
                       selected = "Visualise data")
   })
   observeEvent(input$to_select_tab,{
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
+    updateTabsetPanel(inputId = "second_order_tabs" ,
+                      selected = "Select data")
   })
 
   # Observe change of tabs reset to overview
@@ -365,7 +386,6 @@ shinyServer(function(global, input, output, session) {
     updateTabsetPanel(inputId = "tab_figures" ,
                       selected = "Overview")
   })
-
 
   # Observe if user want to go to information tab
   observeEvent(input$link_to_information, {
