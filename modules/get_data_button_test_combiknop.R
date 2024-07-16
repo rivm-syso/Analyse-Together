@@ -73,10 +73,10 @@ get_data_cache_combiknop_server <- function(id,
                                      pop_up_message){
       type <- ifelse(is.null(mun_or_proj()), NA, mun_or_proj())
       name <- ifelse(is.null(name_munproj()), NA, name_munproj())
-      tstart <- as_datetime(ifelse(is.null(selected_start_date()), NA, selected_start_date()))
-      tend <- as_datetime(ifelse(is.null(selected_end_date()), NA, selected_end_date()))
-      time_start <- selected_start_date() %>% as.POSIXct()
-      time_end <- selected_end_date() %>%  as.POSIXct()
+      tstart <- as_datetime(ifelse(is.null(selected_start_date), NA, selected_start_date))
+      tend <- as_datetime(ifelse(is.null(selected_end_date), NA, selected_end_date))
+      time_start <- selected_start_date
+      time_end <- selected_end_date
       log_info("mod download: Download pushed with paremeters Type: {type};
                name: {name}; time_start: {tstart}; time_end: {tend}")
 
@@ -180,12 +180,18 @@ get_data_cache_combiknop_server <- function(id,
         pop_up_message_time <- paste0(pop_up_message, " Geschatte downloadtijd: ",
                                       "30", ' minuten.')
 
+        # For the initial download, download from the beginning of the month
+        start_time_all <- lubridate::floor_date(start_time,
+                                                    unit = "month")
+        end_time_all <- lubridate::ceiling_date(end_time,
+                                                    unit = "month")
+
         # Start the download and show pop up message
         # Do the download functionalities from external source
         do_download_external(mun_or_proj,
                              name_munproj,
-                             selected_start_date,
-                             selected_end_date,
+                             start_time_all,
+                             end_time_all,
                              pop_up_title,
                              pop_up_message_time)
 
@@ -229,8 +235,8 @@ get_data_cache_combiknop_server <- function(id,
           # Start the download and show pop up message
           do_download_external(mun_or_proj,
                                name_munproj,
-                               selected_start_date,
-                               selected_end_date,
+                               start_time,
+                               end_time,
                                pop_up_title,
                                pop_up_message_time)
 
