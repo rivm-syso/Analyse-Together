@@ -52,7 +52,9 @@ get_data_cache_server <- function(id,
       tagList(
         actionButton(ns("get_dbs_cache"),
                      text_button,
-                     style="background-color: #ffe9b7")
+                     style="background-color: #ffe9b7"),
+        show_data_cache_output(ns("show_data_cache"))
+
 
       )
     })
@@ -66,12 +68,14 @@ get_data_cache_server <- function(id,
                                      pop_up_message){
       type <- ifelse(is.null(mun_or_proj()), NA, mun_or_proj())
       name <- ifelse(is.null(name_munproj()), NA, name_munproj())
-      tstart <- as_datetime(ifelse(is.null(selected_start_date()), NA, selected_start_date()))
-      tend <- as_datetime(ifelse(is.null(selected_end_date()), NA, selected_end_date()))
+      tstart <- as_datetime(ifelse(is.null(selected_start_date()), NA,
+                                   selected_start_date()))
+      tend <- as_datetime(ifelse(is.null(selected_end_date()), NA,
+                                 selected_end_date()))
       time_start <- selected_start_date() %>% as.POSIXct()
       time_end <- selected_end_date() %>%  as.POSIXct()
-      log_info("mod download: Download pushed with paremeters Type: {type}; name: {name}; time_start: {tstart}; time_end: {tend}")
-
+      log_info("mod download: Download pushed with paremeters Type:
+               {type}; name: {name}; time_start: {tstart}; time_end: {tend}")
 
       if(any(is.na(c(type, name, tstart, tend)))) {
         log_trace("mod download: Download not started, missing parameters")
@@ -96,7 +100,6 @@ get_data_cache_server <- function(id,
                             time_end = time_end,
                             conn = pool,
                             max_requests = 100)
-
 
       }
     }
@@ -124,6 +127,18 @@ get_data_cache_server <- function(id,
         need(!is_empty((end_time)),"Please, select periode")
       )
 
+      # Download always from the beginning of the month
+      start_time_all <- lubridate::floor_date(start_time,
+                                              unit = "month")
+      end_time_all <- lubridate::ceiling_date(end_time,
+                                              unit = "month")
+
+      # Create dataframe for plotting availability in cache
+      data_to_plot <- data.frame(date = seq(start_time,
+                                            end_time,
+                                            by='1 day')
+      )
+
       # Set up notification
       showNotification(i18n$t("expl_waiting_start"),
                        duration = NULL,
@@ -137,14 +152,22 @@ get_data_cache_server <- function(id,
                                                    type_choice,
                                                    conn = pool)
 
-      log_info("get mod: Get data from caching database: {name_choice} ; {start_time} ; {end_time}... ")
+      log_info("get mod: Get data from caching database: {name_choice} ;
+               {start_time} ; {end_time}... ")
 
       # Estimate the download time, if sensors exists in selection
       # If there are no sensors in the database known (yet)
       if(is.null(stations_name)){
         log_trace("get mod: download to queu ...")
 
-        message_data$download_estimation <- c(paste0("No information available yet, please press the get data button (right button)."))
+        # Set all the days to unavailable and create plot
+        data_to_plot <- data_to_plot %>% dplyr::mutate(available = F)
+        show_data_cache_server("show_data_cache",
+                               data_to_plot = data_to_plot)
+
+        message_data$download_estimation <- c(paste0("No information available yet,
+                                                     please press the get data button
+                                                     (right button)."))
 
         # remove notification
         removeNotification(id = ns("waiting_start"))
@@ -153,8 +176,8 @@ get_data_cache_server <- function(id,
         # Do the download functionalities from external source
         do_download_external(mun_or_proj,
                              name_munproj,
-                             selected_start_date,
-                             selected_end_date,
+                             start_time_all,
+                             end_time_all,
                              pop_up_title,
                              pop_up_message)
 
@@ -170,14 +193,46 @@ get_data_cache_server <- function(id,
           })
         timeranges_to_download <- unlist(timeranges_to_download)
 
+        # Create visualisation of the available data in cache
+        # Set all the days to available
+        data_to_plot <- data_to_plot %>% dplyr::mutate(available = T)
+        # Check which aren't available
+        if(T%in% (timeranges_to_download > 0)){
+          # Assumption is that alle stations have the same missing period
+          start_unavailable <- lubridate::as_datetime(timeranges_to_download[1],
+                                                      tz = "Europe/Amsterdam") %>%
+            lubridate::as_date()
+          end_unavailable <- lubridate::as_datetime(timeranges_to_download[2],
+                                                      tz = "Europe/Amsterdam") %>%
+            lubridate::as_date()
+
+          seq_unavailable <- seq((start_unavailable),
+                                 (end_unavailable),
+                                 by = "1 day")
+
+          # Set all the days to available and create plot
+          data_to_plot <- data_to_plot %>%
+            dplyr::mutate(available = ifelse(date %in% seq_unavailable, F, T)
+                          )
+
+        }
+
+        # Show viualisation
+        show_data_cache_server("show_data_cache",
+                               data_to_plot = data_to_plot)
+
+
         # Not all data for the choosen period is in the dbs, So download needed
         if(T %in% (timeranges_to_download > 0) ){
           log_trace("get mod: download timeranges ...")
 
-          # if there is missing timeranges, then estimate time and do_download_external
+          # if there is missing timeranges, then estimate time and
+          # do_download_external
           # Shinyalert for estimated time.
           estimate_time <- ceiling((length(stations_name) * 7 + 30)/60)
-          message_data$download_estimation <- c(paste0("Estimated load time from external source: ", estimate_time, " minutes."))
+          message_data$download_estimation <- c(paste0("Estimated load time
+                                                       from external source: ",
+                                                       estimate_time, " minutes."))
 
           pop_up_message <- paste0(pop_up_message, " Geschatte download tijd: ",
                                    estimate_time, ' minuten.')
@@ -188,18 +243,18 @@ get_data_cache_server <- function(id,
           # Start the download and show pop up message
           do_download_external(mun_or_proj,
                                name_munproj,
-                               selected_start_date,
-                               selected_end_date,
+                               start_time_all,
+                               end_time_all,
                                pop_up_title,
                                pop_up_message)
 
           log_trace("get mod: timeranges done")
 
       }else{ # The data is available in the dbs, So load this in the tool
-        # Get the data measurements of the selected Municipality/project in the period
-        # and do some data cleaning
         log_info("get mod: adding data to the tool ...")
 
+        # Get the data measurements of the selected Municipality/project in
+        # the period and do some data cleaning
         data_measurements$data_all <- get_measurements_cleaned(measurements_con,
                                                                stations_name,
                                                                start_time,
@@ -221,13 +276,9 @@ get_data_cache_server <- function(id,
         # remove notification
         removeNotification(id = ns("waiting_start"))
 
-        # Check if there is data in de caching, otherwise stop and give message
-        if(nrow(data_measurements$data_all) == 0){
-          message_data$data_in_dbs <- c(paste0("No data in ", type_choice, " ", name_choice))
-          shiny::validate(need(F,message = paste0("No data in ", type_choice, " ", name_choice)))
-        }
-
-        message_data$data_in_dbs <- c(paste0("Data available in ", type_choice, " ", name_choice))
+        # Some messaging
+        message_data$data_in_dbs <- c(paste0("Data available in ", type_choice,
+                                             " ", name_choice))
 
         # counter to trigger event to switch to Start-page
         message_data$to_start_page <-  message_data$to_start_page + 1

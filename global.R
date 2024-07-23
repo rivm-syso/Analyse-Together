@@ -48,6 +48,7 @@ library(sp)              # For maps
 library(DT)              # For tables
 library(latex2exp)       # For titles in graphs
 library(openair)         # For openair-plots
+library(colorBlindness)  # For colours
 
 # Geo
 library(sf)
@@ -239,6 +240,7 @@ data_stations_list <- get_stations_cleaned(stations_con,
 # Source module for the communication
 source("modules/communication_module.R")
 source("modules/info_popup.R")
+source("modules/show_data_cache.R")
 
 # Source module for the date range selection
 source("modules/select_date_range.R")
