@@ -2,7 +2,9 @@
 ### Get data button ###
 ###############################################
 
-# This is a module which get the data from the (cache)database
+# This is a module which get the data from the (cache)database,
+# checks wheter or not the data is available and when not downloads
+# it from the API (add a job in the queu)
 ######################################################################
 # Output Module
 ######################################################################
@@ -48,7 +50,9 @@ get_data_cache_server <- function(id,
 
     output$get_dbs_cache <- renderUI({
       tagList(
-        actionButton(ns("get_dbs_cache"), text_button, style="background-color: #ffe9b7")
+        actionButton(ns("get_dbs_cache"),
+                     text_button,
+                     style="background-color: #ffe9b7")
 
       )
     })
@@ -123,26 +127,27 @@ get_data_cache_server <- function(id,
       # Set up notification
       showNotification(i18n$t("expl_waiting_start"),
                        duration = NULL,
-                       id = ns("notification"),
+                       id = ns("waiting_start"),
                        closeButton = F
                        )
 
       # Load the data from the caching database
       # Get the station names in the selected Municipality/project
-      stations_name <- get_stations_from_selection(name_choice, type_choice, conn = pool)
-
-      browser()
+      stations_name <- get_stations_from_selection(name_choice,
+                                                   type_choice,
+                                                   conn = pool)
 
       log_info("get mod: Get data from caching database: {name_choice} ; {start_time} ; {end_time}... ")
-      message_data$to_start_page <- c(paste0("To start page if:  ", type_choice, " ", name_choice," " , start_time, end_time, "has changed."))
 
       # Estimate the download time, if sensors exists in selection
       # If there are no sensors in the database known (yet)
       if(is.null(stations_name)){
+        log_trace("get mod: download to queu ...")
+
         message_data$download_estimation <- c(paste0("No information available yet, please press the get data button (right button)."))
 
         # remove notification
-        removeNotification(id = ns("notification"))
+        removeNotification(id = ns("waiting_start"))
 
         # Start the download and show pop up message
         # Do the download functionalities from external source
@@ -152,6 +157,9 @@ get_data_cache_server <- function(id,
                              selected_end_date,
                              pop_up_title,
                              pop_up_message)
+
+        log_trace("get mod: download added to queu")
+
       }else{ # There are sensors known
         # Check if there are measurements for the choosen period
         timeranges_to_download <- sapply(stations_name, function(x){
@@ -161,10 +169,11 @@ get_data_cache_server <- function(id,
                                           pool)
           })
         timeranges_to_download <- unlist(timeranges_to_download)
-        browser()
 
         # Not all data for the choosen period is in the dbs, So download needed
         if(T %in% (timeranges_to_download > 0) ){
+          log_trace("get mod: download timeranges ...")
+
           # if there is missing timeranges, then estimate time and do_download_external
           # Shinyalert for estimated time.
           estimate_time <- ceiling((length(stations_name) * 7 + 30)/60)
@@ -174,7 +183,7 @@ get_data_cache_server <- function(id,
                                    estimate_time, ' minuten.')
 
           # remove notification
-          removeNotification(id = ns("notification"))
+          removeNotification(id = ns("waiting_start"))
 
           # Start the download and show pop up message
           do_download_external(mun_or_proj,
@@ -184,10 +193,13 @@ get_data_cache_server <- function(id,
                                pop_up_title,
                                pop_up_message)
 
+          log_trace("get mod: timeranges done")
 
       }else{ # The data is available in the dbs, So load this in the tool
         # Get the data measurements of the selected Municipality/project in the period
         # and do some data cleaning
+        log_info("get mod: adding data to the tool ...")
+
         data_measurements$data_all <- get_measurements_cleaned(measurements_con,
                                                                stations_name,
                                                                start_time,
@@ -201,12 +213,13 @@ get_data_cache_server <- function(id,
                                                    line_default,
                                                    group_name_none,
                                                    line_overload)
+
         # Put the station data in the reactivevalues
         data_stations$data <- data_stations_list$data
         data_stations$data_all <- data_stations_list$data_all
 
         # remove notification
-        removeNotification(id = ns("notification"))
+        removeNotification(id = ns("waiting_start"))
 
         # Check if there is data in de caching, otherwise stop and give message
         if(nrow(data_measurements$data_all) == 0){
@@ -215,6 +228,9 @@ get_data_cache_server <- function(id,
         }
 
         message_data$data_in_dbs <- c(paste0("Data available in ", type_choice, " ", name_choice))
+
+        # counter to trigger event to switch to Start-page
+        message_data$to_start_page <-  message_data$to_start_page + 1
 
         log_info("get mod: Data available in tool. ")
       }

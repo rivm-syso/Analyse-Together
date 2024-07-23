@@ -204,7 +204,7 @@ shinyUI(
                          date_range_output("select_date_range"),
                          component_selection_output("select_component"),
                          p(i18n$t("tool_select_6_expl")),
-                         get_data_cache_combiknop_output("test_combiknop")
+                         get_data_cache_output("get_data_dbs_button_start")
                      )
                    )
             )
