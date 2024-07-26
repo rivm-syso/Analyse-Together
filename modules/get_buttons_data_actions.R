@@ -52,19 +52,23 @@ btn_do_data_actions_server <- function(id,
                    & missing_days$create_btn_use_data){
             tagList(
               actionButton(ns("btn_use_data"),
-                              label = "Gebruik beschikbare data"),
+                              label = "Gebruik beschikbare data",
+                           icon = icon("play")),
               actionButton(ns("btn_external_data"),
-                              label = "Ophalen van missende data")
+                              label = "Ophalen van missende data",
+                           icon = icon("hourglass-start"))
               )
           }else if(missing_days$create_btn_get_data){
             tagList(
               actionButton(ns("btn_external_data"),
-                           label = "Ophalen van missende data")
+                           label = "Ophalen van missende data",
+                           icon = icon("hourglass-start"))
             )
           }else if(missing_days$create_btn_use_data){
             tagList(
               actionButton(ns("btn_use_data"),
-                              label = "Gebruik beschikbare data")
+                              label = "Gebruik beschikbare data",
+                           icon = icon("play"))
             )
           }
         })
