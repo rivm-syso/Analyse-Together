@@ -49,6 +49,7 @@ get_data_cache_server <- function(id,
 
     ns <- session$ns
 
+    # Ui output with action button and other modules
     output$get_dbs_cache <- renderUI({
       tagList(
         actionButton(ns("get_dbs_cache"),
