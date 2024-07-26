@@ -73,6 +73,8 @@ source("funs/logging_fun.R")
 source("funs/ui_create_plots_funs.R")
 source("funs/get_data_caching_funs.R")
 source("funs/set_state_station_data_stations.R")
+
+# set_loglevel(level = "TRACE")
 set_loglevel(level = "INFO")
 
 # check if database must be renewed or created
@@ -290,6 +292,7 @@ source("modules/set_rename_group_button.R")
 source("modules/download_api_button.R")
 source("modules/get_data_button.R")
 source("modules/download_to_pc.R")
+source("modules/get_buttons_data_actions.R")
 
 # # Source que display
 # source("modules/view_que.R")

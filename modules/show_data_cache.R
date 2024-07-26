@@ -99,16 +99,17 @@ show_data_cache_server <- function(id,
         dplyr::filter(available == F) %>%
         count()
 
+      # return number of missing data
+      data_other$missing_days <- list(missing_days = missing_days,
+                                      create_btn_get_data = create_btn_get_data,
+                                      create_btn_use_data = create_btn_use_data,
+                                      counter = lubridate::now())
+
       # text output with number of missing data days
       output$missing_days <- renderText({
 
         paste0("Er missen nog: ", missing_days, " dagen in de gekozen tijdsperiode.")
       })
-
-      # return number of missing data
-      data_other$missing_days <- list(missing_days = missing_days,
-                                      create_btn_get_data = create_btn_get_data,
-                                      create_btn_use_data = create_btn_use_data)
 
     })
 
