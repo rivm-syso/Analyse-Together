@@ -32,7 +32,8 @@ shinyServer(function(global, input, output, session) {
                                combi_col_name = setNames(default_col_select,
                                                          default_group_name),
                                indu_station_index = 1,
-                               missing_days = 0)
+                               missing_days = 0,
+                               to_start_page = 0)
 
   # Store the data points (all and filtered)
   data_measurements <- reactiveValues(data_all = measurements_all)
@@ -40,7 +41,7 @@ shinyServer(function(global, input, output, session) {
   data_stations <- reactiveValues(data_all = data_stations_list$data_all,
                                   data = data_stations_list$data)
   # Store messages to communicate with user
-  message_data <- reactiveValues(to_start_page = 0)
+  message_data <- reactiveValues()
 
   ########### Modules ################
   # The pickerInput for component selection ----
@@ -344,7 +345,7 @@ shinyServer(function(global, input, output, session) {
 
   # Observe if there is new data selected from the caching, then move to the
   # start-page
-  observeEvent(message_data$to_start_page, {
+  observeEvent(data_other$to_start_page, {
                updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
                # If you loaded new data, get the cut off value based on this new data
                data_other$cutoff <- isolate(communication_stuff$cut_off_value())

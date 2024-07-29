@@ -292,7 +292,6 @@ source("modules/set_rename_group_button.R")
 source("modules/download_api_button.R")
 source("modules/get_data_button.R")
 source("modules/download_to_pc.R")
-source("modules/get_buttons_data_actions.R")
 
 # # Source que display
 # source("modules/view_que.R")
