@@ -221,7 +221,6 @@ shinyServer(function(global, input, output, session) {
 
   # Get the data from the database ----
   get_data_cache_dbs_start <- get_data_cache_server("get_data_dbs_button_start",
-                                            text_button = i18n$t({"title_start"}),
                                             data_measurements = data_measurements,
                                             data_stations = data_stations,
                                             message_data = message_data,
@@ -241,7 +240,7 @@ shinyServer(function(global, input, output, session) {
                                             # Default group name
                                             group_name_none,
                                             pop_up_title = i18n$t("word_helaas"),
-                                            pop_up_message = i18n$t("infotext_nodatayet")
+                                            pop_up_message = i18n$t("infotext_patient")
                                             )
 
   # Download to pc user ----

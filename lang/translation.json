@@ -190,8 +190,8 @@
 	      "nl": "4. Geef aan in welke component je wilt bekijken. "
 	  },
 	 {"tag" : "tool_select_6_expl",
-	      "en": "5. Click on the data button. The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background. UPDATE TEXT",
-	      "nl": "5. Klik op de 'Haal data op'-button. De gegevens worden geladen in de tool. Mocht je de eerste zijn die deze gegevens in de tool gaat bekijken, dan worden de gegevens op de achtergrond opgehaald van Samen Meten, het Luchtmeetnet en het KNMI. Dit kan even duren. "
+	      "en": "5. Click on the 'Check availability' button. We will look up whether the data is immediately available.",
+	      "nl": "5. Klik op de 'Check beschikbaarheid'-button. Er wordt opgezocht of de data direct beschikbaar is. "
 	  },
       {"tag" : "sel_knmi",
 	    	"en": "Show KNMI stations",
@@ -230,8 +230,16 @@
         "nl": "Andere data"
       },
       {"tag" : "btn_get_data",
-        "en": "Load data",
-        "nl": "Haal data op"
+        "en": "Check availability",
+        "nl": "Check beschikbaarheid"
+      },
+      {"tag" : "btn_external_data",
+        "en": "Load missing data",
+        "nl": "Haal missende data op"
+      },
+      {"tag" : "btn_use_data",
+        "en": "Use available data",
+        "nl": "Gebruik beschikbare data"
       },
 	    {"tag" : "title_time",
         "en": "Time series",
@@ -277,6 +285,14 @@
         "en": "Rename group",
         "nl": "Hernoem groep"
       },
+      {"tag" : "word_present",
+        "en": "Present",
+        "nl": "Aanwezig"
+      },
+      {"tag" : "word_absent",
+        "en": "Absent",
+        "nl": "Afwezig"
+      },
       {"tag" : "word_table",
         "en": "Table for",
         "nl": "Tabel voor"
@@ -317,6 +333,16 @@
     {"tag" : "word_tableplot",
         "en": "Table",
         "nl": "Tabel"
+      },
+
+    {"tag" : "infotext_missing_days_1",
+        "en": "There are still ",
+        "nl": "Er missen nog "
+      },
+
+    {"tag" : "infotext_missing_days_2",
+        "en": " days missing in the chosen time period.",
+        "nl": " dagen in de gekozen tijdsperiode."
       },
     {"tag" : "infotext_overview",
         "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. For every hour there one measurements per sensor. The black line shows the average measurement. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI.",
@@ -474,18 +500,21 @@
       "en": "Read more about the data.",
       "nl": "Lees hier meer over de data."
       },
-      	  {
-	    "tag" : "expl_waiting_start",
+      {"tag" : "expl_waiting_start",
 	    "en" : "Please wait a moment, the data is being loaded to the tool. In a moment you will be forwarded back to start.",
 	    "nl" : "Even geduld, de gegevens worden geladen, je gaat zo vanzelf weer naar Start."
+	  },
+	  {"tag" : "expl_waiting_check_cache",
+	    "en" : "Please wait a moment, the availability is being searched.",
+	    "nl" : "Even geduld, de beschikbaarheid wordt opgezocht."
 	  },
       {"tag" : "word_patient",
         "en": "Be patient, please!",
         "nl": "Even geduld"
       },
             {"tag" : "infotext_patient",
-        "en": "The data is gathered from the different sources. This can take 30 minutes. You can close the tool now. Please continue later or start with exploring the example data.",
-        "nl": "De data wordt opgehaald van de verschillende bronhouders. Dit kan 30 minuten duren. Je kunt de tool afsluiten. Als je de tool eerst al wilt uitproberen, herstart de tool en ontdek deze met de al ingeladen data."
+        "en": "The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background. This can take 30 minutes. Please make another selection or wait and try again.",
+        "nl": "De data wordt opgehaald van de verschillende bronhouders. Dit kan 30 minuten duren. Maak een andere selectie of wacht en probeer het later nog eens."
       },
         {"tag" : "word_helaas",
         "en": "Unfortunately...",

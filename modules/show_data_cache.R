@@ -89,7 +89,7 @@ show_data_cache_server <- function(id,
                               pollutant = "available",
                               cols = c( "#d95f02","#1b9e77"),
                               breaks = c(-0.2,0.8,1.2),
-                              labels = c( "Afwezig", "Aanwezig"),
+                              labels = c( i18n$t("word_absent"), i18n$t("word_present")),
                               key.position = "top",
                               key.header = title_plot)
       })
@@ -108,7 +108,8 @@ show_data_cache_server <- function(id,
       # text output with number of missing data days
       output$missing_days <- renderText({
 
-        paste0("Er missen nog: ", missing_days, " dagen in de gekozen tijdsperiode.")
+        paste0(i18n$t("infotext_missing_days_1"), missing_days,
+               i18n$t("infotext_missing_days_2"))
       })
 
     })

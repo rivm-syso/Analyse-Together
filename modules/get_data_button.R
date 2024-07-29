@@ -21,7 +21,6 @@ get_data_cache_output <- function(id) {
 ######################################################################
 
 get_data_cache_server <- function(id,
-                                  text_button,
                                   data_measurements,
                                   data_stations,
                                   message_data,
@@ -53,8 +52,9 @@ get_data_cache_server <- function(id,
     output$get_dbs_cache <- renderUI({
       tagList(
         actionButton(ns("get_dbs_cache"),
-                     text_button,
-                     style="background-color: #ffe9b7"),
+                     i18n$t("btn_get_data"),
+                     style="background-color: #ffe9b7",
+                     icon = icon("square-check")),
         show_data_cache_output(ns("show_data_cache")),
         uiOutput(ns("btn_do_data"))
       )
@@ -296,22 +296,22 @@ get_data_cache_server <- function(id,
            & data_other$missing_days$create_btn_use_data){
           tagList(
             actionButton(ns("btn_use_data"),
-                         label = "Gebruik beschikbare data",
+                         label = i18n$t("btn_use_data"),
                          icon = icon("play")),
             actionButton(ns("btn_external_data"),
-                         label = "Ophalen van missende data",
+                         label = i18n$t("btn_external_data"),
                          icon = icon("hourglass-start"))
           )
         }else if(data_other$missing_days$create_btn_get_data){
           tagList(
             actionButton(ns("btn_external_data"),
-                         label = "Ophalen van missende data",
+                         label = i18n$t("btn_external_data"),
                          icon = icon("hourglass-start"))
           )
         }else if(data_other$missing_days$create_btn_use_data){
           tagList(
             actionButton(ns("btn_use_data"),
-                         label = "Gebruik beschikbare data",
+                         label = i18n$t("btn_use_data"),
                          icon = icon("play"))
           )
         }
@@ -327,6 +327,14 @@ get_data_cache_server <- function(id,
     # Observe if the get_dbs_cache is clicked ----
     observeEvent(input$get_dbs_cache, {
 
+      # Give user feedback
+      # Set up notification
+      showNotification(i18n$t("expl_waiting_check_cache"),
+                       duration = NULL,
+                       id = ns("waiting_check_cache"),
+                       closeButton = F
+      )
+
       # Check the input values, if available and get some more info
       input_values <- isolate(initiate_status())
 
@@ -341,6 +349,9 @@ get_data_cache_server <- function(id,
                              stations_name = input_values$stations_name,
                              timeranges_to_download =
                                input_values$timeranges_to_download)
+
+      # remove notification
+      removeNotification(id = ns("waiting_check_cache"))
 
   })
   })
