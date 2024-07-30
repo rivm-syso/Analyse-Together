@@ -153,8 +153,8 @@
 		  "nl": "In deze tool kun je de metingen van de luchtkwaliteitssensoren onderzoeken. Zo is het mogelijk verschillende sensoren te vergelijken met een referentiestation, de sensoren te groeperen en gemiddeldes per dag/week te maken."
 		},
     {"tag" : "tool_welcome_2_expl",
-    "en" : "We already made a selection for you to explore the tool right away. In the calender you can see how many sensors were available during this period. On the map you see which sensors are ready for use. Click on 'Explore' to start your analysis.",
-    "nl" : "We hebben al een selectie voor je klaargezet om daarmee de tool meteen te ontdekken. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart zie je met welke sensoren je aan de slag kunt gaan. Klik op 'Ontdekken' om te beginnen."
+    "en" : "We already made a selection for you to explore the tool right away. In the calender below you can see how many sensors were available during this period. On the map you see which sensors are ready for use. Click on 'Explore' to start your analysis.",
+    "nl" : "We hebben al een selectie voor je klaargezet om daarmee de tool meteen te ontdekken. Hieronder zie je In de kalender hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart zie je met welke sensoren je aan de slag kunt gaan. Klik op 'Ontdekken' om te beginnen."
     },
     {"tag" : "tool_welcome_3_expl",
     "en" : "Do want to choose the measurements, the municipality, or the project yourself? Go yo 'Choose' en return here to explore your data selection. ",
