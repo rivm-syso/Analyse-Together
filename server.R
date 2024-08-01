@@ -415,6 +415,12 @@ shinyServer(function(global, input, output, session) {
                                                  type_choice,
                                                  conn = pool)
 
+    # Check if there are stations in cache dbs known,
+    # then the default data is shown
+    shiny::validate(need(!purrr::is_null(stations_name),"No stations found,
+                         please use the 'Choose' option from the default tool
+                         to load the data."))
+
     # Get the data measurements of the selected Municipality/project in
     # the period and do some data cleaning
     data_measurements$data_all <- get_measurements_cleaned(measurements_con,
