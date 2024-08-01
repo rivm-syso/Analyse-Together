@@ -187,4 +187,31 @@ add_uncertainty_bias_sensor <- function(data_measurements){
 
   return(data_measurements)
 
-  }
+}
+
+#' Filter data on parameter
+#'
+#' The station measure several paramaters. This function filters the
+#' given parameter_input for the air quality stations. And keeps the
+#' KNMI ws and wd observations
+#'
+#' @param data_all df with at least columns (parameter, station)
+#' @param parameter_input string with parameter as in column parameter
+#' @param knmi default T can be add if different approach
+#'
+#' @return df as data_all but without redundant parameters
+#' @export
+#'
+filter_parameter <- function(data_all, parameter_input, knmi = T){
+  data_all <- data_all %>%
+    dplyr::mutate(
+      keep = case_when(parameter == parameter_input & !grepl("^KNMI", station) ~ T,
+                       grepl("^KNMI", station) & parameter %in% c("wd", "ws") ~ T,
+                       T ~ F
+      )
+    ) %>%
+    dplyr::filter(keep) %>%
+    dplyr::select(-c(keep))
+
+  return(data_all)
+}
