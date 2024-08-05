@@ -379,7 +379,6 @@ shinyServer(function(global, input, output, session) {
   observe({
     user_input_url <- parseQueryString(session$clientData$url_search)
 
-    browser()
     # Check if there is a valid query
     if(purrr::is_empty(user_input_url)){
       # Get the default values
