@@ -386,6 +386,7 @@ shinyServer(function(global, input, output, session) {
       type_choice <- default_munproj
       start_time <- default_time$start_time
       end_time <- default_time$end_time
+      parameter_choice <- default_parameter
     }else{
 
       # Check if all input is valid, otherwise take default values
@@ -396,6 +397,10 @@ shinyServer(function(global, input, output, session) {
       name_choice <- ifelse(is.null(user_input_url$name),
                             default_munproj_name,
                             user_input_url$name)
+
+      parameter_choice <- ifelse(is.null(user_input_url$parameter),
+                            default_parameter,
+                            user_input_url$parameter)
 
       if(is.null(user_input_url$start_date)){
         start_time <- default_time$start_time
@@ -424,10 +429,11 @@ shinyServer(function(global, input, output, session) {
 
     # Get the data measurements of the selected Municipality/project in
     # the period and do some data cleaning
-    data_measurements$data_all <- get_measurements_cleaned(measurements_con,
-                                                           stations_name,
-                                                           start_time,
-                                                           end_time)
+    data_measurements$data_all <- get_measurements_cleaned(measurements_con = measurements_con,
+                                                           stations_name = stations_name,
+                                                           parameter_input = parameter_choice,
+                                                           start_time = start_time,
+                                                           end_time = end_time)
 
     # Get the data of the stations and put colours etc to it
     data_stations_list <- get_stations_cleaned(stations_con,
