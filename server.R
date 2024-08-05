@@ -376,8 +376,11 @@ shinyServer(function(global, input, output, session) {
 
   # Observe User input from URL to start with other data set,
   # If no input is given, start/load the default data set
-  observe({
+  observeEvent(reactive({session$clientData$url_search}),{
+
     user_input_url <- parseQueryString(session$clientData$url_search)
+
+    log_trace("server observer_url: {user_input_url}")
 
     # Check if there is a valid query
     if(purrr::is_empty(user_input_url)){
@@ -416,6 +419,9 @@ shinyServer(function(global, input, output, session) {
 
     }
 
+    log_info("server observer url: get data from: {name_choice},
+              {start_time}, {end_time}")
+
     # Get the station names in the selected Municipality/project
     stations_name <- get_stations_from_selection(name_choice,
                                                  type_choice,
@@ -447,6 +453,8 @@ shinyServer(function(global, input, output, session) {
     # Put the station data in the reactivevalues
     data_stations$data <- data_stations_list$data
     data_stations$data_all <- data_stations_list$data_all
+
+    log_info("server observer url: data_in tool")
 
   })
 
