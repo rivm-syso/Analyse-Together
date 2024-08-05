@@ -74,8 +74,8 @@ source("funs/ui_create_plots_funs.R")
 source("funs/get_data_caching_funs.R")
 source("funs/set_state_station_data_stations.R")
 
-# set_loglevel(level = "TRACE")
-set_loglevel(level = "INFO")
+set_loglevel(level = "TRACE")
+# set_loglevel(level = "INFO")
 
 # check if database must be renewed or created
 db_script <- here::here("scripts","container_data_prep.R")
@@ -250,6 +250,7 @@ source("modules/select_group_name_switch.R")
 source("modules/add_metadata_param_tables.R")
 source("modules/add_single_text_message.R")
 source("modules/add_info_sensor_plot.R")
+source("modules/add_waiting_info.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")

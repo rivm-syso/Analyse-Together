@@ -268,6 +268,10 @@ shinyServer(function(global, input, output, session) {
                              data_stations = data_stations,
                              data_other = data_other)
 
+  waiting_info_server("check_waiting",
+                      data_other = data_other,
+                      pool = pool)
+
   # Single text items
   single_text_server("text_data_available",
                      text_message = reactive(message_data$data_in_dbs))

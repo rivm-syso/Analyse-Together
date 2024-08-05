@@ -144,7 +144,7 @@ get_data_cache_server <- function(id,
                                                              start_time,
                                                              end_time)
 
-      
+
       # Get the data of the stations and put colours etc to it
       data_stations_list <- get_stations_cleaned(stations_con,
                                                  stations_name,
@@ -214,13 +214,36 @@ get_data_cache_server <- function(id,
         kits <- get_stations_from_selection(name, type = type)
         log_trace("mod get button data actions: Overview kits opgehaald")
 
-        create_data_request(kits = kits,
+        data_reqs <- create_data_request(kits = kits,
                             time_start = time_start,
                             time_end = time_end,
                             conn = pool,
                             max_requests = 100)
 
-        log_trace("mod get button data actions: download request made")
+        browser()
+        # get the meta data of the cache dbs
+        meta_table <- tbl(pool, "meta") %>%
+          as.data.frame()
+
+        # overview data requests in queu, including waitng number
+        data_reqs_queu <- meta_table %>%
+          dplyr::filter(type == "data_req") %>%
+          dplyr::select(-c(doc)) %>%
+          dplyr::mutate(waiting = row_number())
+
+        # Get job id of interest
+        job_id_interest <- tail(data_reqs,1) %>% unlist()
+        # number of requests above the one of interest, waiting
+        waiting_number <- data_reqs_queu %>%
+          dplyr::filter(str_detect(ref, job_id_interest)) %>%
+          dplyr::select(waiting) %>%
+          pull()
+
+        #Store job_id
+        data_other$job_id <- job_id_interest
+
+        log_info("mod get button data actions: download request made {job_id_interest},
+                  waiting {waiting_number}")
 
       }
     }

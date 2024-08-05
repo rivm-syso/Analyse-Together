@@ -231,6 +231,8 @@ shinyUI(
           actionLink(label = i18n$t("btn_link_information"),
                      inputId = "link_to_information"))),
 
+    waiting_info_output("check_waiting"),
+
 
     ), # end tabpanel "HOME"
 
