@@ -71,6 +71,7 @@ source("funs/download_fun.R")
 source("funs/data_to_tool_fun.R")
 source("funs/logging_fun.R")
 source("funs/ui_create_plots_funs.R")
+source("funs/ui_tab_info.R")
 source("funs/get_data_caching_funs.R")
 source("funs/set_state_station_data_stations.R")
 
