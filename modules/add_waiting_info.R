@@ -31,7 +31,7 @@ waiting_info_server <- function(id,
 
     check_job_info <- function(pool,
                                data_other){
-      browser()
+
       # Get job_id
       job_id_interest <- data_other$job_id
 
@@ -49,13 +49,14 @@ waiting_info_server <- function(id,
 
       # Check if the job is still on the waiting list
       if(job_type == "data_req_done"){
-        # Creates message with job info about the data availability, popup?
-        browser()
+
+        log_trace("mod waiting info: yes job is done {job_id_interest}")
+
+        # Creates message with job info about the data availability
         text_for_footer <- "klaar"
         return(text_for_footer)
 
       }else{
-        browser()
 
         # overview data requests in queu, including waiting number
         data_reqs_queu <- meta_table %>%
@@ -69,8 +70,11 @@ waiting_info_server <- function(id,
           dplyr::select(waiting) %>%
           pull()
 
+        log_trace("mod waiting info: waiting number {waiting_number}")
+
         # writes in footer the position of the job in the waiting list
-        text_for_footer <- paste0("wachten: ", waiting_number)
+        text_for_footer <- paste0(i18n$t("expl_waiting_number"),
+                                  waiting_number)
 
 
         return(text_for_footer)
@@ -79,13 +83,29 @@ waiting_info_server <- function(id,
     }
 
     output$waiting_text <- renderUI({
-      browser()
-      # Do this every minute
 
-      invalidateLater(10000)
-      text_for_footer <- check_job_info(data_other = data_other,
-                                        pool = pool)
-      div(p(text_for_footer))
+      # Do this every minute, if there is a job in line
+      invalidateLater(60000)
+
+      if(data_other$waiting_number > 0){
+
+        log_trace("mod waiting info: check if job is done ...")
+        # Check if the job is still in line
+        text_for_footer <- check_job_info(data_other = data_other,
+                                          pool = pool)
+
+        # Check if data is available, show pop up if ready
+        if(text_for_footer == "klaar"){
+          data_other$waiting_number <- 0
+          shinyalert::shinyalert(title = i18n$t("word_ready"),
+                     text = i18n$t("expl_waiting_success"),
+                     type = "success")
+        }
+
+        # Show footer if job is still in line
+        div(p(text_for_footer))
+        }
+
     })
 
   })

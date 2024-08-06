@@ -220,7 +220,6 @@ get_data_cache_server <- function(id,
                             conn = pool,
                             max_requests = 100)
 
-        browser()
         # get the meta data of the cache dbs
         meta_table <- tbl(pool, "meta") %>%
           as.data.frame()
@@ -241,6 +240,9 @@ get_data_cache_server <- function(id,
 
         #Store job_id
         data_other$job_id <- job_id_interest
+
+        # Store the waiting number
+        data_other$waiting_number <- waiting_number
 
         log_info("mod get button data actions: download request made {job_id_interest},
                   waiting {waiting_number}")

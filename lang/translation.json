@@ -508,6 +508,16 @@
 	    "en" : "Please wait a moment, the availability is being searched.",
 	    "nl" : "Even geduld, de beschikbaarheid wordt opgezocht."
 	  },
+      {"tag" : "expl_waiting_number",
+        "en" : "See Dutch",
+        "nl" : "De data wordt bij elkaar gezocht van Samen Meten, het Luchtmeetnet en het KNMI. Het nummer in de wachtrij is: "      },
+      {"tag" : "expl_waiting_success",
+        "en" : "See Dutch",
+        "nl" : "Data is voor je opgehaald, ga naar kiezen om de data in de tool te laden."      },
+      {"tag" : "word_ready",
+        "en": "Ready!",
+        "nl": "Klaar!"
+      },
       {"tag" : "word_patient",
         "en": "Be patient, please!",
         "nl": "Even geduld"

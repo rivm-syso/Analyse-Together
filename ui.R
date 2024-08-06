@@ -45,7 +45,11 @@ shinyUI(
       # To show a spinning wheel when shiny is busy
       shinybusy::add_busy_spinner(spin = "fading-circle"),
 
-      fluidRow(column(width = 1, offset = 10,
+      fluidRow(column(width = 6,
+                      # Information about waiting time for job in queu
+                      waiting_info_output("check_waiting")),
+               # Buttons to select language
+               column(width = 1, offset = 10,
                       shiny.i18n::usei18n(i18n),
                       radioGroupButtons('selected_language',
                                         size = 'sm',
@@ -228,9 +232,6 @@ shinyUI(
     div(p(i18n$t("expl_indicative_data"),
           actionLink(label = i18n$t("btn_link_information"),
                      inputId = "link_to_information"))),
-
-    waiting_info_output("check_waiting"),
-
 
     ), # end tabpanel "HOME"
 
