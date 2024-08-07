@@ -86,6 +86,7 @@ check_schedule <- function(scheduled_time, force = FALSE) {
         last_schedule_run <- lubridate::today() - 1
         add_doc(type = "schedule", ref = "last_run", doc = last_schedule_run,
                 overwrite = TRUE, conn = pool)
+        return(FALSE)
 
     }
 

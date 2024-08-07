@@ -36,6 +36,7 @@ source(here::here("funs","database_fun.R"))
 source(here::here("funs","queue_fun.R"))
 source(here::here("funs","download_fun.R"))
 source(here::here("funs","logging_fun.R"))
+source(here::here("funs","scheduler_fun.R"))
 source(here::here("scripts","test_functions.R"))
 
 # setup logging
@@ -56,12 +57,32 @@ pool <- dbPool(
 pool::dbExecute(pool, "PRAGMA busy_timeout = 90000")
 pool::dbExecute(pool, "PRAGMA synchronous = 1 ")
 
+
+# read prepped list with municipalities and projects to schedule
+fname_scheduled <- get_schedule_fname()
+scheduled <- read_csv(fname_scheduled)
+
+# add list to meta data
+add_doc(type = "schedule", ref = "daily", 
+        doc = scheduled, con = pool, overwrite = TRUE)
+
+# Set time to run scheduled tasks
+sched_time_cfg <-  "10:00"
+sched_time <- lubridate::hm(sched_time_cfg) + today()
+tz(sched_time) <- "Europe/Amsterdam"
+
 while(TRUE) {
+
+
+    if(check_schedule(sched_time)) {
+        run_scheduled(type = "municipality")
+        run_scheduled(type = "project")
+    }
 
     joblist <- list_doc(type = "data_req", conn = pool)
     if(length(joblist) == 0) {
-        log_trace("queue_man: no data requests")
-        Sys.sleep(5)
+        # log_trace("queue_man: no data requests")
+        Sys.sleep(30)
         next
     }
 

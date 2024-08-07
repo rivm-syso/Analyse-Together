@@ -68,14 +68,3 @@ sched_time
     
 res <- check_schedule(sched_time, force = TRUE)
 
-while(TRUE) {
-    Sys.sleep(10)
-    res <- check_schedule(sched_time)
-    if(res) {
-        cat("-------------------------------------\n")
-        cat("run someting!\n")
-        cat("-------------------------------------\n")
-    }
-}
-
-
