@@ -65,3 +65,50 @@ run_scheduled <- function(type = "municipality", ref = "daily") {
 
 }
 
+
+check_schedule <- function(scheduled_time, force = FALSE) {
+    # checks if the current time is passed the scheduled time, if
+    # that's true the function updates the last run meta doc and
+    # returns TRUE. This only happens once a day
+    # If the force option is used, the triggering of the function is
+    # forced by setting the last_run data to yesterday. This is for
+    # debug purposes
+    # arguments:
+    # scheduled time: the schedulted time after this function should
+    # trigger once
+    # force: set last run to yesterday
+    # NOTE: take care of the timezone of scheduled time. It is
+    # compared to the current time in the timezone of the running
+    # system
+
+    
+    if(force) {
+        last_schedule_run <- lubridate::today() - 1
+        add_doc(type = "schedule", ref = "last_run", doc = last_schedule_run,
+                overwrite = TRUE, conn = pool)
+
+    }
+
+    t_now <- lubridate::now()
+    t_last <- get_doc(type = "schedule", ref = "last_run", conn = pool)
+
+    if(is.logical(t_last))  {
+        t_last  <- lubridate::today() -1
+    }
+    
+    log_trace("schedule: checking t_last:{t_last}, scheduled:{scheduled_time}")
+
+    if((t_last < lubridate::today()) && (t_now >= scheduled_time)) {
+    
+        log_info("schedule: triggering ...")
+
+        last_schedule_run <- lubridate::floor_date(t_now, unit = "day")
+        add_doc(type = "schedule", ref = "last_run", doc = last_schedule_run,
+                overwrite = TRUE, conn = pool)
+        return(TRUE)
+
+    } else {
+        return(FALSE)
+    }
+}
+

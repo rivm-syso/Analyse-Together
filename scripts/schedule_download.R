@@ -30,7 +30,16 @@ source(here::here("funs","database_fun.R"))
 source(here::here("funs","queue_fun.R"))
 source(here::here("funs","download_fun.R"))
 source(here::here("funs","scheduler_fun.R"))
+source(here::here("funs","logging_fun.R"))
 source(here::here("scripts","test_functions.R"))
+
+# setup logging
+pid <- Sys.getpid()
+logfile <- file.path(get_database_dirname(),paste0("queue.log"))
+log_appender(appender_file(logfile))
+log_info("schedule started")
+set_loglevel(level = TRACE)
+
 
 
 # Connect to database
@@ -51,6 +60,22 @@ scheduled
 add_doc(type = "schedule", ref = "daily", 
         doc = scheduled, con = pool, overwrite = TRUE)
 
-# run schedule
-#run_scheduled(type = "municipality")
-#run_scheduled(type = "project")
+sched_time_cfg <-  "13:00"
+sched_time <- lubridate::hm(sched_time_cfg) + today()
+tz(sched_time) <- "Europe/Amsterdam"
+sched_time
+
+    
+res <- check_schedule(sched_time, force = TRUE)
+
+while(TRUE) {
+    Sys.sleep(10)
+    res <- check_schedule(sched_time)
+    if(res) {
+        cat("-------------------------------------\n")
+        cat("run someting!\n")
+        cat("-------------------------------------\n")
+    }
+}
+
+
