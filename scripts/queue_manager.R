@@ -56,17 +56,6 @@ pool <- dbPool(
 pool::dbExecute(pool, "PRAGMA busy_timeout = 90000")
 pool::dbExecute(pool, "PRAGMA synchronous = 1 ")
 
-list_doc <- function(type, conn) {
-
-    qry <- glue::glue_sql("SELECT ref FROM meta WHERE type={type};",
-                          .con = conn)
-    res <- DBI::dbGetQuery(conn, qry)
-    return(res$ref)
-
-}
-
-
-
 while(TRUE) {
 
     joblist <- list_doc(type = "data_req", conn = pool)
