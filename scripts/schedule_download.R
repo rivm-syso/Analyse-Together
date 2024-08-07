@@ -42,9 +42,8 @@ pool <- dbPool(
 pool::dbExecute(pool, "PRAGMA busy_timeout = 90000")
 pool::dbExecute(pool, "PRAGMA synchronous = 1 ")
 
-
 # read prepped list with municipalities and projects to schedule
-fname_scheduled <- here::here("prepped_data/scheduled.csv")
+fname_scheduled <- get_schedule_fname()
 scheduled <- read_csv(fname_scheduled)
 scheduled
 
@@ -53,10 +52,5 @@ add_doc(type = "schedule", ref = "daily",
         doc = scheduled, con = pool, overwrite = TRUE)
 
 # run schedule
-run_scheduled(type = "municipality")
-run_scheduled(type = "project")
-
-
-
-
-
+#run_scheduled(type = "municipality")
+#run_scheduled(type = "project")

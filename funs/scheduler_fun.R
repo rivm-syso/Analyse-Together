@@ -7,6 +7,21 @@
 ######################################################################
 
 
+get_schedule_fname <- function() {
+    # gets the filename of the schedule, either from an environemt var
+    # or use the default value 
+    if ("ANALYSETOGETHER_SCHEDULE" %in% names(Sys.getenv())) {
+        sched_fname <- Sys.getenv("ANALYSETOGETHER_SCHEDULE")
+    } else {
+        sched_fname <- file.path(here::here(), "prepped_data", "schedule.csv")
+    }
+
+    if(!file.exists(sched_fname)) {
+        stop("ERROR: get_schedule_fname: path to filename not found")
+    }
+    return(sched_fname)
+}
+
 
 
 run_scheduled <- function(type = "municipality", ref = "daily") {
@@ -21,7 +36,7 @@ run_scheduled <- function(type = "municipality", ref = "daily") {
     sched <- get_doc(type = "schedule", ref, con = pool)
 
     if (is.logical(sched) && is.na(sched)) {
-        log_info(glue("WARNING: run_scheduled: no schedule found for type {type}"))
+        log_warn(glue("WARNING: run_scheduled: no schedule found for type {type}"))
         return()
     }
 
