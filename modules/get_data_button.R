@@ -238,6 +238,9 @@ get_data_cache_server <- function(id,
           dplyr::select(waiting) %>%
           pull()
 
+        # Take the last one (multiple lines if >100 stations in job)
+        waiting_number <- tail(waiting_number,1)
+
         #Store job_id
         data_other$job_id <- job_id_interest
 

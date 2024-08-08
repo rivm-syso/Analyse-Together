@@ -47,6 +47,9 @@ waiting_info_server <- function(id,
         dplyr::select(type) %>%
         pull()
 
+      # Take the last one (multiple lines if >100 stations in job)
+      job_type <- tail(job_type, 1)
+
       # Sometimes a jop_type is AND data_req AND data_req_done, check if only 1
       if(length(job_type) == 1){
         # Check if the job is still on the waiting list
@@ -71,6 +74,9 @@ waiting_info_server <- function(id,
             dplyr::select(waiting) %>%
             pull()
 
+          # Take the last one (multiple lines if >100 stations in job)
+          waiting_number <- tail(waiting_number,1)
+
           # Get amount of stations in the waiting line
           amount_in_line <- 0
           for(x in seq(1, nrow(data_reqs_queu))){
@@ -92,7 +98,13 @@ waiting_info_server <- function(id,
           }
 
           # Calculate approx. waiting time
-          waiting_time <- waiting_number * 30 - data_other$waiting_counter
+          waiting_time <- ceiling((waiting_number*300 + 4*amount_in_line)/60) -
+            data_other$waiting_counter
+
+          # Check if not negative waiting time
+          if(waiting_time < 0){
+            waiting_time <- 5
+          }
 
           log_trace("mod waiting info: waiting number {waiting_number}")
 
@@ -106,6 +118,8 @@ waiting_info_server <- function(id,
         }
       }
 
+      return(i18n$t("word_patient"))
+
     }
 
     output$waiting_text <- renderUI({
@@ -113,6 +127,7 @@ waiting_info_server <- function(id,
       # Do this every minute, if there is a job in line
       invalidateLater(60000)
 
+      browser()
       if(data_other$waiting_number > 0){
 
         data_other$waiting_counter <- isolate(data_other$waiting_counter) + 1
