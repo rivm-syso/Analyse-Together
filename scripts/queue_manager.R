@@ -68,12 +68,11 @@ add_doc(type = "schedule", ref = "daily",
 
 # Set time to run scheduled tasks
 sched_time_cfg <-  "10:00"
-sched_time <- lubridate::hm(sched_time_cfg) + today()
-tz(sched_time) <- "Europe/Amsterdam"
 
 while(TRUE) {
 
-
+    sched_time <- lubridate::hm(sched_time_cfg) + today()
+    tz(sched_time) <- "Europe/Amsterdam"
     if(check_schedule(sched_time)) {
         run_scheduled(type = "municipality")
         run_scheduled(type = "project")
