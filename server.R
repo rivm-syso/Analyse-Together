@@ -5,6 +5,7 @@ shinyServer(function(global, input, output, session) {
   observeEvent(input$selected_language, {
     # Here is where we update language in session
     shiny.i18n::update_lang(session = session, language = input$selected_language)
+    data_other$lang <- input$selected_language
   })
 
   # To keep the app activated in container
@@ -33,7 +34,9 @@ shinyServer(function(global, input, output, session) {
                                                          default_group_name),
                                indu_station_index = 1,
                                missing_days = 0,
-                               to_start_page = 0)
+                               to_start_page = 0,
+                               lang = default_lang)
+
 
   # Store the data points (all and filtered)
   data_measurements <- reactiveValues(data_all = measurements_all)
@@ -67,7 +70,8 @@ shinyServer(function(global, input, output, session) {
   select_date_range <- date_range_server("select_date_range",
                                          data_other = data_other,
                                          list(start_time = default_time$start_time,
-                                              end_time = default_time$end_time))
+                                              end_time = default_time$end_time)
+                                         )
 
   # select project/mun ----
   project_or_mun_selection_server("proj_or_mun_select",
@@ -226,6 +230,7 @@ shinyServer(function(global, input, output, session) {
                                             message_data = message_data,
                                             mun_or_proj = reactive(data_other$mun_or_proj) ,
                                             name_munproj = reactive(data_other$name_munproj),
+                                            selected_parameter = reactive(data_other$parameter),
                                             selected_start_date = reactive(data_other$start_date),
                                             selected_end_date = reactive(data_other$end_date),
                                             pool = pool,

@@ -26,6 +26,7 @@ get_data_cache_server <- function(id,
                                   message_data,
                                   mun_or_proj,
                                   name_munproj,
+                                  selected_parameter,
                                   selected_start_date,
                                   selected_end_date,
                                   pool,
@@ -139,9 +140,11 @@ get_data_cache_server <- function(id,
       # the period and do some data cleaning
       data_measurements$data_all <- get_measurements_cleaned(measurements_con,
                                                              stations_name,
+                                                             parameter_input = selected_parameter(),
                                                              start_time,
                                                              end_time)
 
+      
       # Get the data of the stations and put colours etc to it
       data_stations_list <- get_stations_cleaned(stations_con,
                                                  stations_name,
