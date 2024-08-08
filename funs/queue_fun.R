@@ -37,7 +37,7 @@ create_data_request <- function(kits, time_start, time_end, conn, max_requests =
     }
 
 
-    # job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
+    job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
     kits_req <- tibble(station = kits, time_start = time_start, time_end = time_end) %>%
         rowid_to_column("id") %>%
         mutate(set = ceiling(id / max_requests)) %>%

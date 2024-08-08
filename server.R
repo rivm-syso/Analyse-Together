@@ -35,7 +35,8 @@ shinyServer(function(global, input, output, session) {
                                indu_station_index = 1,
                                missing_days = 0,
                                to_start_page = 0,
-                               waiting_number = 0)
+                               waiting_number = 0,
+                               waiting_counter = 0)
 
   # Store the data points (all and filtered)
   data_measurements <- reactiveValues(data_all = measurements_all)

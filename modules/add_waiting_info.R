@@ -47,37 +47,63 @@ waiting_info_server <- function(id,
         dplyr::select(type) %>%
         pull()
 
-      # Check if the job is still on the waiting list
-      if(job_type == "data_req_done"){
+      # Sometimes a jop_type is AND data_req AND data_req_done, check if only 1
+      if(length(job_type) == 1){
+        # Check if the job is still on the waiting list
+        if(job_type == "data_req_done"){
 
-        log_trace("mod waiting info: yes job is done {job_id_interest}")
+          log_trace("mod waiting info: yes job is done {job_id_interest}")
 
-        # Creates message with job info about the data availability
-        text_for_footer <- "klaar"
-        return(text_for_footer)
+          # Creates message with job info about the data availability
+          text_for_footer <- "klaar"
+          return(text_for_footer)
 
-      }else{
+        }else{
 
-        # overview data requests in queu, including waiting number
-        data_reqs_queu <- meta_table %>%
-          dplyr::filter(type == "data_req") %>%
-          dplyr::select(-c(doc)) %>%
-          dplyr::mutate(waiting = row_number())
+          # overview data requests in queu, including waiting number
+          data_reqs_queu <- meta_table %>%
+            dplyr::filter(type == "data_req") %>%
+            dplyr::mutate(waiting = row_number())
 
-        # Check the position of job in the waiting list
-        waiting_number <- data_reqs_queu %>%
-          dplyr::filter(str_detect(ref, job_id_interest)) %>%
-          dplyr::select(waiting) %>%
-          pull()
+          # Check the position of job in the waiting list
+          waiting_number <- data_reqs_queu %>%
+            dplyr::filter(str_detect(ref, job_id_interest)) %>%
+            dplyr::select(waiting) %>%
+            pull()
 
-        log_trace("mod waiting info: waiting number {waiting_number}")
+          # Get amount of stations in the waiting line
+          amount_in_line <- 0
+          for(x in seq(1, nrow(data_reqs_queu))){
+            job_in_line <- data_reqs_queu[x,]
 
-        # writes in footer the position of the job in the waiting list
-        text_for_footer <- paste0(i18n$t("expl_waiting_number"),
-                                  waiting_number)
+            print(job_in_line)
+            x_in_line <- ATdatabase::get_doc(job_in_line$type,
+                                                  job_in_line$ref,
+                                                  pool) %>%
+              count()
+            amount_in_line <- amount_in_line + x_in_line
+          }
 
+          # Check if line is changed, update the counter
+          # This can be the case if multiple in line
+          if(waiting_number < data_other$waiting_number){
+            data_other$waiting_number <- waiting_number
+            data_other$waiting_counter <- 0
+          }
 
-        return(text_for_footer)
+          # Calculate approx. waiting time
+          waiting_time <- waiting_number * 30 - data_other$waiting_counter
+
+          log_trace("mod waiting info: waiting number {waiting_number}")
+
+          # writes in footer the position of the job in the waiting list
+          text_for_footer <- paste0(i18n$t("expl_waiting_number"),
+                                    waiting_number, "
+                                     Geschatte tijd is: ", waiting_time, "
+                                     minuten.")
+
+          return(text_for_footer)
+        }
       }
 
     }
@@ -89,6 +115,8 @@ waiting_info_server <- function(id,
 
       if(data_other$waiting_number > 0){
 
+        data_other$waiting_counter <- isolate(data_other$waiting_counter) + 1
+
         log_trace("mod waiting info: check if job is done ...")
         # Check if the job is still in line
         text_for_footer <- check_job_info(data_other = data_other,
@@ -97,6 +125,8 @@ waiting_info_server <- function(id,
         # Check if data is available, show pop up if ready
         if(text_for_footer == "klaar"){
           data_other$waiting_number <- 0
+          data_other$waiting_counter <- 0
+
           shinyalert::shinyalert(title = i18n$t("word_ready"),
                      text = i18n$t("expl_waiting_success"),
                      type = "success")
