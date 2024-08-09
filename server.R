@@ -6,6 +6,7 @@ shinyServer(function(global, input, output, session) {
   observeEvent(input$selected_language, {
     # Here is where we update language in session
     shiny.i18n::update_lang(session = session, language = input$selected_language)
+    data_other$lang <- input$selected_language
   })
 
   # To keep the app activated in container
@@ -34,7 +35,8 @@ shinyServer(function(global, input, output, session) {
                                                          default_group_name),
                                indu_station_index = 1,
                                missing_days = 0,
-                               to_start_page = 0)
+                               to_start_page = 0,
+                               lang = default_lang)
 
   # Store the data points (all and filtered)
   data_measurements <- reactiveValues(data_all = measurements_all)
@@ -68,7 +70,8 @@ shinyServer(function(global, input, output, session) {
   select_date_range <- date_range_server("select_date_range",
                                          data_other = data_other,
                                          list(start_time = default_time$start_time,
-                                              end_time = default_time$end_time))
+                                              end_time = default_time$end_time)
+                                         )
 
   # select project/mun ----
   project_or_mun_selection_server("proj_or_mun_select",
