@@ -237,7 +237,7 @@ shinyUI(
 
     # Tab Information about the tool ----
     tpInfo()
-
+    
     # ----
   ) # end of navbarpage
 

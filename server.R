@@ -40,7 +40,6 @@ shinyServer(function(global, input, output, session) {
                                waiting_counter = 0,
                                lang = default_lang)
 
-
   # Store the data points (all and filtered)
   data_measurements <- reactiveValues(data_all = measurements_all)
   # Store the station locations and plotcolor etc
@@ -397,8 +396,8 @@ shinyServer(function(global, input, output, session) {
       # Get the default values
       name_choice <- default_munproj_name
       type_choice <- default_munproj
-      start_time <- default_time$start_time
-      end_time <- default_time$end_time
+      start_time <- default_time_demo$start_time
+      end_time <- default_time_demo$end_time
       parameter_choice <- default_parameter
     }else{
 

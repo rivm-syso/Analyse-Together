@@ -118,9 +118,9 @@ pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 
 ## Initiate some variables                                                  ====
 # Default start and end time for the date picker
-# default_time <- list(start_time = lubridate::today() - days(65),
-#                      end_time = lubridate::today())
-default_time <- list(start_time = lubridate::ymd("20230901"),
+default_time <- list(start_time = lubridate::today() - lubridate::days(30),
+                     end_time = lubridate::today())
+default_time_demo <- list(start_time = lubridate::ymd("20230901"),
                      end_time = lubridate::ymd("20231201"))
 
 # store lists with projects and municipalities
