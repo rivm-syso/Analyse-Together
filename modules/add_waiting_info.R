@@ -127,7 +127,6 @@ waiting_info_server <- function(id,
       # Do this every minute, if there is a job in line
       invalidateLater(60000)
 
-      browser()
       if(data_other$waiting_number > 0){
 
         data_other$waiting_counter <- isolate(data_other$waiting_counter) + 1
