@@ -74,7 +74,6 @@ shinyUI(
           title = i18n$t("title_start"),
 
           fluidRow(
-
             column(width = 4,
                    wellPanel(
 
@@ -82,13 +81,13 @@ shinyUI(
                      div(h3(i18n$t("tool_welcome")),
                          p(i18n$t("tool_welcome_1_expl")),
                          p(i18n$t("tool_welcome_2_expl"))
-                         ),
+                     ),
 
                      actionButton("to_visualise_tab",
                                   i18n$t("title_visualisedata"),
                                   width = "200px",
                                   icon = icon("chart-line")
-                                  ),
+                     ),
                      br(),
                      br(),
                      div(p(i18n$t("tool_welcome_3_expl"))),
@@ -96,29 +95,26 @@ shinyUI(
                                   i18n$t("title_selectdata"),
                                   width = "200px",
                                   icon = icon("window-restore")
-                                  )
-
-
-                   )
+                     )
+                )
             ),
 
-            column(width = 4,
-                   wellPanel(
-                     div(
-                       h4(i18n$t("title_calendar_start")))),
-                    info_sensor_output("info_sensor")
+        column(width = 4,
+               wellPanel(
+                 div(
+                   h4(i18n$t("title_calendar_start")))),
+               info_sensor_output("info_sensor")
 
-                   ),
+        ),
 
-            column(width = 4,
-                   wellPanel(
-                     div(
+        column(width = 4,
+               wellPanel(
+                 div(
                    h4(i18n$t("title_map_start")))),
-                   show_map_no_output("map_start")
-
-            )
+               show_map_no_output("map_start")
 
           )
+        )
         ), # end of tabpanel "START"
 
         tabPanel(
@@ -208,11 +204,8 @@ shinyUI(
                          date_range_output("select_date_range"),
                          component_selection_output("select_component"),
                          p(i18n$t("tool_select_6_expl")),
-                         download_api_button_output("dl_btn_pushed"),
-                         p(i18n$t("tool_select_7_expl")),
                          get_data_cache_output("get_data_dbs_button_start")
                      )
-
                    )
             )
           )

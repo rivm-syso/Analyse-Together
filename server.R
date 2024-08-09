@@ -33,7 +33,10 @@ shinyServer(function(global, input, output, session) {
                                combi_col_name = setNames(default_col_select,
                                                          default_group_name),
                                indu_station_index = 1,
+                               missing_days = 0,
+                               to_start_page = 0,
                                lang = default_lang)
+
 
   # Store the data points (all and filtered)
   data_measurements <- reactiveValues(data_all = measurements_all)
@@ -222,8 +225,7 @@ shinyServer(function(global, input, output, session) {
 
   # Get the data from the database ----
   get_data_cache_dbs_start <- get_data_cache_server("get_data_dbs_button_start",
-                                            text_button = i18n$t({"title_start"}),
-                                              data_measurements = data_measurements,
+                                            data_measurements = data_measurements,
                                             data_stations = data_stations,
                                             message_data = message_data,
                                             mun_or_proj = reactive(data_other$mun_or_proj) ,
@@ -234,6 +236,7 @@ shinyServer(function(global, input, output, session) {
                                             pool = pool,
                                             measurements_con = measurements_con,
                                             stations_con = stations_con,
+                                            data_other = data_other,
                                             # Options for the colors
                                             col_default,
                                             # Options for the linetype
@@ -242,7 +245,7 @@ shinyServer(function(global, input, output, session) {
                                             # Default group name
                                             group_name_none,
                                             pop_up_title = i18n$t("word_helaas"),
-                                            pop_up_message = i18n$t("infotext_nodatayet")
+                                            pop_up_message = i18n$t("infotext_patient")
                                             )
 
   # Download to pc user ----
@@ -307,7 +310,6 @@ shinyServer(function(global, input, output, session) {
   info_button_server("plot_table",
                      i18n$t("expl_meta_table_expl"))
 
-
    ########### Observers ################
    # Observe if you change tab and store the tabname ----
     observeEvent(input$second_order_tabs,{
@@ -347,13 +349,11 @@ shinyServer(function(global, input, output, session) {
 
   # Observe if there is new data selected from the caching, then move to the
   # start-page
-  observe({
-    data_changed <- message_data$to_start_page
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
-    # If you loaded new data, get the cut off value based on this new data
-    data_other$cutoff <- isolate(communication_stuff$cut_off_value())
-
-  })
+  observeEvent(data_other$to_start_page, {
+               updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
+               # If you loaded new data, get the cut off value based on this new data
+               data_other$cutoff <- isolate(communication_stuff$cut_off_value())
+               })
 
   # Observe to change tabs
   observeEvent(input$to_visualise_tab,{
@@ -361,7 +361,8 @@ shinyServer(function(global, input, output, session) {
                       selected = "Visualise data")
   })
   observeEvent(input$to_select_tab,{
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
+    updateTabsetPanel(inputId = "second_order_tabs" ,
+                      selected = "Select data")
   })
 
   # Observe change of tabs reset to overview
@@ -369,7 +370,6 @@ shinyServer(function(global, input, output, session) {
     updateTabsetPanel(inputId = "tab_figures" ,
                       selected = "Overview")
   })
-
 
   # Observe if user want to go to information tab
   observeEvent(input$link_to_information, {
