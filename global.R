@@ -117,9 +117,9 @@ pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 
 ## Initiate some variables                                                  ====
 # Default start and end time for the date picker
-# default_time <- list(start_time = lubridate::today() - days(65),
-#                      end_time = lubridate::today())
-default_time <- list(start_time = lubridate::ymd("20230901"),
+default_time <- list(start_time = lubridate::today() - lubridate::days(30),
+                     end_time = lubridate::today())
+default_time_demo <- list(start_time = lubridate::ymd("20230901"),
                      end_time = lubridate::ymd("20231201"))
 
 # store lists with projects and municipalities
@@ -216,26 +216,6 @@ plot_choices <- data.frame('plot' = c("barplot", "timeplot", "timevariation_week
                                      "Timevariation Daily plot", "Calender plot",
                                      "Pollution rose plot", "Table"))
 plot_choices = setNames(plot_choices$plot, plot_choices$label)
-
-# Get start data set
-stations_name <- get_stations_from_selection(default_munproj_name,
-                                             default_munproj,
-                                             conn = pool)
-
-measurements_all <- get_measurements_cleaned(measurements_con,
-                                             stations_name,
-                                             parameter_input = default_parameter,
-                                             start_time = default_time$start_time,
-                                             end_time = default_time$end_time)
-
-data_stations_list <- get_stations_cleaned(stations_con,
-                                      stations_name,
-                                      measurements_all,
-                                      col_default,
-                                      line_default,
-                                      group_name_none,
-                                      line_overload)
-
 
 ### APP SPECIFIC SETTINGS                                                   ====
 
