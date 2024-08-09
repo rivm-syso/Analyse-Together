@@ -69,55 +69,54 @@ shinyUI(
       tabsetPanel(
         id = "second_order_tabs",
 
-        tabPanel(
+        tabPanel( #----
           value = "Start",
           title = i18n$t("title_start"),
 
           fluidRow(
-            column(width = 4,
-                   wellPanel(
+            wellPanel(
 
-                     # Text for the user
-                     div(h3(i18n$t("tool_welcome")),
-                         p(i18n$t("tool_welcome_1_expl")),
-                         p(i18n$t("tool_welcome_2_expl"))
-                     ),
+              # Text for the user
+              div(h3(i18n$t("tool_welcome")),
+                  p(i18n$t("tool_welcome_1_expl")),
+                  p(i18n$t("tool_welcome_2_expl"))
+              ),
 
-                     actionButton("to_visualise_tab",
-                                  i18n$t("title_visualisedata"),
-                                  width = "200px",
-                                  icon = icon("chart-line")
-                     ),
-                     br(),
-                     br(),
-                     div(p(i18n$t("tool_welcome_3_expl"))),
-                     actionButton("to_select_tab",
-                                  i18n$t("title_selectdata"),
-                                  width = "200px",
-                                  icon = icon("window-restore")
-                     )
-                )
-            ),
+              actionButton("to_visualise_tab",
+                           i18n$t("title_visualisedata"),
+                           width = "200px",
+                           icon = icon("chart-line")
+              ),
+              br(),
+              br(),
+              div(p(i18n$t("tool_welcome_3_expl"))),
+              actionButton("to_select_tab",
+                           i18n$t("title_selectdata"),
+                           width = "200px",
+                           icon = icon("window-restore")
+              )
 
-        column(width = 4,
+            )
+          ),
+
+          fluidRow(
                wellPanel(
                  div(
-                   h4(i18n$t("title_calendar_start")))),
+                   h4(i18n$t("title_calendar_start"))),
+                 ),
                info_sensor_output("info_sensor")
+               ),
 
-        ),
-
-        column(width = 4,
+          fluidRow(
                wellPanel(
                  div(
-                   h4(i18n$t("title_map_start")))),
-               show_map_no_output("map_start")
-
-          )
-        )
+                   h4(i18n$t("title_map_start"))),
+                 show_map_no_output("map_start")
+                 )
+               )
         ), # end of tabpanel "START"
 
-        tabPanel(
+        tabPanel( #----
           value = "Visualise data",
           title = i18n$t("title_visualisedata"),
 
@@ -186,7 +185,7 @@ shinyUI(
           )
         ), # end of tabpanel "VISUALISE DATA"
 
-        tabPanel(
+        tabPanel( #----
           value = "Select data",
           title = i18n$t("title_selectdata"),
 
@@ -205,13 +204,14 @@ shinyUI(
                          component_selection_output("select_component"),
                          p(i18n$t("tool_select_6_expl")),
                          get_data_cache_output("get_data_dbs_button_start")
+
                      )
                    )
             )
           )
         ), # end tabpanel "SELECT DATA"
 
-        tabPanel(
+        tabPanel( #----
           value = "Advanced",
           title = i18n$t("title_advanced"),
 
@@ -226,7 +226,7 @@ shinyUI(
       ), # end of tabsetpanel "second_order"
 
 
-    # Text for footer
+    # Text for footer ----
     div(p(i18n$t("expl_indicative_data"),
           actionLink(label = i18n$t("btn_link_information"),
                      inputId = "link_to_information"))),
