@@ -45,7 +45,11 @@ shinyUI(
       # To show a spinning wheel when shiny is busy
       shinybusy::add_busy_spinner(spin = "fading-circle"),
 
-      fluidRow(column(width = 1, offset = 10,
+      fluidRow(column(width = 6,
+                      # Information about waiting time for job in queu
+                      waiting_info_output("check_waiting")),
+               # Buttons to select language
+               column(width = 1, offset = 10,
                       shiny.i18n::usei18n(i18n),
                       radioGroupButtons('selected_language',
                                         size = 'sm',
@@ -160,8 +164,6 @@ shinyUI(
                                     info_button_output("text_step2")
                              )),
                                 outlier_cutoff_output("select_cutoff"),
-
-
                          )
 
                          ),
@@ -231,61 +233,11 @@ shinyUI(
           actionLink(label = i18n$t("btn_link_information"),
                      inputId = "link_to_information"))),
 
-
     ), # end tabpanel "HOME"
 
-    tabPanel( # tabpanel "INFORMATION" ----
-      value = "Information",
-      title = i18n$t("title_infotool"),
-      h4(i18n$t("word_ATTool")),
-      p(i18n$t("tool_intro_expl")),br(),
-      h4(i18n$t("word_data")),
-      p(i18n$t("tool_intro_data_expl")),br(),
-      h4(i18n$t("word_cal_values")),
-      p(i18n$t("tool_intro_cal_values_expl")),br(),
-      h4(i18n$t("word_confident_interval")),
-      p(i18n$t("tool_confident_interval_1_expl")),
-      p(i18n$t("tool_confident_interval_2_expl")),
-      p(i18n$t("tool_confident_interval_3_expl")),
-      p(i18n$t("tool_confident_interval_4_expl")),br(),
-      h4(i18n$t("word_maximum_value")),
-      p(i18n$t("tool_maximum_value_1_expl")),
-      br(),
-      h4(i18n$t("word_variation_whisker")),
-      p(i18n$t("tool_variation_whisker_1_expl")),
-      p(i18n$t("tool_variation_whisker_2_expl")),
-      p(i18n$t("tool_variation_whisker_3_expl")),br(),
-      h4(i18n$t("word_opensource")),
-      p(i18n$t("tool_intro_opensource_expl")), br(),
-      h4(i18n$t("word_links")),
-      p(i18n$t("expl_link_to_samenmeten"),
-        a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-        br(), i18n$t("expl_link_to_samenmeten_info"),
-        a("link", href ='https://samenmeten.nl/dataportaal/samen-analyseren-tool', target = 'blank'),
-        br(), i18n$t("expl_link_github"),
-        a("github", href ='https://doi.org/10.21945/a32c33e3-8a98-4a69-8996-93a08f4e3a37', target = 'blank'),
-        br(),i18n$t("expl_link_to_LML"),
-        a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-        br(),i18n$t("expl_link_to_KNMI"),
-        a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
-        br(),i18n$t("expl_link_to_openair"),
-        a("openair", href ='https://davidcarslaw.github.io/openair/', target = 'blank'),
-        br(),
-        i18n$t("expl_link_to_projecten"),
-        a("samenmeten.nl/initiatieven", href ='https://www.samenmeten.nl/initiatieven', target = 'blank'),
-        br(),
-        i18n$t("expl_link_to_benb_artikel"),
-        a("link", href ='https://www.mdpi.com/1424-8220/22/20/8053', target = 'blank'),
-        br(),
-        i18n$t("expl_link_to_kalibration"),
-        a("link", href ='https://samenmeten.nl/dataportaal/kalibratie-van-fijnstofsensoren', target = 'blank'),
-        br(),
-        "Contact: ",
-        a("link", href ='https://samenmeten.nl/contact', target = 'blank'))
-
-    ) # end of tabpanel "INFORMATION"
-
-
+    # Tab Information about the tool ----
+    tpInfo()
+    
     # ----
   ) # end of navbarpage
 

@@ -36,6 +36,8 @@ shinyServer(function(global, input, output, session) {
                                indu_station_index = 1,
                                missing_days = 0,
                                to_start_page = 0,
+                               waiting_number = 0,
+                               waiting_counter = 0,
                                lang = default_lang)
 
   # Store the data points (all and filtered)
@@ -270,6 +272,10 @@ shinyServer(function(global, input, output, session) {
   rename_group_button_server("rename_group",
                              data_stations = data_stations,
                              data_other = data_other)
+
+  waiting_info_server("check_waiting",
+                      data_other = data_other,
+                      pool = pool)
 
   # Single text items
   single_text_server("text_data_available",
