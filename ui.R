@@ -263,7 +263,7 @@ shinyUI(
         br(), i18n$t("expl_link_to_samenmeten_info"),
         a("link", href ='https://samenmeten.nl/dataportaal/samen-analyseren-tool', target = 'blank'),
         br(), i18n$t("expl_link_github"),
-        a("github", href ='https://github.com/rivm-syso/Analyse-Together', target = 'blank'),
+        a("github", href ='https://doi.org/10.21945/a32c33e3-8a98-4a69-8996-93a08f4e3a37', target = 'blank'),
         br(),i18n$t("expl_link_to_LML"),
         a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
         br(),i18n$t("expl_link_to_KNMI"),
