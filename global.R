@@ -247,6 +247,7 @@ source("modules/select_outlier_cutoff.R")
 source("modules/select_slider_zoom.R")
 source("modules/select_group_name_switch.R")
 source("modules/select_all_stations.R")
+source("modules/select_deselect_all_stations.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")

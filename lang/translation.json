@@ -229,6 +229,10 @@
         "en": "Select all",
         "nl": "Alles selecteren"
       },
+      {"tag" : "btn_deselect_all",
+        "en": "Reset all selected",
+        "nl": "Alles deselecteren"
+      },
       {"tag" : "btn_own_data",
         "en": "Other data",
         "nl": "Andere data"

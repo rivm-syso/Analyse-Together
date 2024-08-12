@@ -268,6 +268,14 @@ shinyServer(function(global, input, output, session) {
                           line_overload = line_overload
                           )
 
+  # Deselect all stations ----
+  deselect_all_button_server("deselect_all",
+                           group_name_none = group_name_none,
+                           data_stations = data_stations,
+                           col_default = col_default,
+                           line_default =  line_default
+  )
+
   # Create a new group ----
   set_new_group_button <- set_group_button_server("set_group_pushed",
                                                   data_stns = reactive(data_stations$data),
