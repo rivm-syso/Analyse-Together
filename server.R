@@ -1,10 +1,12 @@
 # Define server logic                                                       ====
 shinyServer(function(global, input, output, session) {
 
+
   # To change the language in the tool
   observeEvent(input$selected_language, {
     # Here is where we update language in session
     shiny.i18n::update_lang(session = session, language = input$selected_language)
+    data_other$lang <- input$selected_language
   })
 
   # To keep the app activated in container
@@ -31,7 +33,12 @@ shinyServer(function(global, input, output, session) {
                                col_select = default_col_select,
                                combi_col_name = setNames(default_col_select,
                                                          default_group_name),
-                               indu_station_index = 1)
+                               indu_station_index = 1,
+                               missing_days = 0,
+                               to_start_page = 0,
+                               waiting_number = 0,
+                               waiting_counter = 0,
+                               lang = default_lang)
 
   # Store the data points (all and filtered)
   data_measurements <- reactiveValues(data_all = measurements_all)
@@ -65,7 +72,8 @@ shinyServer(function(global, input, output, session) {
   select_date_range <- date_range_server("select_date_range",
                                          data_other = data_other,
                                          list(start_time = default_time$start_time,
-                                              end_time = default_time$end_time))
+                                              end_time = default_time$end_time)
+                                         )
 
   # select project/mun ----
   project_or_mun_selection_server("proj_or_mun_select",
@@ -219,8 +227,7 @@ shinyServer(function(global, input, output, session) {
 
   # Get the data from the database ----
   get_data_cache_dbs_start <- get_data_cache_server("get_data_dbs_button_start",
-                                            text_button = i18n$t({"title_start"}),
-                                              data_measurements = data_measurements,
+                                            data_measurements = data_measurements,
                                             data_stations = data_stations,
                                             message_data = message_data,
                                             mun_or_proj = reactive(data_other$mun_or_proj) ,
@@ -231,6 +238,7 @@ shinyServer(function(global, input, output, session) {
                                             pool = pool,
                                             measurements_con = measurements_con,
                                             stations_con = stations_con,
+                                            data_other = data_other,
                                             # Options for the colors
                                             col_default,
                                             # Options for the linetype
@@ -239,7 +247,7 @@ shinyServer(function(global, input, output, session) {
                                             # Default group name
                                             group_name_none,
                                             pop_up_title = i18n$t("word_helaas"),
-                                            pop_up_message = i18n$t("infotext_nodatayet")
+                                            pop_up_message = i18n$t("infotext_patient")
                                             )
 
   # Download to pc user ----
@@ -264,6 +272,10 @@ shinyServer(function(global, input, output, session) {
   rename_group_button_server("rename_group",
                              data_stations = data_stations,
                              data_other = data_other)
+
+  waiting_info_server("check_waiting",
+                      data_other = data_other,
+                      pool = pool)
 
   # Single text items
   single_text_server("text_data_available",
@@ -304,7 +316,6 @@ shinyServer(function(global, input, output, session) {
   info_button_server("plot_table",
                      i18n$t("expl_meta_table_expl"))
 
-
    ########### Observers ################
    # Observe if you change tab and store the tabname ----
     observeEvent(input$second_order_tabs,{
@@ -344,10 +355,10 @@ shinyServer(function(global, input, output, session) {
 
   # Observe if there is new data selected from the caching, then move to the
   # start-page
-  observe({
-    data_changed <- message_data$to_start_page
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
-  })
+
+  observeEvent(data_other$to_start_page, {
+               updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
+               })
 
   # Observe to change tabs
   observeEvent(input$to_visualise_tab,{
@@ -355,7 +366,8 @@ shinyServer(function(global, input, output, session) {
                       selected = "Visualise data")
   })
   observeEvent(input$to_select_tab,{
-    updateTabsetPanel(inputId = "second_order_tabs" , selected = "Select data")
+    updateTabsetPanel(inputId = "second_order_tabs" ,
+                      selected = "Select data")
   })
 
   # Observe change of tabs reset to overview
@@ -364,12 +376,97 @@ shinyServer(function(global, input, output, session) {
                       selected = "Overview")
   })
 
-
   # Observe if user want to go to information tab
   observeEvent(input$link_to_information, {
     updateNavbarPage(inputId = "navbar" ,
                       selected = "Information")
   })
+
+  # Observe User input from URL to start with other data set,
+  # If no input is given, start/load the default data set
+  observeEvent(reactive({session$clientData$url_search}),{
+
+    user_input_url <- parseQueryString(session$clientData$url_search)
+
+    log_trace("server observer_url: {user_input_url}")
+
+    # Check if there is a valid query
+    if(purrr::is_empty(user_input_url)){
+      # Get the default values
+      name_choice <- default_munproj_name
+      type_choice <- default_munproj
+      start_time <- default_time_demo$start_time
+      end_time <- default_time_demo$end_time
+      parameter_choice <- default_parameter
+    }else{
+
+      # Check if all input is valid, otherwise take default values
+      type_choice <- ifelse(is.null(user_input_url$proj_mun),
+                            default_munproj,
+                            user_input_url$proj_mun)
+
+      name_choice <- ifelse(is.null(user_input_url$name),
+                            default_munproj_name,
+                            user_input_url$name)
+
+      parameter_choice <- ifelse(is.null(user_input_url$parameter),
+                            default_parameter,
+                            user_input_url$parameter)
+
+      if(is.null(user_input_url$start_date)){
+        start_time <- default_time$start_time
+      }else{
+        start_time <- lubridate::ymd(user_input_url$start_date)
+      }
+
+      if(is.null(user_input_url$end_date)){
+        end_time <- default_time$end_time
+      }else{
+        end_time <- lubridate::ymd(user_input_url$end_date)
+      }
+
+    }
+
+    log_info("server observer url: get data from: {name_choice},
+              {start_time}, {end_time}")
+
+    # Get the station names in the selected Municipality/project
+    stations_name <- get_stations_from_selection(name_choice,
+                                                 type_choice,
+                                                 conn = pool)
+
+    # Check if there are stations in cache dbs known,
+    # then the default data is shown
+    shiny::validate(need(!purrr::is_null(stations_name),"No stations found,
+                         please use the 'Choose' option from the default tool
+                         to load the data."))
+
+    # Get the data measurements of the selected Municipality/project in
+    # the period and do some data cleaning
+    data_measurements$data_all <- get_measurements_cleaned(measurements_con = measurements_con,
+                                                           stations_name = stations_name,
+                                                           parameter_input = parameter_choice,
+                                                           start_time = start_time,
+                                                           end_time = end_time)
+
+    # Get the data of the stations and put colours etc to it
+    data_stations_list <- get_stations_cleaned(stations_con,
+                                               stations_name,
+                                               data_measurements$data_all,
+                                               col_default,
+                                               line_default,
+                                               group_name_none,
+                                               line_overload)
+
+    # Put the station data in the reactivevalues
+    data_stations$data <- data_stations_list$data
+    data_stations$data_all <- data_stations_list$data_all
+
+    log_info("server observer url: data_in tool")
+
+  })
+
+
   # Observe secret observer button
   observeEvent(input$browser, {
     browser()
