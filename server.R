@@ -258,6 +258,16 @@ shinyServer(function(global, input, output, session) {
                             selected_start_date = reactive(data_other$start_date),
                             selected_end_date = reactive(data_other$end_date))
 
+  # Select all stations ----
+  select_all_button_server("select_all",
+                           group_name = reactive(data_other$group_name),
+                          data_stations = data_stations,
+                          col_select = reactive(data_other$col_select),
+                          line_cat = line_cat,
+                          line_default =  line_default,
+                          line_overload = line_overload
+                          )
+
   # Create a new group ----
   set_new_group_button <- set_group_button_server("set_group_pushed",
                                                   data_stns = reactive(data_stations$data),
