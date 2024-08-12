@@ -217,17 +217,7 @@ shinyServer(function(global, input, output, session) {
                                               selected_cutoff = reactive(data_other$cutoff)
                                               )
 
-  # Download data from external source to database ----
-  download_api_button <- download_api_button_server("dl_btn_pushed",
-                                                    proj_or_mun = reactive(data_other$mun_or_proj) ,
-                                                    name_munproj = reactive(data_other$name_munproj),
-                                                    selected_start_date = reactive(data_other$start_date),
-                                                    selected_end_date = reactive(data_other$end_date),
-                                                    pool = pool,
-                                                    pop_up_title = i18n$t("word_patient"),
-                                                    pop_up_message = i18n$t("infotext_patient"))
-
-  # Get the data from the database ----
+   # Get the data from the database ----
   get_data_cache_dbs_start <- get_data_cache_server("get_data_dbs_button_start",
                                             data_measurements = data_measurements,
                                             data_stations = data_stations,
