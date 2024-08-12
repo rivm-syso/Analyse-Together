@@ -225,6 +225,10 @@
         "en": "Figures",
         "nl": "Plaatjes"
       },
+      {"tag" : "btn_select_all",
+        "en": "Select all",
+        "nl": "Alles selecteren"
+      },
       {"tag" : "btn_own_data",
         "en": "Other data",
         "nl": "Andere data"
