@@ -347,9 +347,6 @@ shinyServer(function(global, input, output, session) {
   observe({
     data_changed <- message_data$to_start_page
     updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
-    # If you loaded new data, get the cut off value based on this new data
-    data_other$cutoff <- isolate(communication_stuff$cut_off_value())
-
   })
 
   # Observe to change tabs
