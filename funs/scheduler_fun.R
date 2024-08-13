@@ -8,7 +8,7 @@
 
 
 get_schedule_fname <- function() {
-    # gets the filename of the schedule, either from an environemt var
+    # gets the filename of the schedule, either from an environment var
     # or use the default value 
     if ("ANALYSETOGETHER_SCHEDULE" %in% names(Sys.getenv())) {
         sched_fname <- Sys.getenv("ANALYSETOGETHER_SCHEDULE")
