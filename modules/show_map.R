@@ -366,10 +366,6 @@ show_map_server <- function(id,
       }
       else{done}
 
-      # Add the new situation to the map
-      isolate(add_lmls_map())
-      isolate(add_sensors_map())
-      isolate(add_knmi_map())
     })
 
     # Observe if a sensor is in de square selection -> select
@@ -409,11 +405,6 @@ show_map_server <- function(id,
         }}
       else{done}
 
-      # Add the new situation to the map
-      isolate(add_lmls_map())
-      isolate(add_sensors_map())
-      isolate(add_knmi_map())
-
     })
 
     # Observe the clicks of an user
@@ -445,10 +436,16 @@ show_map_server <- function(id,
         }}
       else{done}
 
+    })
+
+    # Observe if the stations are selected/deselected
+    observeEvent({data_stations$data}, {
+
       # add the updated markers on the map
       isolate(add_sensors_map())
       isolate(add_lmls_map())
       isolate(add_knmi_map())
+
     })
 
     # Return ----
