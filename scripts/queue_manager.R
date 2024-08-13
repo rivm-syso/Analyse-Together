@@ -67,7 +67,7 @@ add_doc(type = "schedule", ref = "daily",
         doc = scheduled, con = pool, overwrite = TRUE)
 
 # Set time to run scheduled tasks
-sched_time_cfg <-  "10:00"
+sched_time_cfg <-  "02:00"
 
 while(TRUE) {
 
