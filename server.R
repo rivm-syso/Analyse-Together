@@ -259,12 +259,6 @@ shinyServer(function(global, input, output, session) {
                       pool = pool)
 
   # Single text items
-  single_text_server("text_data_available",
-                     text_message = reactive(message_data$data_in_dbs))
-  single_text_server("text_download_estimation",
-                     text_message = reactive(message_data$download_estimation))
-  single_text_server("text_check_visualisation",
-                     text_message = reactive("Please, check with the visualisations if all expected data is available."))
   single_text_server("text_selected_sensors",
                      text_message = reactive(message_data$selected_sensors))
 
@@ -286,7 +280,6 @@ shinyServer(function(global, input, output, session) {
 
   info_button_server("plot_daily",
                      i18n$t("expl_overviewplot_expl_daily"))
-
 
   info_button_server("plot_windcal",
                      i18n$t("expl_calplot_expl"))
