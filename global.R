@@ -182,7 +182,7 @@ uc_min_pm25 <- 5.3
 
 # default parameter to cutoff the values
 # used to set outlier limit
-default_cutoff <- 9999
+default_cutoff <- 100
 
 # default parameter
 default_parameter <- "pm25_kal"
@@ -242,6 +242,8 @@ source("modules/choose_mun_or_proj.R")
 source("modules/select_outlier_cutoff.R")
 source("modules/select_slider_zoom.R")
 source("modules/select_group_name_switch.R")
+source("modules/select_all_stations.R")
+source("modules/select_deselect_all_stations.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
