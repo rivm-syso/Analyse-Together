@@ -70,6 +70,7 @@ source("funs/ui_create_plots_funs.R")
 source("funs/ui_tab_info.R")
 source("funs/get_data_caching_funs.R")
 source("funs/set_state_station_data_stations.R")
+source("funs/select_filter_functions.R")
 
 set_loglevel(level = "TRACE")
 # set_loglevel(level = "INFO")
@@ -221,14 +222,9 @@ plot_choices = setNames(plot_choices$plot, plot_choices$label)
 ### APP SPECIFIC SETTINGS                                                   ====
 
 # Source module for the communication
-source("modules/communication_module.R")
 source("modules/info_popup.R")
 source("modules/show_data_cache.R")
 
-# Source module for the date range selection
-source("modules/select_date_range.R")
-# Source module for the component selection
-source("modules/select_component.R")
 # source moduel to choose the plot visualisation
 source("modules/select_plot.R")
 source("modules/show_plot.R")
@@ -273,7 +269,6 @@ source("funs/ui_tab_grouping.R")
 # Source buttons
 source("modules/set_groupname_button.R")
 source("modules/set_rename_group_button.R")
-source("modules/download_api_button.R")
 source("modules/get_data_button.R")
 source("modules/download_to_pc.R")
 

@@ -194,17 +194,6 @@ get_data_cache_server <- function(id,
       } else {
         log_trace("mod get button data actions: create download queue")
 
-        #     # if there is missing timeranges, then estimate time and
-        #     # do_download_external
-        #     # Shinyalert for estimated time.
-        #     estimate_time <- ceiling((length(stations_name) * 7 + 30)/60)
-        #     message_data$download_estimation <- c(paste0("Estimated load time
-        #                                                  from external source: ",
-        #                                                  estimate_time, " minutes."))
-        #
-        #     pop_up_message <- paste0(pop_up_message, " Geschatte download tijd: ",
-        #                              estimate_time, ' minuten.')
-
         # Add message pop up to the user
         shinyalert(pop_up_title,
                    pop_up_message,
