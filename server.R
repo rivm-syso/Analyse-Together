@@ -206,18 +206,7 @@ shinyServer(function(global, input, output, session) {
                      min_date = reactive(data_other$start_date),
                      max_date = reactive(data_other$end_date))
 
-  # The communication module ----
-  communication_stuff <- communication_server("test_comm_output",
-                                              data_measurements = reactive(data_measurements$data_all),
-                                              data_stations = reactive(data_stations$data),
-                                              meta, # TODO willen we hier wat mee?
-                                              selected_parameter = reactive(data_other$parameter),
-                                              selected_start_date = reactive(data_other$start_date),
-                                              selected_end_date = reactive(data_other$end_date),
-                                              selected_cutoff = reactive(data_other$cutoff)
-                                              )
-
-   # Get the data from the database ----
+  # Get the data from the database ----
   get_data_cache_dbs_start <- get_data_cache_server("get_data_dbs_button_start",
                                             data_measurements = data_measurements,
                                             data_stations = data_stations,
@@ -313,6 +302,7 @@ shinyServer(function(global, input, output, session) {
     observeEvent(input$second_order_tabs,{
       data_other$tab_choice <- input$second_order_tabs
     })
+
   # Observe if you change tab and store the tabname ----
   observeEvent(input$tab_figures,{
     data_other$tab_choice_figures <- input$tab_figures
@@ -322,22 +312,37 @@ shinyServer(function(global, input, output, session) {
     data_other$change_tab_figures <- input$tab_figures
   })
 
-  # Observe filtered data from stations and groups ----
-  observe({
-    data_filtered <- communication_stuff$selected_measurements()
-    data_measurements$data_filtered <- data_filtered
+  # Observeadjustments to data (selection, filtering)
+  to_listen <- reactive({
+    list(data_stations$data,
+         data_other$cutoff)
+  })
+  observeEvent(to_listen(),{
+    log_trace("server: observeEvent selecting and filtering")
+    # Filter the data to selected stations
+    data_measurements$data_filtered <-
+      filter_data_measurements_fun(data_other$start_date,
+                                   data_other$end_date,
+                                   data_other$cutoff,
+                                   data_other$parameter,
+                                   data_stations$data,
+                                   data_measurements$data_all)
 
-    data_grouped <- communication_stuff$grouped_measurements()
-    data_measurements$data_grouped <- data_grouped
+    # Calculate group mean
+    data_measurements$data_grouped <-
+      calc_group_mean_fun(data_measurements$data_filtered,
+                          uc_min_pm10,
+                          uc_min_pm25)
 
-    message_data$selected_sensors <- communication_stuff$message_selected()
+    # filter knmi measurements
+    data_measurements$data_filtered_knmi <-
+      get_knmi_measurements_fun(data_other$start_date,
+                                data_other$end_date,
+                                data_measurements$data_all,
+                                data_stations$data)
+
   })
 
-  # Observe filtered data from knmi ----
-  observe({
-    data_filtered_knmi <- communication_stuff$knmi_measurements()
-    data_measurements$data_filtered_knmi <- data_filtered_knmi
-  })
 
   # Observe if the station locations changes (colour) ----
   observe({
@@ -349,8 +354,6 @@ shinyServer(function(global, input, output, session) {
   # start-page
   observeEvent(data_other$to_start_page, {
                updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
-               # If you loaded new data, get the cut off value based on this new data
-               data_other$cutoff <- isolate(communication_stuff$cut_off_value())
                })
 
   # Observe to change tabs

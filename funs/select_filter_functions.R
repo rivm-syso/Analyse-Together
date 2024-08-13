@@ -79,9 +79,9 @@ filter_data_measurements_fun <- function(start_time,
     # Keep for this dataset the label the same as the station. No changes for grouping yet.
     dplyr::mutate(label = station)
 
-  # log_trace("mod com: number of selected stations {length(selected_stations)}")
-  # log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
-  log_trace("mod com: filtered measurements {nrow(measurements_filt_stns)}")
+  # log_trace("fun filter measurements:: number of selected stations {length(selected_stations)}")
+  # log_trace("fun filter measurements:: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
+  log_trace("fun filter measurements: filtered measurements {nrow(measurements_filt_stns)}")
   return(measurements_filt_stns)
 }
 
@@ -177,9 +177,9 @@ get_knmi_measurements_fun <- function(start_time,
                     station %in% selected_stations
     )
 
-  # log_trace("mod com: number of selected stations {length(selected_stations)}")
-  # log_trace("mod com: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
-  log_trace("mod com: filtered measurements KNMI {nrow(measurements_filt_knmi)}")
+  # log_trace("fun filter knmi measurements: number of selected stations {length(selected_stations)}")
+  # log_trace("fun filter knmi measurements: names of selected stations {paste(selected_stations, sep = ' ', collapse = ' ')}")
+  log_trace("fun filter knmi measurements: filtered measurements KNMI {nrow(measurements_filt_knmi)}")
 
   return(measurements_filt_knmi)
 }

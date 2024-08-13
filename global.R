@@ -222,7 +222,6 @@ plot_choices = setNames(plot_choices$plot, plot_choices$label)
 ### APP SPECIFIC SETTINGS                                                   ====
 
 # Source module for the communication
-source("modules/communication_module.R")
 source("modules/info_popup.R")
 source("modules/show_data_cache.R")
 
