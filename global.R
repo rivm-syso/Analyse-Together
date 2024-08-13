@@ -181,7 +181,7 @@ uc_min_pm25 <- 5.3
 
 # default parameter to cutoff the values
 # used to set outlier limit
-default_cutoff <- 9999
+default_cutoff <- 100
 
 # default parameter
 default_parameter <- "pm25_kal"
