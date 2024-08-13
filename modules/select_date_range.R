@@ -53,8 +53,8 @@ date_range_server <- function(id,
 
 
                observeEvent(input$date_range,{
-                 data_other$start_date <- input$date_range[1]
-                 data_other$end_date <- input$date_range[2]
+                 data_other$start_date_choose <- input$date_range[1]
+                 data_other$end_date_choose <- input$date_range[2]
 
                })
 

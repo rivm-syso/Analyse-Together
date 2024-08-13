@@ -27,6 +27,8 @@ shinyServer(function(global, input, output, session) {
                                name_munproj = default_munproj_name,
                                start_date = default_time[[1]],
                                end_date = default_time[[2]],
+                               start_date_choose = default_time[[1]],
+                               end_date_choose = default_time[[2]],
                                parameter = default_parameter,
                                cutoff = default_cutoff,
                                plot = default_plot,
@@ -233,8 +235,8 @@ shinyServer(function(global, input, output, session) {
                                             mun_or_proj = reactive(data_other$mun_or_proj) ,
                                             name_munproj = reactive(data_other$name_munproj),
                                             selected_parameter = reactive(data_other$parameter),
-                                            selected_start_date = reactive(data_other$start_date),
-                                            selected_end_date = reactive(data_other$end_date),
+                                            selected_start_date = reactive(data_other$start_date_choose),
+                                            selected_end_date = reactive(data_other$end_date_choose),
                                             pool = pool,
                                             measurements_con = measurements_con,
                                             stations_con = stations_con,
@@ -444,6 +446,10 @@ shinyServer(function(global, input, output, session) {
       }
 
     }
+
+    # Store the start and end time for further selection and use
+    data_other$start_date <- start_time
+    data_other$end_date <- end_time
 
     log_info("server observer url: get data from: {name_choice},
               {start_time}, {end_time}")

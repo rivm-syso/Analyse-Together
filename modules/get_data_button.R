@@ -158,6 +158,10 @@ get_data_cache_server <- function(id,
       data_stations$data <- data_stations_list$data
       data_stations$data_all <- data_stations_list$data_all
 
+      # Set the start end period as use for selection
+      data_other$start_date <- start_time
+      data_other$end_date <- end_time
+
       # remove notification
       removeNotification(id = ns("waiting_start"))
 
