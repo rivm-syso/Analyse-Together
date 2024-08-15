@@ -91,17 +91,6 @@ show_data_cache_server <- function(id,
         }
       }
 
-      # plot output with the available data
-      output$plot_cache <- renderPlot({
-        openair::calendarPlot(data_to_plot,
-                              pollutant = "available",
-                              cols = c( "#d95f02","#1b9e77"),
-                              breaks = c(-0.2,0.8,1.2),
-                              labels = c( i18n$t("word_absent"), i18n$t("word_present")),
-                              key.position = "top",
-                              key.header = title_plot)
-      })
-
       # calculate the data missing
       missing_days <- data_to_plot %>%
         dplyr::filter(available == F) %>%
@@ -118,6 +107,17 @@ show_data_cache_server <- function(id,
 
         paste0(i18n$t("infotext_missing_days_1"), missing_days,
                i18n$t("infotext_missing_days_2"))
+      })
+
+      # plot output with the available data
+      output$plot_cache <- renderPlot({
+        openair::calendarPlot(data_to_plot,
+                              pollutant = "available",
+                              cols = c( "#d95f02","#1b9e77"),
+                              breaks = c(-0.2,0.8,1.2),
+                              labels = c( i18n$t("word_absent"), i18n$t("word_present")),
+                              key.position = "top",
+                              key.header = title_plot)
       })
 
     })
