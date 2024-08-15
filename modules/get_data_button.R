@@ -310,7 +310,7 @@ get_data_cache_server <- function(id,
     })
 
     # Observe if the get_dbs_cache is clicked ----
-    observeEvent(tolisten(), {
+    observeEvent(input$get_dbs_cache, {
 
       # Give user feedback
       # Set up notification
