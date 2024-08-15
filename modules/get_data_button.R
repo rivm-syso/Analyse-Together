@@ -49,7 +49,7 @@ get_data_cache_server <- function(id,
 
     ns <- session$ns
 
-    # Ui output with action button and other modules
+    # Ui output with action button and other modules ----
     output$get_dbs_cache <- renderUI({
       tagList(
         actionButton(ns("get_dbs_cache"),
@@ -64,6 +64,7 @@ get_data_cache_server <- function(id,
     # Create overview from the input status, which can be used in the
     # different steps
     initiate_status <- reactive({
+
       # Get the selected choice
       type_choice <- mun_or_proj()
       # Name of municipality/project
@@ -74,6 +75,9 @@ get_data_cache_server <- function(id,
         need(!is_empty((type_choice)),"Please, select gemeente of project"),
         need(!is_empty((name_choice)),"Please, select gemeente of project")
       )
+
+      # If the jobs are done, then this is changing, so excecute initiate_values
+      waiting_nymber <- data_other$waiting_number
 
       # Get the selected time period
       start_time <- selected_start_date()
@@ -299,18 +303,41 @@ get_data_cache_server <- function(id,
 
     })
 
+    # Create list where to observe changes to react on
+    tolisten <- reactive({
+      list(input$get_dbs_cache,
+           data_other$waiting_number)
+    })
 
-    # Observe what is expected after checking the cache database ----
-    observeEvent(data_other$missing_days, {
+    # Observe if the get_dbs_cache is clicked ----
+    observeEvent(tolisten(), {
+
+      # Give user feedback
+      # Set up notification
+      showNotification(i18n$t("expl_waiting_check_cache"),
+                       duration = NULL,
+                       id = ns("waiting_check_cache"),
+                       closeButton = F
+      )
+
+      # Check the input values, if available and get some more info
+      input_values <- initiate_status()
+
+      log_trace("mod get_data_button; observeEvent get_dbs_cache; input {input_values} ")
+
+      # Show visualisation of data availability in cache dbs
+      # get results of which steps to continue
+      show_data_cache_server("show_data_cache",
+                             title_plot = input_values$name_choice,
+                             data_other = data_other,
+                             data_to_plot = input_values$data_to_plot,
+                             stations_name = input_values$stations_name,
+                             timeranges_to_download =
+                               input_values$timeranges_to_download)
 
       # Check if there is new data
       shiny::validate(need(class(data_other$missing_days) == "list" ,
                            "start of tool"))
-
-      # Check the input values, if available and get some more info
-      input_values <- isolate(initiate_status())
-
-      log_trace("mod get_data_button; observeEvent missing_days; input {input_values} ")
 
       # Create buttons to choose which data actions to do: use the data available
       # or download the external data
@@ -340,39 +367,6 @@ get_data_cache_server <- function(id,
           )
         }
       })
-
-      log_trace("get buttons data actions mod: create buttons;
-                  {input$btn_use_data}")
-
-
-    })
-
-
-    # Observe if the get_dbs_cache is clicked ----
-    observeEvent(input$get_dbs_cache, {
-
-      # Give user feedback
-      # Set up notification
-      showNotification(i18n$t("expl_waiting_check_cache"),
-                       duration = NULL,
-                       id = ns("waiting_check_cache"),
-                       closeButton = F
-      )
-
-      # Check the input values, if available and get some more info
-      input_values <- isolate(initiate_status())
-
-      log_trace("mod get_data_button; observeEvent get_dbs_cache; input {input_values} ")
-
-      # Show visualisation of data availability in cache dbs
-      # get results of which steps to continue
-      show_data_cache_server("show_data_cache",
-                             title_plot = input_values$name_choice,
-                             data_other = data_other,
-                             data_to_plot = input_values$data_to_plot,
-                             stations_name = input_values$stations_name,
-                             timeranges_to_download =
-                               input_values$timeranges_to_download)
 
       # remove notification
       removeNotification(id = ns("waiting_check_cache"))
