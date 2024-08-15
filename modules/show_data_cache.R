@@ -56,9 +56,7 @@ show_data_cache_server <- function(id,
       if(purrr::is_empty(stations_name)){
         data_to_plot <- data_to_plot %>% dplyr::mutate(available = F)
         create_btn_get_data <- T
-      }else{ # If there is data set to TRUE
-        data_to_plot <- data_to_plot %>% dplyr::mutate(available = T)
-        create_btn_use_data <- T
+      }else{ # If there is data at least of this municipality/project
         # Check which periods aren't available
         if(T %in% (timeranges_to_download > 0)){
 
@@ -80,6 +78,16 @@ show_data_cache_server <- function(id,
           data_to_plot <- data_to_plot %>%
             dplyr::mutate(available = ifelse(date %in% seq_unavailable, F, T)
             )
+
+          # Check if part of the data is available
+          if(T %in% data_to_plot$available){
+            create_btn_use_data <- T
+          }
+
+        }else{
+          # all data available
+          data_to_plot <- data_to_plot %>% dplyr::mutate(available = T)
+          create_btn_use_data <- T
         }
       }
 
