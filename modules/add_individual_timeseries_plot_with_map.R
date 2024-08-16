@@ -212,13 +212,19 @@ individual_timeseries_map_server <- function(id,
       # Set value for the y-ax
       max_yvalue <- data_other$cutoff
 
+      # Set min and max for x-as
+      zoom_in = list(
+        start_slider_zoom = reactive(data_other$start_date %>% as.POSIXct()),
+        end_slider_zoom = reactive(data_other$end_date %>%  as.POSIXct()))
+
       # Create timeseries plot
       timeseries_server("individual_timeseries_plot",
                         data_measurements = reactive(measurements),
                         parameter = parameter,
                         overview_component = overview_component,
                         theme_plots = theme_plots,
-                        manual_ylim = c(0, max_yvalue))
+                        manual_ylim = c(0, max_yvalue),
+                        zoom_in = zoom_in)
     })
 
 
