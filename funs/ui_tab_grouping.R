@@ -17,6 +17,15 @@ tpGrouping <- function(){
       ),
       fluidRow(
         style = "margin-left: 20px;",
+        select_all_button_output("select_all")
+      ),
+      br(),
+      fluidRow(
+        style = "margin-left: 20px;",
+        deselect_all_button_output("deselect_all")
+      ),
+      fluidRow(
+        style = "margin-left: 20px;",
         p(single_text_output("text_selected_sensors")),
         p(i18n$t("expl_add_sensor_to_group")),
         switch_group_output("switch_group")
