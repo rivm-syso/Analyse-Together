@@ -49,7 +49,7 @@ get_data_cache_server <- function(id,
 
     ns <- session$ns
 
-    # Ui output with action button and other modules
+    # Ui output with action button and other modules ----
     output$get_dbs_cache <- renderUI({
       tagList(
         actionButton(ns("get_dbs_cache"),
@@ -64,6 +64,7 @@ get_data_cache_server <- function(id,
     # Create overview from the input status, which can be used in the
     # different steps
     initiate_status <- reactive({
+
       # Get the selected choice
       type_choice <- mun_or_proj()
       # Name of municipality/project
@@ -74,6 +75,9 @@ get_data_cache_server <- function(id,
         need(!is_empty((type_choice)),"Please, select gemeente of project"),
         need(!is_empty((name_choice)),"Please, select gemeente of project")
       )
+
+      # If the jobs are done, then this is changing, so excecute initiate_values
+      waiting_nymber <- data_other$waiting_number
 
       # Get the selected time period
       start_time <- selected_start_date()
@@ -299,18 +303,12 @@ get_data_cache_server <- function(id,
 
     })
 
-
-    # Observe what is expected after checking the cache database ----
-    observeEvent(data_other$missing_days, {
+    # Observe change in missing_days to create the buttons
+    observeEvent(data_other$missing_days,{
 
       # Check if there is new data
       shiny::validate(need(class(data_other$missing_days) == "list" ,
                            "start of tool"))
-
-      # Check the input values, if available and get some more info
-      input_values <- isolate(initiate_status())
-
-      log_trace("mod get_data_button; observeEvent missing_days; input {input_values} ")
 
       # Create buttons to choose which data actions to do: use the data available
       # or download the external data
@@ -340,11 +338,6 @@ get_data_cache_server <- function(id,
           )
         }
       })
-
-      log_trace("get buttons data actions mod: create buttons;
-                  {input$btn_use_data}")
-
-
     })
 
 
@@ -360,7 +353,7 @@ get_data_cache_server <- function(id,
       )
 
       # Check the input values, if available and get some more info
-      input_values <- isolate(initiate_status())
+      input_values <- initiate_status()
 
       log_trace("mod get_data_button; observeEvent get_dbs_cache; input {input_values} ")
 
