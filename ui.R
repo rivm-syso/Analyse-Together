@@ -8,15 +8,6 @@ shinyUI(
     tags$head(
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
-      tags$style(
-        # To place the notification in the centre of the screen
-        HTML(".shiny-notification {
-             position:fixed;
-             top: calc(50%);
-             left: calc(50%);
-             }
-             "
-        )),
 
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
@@ -237,7 +228,7 @@ shinyUI(
 
     # Tab Information about the tool ----
     tpInfo()
-    
+
     # ----
   ) # end of navbarpage
 
