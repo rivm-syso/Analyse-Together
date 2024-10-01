@@ -47,6 +47,7 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
      shinyalert \
      datawizard \
      shinybusy \
+     filelock \
      && rm -rf /tmp/downloaded_packages
 
 # install some more R pkgs (in a new layer)
