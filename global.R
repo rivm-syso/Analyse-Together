@@ -40,6 +40,7 @@ i18n$set_translation_language("nl") # here you select the default translation to
 # Databases (essential)
 library(RSQLite)
 library(pool)
+library(filelock)
 
 # Visualisation
 library(leaflet)         # For maps
@@ -56,6 +57,7 @@ library(sf)
 library(logger)
 #log_threshold(loglevel)
 
+# AT libraries
 library(samanapir)
 library(ATdatabase)
 
@@ -79,8 +81,18 @@ db_script <- here::here("scripts","container_data_prep.R")
 system2("Rscript", db_script, wait = TRUE)
 
 # launch queue manager
-qm_script <- here::here("scripts","queue_manager.R")
-system2("Rscript", qm_script, wait = FALSE)
+
+lockfile <- file.path(get_database_dirname(), "lock")
+lfres <- lock(lockfile, timeout = 1000)
+
+if(!is.null(lfres)) {
+    log_info("Starting queue manager")
+    qm_script <- here::here("scripts","queue_manager.R")
+    system2("Rscript", qm_script, wait = FALSE)
+} else {
+    log_info("Queue manager not started")
+}
+
 
 # Set language and date options                                             ====
 options(encoding = "UTF-8")                  # Standard UTF-8 encoding
