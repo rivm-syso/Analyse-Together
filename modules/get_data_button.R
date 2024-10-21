@@ -56,11 +56,12 @@ get_data_cache_server <- function(id,
                      i18n$t("btn_get_data"),
                      style="background-color: #ffe9b7",
                      icon = icon("square-check")),
-        show_data_cache_output(ns("show_data_cache")),
+        show_data_avail_cache_output(ns("show_data_cache")),
         uiOutput(ns("btn_do_data"))
       )
     })
 
+    # Initiate status ----
     # Create overview from the input status, which can be used in the
     # different steps
     initiate_status <- reactive({
@@ -77,22 +78,17 @@ get_data_cache_server <- function(id,
       )
 
       # If the jobs are done, then this is changing, so excecute initiate_values
-      waiting_nymber <- data_other$waiting_number
+      waiting_number <- data_other$waiting_number
 
       # Get the selected time period
       start_time <- selected_start_date()
-      end_time <- selected_end_date() - 1
+      end_time <- selected_end_date()
+      end_time_plot <- end_time - 1
 
       # Check if there is selected start/end time
       shiny::validate(
         need(!is_empty((start_time)),"Please, select periode"),
         need(!is_empty((end_time)),"Please, select periode")
-      )
-
-      # Create dataframe for plotting availability in cache
-      data_to_plot <- data.frame(date = seq(start_time,
-                                            end_time,
-                                            by='1 day')
       )
 
       # Load the data from the caching database
@@ -101,27 +97,17 @@ get_data_cache_server <- function(id,
                                                    type_choice,
                                                    conn = pool)
 
-      # Get the missing time ranges from cache database
-      timeranges_to_download <- sapply(stations_name, function(x){
-        ATdatabase::get_download_ranges(x,
-                                        start_time %>% as.POSIXct(),
-                                        end_time %>% as.POSIXct(),
-                                        pool)
-      })
-      timeranges_to_download <- unlist(timeranges_to_download)
-
       return(list(type_choice = type_choice,
                   name_choice = name_choice,
                   start_time = start_time,
                   end_time = end_time,
-                  data_to_plot = data_to_plot,
-                  stations_name = stations_name,
-                  timeranges_to_download = timeranges_to_download
+                  stations_name = stations_name
                   ))
 
     })
 
-    # Function to get the data from the cache dbs in the tool ----
+    # Load from cache  ----
+    # Function to get the data from the cache dbs in the tool
     load_from_cache <- function(measurements_con,
                                 stations_name,
                                 start_time,
@@ -173,7 +159,8 @@ get_data_cache_server <- function(id,
 
     }
 
-    # Function to do the download or at least creates the job ----
+    # do_download_external ----
+    # Function to do the download or at least creates the job
     do_download_external <- function(mun_or_proj,
                                      name_munproj,
                                      selected_start_date,
@@ -303,44 +290,6 @@ get_data_cache_server <- function(id,
 
     })
 
-    # Observe change in missing_days to create the buttons
-    observeEvent(data_other$missing_days,{
-
-      # Check if there is new data
-      shiny::validate(need(class(data_other$missing_days) == "list" ,
-                           "start of tool"))
-
-      # Create buttons to choose which data actions to do: use the data available
-      # or download the external data
-      output$btn_do_data <- renderUI({
-
-        if(data_other$missing_days$create_btn_get_data
-           & data_other$missing_days$create_btn_use_data){
-          tagList(
-            actionButton(ns("btn_use_data"),
-                         label = i18n$t("btn_use_data"),
-                         icon = icon("play")),
-            actionButton(ns("btn_external_data"),
-                         label = i18n$t("btn_external_data"),
-                         icon = icon("hourglass-start"))
-          )
-        }else if(data_other$missing_days$create_btn_get_data){
-          tagList(
-            actionButton(ns("btn_external_data"),
-                         label = i18n$t("btn_external_data"),
-                         icon = icon("hourglass-start"))
-          )
-        }else if(data_other$missing_days$create_btn_use_data){
-          tagList(
-            actionButton(ns("btn_use_data"),
-                         label = i18n$t("btn_use_data"),
-                         icon = icon("play"))
-          )
-        }
-      })
-    })
-
-
     # Observe if the get_dbs_cache is clicked ----
     observeEvent(input$get_dbs_cache, {
 
@@ -359,13 +308,24 @@ get_data_cache_server <- function(id,
 
       # Show visualisation of data availability in cache dbs
       # get results of which steps to continue
-      show_data_cache_server("show_data_cache",
-                             title_plot = input_values$name_choice,
-                             data_other = data_other,
-                             data_to_plot = input_values$data_to_plot,
+      show_data_avail_cache_server("show_data_cache",
+                             measurements_con = measurements_con,
+                             start_time = input_values$start_time,
+                             end_time = input_values$end_time,
                              stations_name = input_values$stations_name,
-                             timeranges_to_download =
-                               input_values$timeranges_to_download)
+                             rand_nr = sample(1:1000,1))
+
+      # Add actionButtons to load the data
+      output$btn_do_data <- renderUI({
+          tagList(
+            actionButton(ns("btn_use_data"),
+                         label = i18n$t("btn_use_data"),
+                         icon = icon("play")),
+            actionButton(ns("btn_external_data"),
+                         label = i18n$t("btn_external_data"),
+                         icon = icon("hourglass-start"))
+          )
+        })
 
       # remove notification
       removeNotification(id = ns("waiting_check_cache"))
