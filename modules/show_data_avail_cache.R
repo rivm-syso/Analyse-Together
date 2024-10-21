@@ -48,6 +48,7 @@ show_data_avail_cache_server <- function(id,
       # Create visualisation of the available data in cache
       # If no data at all
       if(purrr::is_empty(stations_name)){
+        log_trace("mod show avail: Empty stations_name. No data available in cache ")
 
         # message to the user
         output$data_avail_or_not <- renderText({
@@ -65,6 +66,7 @@ show_data_avail_cache_server <- function(id,
                            data_measurements = reactive({data_in_tool_empty}))
 
       }else{ # If there is data at least of this municipality/project
+        log_trace("mod show avail: get_measurements_cleaned ...")
         # Load the data from the cache dbs
         data_in_tool <- get_measurements_cleaned(measurements_con,
                                                  stations_name,
