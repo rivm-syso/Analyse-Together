@@ -47,12 +47,6 @@ log_appender(appender_file(logfile))
 log_info(glue("{logprefix} started"))
 set_loglevel()
     
-log_threshold("TRACE")
-
-
-
-
-
 # Connect with the database using pool, store data, read table              ====
 
 fname_db <- get_database_path()
