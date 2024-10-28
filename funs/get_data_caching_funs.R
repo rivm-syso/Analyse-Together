@@ -7,6 +7,7 @@
 #'
 #' @param measurements_con tbl, to indicate the database table
 #' @param stations_name character, with the stations names of interest
+#' @param parameter_input chacracter whit whic parameter of interest
 #' @param start_time date, to indicatidate start of the period
 #' @param end_time date, to indicate end of the period
 #'
@@ -15,6 +16,7 @@
 #'
 get_measurements_cleaned <- function(measurements_con,
                                      stations_name,
+                                     parameter_input,
                                      start_time,
                                      end_time){
   # get the measurements from the caching dbs
@@ -39,6 +41,9 @@ get_measurements_cleaned <- function(measurements_con,
 
   # Add bias to the uncertainty sensors raw data
   data_all <- add_uncertainty_bias_sensor(data_all)
+
+  # Select only the measurements of the given parameter
+  data_all <- filter_parameter(data_all, parameter_input)
 
   return(data_all)
 

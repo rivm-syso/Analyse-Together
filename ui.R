@@ -8,15 +8,6 @@ shinyUI(
     tags$head(
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
-      tags$style(
-        # To place the notification in the centre of the screen
-        HTML(".shiny-notification {
-             position:fixed;
-             top: calc(50%);
-             left: calc(50%);
-             }
-             "
-        )),
 
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
@@ -45,7 +36,11 @@ shinyUI(
       # To show a spinning wheel when shiny is busy
       shinybusy::add_busy_spinner(spin = "fading-circle"),
 
-      fluidRow(column(width = 1, offset = 10,
+      fluidRow(column(width = 6,
+                      # Information about waiting time for job in queu
+                      waiting_info_output("check_waiting")),
+               # Buttons to select language
+               column(width = 1, offset = 10,
                       shiny.i18n::usei18n(i18n),
                       radioGroupButtons('selected_language',
                                         size = 'sm',
@@ -69,59 +64,54 @@ shinyUI(
       tabsetPanel(
         id = "second_order_tabs",
 
-        tabPanel(
+        tabPanel( #----
           value = "Start",
           title = i18n$t("title_start"),
 
           fluidRow(
+            wellPanel(
 
-            column(width = 4,
-                   wellPanel(
+              # Text for the user
+              div(h3(i18n$t("tool_welcome")),
+                  p(i18n$t("tool_welcome_1_expl")),
+                  p(i18n$t("tool_welcome_2_expl"))
+              ),
 
-                     # Text for the user
-                     div(h3(i18n$t("tool_welcome")),
-                         p(i18n$t("tool_welcome_1_expl")),
-                         p(i18n$t("tool_welcome_2_expl"))
-                         ),
-
-                     actionButton("to_visualise_tab",
-                                  i18n$t("title_visualisedata"),
-                                  width = "200px",
-                                  icon = icon("chart-line")
-                                  ),
-                     br(),
-                     br(),
-                     div(p(i18n$t("tool_welcome_3_expl"))),
-                     actionButton("to_select_tab",
-                                  i18n$t("title_selectdata"),
-                                  width = "200px",
-                                  icon = icon("window-restore")
-                                  )
-
-
-                   )
-            ),
-
-            column(width = 4,
-                   wellPanel(
-                     div(
-                       h4(i18n$t("title_calendar_start")))),
-                    info_sensor_output("info_sensor")
-
-                   ),
-
-            column(width = 4,
-                   wellPanel(
-                     div(
-                   h4(i18n$t("title_map_start")))),
-                   show_map_no_output("map_start")
+              actionButton("to_visualise_tab",
+                           i18n$t("title_visualisedata"),
+                           width = "200px",
+                           icon = icon("chart-line")
+              ),
+              br(),
+              br(),
+              div(p(i18n$t("tool_welcome_3_expl"))),
+              actionButton("to_select_tab",
+                           i18n$t("title_selectdata"),
+                           width = "200px",
+                           icon = icon("window-restore")
+              )
 
             )
+          ),
 
-          )
+          fluidRow(
+               wellPanel(
+                 div(
+                   h4(i18n$t("title_calendar_start"))),
+                 ),
+               info_sensor_output("info_sensor")
+               ),
+
+          fluidRow(
+               wellPanel(
+                 div(
+                   h4(i18n$t("title_map_start"))),
+                 show_map_no_output("map_start")
+                 )
+               )
         ), # end of tabpanel "START"
 
-        tabPanel(
+        tabPanel( #----
           value = "Visualise data",
           title = i18n$t("title_visualisedata"),
 
@@ -165,8 +155,6 @@ shinyUI(
                                     info_button_output("text_step2")
                              )),
                                 outlier_cutoff_output("select_cutoff"),
-
-
                          )
 
                          ),
@@ -190,7 +178,7 @@ shinyUI(
           )
         ), # end of tabpanel "VISUALISE DATA"
 
-        tabPanel(
+        tabPanel( #----
           value = "Select data",
           title = i18n$t("title_selectdata"),
 
@@ -208,17 +196,15 @@ shinyUI(
                          date_range_output("select_date_range"),
                          component_selection_output("select_component"),
                          p(i18n$t("tool_select_6_expl")),
-                         download_api_button_output("dl_btn_pushed"),
-                         p(i18n$t("tool_select_7_expl")),
                          get_data_cache_output("get_data_dbs_button_start")
-                     )
 
+                     )
                    )
             )
           )
         ), # end tabpanel "SELECT DATA"
 
-        tabPanel(
+        tabPanel( #----
           value = "Advanced",
           title = i18n$t("title_advanced"),
 
@@ -233,65 +219,15 @@ shinyUI(
       ), # end of tabsetpanel "second_order"
 
 
-    # Text for footer
+    # Text for footer ----
     div(p(i18n$t("expl_indicative_data"),
           actionLink(label = i18n$t("btn_link_information"),
                      inputId = "link_to_information"))),
 
-
     ), # end tabpanel "HOME"
 
-    tabPanel( # tabpanel "INFORMATION" ----
-      value = "Information",
-      title = i18n$t("title_infotool"),
-      h4(i18n$t("word_ATTool")),
-      p(i18n$t("tool_intro_expl")),br(),
-      h4(i18n$t("word_data")),
-      p(i18n$t("tool_intro_data_expl")),br(),
-      h4(i18n$t("word_cal_values")),
-      p(i18n$t("tool_intro_cal_values_expl")),br(),
-      h4(i18n$t("word_confident_interval")),
-      p(i18n$t("tool_confident_interval_1_expl")),
-      p(i18n$t("tool_confident_interval_2_expl")),
-      p(i18n$t("tool_confident_interval_3_expl")),
-      p(i18n$t("tool_confident_interval_4_expl")),br(),
-      h4(i18n$t("word_maximum_value")),
-      p(i18n$t("tool_maximum_value_1_expl")),
-      br(),
-      h4(i18n$t("word_variation_whisker")),
-      p(i18n$t("tool_variation_whisker_1_expl")),
-      p(i18n$t("tool_variation_whisker_2_expl")),
-      p(i18n$t("tool_variation_whisker_3_expl")),br(),
-      h4(i18n$t("word_opensource")),
-      p(i18n$t("tool_intro_opensource_expl")), br(),
-      h4(i18n$t("word_links")),
-      p(i18n$t("expl_link_to_samenmeten"),
-        a("samenmeten.rivm.nl", href ='https://samenmeten.rivm.nl/dataportaal/', target = 'blank'),
-        br(), i18n$t("expl_link_to_samenmeten_info"),
-        a("link", href ='https://samenmeten.nl/dataportaal/samen-analyseren-tool', target = 'blank'),
-        br(), i18n$t("expl_link_github"),
-        a("github", href ='https://github.com/rivm-syso/Analyse-Together', target = 'blank'),
-        br(),i18n$t("expl_link_to_LML"),
-        a("luchtmeetnet.nl", href ='https://www.luchtmeetnet.nl/', target = 'blank'),
-        br(),i18n$t("expl_link_to_KNMI"),
-        a("knmi.nl", href ='https://www.knmi.nl/', target = 'blank'),
-        br(),i18n$t("expl_link_to_openair"),
-        a("openair", href ='https://davidcarslaw.github.io/openair/', target = 'blank'),
-        br(),
-        i18n$t("expl_link_to_projecten"),
-        a("samenmeten.nl/initiatieven", href ='https://www.samenmeten.nl/initiatieven', target = 'blank'),
-        br(),
-        i18n$t("expl_link_to_benb_artikel"),
-        a("link", href ='https://www.mdpi.com/1424-8220/22/20/8053', target = 'blank'),
-        br(),
-        i18n$t("expl_link_to_kalibration"),
-        a("link", href ='https://samenmeten.nl/dataportaal/kalibratie-van-fijnstofsensoren', target = 'blank'),
-        br(),
-        "Contact: ",
-        a("link", href ='https://samenmeten.nl/contact', target = 'blank'))
-
-    ) # end of tabpanel "INFORMATION"
-
+    # Tab Information about the tool ----
+    tpInfo()
 
     # ----
   ) # end of navbarpage
