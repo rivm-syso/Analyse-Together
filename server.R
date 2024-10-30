@@ -121,6 +121,7 @@ shinyServer(function(global, input, output, session) {
       data_measurements$data_all <- data.frame(station = character(0),
                                                parameter = character(0),
                                                value = numeric(0),
+                                               sd = numeric(0),
                                                aggregation = numeric(0),
                                                timestamp = integer(0),
                                                date = structure(numeric(0),
@@ -138,7 +139,8 @@ shinyServer(function(global, input, output, session) {
                                        linetype = character(0),
                                        group_name = character(0),
                                        label = character(0),
-                                       stroke = character(0)
+                                       stroke = character(0),
+                                       size = character(0)
                                        )
 
       data_stations$data_all <- data.frame(station = character(0),
