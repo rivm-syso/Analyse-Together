@@ -102,7 +102,7 @@ show_map_server <- function(id,
     # Add knmi stations to the map
     add_knmi_map <- function(){
       # Get the data
-      data_snsrs <- get_locations(data_stations$data)$station_loc
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
 
       if(is.null(data_snsrs)){
         # clear all weather stations from the map
@@ -150,7 +150,7 @@ show_map_server <- function(id,
 
           # Get all newer data info
           # Get the data
-          data_snsrs <- get_locations(data_stations$data)$station_loc
+          data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
           # get the stations only knmi
           data_snsrs <- data_snsrs %>%
             dplyr::filter(station_type == "KNMI")
@@ -183,7 +183,7 @@ show_map_server <- function(id,
     # Add the sensors to the map
     add_sensors_map <- function(){
       # Check if there is data
-      data_snsrs_col <- get_locations(data_stations$data)$station_loc
+      data_snsrs_col <- get_locations_coordinates(data_stations$data)$station_loc
       if(is.null(data_snsrs_col)){
         # clear all sensor stations from the map
         proxy <- leafletProxy('map') # set up proxy map
@@ -192,7 +192,7 @@ show_map_server <- function(id,
           clearGroup("sensoren")
       }else{
       # Get the sensor data
-      data_snsrs_col <- get_locations(data_stations$data)$station_loc %>%
+      data_snsrs_col <- get_locations_coordinates(data_stations$data)$station_loc %>%
         dplyr::filter(station_type == "sensor")
 
       if(nrow(data_snsrs_col)>0){
@@ -218,7 +218,7 @@ show_map_server <- function(id,
     # Add reference stations to the map
     add_lmls_map <- function(){
       # Check if there is data
-      data_snsrs <- get_locations(data_stations$data)$station_loc
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
       if(is.null(data_snsrs)){
         # Clear all reference stations from the map
         proxy <- leafletProxy('map') # set up proxy map
@@ -228,7 +228,7 @@ show_map_server <- function(id,
       }else{
 
       # Get the reference stations
-      data_snsrs <- get_locations(data_stations$data)$station_loc %>%
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc %>%
         dplyr::filter(station_type == "ref")
 
       # Update map with new markers to show selected
@@ -264,7 +264,7 @@ show_map_server <- function(id,
 
         # Get all newer data info
         # Get the reference stations
-        data_snsrs <- get_locations(data_stations$data)$station_loc %>%
+        data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc %>%
           dplyr::filter(station_type == "ref")
         # Put selected stations on map
         data_selected <- data_snsrs %>%
@@ -322,7 +322,7 @@ show_map_server <- function(id,
       # Zoek de sensoren in de feature
       if (!is.null(rectangular_desel)){
         # Check if there is data
-        data_snsrs <- get_locations()$station_loc_coord
+        data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc_coord
 
         shiny::validate(
           need(!is.null(data_snsrs), "Error, no data selected.")
@@ -363,7 +363,7 @@ show_map_server <- function(id,
       # Zoek de sensoren in de feature
       if (!is.null(rectangular_sel)){
         # Check if there is data
-        data_snsrs <- get_locations(data_stations$data)$station_loc_coord
+        data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc_coord
 
         shiny::validate(
           need(!is.null(data_snsrs), "Error, no data selected.")

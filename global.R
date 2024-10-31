@@ -71,7 +71,7 @@ source("funs/ui_tab_info.R")
 source("funs/get_data_caching_funs.R")
 source("funs/set_state_station_data_stations.R")
 source("funs/select_filter_functions.R")
-source("funs/get_locations.R")
+source("funs/get_locations_coordinates.R")
 
 set_loglevel(level = "TRACE")
 # set_loglevel(level = "INFO")
@@ -110,7 +110,7 @@ theme_plots <- theme_bw(base_size = 18) +
   )
 
 # Connect with the database using pool, store data, read table              ====
-db_path <- get_database_path(db ="db_werkend.db")
+db_path <- get_database_path()
 log_info("opening database {db_path}")
 pool <- dbPool(
                drv = SQLite(synchronous = "off"),

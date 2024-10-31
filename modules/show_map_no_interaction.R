@@ -78,7 +78,7 @@ show_map_no_server <- function(id,
       log_trace("mod map no interaction: set view stations")
 
       # Check if there is data
-      data_snsrs_col <- get_locations(data_stations())$station_loc
+      data_snsrs_col <- get_locations_coordinates(data_stations())$station_loc
 
       # If there are stations then zoom to them
       if(!is.null(data_snsrs_col)){
@@ -101,7 +101,7 @@ show_map_no_server <- function(id,
     # Add knmi stations to the map
     add_knmi_map <- function(){
       # Get the data
-      data_snsrs <- get_locations(data_stations())$station_loc
+      data_snsrs <- get_locations_coordinates(data_stations())$station_loc
 
       if(is.null(data_snsrs) ){
         # clear all weather stations from the map
@@ -135,7 +135,7 @@ show_map_no_server <- function(id,
       log_trace("mod map no interaction: add sensor map")
 
       # # Check if there is data
-      data_snsrs <- get_locations(data_stations())$station_loc
+      data_snsrs <- get_locations_coordinates(data_stations())$station_loc
       if(is_null(data_snsrs)){
         #Clear all sensors from the map
         proxy <- leafletProxy('map_no') # set up proxy map
@@ -175,7 +175,7 @@ show_map_no_server <- function(id,
     add_lmls_map <- function(){
 
       # # Check if there is data
-      data_snsrs <- get_locations(data_stations())$station_loc
+      data_snsrs <- get_locations_coordinates(data_stations())$station_loc
       if(is.null(data_snsrs)){
         # Clear all reference stations from the map
         proxy <- leafletProxy('map_no') # set up proxy map

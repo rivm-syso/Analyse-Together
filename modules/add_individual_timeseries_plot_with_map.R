@@ -83,7 +83,7 @@ individual_timeseries_map_server <- function(id,
     # Change view to centre stations ----
     set_view_stations <- function(){
       # Check if there is data
-      data_snsrs_col <- get_locations(data_stations$data)$station_loc
+      data_snsrs_col <- get_locations_coordinates(data_stations$data)$station_loc
 
       # If there are stations then zoom to them
       if(!is.null(data_snsrs_col) ){
@@ -107,7 +107,7 @@ individual_timeseries_map_server <- function(id,
     # Add the sensors to the map ----
     add_sensors_map <- function(){
       # # Check if there is data
-      data_snsrs <-get_locations(data_stations$data)$station_loc
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
       if(is.null(data_snsrs)){
         #Clear all sensors from the map
         proxy <- leafletProxy('map') # set up proxy map
@@ -159,7 +159,7 @@ individual_timeseries_map_server <- function(id,
       indu_station_name <- selected_station$station[data_other$indu_station_index]
 
       # Change stroke colour for selected station
-      data_snsrs <- get_locations(data_stations$data)$station_loc
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
       data_snsrs <- data_snsrs %>%
         dplyr::mutate(stroke = ifelse(station == indu_station_name, "black", col))
 

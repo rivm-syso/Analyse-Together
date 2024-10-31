@@ -1,10 +1,11 @@
-#' Get the locations from the stations and convert to spatialcoordinates
+#' Get the locations and coordinates from the stations and convert to
+#'  spatialcoordinates
 #'
 #' @param data_stations_data dataframe with at least the columns c(station, lon, lat)
 #'
 #' @return list with "station_loc" and "station_loc_coord"
 #' @export
-get_locations <- function(data_stations_data){
+get_locations_coordinates <- function(data_stations_data){
   # Check if there is data
   if(nrow(data_stations_data) == 0){
     station_loc = NULL
