@@ -47,6 +47,7 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
      shinyalert \
      datawizard \
      shinybusy \
+     filelock \
      colorBlindness \
      && rm -rf /tmp/downloaded_packages
 
