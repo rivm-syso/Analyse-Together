@@ -3,7 +3,8 @@
 #'
 #' @param data_stations_data dataframe with at least the columns c(station, lon, lat)
 #'
-#' @return list with "station_loc" and "station_loc_coord"
+#' @return list with "station_loc" and "station_loc_coord"; if no stations found,
+#' the statiosn_loc and station_loc_coord contain value NULL
 #' @export
 get_locations_coordinates <- function(data_stations_data){
   # Check if there is data
