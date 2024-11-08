@@ -57,7 +57,7 @@ get_data_cache_server <- function(id,
                      style="background-color: #ffe9b7",
                      icon = icon("square-check")),
         fluidRow(
-          column(info_sensor_output(ns("data_availability_calender_2")), width = 8),
+          column(info_sensor_output(ns("data_availability_calender_temp")), width = 8),
           column(show_map_no_output(ns("data_available_map")), width = 4),
         ),
         textOutput(ns("data_avail_or_not")),
@@ -294,25 +294,22 @@ get_data_cache_server <- function(id,
       # Check the input values, if available and get some more info
       input_values <- initiate_status()
 
-      log_info("get buttons data actions mod: Get data from caching database:
-      {input_values$name_choice} ; {input_values$start_time} ; {
-               input_values$end_time}... ")
+      # If no data at all
+      if(purrr::is_empty(stations_name)){
+        log_trace("mod show avail: Empty stations_name. No data available in cache ")
 
-      load_from_cache(measurements_con = measurements_con,
-                      stations_name = input_values$stations_name,
-                      start_time = input_values$start_time,
-                      end_time = input_values$end_time,
-                      stations_con = stations_con,
-                      data_measurements = data_measurements,
-                      col_default = col_default,
-                      line_default = line_default,
-                      groep_name_none = groep_name_none,
-                      line_overload = line_overload)
+      }else{
+        log_info("get buttons data actions mod: set temp data to product data")
 
-      # counter to trigger event to switch to Start-page
-      data_other$to_start_page <-  data_other$to_start_page + 1
-      log_trace("mod get data button:
-                data_other$to_start_page {data_other$to_start_page}")
+        data_measurements$data_all <- data_measurements$temp_data_all
+        data_stations$data <- data_stations$temp_data
+        data_stations$data_all <- data_stations$temp_data_all
+
+        # counter to trigger event to switch to Start-page
+        data_other$to_start_page <-  data_other$to_start_page + 1
+        log_trace("mod get data button:
+                  data_other$to_start_page {data_other$to_start_page}")
+      }
 
     })
 
@@ -371,7 +368,7 @@ get_data_cache_server <- function(id,
                                          "date", "sd", "diff"))
 
         # Plot empty data, plot will give proper message
-        info_sensor_server("data_availability_calender",
+        info_sensor_server("data_availability_calender_temp",
                            data_measurements = reactive({data_in_tool_empty}))
 
         # Create empty stations
@@ -405,7 +402,7 @@ get_data_cache_server <- function(id,
                             line_overload = line_overload)
 
         # show which data is available, in calender
-        info_sensor_server("data_availability_calender_2",
+        info_sensor_server("data_availability_calender_temp",
                            data_measurements = reactive({data_measurements$temp_data_all}))
 
         # And in a map show the data available
