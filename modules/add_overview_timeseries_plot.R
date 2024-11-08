@@ -46,8 +46,8 @@ overview_timeseries_server <- function(id,
       station_info <- data_stations()
 
       # Check if there is data
-      shiny::validate(need(nrow(measurements) > 0, "No data available to plot."))
-      shiny::validate(need(nrow(station_info) > 0, "No data available to plot."))
+      shiny::validate(need(nrow(measurements) > 0, i18n$t("expl_no_data_available")))
+      shiny::validate(need(nrow(station_info) > 0, i18n$t("expl_no_data_available")))
 
       # Add station type to the measurements
       measurements <-

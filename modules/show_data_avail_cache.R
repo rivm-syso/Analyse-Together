@@ -52,7 +52,7 @@ show_data_avail_cache_server <- function(id,
 
         # message to the user
         output$data_avail_or_not <- renderText({
-          "No data found, please consider to get them."
+          i18n$t("infotext_nodatayet")
         })
 
         # Create empty data_frame to plot
@@ -81,7 +81,7 @@ show_data_avail_cache_server <- function(id,
 
         # message to the user
         output$data_avail_or_not <- renderText({
-          "Please check if this is the data expected."
+          i18n$t("expl_check_expected")
         })
 
       }

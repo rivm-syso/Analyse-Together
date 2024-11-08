@@ -150,7 +150,7 @@ individual_timeseries_map_server <- function(id,
     set_stroke_sensor <- reactive({
       # Check if there is any data selected etc.
       shiny::validate(need(nrow(data_stations$data) > 0,
-                           "No station data available"))
+                           i18n$t("expl_no_sensor_data")))
 
       # Get the name of the station
       # NB from the selected stations
@@ -225,7 +225,7 @@ individual_timeseries_map_server <- function(id,
       indu_station_name <- selected_station$station[data_other$indu_station_index]
 
       # Check if a sensor is selected
-      shiny::validate(need(!is.na(indu_station_name), "No station selected. Please go back to step 1."))
+      shiny::validate(need(!is.na(indu_station_name), i18n$t("expl_no_station_selected")))
 
       actionButton(
         ns("btn_deselect_sensor"),

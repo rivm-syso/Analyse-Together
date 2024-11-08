@@ -358,7 +358,7 @@ shinyServer(function(global, input, output, session) {
                                             # Default group name
                                             group_name_none,
                                             pop_up_title = i18n$t("word_helaas"),
-                                            pop_up_message = i18n$t("infotext_patient")
+                                            pop_up_message = i18n$t("expl_patient")
                                             )
 
   # Download to pc user ----

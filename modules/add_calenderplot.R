@@ -41,9 +41,9 @@ calender_server <- function(id,
       # Check if there is data to plot
       shiny::validate(
         need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
-             'Geen sensordata beschikbaar.'),
+             i18n$t("expl_no_sensor_data")),
         need(!is_empty(data_plot_wind) | !dim(data_plot_wind)[1] == 0,
-             'Geen knmi-data beschikbaar.'),
+             i18n$t("expl_no_weather_data")),
       )
 
       # Find the corresponding label, for the parameter
@@ -58,18 +58,21 @@ calender_server <- function(id,
       knmidata <- data_plot_wind %>%
         dplyr::filter(parameter == 'wd' | parameter == 'ws') %>%
         dplyr::select(c('station', 'parameter', 'value', 'date')) %>%
-        tidyr::pivot_wider(names_from = 'parameter', values_from = 'value', values_fn = mean) %>%
+        tidyr::pivot_wider(names_from = 'parameter', values_from = 'value',
+                           values_fn = mean) %>%
         rename(knmi_stat = station)
 
       # Check if there is only 1 knmi station is selected
-      knmi_number <- knmidata %>% dplyr::select(knmi_stat) %>% unique() %>% count() %>% pull()
-      shiny::validate(need(knmi_number == 1, "Please select only 1 KNMI station."))
+      knmi_number <- knmidata %>% dplyr::select(knmi_stat) %>% unique() %>%
+        count() %>% pull()
+      shiny::validate(need(knmi_number == 1, i18n$t("expl_select_1_weather")))
 
       # Merge KNMI data with the stations data
       data_calender <- dplyr::left_join(data_calender, knmidata, by = 'date')
 
       # Make a plot ====
-      try(openair::calendarPlot(data_calender, pollutant = "value", annotate = "ws",
+      try(openair::calendarPlot(data_calender, pollutant = "value",
+                                annotate = "ws",
                        type = 'label',
                        local.tz = "Europe/Amsterdam",
                        cols = "Oranges",
@@ -77,9 +80,13 @@ calender_server <- function(id,
                        par.settings = list(fontsize=list(text=15)),
                        key.header = parameter_label,
                        key.footer = '',
-                       main = paste0('Period: ', min(data_plot$date) %>% format("%d/%b/%Y"),
-                                      " - ",  max(data_plot$date) %>% format("%d/%b/%Y")),
-                       labels = c('0 to 5', '5 to 10', '10 to 15', '15 to 20', '20 to 30', '30 to 50', '50 to 100', '100 or more')))
+                       main = paste0('Period: ', min(data_plot$date) %>%
+                                       format("%d/%b/%Y"),
+                                      " - ",  max(data_plot$date) %>%
+                                       format("%d/%b/%Y")),
+                       labels = c('0 to 5', '5 to 10', '10 to 15', '15 to 20',
+                                  '20 to 30', '30 to 50', '50 to 100',
+                                  '100 or more')))
 
     })
 
