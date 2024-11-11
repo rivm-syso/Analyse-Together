@@ -349,16 +349,18 @@ get_data_cache_server <- function(id,
       # Check the input values, if available and get some more info
       input_values <- initiate_status()
 
-      log_trace("mod get_data_button; observeEvent get_dbs_cache; input {input_values} ")
+      log_trace("mod get_data_button; observeEvent get_dbs_cache;
+                input {input_values} ")
 
       # Create visualisation of the available data in cache
       # If no data at all
       if(purrr::is_empty(stations_name)){
-        log_trace("mod show avail: Empty stations_name. No data available in cache ")
+        log_trace("mod show avail: Empty stations_name.
+                  No data available in cache ")
 
         # message to the user
         output$data_avail_or_not <- renderText({
-          i18n$t("infotext_nodatayet")
+          i18n$t("expl_nodatayet")
         })
 
         # Create empty data_frame to plot
@@ -403,7 +405,8 @@ get_data_cache_server <- function(id,
 
         # show which data is available, in calender
         info_sensor_server("data_availability_calender_temp",
-                           data_measurements = reactive({data_measurements$temp_data_all}))
+                           data_measurements =
+                             reactive({data_measurements$temp_data_all}))
 
         # And in a map show the data available
         show_map_no_server("data_available_map",
