@@ -295,7 +295,7 @@ get_data_cache_server <- function(id,
       input_values <- initiate_status()
 
       # If no data at all
-      if(purrr::is_empty(stations_name)){
+      if(purrr::is_empty(input_values$stations_name)){
         log_trace("mod show avail: Empty stations_name. No data available in cache ")
 
       }else{
