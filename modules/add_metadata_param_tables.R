@@ -41,8 +41,8 @@ metadata_param_server <- function(id,
 
       # Check if there is data
       shiny::validate(
-        need(!is_empty(data_all),'Geen sensordata beschikbaar.'),
-        need(!dim(data_all)[1] == 0,'Geen sensordata beschikbaar.')
+        need(!is_empty(data_all), i18n$t("expl_no_sensor_data")),
+        need(!dim(data_all)[1] == 0, i18n$t("expl_no_sensor_data"))
       )
 
       # Get the info of the stations
