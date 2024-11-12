@@ -258,7 +258,8 @@ shinyServer(function(global, input, output, session) {
 
   # Info about the sensor plot on start page ----
   info_sensor <- info_sensor_server("info_sensor",
-                                    data_measurements = reactive(data_measurements$data_all))
+                                    data_measurements =
+                                      reactive(data_measurements$data_all))
 
    # The map on the show page ----
   show_map_no_select_server("map_no_select_step3",
@@ -497,7 +498,8 @@ shinyServer(function(global, input, output, session) {
   # start-page
 
   observeEvent(data_other$to_start_page, {
-               updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
+               updateTabsetPanel(inputId = "second_order_tabs" ,
+                                 selected = "Start")
                })
 
   # Observe to change tabs

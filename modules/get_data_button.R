@@ -56,7 +56,11 @@ get_data_cache_server <- function(id,
                      i18n$t("btn_get_data"),
                      style="background-color: #ffe9b7",
                      icon = icon("square-check")),
-        show_data_avail_cache_output(ns("show_data_cache")),
+        fluidRow(
+          column(info_sensor_output(ns("data_availability_calender_temp")), width = 8),
+          column(show_map_no_output(ns("data_available_map")), width = 4),
+        ),
+        textOutput(ns("data_avail_or_not")),
         uiOutput(ns("btn_do_data"))
       )
     })
@@ -106,6 +110,50 @@ get_data_cache_server <- function(id,
 
     })
 
+
+    # Load from cache  ----
+    # Function to get the data from the cache dbs in the tool
+    load_from_cache_temp <- function(measurements_con,
+                                stations_name,
+                                start_time,
+                                end_time,
+                                stations_con,
+                                data_measurements,
+                                col_default,
+                                line_default,
+                                groep_name_none,
+                                line_overload){
+
+      # Get the data measurements of the selected Municipality/project in
+      # the period and do some data cleaning
+      data_measurements$temp_data_all <-
+        get_measurements_cleaned(measurements_con,
+                                 stations_name,
+                                 parameter_input = selected_parameter(),
+                                 start_time,
+                                 end_time)
+
+
+      # Get the data of the stations and put colours etc to it
+      data_stations_list <- get_stations_cleaned(stations_con,
+                                                 stations_name,
+                                                 data_measurements$temp_data_all,
+                                                 col_default,
+                                                 line_default,
+                                                 group_name_none,
+                                                 line_overload)
+
+      # Put the station data in the reactivevalues
+      data_stations$temp_data <- data_stations_list$data
+      data_stations$temp_data_all <- data_stations_list$data_all
+
+      # Set the start end period as use for selection
+      data_other$start_date <- start_time
+      data_other$end_date <- end_time
+
+      log_info("mod get_data_button: Data temp available in tool. ")
+
+    }
     # Load from cache  ----
     # Function to get the data from the cache dbs in the tool
     load_from_cache <- function(measurements_con,
@@ -246,25 +294,22 @@ get_data_cache_server <- function(id,
       # Check the input values, if available and get some more info
       input_values <- initiate_status()
 
-      log_info("get buttons data actions mod: Get data from caching database:
-      {input_values$name_choice} ; {input_values$start_time} ; {
-               input_values$end_time}... ")
+      # If no data at all
+      if(purrr::is_empty(input_values$stations_name)){
+        log_trace("mod show avail: Empty stations_name. No data available in cache ")
 
-      load_from_cache(measurements_con = measurements_con,
-                      stations_name = input_values$stations_name,
-                      start_time = input_values$start_time,
-                      end_time = input_values$end_time,
-                      stations_con = stations_con,
-                      data_measurements = data_measurements,
-                      col_default = col_default,
-                      line_default = line_default,
-                      groep_name_none = groep_name_none,
-                      line_overload = line_overload)
+      }else{
+        log_info("get buttons data actions mod: set temp data to product data")
 
-      # counter to trigger event to switch to Start-page
-      data_other$to_start_page <-  data_other$to_start_page + 1
-      log_trace("mod get data button:
-                data_other$to_start_page {data_other$to_start_page}")
+        data_measurements$data_all <- data_measurements$temp_data_all
+        data_stations$data <- data_stations$temp_data
+        data_stations$data_all <- data_stations$temp_data_all
+
+        # counter to trigger event to switch to Start-page
+        data_other$to_start_page <-  data_other$to_start_page + 1
+        log_trace("mod get data button:
+                  data_other$to_start_page {data_other$to_start_page}")
+      }
 
     })
 
@@ -304,16 +349,74 @@ get_data_cache_server <- function(id,
       # Check the input values, if available and get some more info
       input_values <- initiate_status()
 
-      log_trace("mod get_data_button; observeEvent get_dbs_cache; input {input_values} ")
+      log_trace("mod get_data_button; observeEvent get_dbs_cache;
+                input {input_values} ")
 
-      # Show visualisation of data availability in cache dbs
-      # get results of which steps to continue
-      show_data_avail_cache_server("show_data_cache",
-                             measurements_con = measurements_con,
-                             start_time = input_values$start_time,
-                             end_time = input_values$end_time,
-                             stations_name = input_values$stations_name,
-                             rand_nr = sample(1:1000,1))
+      # Create visualisation of the available data in cache
+      # If no data at all
+      if(purrr::is_empty(input_values$stations_name)){
+        log_trace("mod show avail: Empty stations_name.
+                  No data available in cache ")
+
+        # message to the user
+        output$data_avail_or_not <- renderText({
+          i18n$t("expl_nodatayet")
+        })
+
+        # Create empty data_frame to plot
+        data_in_tool_empty <- setNames(data.frame(matrix(ncol = 8, nrow = 0)),
+                                       c("station", "parameter", "value",
+                                         "aggregation", "timestamp",
+                                         "date", "sd", "diff"))
+
+        # Plot empty data, plot will give proper message
+        info_sensor_server("data_availability_calender_temp",
+                           data_measurements = reactive({data_in_tool_empty}))
+
+        # Create empty stations
+        stations_empty <- setNames(data.frame(matrix(ncol = 11, nrow = 0)),
+                                   c("station", "lat", "lon",
+                                     "selected", "col",
+                                     "linetype", "station_type", "group_name",
+                                     "label", "stroke", "size"))
+
+        # Add empty map
+        show_map_no_server("data_available_map",
+                           data_stations = reactive(stations_empty))
+
+      }else{ # If there is data at least of this municipality/project
+        log_trace("mod get data btn: load from cache temp ...")
+
+        log_info("mod get data btn: Get data from caching database:
+        {input_values$name_choice} ; {input_values$start_time} ; {
+                 input_values$end_time}... ")
+
+        # Get the data from the cache and store it in temp reactivevalue
+        load_from_cache_temp(measurements_con = measurements_con,
+                            stations_name = input_values$stations_name,
+                            start_time = input_values$start_time,
+                            end_time = input_values$end_time,
+                            stations_con = stations_con,
+                            data_measurements = data_measurements,
+                            col_default = col_default,
+                            line_default = line_default,
+                            groep_name_none = groep_name_none,
+                            line_overload = line_overload)
+
+        # show which data is available, in calender
+        info_sensor_server("data_availability_calender_temp",
+                           data_measurements =
+                             reactive({data_measurements$temp_data_all}))
+
+        # And in a map show the data available
+        show_map_no_server("data_available_map",
+                           data_stations = reactive(data_stations$temp_data))
+
+        # message to the user
+        output$data_avail_or_not <- renderText({
+          i18n$t("expl_check_expected")
+        })
+      }
 
       # Add actionButtons to load the data
       output$btn_do_data <- renderUI({
