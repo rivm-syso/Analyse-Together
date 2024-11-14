@@ -147,7 +147,7 @@ waiting_info_server <- function(id,
         }
 
         # Show footer if job is still in line
-        div(p(text_for_footer))
+        div(p(text_for_footer, style="color: red"))
         }
 
     })
