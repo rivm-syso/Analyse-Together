@@ -153,8 +153,8 @@
 		  "nl": "In deze tool kun je de metingen van de luchtkwaliteitssensoren onderzoeken. Zo is het mogelijk verschillende sensoren te vergelijken met een referentiestation, de sensoren te groeperen en gemiddeldes per dag/week te maken."
 		},
     {"tag" : "tool_welcome_2_expl",
-    "en" : "We already made a selection for you to explore the tool right away. In the calender you can see how many sensors were available during this period. On the map you see which sensors are ready for use. Click on 'Explore' to start your analysis.",
-    "nl" : "We hebben al een selectie voor je klaargezet om daarmee de tool meteen te ontdekken. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart zie je met welke sensoren je aan de slag kunt gaan. Klik op 'Ontdekken' om te beginnen."
+    "en" : "We already made a selection for you to explore the tool right away. In the calender below you can see how many sensors were available during this period. On the map you see which sensors are ready for use. Click on 'Explore' to start your analysis.",
+    "nl" : "We hebben al een selectie voor je klaargezet om daarmee de tool meteen te ontdekken. Hieronder zie je In de kalender hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart zie je met welke sensoren je aan de slag kunt gaan. Klik op 'Ontdekken' om te beginnen."
     },
     {"tag" : "tool_welcome_3_expl",
     "en" : "Do want to choose the measurements, the municipality, or the project yourself? Go yo 'Choose' en return here to explore your data selection. ",
@@ -190,14 +190,9 @@
 	      "nl": "4. Geef aan in welke component je wilt bekijken. "
 	  },
 	 {"tag" : "tool_select_6_expl",
-	      "en": "5. Click on the data button. The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background.",
-	      "nl": "5. Klik op de 'Data ophalen van externe bron'-button. De gegevens worden dan op de achtergrond opgehaald van Samen Meten, het Luchtmeetnet en het KNMI. "
+	      "en": "5. Click on the 'Check availability' button. We will look up whether the data is immediately available.",
+	      "nl": "5. Klik op de 'Check beschikbaarheid'-button. Er wordt opgezocht of de data direct beschikbaar is. "
 	  },
-	  {"tag" : "tool_select_7_expl",
-	      "en": "6. Load the retrieved data in this tool and continue on to Start.",
-	      "nl": "6. Laad de opgehaalde data in deze tool en ga verder naar Start."
-	  },
-
       {"tag" : "sel_knmi",
 	    	"en": "Show KNMI stations",
 	      "nl": "Toon KNMI-stations"
@@ -230,9 +225,29 @@
         "en": "Figures",
         "nl": "Plaatjes"
       },
+      {"tag" : "btn_select_all",
+        "en": "Select all",
+        "nl": "Alles selecteren"
+      },
+      {"tag" : "btn_deselect_all",
+        "en": "Reset all selected",
+        "nl": "Alles deselecteren"
+      },
       {"tag" : "btn_own_data",
         "en": "Other data",
         "nl": "Andere data"
+      },
+      {"tag" : "btn_get_data",
+        "en": "Check availability",
+        "nl": "Check beschikbaarheid"
+      },
+      {"tag" : "btn_external_data",
+        "en": "Load missing data",
+        "nl": "Haal missende data op"
+      },
+      {"tag" : "btn_use_data",
+        "en": "Use available data",
+        "nl": "Gebruik beschikbare data"
       },
 	    {"tag" : "title_time",
         "en": "Time series",
@@ -262,10 +277,6 @@
         "en": "This tool was build for citizens. The code is open-source.",
         "nl": "Deze tool is ontwikkeld voor burgers. De code is open-source."
       },
-      {"tag" : "btn_get_data",
-        "en": "Check data availability",
-        "nl": "Check de beschikbaarheid"
-      },
     {"tag" : "btn_start_get_data",
         "en": "Start",
         "nl": "Start"
@@ -281,6 +292,14 @@
       {"tag" : "btn_rename_group",
         "en": "Rename group",
         "nl": "Hernoem groep"
+      },
+      {"tag" : "word_present",
+        "en": "Present",
+        "nl": "Aanwezig"
+      },
+      {"tag" : "word_absent",
+        "en": "Absent",
+        "nl": "Afwezig"
       },
       {"tag" : "word_table",
         "en": "Table for",
@@ -322,6 +341,16 @@
     {"tag" : "word_tableplot",
         "en": "Table",
         "nl": "Tabel"
+      },
+
+    {"tag" : "infotext_missing_days_1",
+        "en": "There are still ",
+        "nl": "Er missen nog "
+      },
+
+    {"tag" : "infotext_missing_days_2",
+        "en": " days missing in the chosen time period.",
+        "nl": " dagen in de gekozen tijdsperiode."
       },
     {"tag" : "infotext_overview",
         "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. For every hour there one measurements per sensor. The black line shows the average measurement. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI.",
@@ -479,26 +508,43 @@
       "en": "Read more about the data.",
       "nl": "Lees hier meer over de data."
       },
-      	  {
-	    "tag" : "expl_waiting_start",
+      {"tag" : "expl_waiting_starttool",
+	    "en" : "Please wait a moment, example data is being loaded to the tool... ",
+	    "nl" : "Even geduld, voorbeeld gegevens worden geladen..."
+	  },
+      {"tag" : "expl_waiting_start",
 	    "en" : "Please wait a moment, the data is being loaded to the tool. In a moment you will be forwarded back to start.",
 	    "nl" : "Even geduld, de gegevens worden geladen, je gaat zo vanzelf weer naar Start."
 	  },
-            {"tag" : "word_patient",
+	  {"tag" : "expl_waiting_check_cache",
+	    "en" : "Please wait a moment, the availability is being searched.",
+	    "nl" : "Even geduld, de beschikbaarheid wordt opgezocht."
+	  },
+      {"tag" : "expl_waiting_number",
+        "en" : "See Dutch",
+        "nl" : "De data wordt bij elkaar gezocht van Samen Meten, het Luchtmeetnet en het KNMI. Het nummer in de wachtrij is: "      },
+      {"tag" : "expl_waiting_success",
+        "en" : "See Dutch",
+        "nl" : "Data is voor je opgehaald, ga naar kiezen om de data in de tool te laden."      },
+      {"tag" : "word_ready",
+        "en": "Ready!",
+        "nl": "Klaar!"
+      },
+      {"tag" : "word_patient",
         "en": "Be patient, please!",
         "nl": "Even geduld"
       },
             {"tag" : "infotext_patient",
-        "en": "The data is gathered from the different sources. This can take 30 minutes. You can close the tool now. Please continue later or start with exploring the example data.",
-        "nl": "De data wordt opgehaald van de verschillende bronhouders. Dit kan 30 minuten duren. Je kunt de tool afsluiten. Als je de tool eerst al wilt uitproberen, herstart de tool en ontdek deze met de al ingeladen data."
+        "en": "The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background. This can take 30 minutes. Please make another selection or wait and try again.",
+        "nl": "De data wordt opgehaald van de verschillende bronhouders. Dit kan 30 minuten duren. Maak een andere selectie of wacht en probeer het later nog eens."
       },
         {"tag" : "word_helaas",
         "en": "Unfortunately...",
         "nl": "Helaas..."
       },
-            {"tag" : "infotext_nodatayet",
-        "en": "There is not (yet) data available for the choosen selection. Please make another selection or press the button: 'Get the data from external source'. ",
-        "nl": "Voor de gekozen selectie zijn (nog) geen metingen beschikbaar. Maak een andere selectie of klik eerst op de knop 'Data ophalen van externe bron'."
+      {"tag" : "infotext_nodatayet",
+        "en": "There is not (yet) data available for the choosen selection. Please make another selection or wait and try again.",
+        "nl": "Voor de gekozen selectie zijn (nog) geen metingen beschikbaar. Maak een andere selectie of wacht en probeer later nog eens."
       }
     ]
 }

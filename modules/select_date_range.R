@@ -43,17 +43,18 @@ date_range_server <- function(id,
                      start = date_total$start_time,
                      end = date_total$end_time,
                      width = "500px",
-                     format = "dd-mm-yyyy",
-                     separator = " - "
+                     format = "dd MM yyyy",
+                     separator = " - ",
+                     startview = "year",
+                     language = data_other$lang
                    )
 
               )})
 
 
                observeEvent(input$date_range,{
-
-                 data_other$start_date <- input$date_range[1]
-                 data_other$end_date <- input$date_range[2]
+                 data_other$start_date_choose <- input$date_range[1]
+                 data_other$end_date_choose <- input$date_range[2]
 
                })
 
