@@ -182,7 +182,6 @@ show_map_server <- function(id,
 
     # Add the sensors to the map
     add_sensors_map <- function(){
-      browser()
       # Check if there is data
       data_snsrs_col <- get_locations_coordinates(data_stations$data)$station_loc
       if(is.null(data_snsrs_col)){
