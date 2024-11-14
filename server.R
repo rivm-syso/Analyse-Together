@@ -50,11 +50,16 @@ shinyServer(function(global, input, output, session) {
 
   # Observe User input from URL to start with other data set,
   # If no input is given, start/load the default data set
+  # Set default time to choose tab to now
   observeEvent(reactive({session$clientData$url_search}),{
 
     user_input_url <- parseQueryString(session$clientData$url_search)
 
     log_trace("server observer_url: {user_input_url}")
+
+    # Set default time to choose tab to now
+    data_other$start_date_choose <- lubridate::today() - lubridate::days(30)
+    data_other$end_date_choose <- lubridate::today()
 
     # Check if there is a valid query
     if(purrr::is_empty(user_input_url)){
@@ -203,8 +208,8 @@ shinyServer(function(global, input, output, session) {
   # The dateRangeInput for date range selection ----
   select_date_range <- date_range_server("select_date_range",
                                          data_other = data_other,
-                                         list(start_time = default_time$start_time,
-                                              end_time = default_time$end_time)
+                                         list(start_time = data_other$start_date_choose,
+                                              end_time = data_other$end_date_choose)
                                          )
 
   # select project/mun ----
