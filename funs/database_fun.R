@@ -387,3 +387,17 @@ download_locations_lml <- function(stations) {
 
 }
 
+
+list_doc <- function(type, conn) {
+    # List all documents of specific type, it returns a list of
+    # references whith that type.
+    # arguments
+    # type: type of document to list
+
+    qry <- glue::glue_sql("SELECT ref FROM meta WHERE type={type};",
+                          .con = conn)
+    res <- DBI::dbGetQuery(conn, qry)
+    return(res$ref)
+
+}
+

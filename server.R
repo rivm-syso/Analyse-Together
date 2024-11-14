@@ -17,7 +17,6 @@ shinyServer(function(global, input, output, session) {
 
   })
 
-
   ############### ReactiveValues #############
   # ReactiveValues to store the data
   # Store other information
@@ -51,11 +50,16 @@ shinyServer(function(global, input, output, session) {
 
   # Observe User input from URL to start with other data set,
   # If no input is given, start/load the default data set
+  # Set default time to choose tab to now
   observeEvent(reactive({session$clientData$url_search}),{
 
     user_input_url <- parseQueryString(session$clientData$url_search)
 
     log_trace("server observer_url: {user_input_url}")
+
+    # Set default time to choose tab to now
+    data_other$start_date_choose <- lubridate::today() - lubridate::days(30)
+    data_other$end_date_choose <- lubridate::today()
 
     # Check if there is a valid query
     if(purrr::is_empty(user_input_url)){
@@ -115,33 +119,67 @@ shinyServer(function(global, input, output, session) {
                                                  conn = pool)
 
     # Check if there are stations in cache dbs known,
-    # then the default data is shown
-    shiny::validate(need(!purrr::is_null(stations_name),"No stations found,
-                         please use the 'Choose' option from the default tool
-                         to load the data."))
+    # otherwise create empty dataframes
+    if(purrr::is_null(stations_name)){
+      log_info("server observer url: no stations found in database")
 
-    # Get the data measurements of the selected Municipality/project in
-    # the period and do some data cleaning
-    data_measurements$data_all <- get_measurements_cleaned(measurements_con = measurements_con,
-                                                           stations_name = stations_name,
-                                                           parameter_input = parameter_choice,
-                                                           start_time = start_time,
-                                                           end_time = end_time)
+      data_measurements$data_all <- data.frame(station = character(0),
+                                               parameter = character(0),
+                                               value = numeric(0),
+                                               sd = numeric(0),
+                                               aggregation = numeric(0),
+                                               timestamp = integer(0),
+                                               date = structure(numeric(0),
+                                                                tzone = "Europe/Amsterdam",
+                                                                class = c("POSIXct",
+                                                                "POSIXt"))
+                                               )
 
-    # Get the data of the stations and put colours etc to it
-    data_stations_list <- get_stations_cleaned(stations_con,
-                                               stations_name,
-                                               data_measurements$data_all,
-                                               col_default,
-                                               line_default,
-                                               group_name_none,
-                                               line_overload)
+      data_stations$data <- data.frame(station = character(0),
+                                       lat = numeric(0),
+                                       lon = numeric(0),
+                                       selected = logical(0),
+                                       station_type =character(0),
+                                       col = character(0),
+                                       linetype = character(0),
+                                       group_name = character(0),
+                                       label = character(0),
+                                       stroke = character(0),
+                                       size = character(0)
+                                       )
 
-    # Put the station data in the reactivevalues
-    data_stations$data <- data_stations_list$data
-    data_stations$data_all <- data_stations_list$data_all
+      data_stations$data_all <- data.frame(station = character(0),
+                                           lat = numeric(0),
+                                           lon = numeric(0),
+                                           timestamp = integer(0)
+                                           )
 
-    log_info("server observer url: data_in tool")
+    }else{
+
+      # Get the data measurements of the selected Municipality/project in
+      # the period and do some data cleaning
+      data_measurements$data_all <- get_measurements_cleaned(measurements_con = measurements_con,
+                                                             stations_name = stations_name,
+                                                             parameter_input = parameter_choice,
+                                                             start_time = start_time,
+                                                             end_time = end_time)
+
+      # Get the data of the stations and put colours etc to it
+      data_stations_list <- get_stations_cleaned(stations_con,
+                                                 stations_name,
+                                                 data_measurements$data_all,
+                                                 col_default,
+                                                 line_default,
+                                                 group_name_none,
+                                                 line_overload)
+
+      # Put the station data in the reactivevalues
+      data_stations$data <- data_stations_list$data
+      data_stations$data_all <- data_stations_list$data_all
+
+      log_info("server observer url: data_in tool")
+    }
+
     # remove notification
     removeNotification(id = ("set_start_data"))
 
@@ -170,8 +208,8 @@ shinyServer(function(global, input, output, session) {
   # The dateRangeInput for date range selection ----
   select_date_range <- date_range_server("select_date_range",
                                          data_other = data_other,
-                                         list(start_time = default_time$start_time,
-                                              end_time = default_time$end_time)
+                                         list(start_time = data_other$start_date_choose,
+                                              end_time = data_other$end_date_choose)
                                          )
 
   # select project/mun ----
@@ -225,7 +263,8 @@ shinyServer(function(global, input, output, session) {
 
   # Info about the sensor plot on start page ----
   info_sensor <- info_sensor_server("info_sensor",
-                                    data_measurements = reactive(data_measurements$data_all))
+                                    data_measurements =
+                                      reactive(data_measurements$data_all))
 
    # The map on the show page ----
   show_map_no_select_server("map_no_select_step3",
@@ -325,7 +364,7 @@ shinyServer(function(global, input, output, session) {
                                             # Default group name
                                             group_name_none,
                                             pop_up_title = i18n$t("word_helaas"),
-                                            pop_up_message = i18n$t("infotext_patient")
+                                            pop_up_message = i18n$t("expl_patient")
                                             )
 
   # Download to pc user ----
@@ -427,6 +466,7 @@ shinyServer(function(global, input, output, session) {
   })
   observeEvent(to_listen(),{
     log_trace("server: observeEvent selecting and filtering")
+
     # Filter the data to selected stations
     data_measurements$data_filtered <-
       filter_data_measurements_fun(data_other$start_date,
@@ -454,6 +494,7 @@ shinyServer(function(global, input, output, session) {
 
   # Observe if the station locations changes (colour) ----
   observe({
+    log_trace("server: observer colour changes in map")
     data_stations_adjust <- map$data_stations()
     data_stations$data <- data_stations_adjust
   })
@@ -462,7 +503,8 @@ shinyServer(function(global, input, output, session) {
   # start-page
 
   observeEvent(data_other$to_start_page, {
-               updateTabsetPanel(inputId = "second_order_tabs" , selected = "Start")
+               updateTabsetPanel(inputId = "second_order_tabs" ,
+                                 selected = "Start")
                })
 
   # Observe to change tabs

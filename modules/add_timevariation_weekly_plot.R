@@ -36,7 +36,7 @@ timevar_weekly_server <- function(id,
       # Check if there is data to plot
       shiny::validate(
         need(!is_empty(data_plot) | !dim(data_plot)[1] == 0,
-             'Geen sensordata beschikbaar.')
+             i18n$t("expl_no_sensor_data"))
       )
 
       # Determine parameter for the label in the plot

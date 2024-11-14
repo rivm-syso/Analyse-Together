@@ -4,7 +4,7 @@
 # that the application uses, and the sourcing of custom functions.
 
 # Define the version of your application                                    ====
-application_version <- "2.1.0"
+application_version <- "2.2.0"
 
 install_github <- FALSE # we run into API rate limits
 
@@ -36,6 +36,7 @@ library(shiny.i18n)
 # Databases (essential)
 library(RSQLite)
 library(pool)
+library(filelock)
 
 # Visualisation
 library(leaflet)         # For maps
@@ -53,6 +54,7 @@ library(sf)
 library(logger)
 #log_threshold(loglevel)
 
+# AT libraries
 library(samanapir)
 library(ATdatabase)
 
@@ -71,6 +73,7 @@ source("funs/ui_tab_info.R")
 source("funs/get_data_caching_funs.R")
 source("funs/set_state_station_data_stations.R")
 source("funs/select_filter_functions.R")
+source("funs/get_locations_coordinates.R")
 
 set_loglevel(level = "TRACE")
 # set_loglevel(level = "INFO")
@@ -80,8 +83,10 @@ db_script <- here::here("scripts","container_data_prep.R")
 system2("Rscript", db_script, wait = TRUE)
 
 # launch queue manager
+log_info("Starting queue manager")
 qm_script <- here::here("scripts","queue_manager.R")
 system2("Rscript", qm_script, wait = FALSE)
+
 
 # Set language and date options                                             ====
 options(encoding = "UTF-8")                  # Standard UTF-8 encoding
@@ -223,7 +228,6 @@ plot_choices = setNames(plot_choices$plot, plot_choices$label)
 
 # Source module for the communication
 source("modules/info_popup.R")
-source("modules/show_data_cache.R")
 
 # source moduel to choose the plot visualisation
 source("modules/select_plot.R")

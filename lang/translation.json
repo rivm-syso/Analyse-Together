@@ -337,17 +337,14 @@
         "en": "Step 3: View",
         "nl": "Stap 3: Kijken"
       },
-
     {"tag" : "word_tableplot",
         "en": "Table",
         "nl": "Tabel"
       },
-
     {"tag" : "infotext_missing_days_1",
         "en": "There are still ",
         "nl": "Er missen nog "
       },
-
     {"tag" : "infotext_missing_days_2",
         "en": " days missing in the chosen time period.",
         "nl": " dagen in de gekozen tijdsperiode."
@@ -484,6 +481,14 @@
         "en": "No weather data available.",
         "nl": "Geen weerdata beschikbaar."
       },
+      {"tag" : "expl_no_sensor_data",
+        "en": "No sensor data available.",
+        "nl": "Geen sensordata beschikbaar."
+      },
+      {"tag" : "expl_no_station_selected",
+        "en": "There are no stations selected. Please, select stations in step 1",
+        "nl": "Er zijn nog geen stations geselecteerd. Selecteer stations in stap 1."
+      },
       {"tag" : "expl_download_to_pc",
         "en" : "Download data to pc",
         "nl" : "Download data naar pc"
@@ -509,8 +514,8 @@
       "nl": "Lees hier meer over de data."
       },
       {"tag" : "expl_waiting_starttool",
-	    "en" : "Please wait a moment, example data is being loaded to the tool... ",
-	    "nl" : "Even geduld, voorbeeld gegevens worden geladen..."
+	    "en" : "Please wait a moment, data is being loaded to the tool... ",
+	    "nl" : "Even geduld, gegevens worden geladen..."
 	  },
       {"tag" : "expl_waiting_start",
 	    "en" : "Please wait a moment, the data is being loaded to the tool. In a moment you will be forwarded back to start.",
@@ -534,7 +539,7 @@
         "en": "Be patient, please!",
         "nl": "Even geduld"
       },
-            {"tag" : "infotext_patient",
+            {"tag" : "expl_patient",
         "en": "The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background. This can take 30 minutes. Please make another selection or wait and try again.",
         "nl": "De data wordt opgehaald van de verschillende bronhouders. Dit kan 30 minuten duren. Maak een andere selectie of wacht en probeer het later nog eens."
       },
@@ -542,9 +547,14 @@
         "en": "Unfortunately...",
         "nl": "Helaas..."
       },
-      {"tag" : "infotext_nodatayet",
-        "en": "There is not (yet) data available for the choosen selection. Please make another selection or wait and try again.",
-        "nl": "Voor de gekozen selectie zijn (nog) geen metingen beschikbaar. Maak een andere selectie of wacht en probeer later nog eens."
+      {"tag" : "expl_nodatayet",
+        "en": "There is not (yet) data available for the choosen selection. Please make another selection or load first the data.",
+        "nl": "Voor de gekozen selectie zijn (nog) geen metingen beschikbaar. Maak een andere selectie of haal eerst de data op."
+      },
+      {
+        "tag": "expl_check_expected",
+        "en" : "Please, check if this is the data expected.",
+        "nl" : "Bepaal of dit de verwachte data is."
       }
     ]
 }
