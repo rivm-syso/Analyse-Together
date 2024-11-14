@@ -33,33 +33,21 @@ show_map_no_server <- function(id,
     # Initialisation icons ----
     # Icons for the reference stations
     icons_stations <- iconList(
-      lml_selected = makeIcon(iconUrl = "images/ref_selected_txt.png", iconWidth = 24, iconHeight = 16),
-      lml_deselected = makeIcon(iconUrl = "images/ref_deselected_txt.png",  iconWidth = 24, iconHeight = 16))
+      lml_selected = makeIcon(iconUrl = "images/ref_selected_txt.png",
+                              iconWidth = 24, iconHeight = 16),
+      lml_deselected = makeIcon(iconUrl = "images/ref_deselected_txt.png",
+                                iconWidth = 24, iconHeight = 16))
 
     # Icons for the knmi stations
     icons_knmis <- iconList(
-      knmi_selected = makeIcon(iconUrl = "images/knmi_selected_txt.png", iconWidth = 30, iconHeight = 16),
-      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected_txt.png", iconWidth = 30, iconHeight = 16))
-
-    # Get the locations from the stations and convert to spatialcoordinates ----
-    get_locations <- reactive({
-      # Check if there is data
-      shiny::validate(need(!is.null(data_stations()), "Error, no data yet."))
-
-      # Get the location of the stations
-      station_loc <- data_stations() %>%
-        dplyr::distinct(station, .keep_all = T) %>%
-        dplyr::filter(lon > 0 & lat >0)
-
-      # Convert to spatialploints
-      station_loc_coord <- SpatialPointsDataFrame(station_loc[,c('lon','lat')],station_loc)
-
-      return(list(station_loc = station_loc, station_loc_coord = station_loc_coord))
-
-    })
+      knmi_selected = makeIcon(iconUrl = "images/knmi_selected_txt.png",
+                               iconWidth = 30, iconHeight = 16),
+      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected_txt.png",
+                                 iconWidth = 30, iconHeight = 16))
 
     # Generate base map ----
     output$map_no <- renderLeaflet({
+      log_trace("mod map no interaction: output$map renderleaflet")
       ns("map_no")
       leaflet() %>%
         # addTiles() %>%
@@ -87,11 +75,13 @@ show_map_no_server <- function(id,
 
     # Change view to centre stations
     set_view_stations <- function(){
+      log_trace("mod map no interaction: set view stations")
+
       # Check if there is data
-      data_snsrs_col <- try(isolate(get_locations()$station_loc))
+      data_snsrs_col <- get_locations_coordinates(data_stations())$station_loc
 
       # If there are stations then zoom to them
-      if(class(data_snsrs_col) != "try-error" ){
+      if(!is.null(data_snsrs_col)){
         # calculate mean location
         mean_lat <- mean(data_snsrs_col$lat)
         mean_lon <- mean(data_snsrs_col$lon)
@@ -111,9 +101,9 @@ show_map_no_server <- function(id,
     # Add knmi stations to the map
     add_knmi_map <- function(){
       # Get the data
-      data_snsrs <- try(isolate(get_locations()$station_loc))
+      data_snsrs <- get_locations_coordinates(data_stations())$station_loc
 
-      if(class(data_snsrs) == "try-error"){
+      if(is.null(data_snsrs) ){
         # clear all weather stations from the map
         proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>%
@@ -142,9 +132,11 @@ show_map_no_server <- function(id,
 
     # Add the sensors to the map
     add_sensors_map <- function(){
+      log_trace("mod map no interaction: add sensor map")
+
       # # Check if there is data
-      data_snsrs <- try(isolate(get_locations()$station_loc))
-      if(class(data_snsrs) == "try-error"){
+      data_snsrs <- get_locations_coordinates(data_stations())$station_loc
+      if(is_null(data_snsrs)){
         #Clear all sensors from the map
         proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>%
@@ -181,9 +173,10 @@ show_map_no_server <- function(id,
 
     # Add reference stations to the map
     add_lmls_map <- function(){
+
       # # Check if there is data
-      data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
-      if(class(data_snsrs) == "try-error"){
+      data_snsrs <- get_locations_coordinates(data_stations())$station_loc
+      if(is.null(data_snsrs)){
         # Clear all reference stations from the map
         proxy <- leafletProxy('map_no') # set up proxy map
         proxy %>%
@@ -221,6 +214,7 @@ show_map_no_server <- function(id,
     })
     # Observe if new data is available-> redraw map
     observeEvent(tolisten(),{
+
           # Add the new situation to the map
           isolate(add_lmls_map())
           isolate(add_sensors_map())

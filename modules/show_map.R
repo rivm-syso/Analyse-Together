@@ -44,30 +44,17 @@ show_map_server <- function(id,
     # Initialisation icons ----
     # Icons for the reference stations
     icons_stations <- iconList(
-      lml_selected = makeIcon(iconUrl = "images/ref_selected_txt.png", iconWidth = 24, iconHeight = 16),
-      lml_deselected = makeIcon(iconUrl = "images/ref_deselected_txt.png",  iconWidth = 24, iconHeight = 16))
+      lml_selected = makeIcon(iconUrl = "images/ref_selected_txt.png",
+                              iconWidth = 24, iconHeight = 16),
+      lml_deselected = makeIcon(iconUrl = "images/ref_deselected_txt.png",
+                                iconWidth = 24, iconHeight = 16))
 
     # Icons for the knmi stations
     icons_knmis <- iconList(
-      knmi_selected = makeIcon(iconUrl = "images/knmi_selected_txt.png", iconWidth = 30, iconHeight = 16),
-      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected_txt.png", iconWidth = 30, iconHeight = 16))
-
-    # Get the locations from the stations and convert to spatialcoordinates ----
-    get_locations <- reactive({
-      # Check if there is data
-      shiny::validate(need(!is.null(data_stations$data), "Error, no data yet."))
-
-      # Get the location of the stations
-      station_loc <- data_stations$data %>%
-        dplyr::distinct(station, .keep_all = T) %>%
-        dplyr::filter(lon > 0 & lat >0)
-
-      # Convert to spatialploints
-      station_loc_coord <- SpatialPointsDataFrame(station_loc[,c('lon','lat')],station_loc)
-
-      return(list(station_loc = station_loc, station_loc_coord = station_loc_coord))
-
-      })
+      knmi_selected = makeIcon(iconUrl = "images/knmi_selected_txt.png",
+                               iconWidth = 30, iconHeight = 16),
+      knmi_deselected = makeIcon(iconUrl = "images/knmi_deselected_txt.png",
+                                 iconWidth = 30, iconHeight = 16))
 
     # Generate base map ----
     output$map <- renderLeaflet({
@@ -115,9 +102,9 @@ show_map_server <- function(id,
     # Add knmi stations to the map
     add_knmi_map <- function(){
       # Get the data
-      data_snsrs <- try(isolate(get_locations()$station_loc))
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
 
-      if(class(data_snsrs) == "try-error"){
+      if(is.null(data_snsrs)){
         # clear all weather stations from the map
         proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
@@ -163,7 +150,7 @@ show_map_server <- function(id,
 
           # Get all newer data info
           # Get the data
-          data_snsrs <- try(isolate(get_locations()$station_loc))
+          data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
           # get the stations only knmi
           data_snsrs <- data_snsrs %>%
             dplyr::filter(station_type == "KNMI")
@@ -195,9 +182,10 @@ show_map_server <- function(id,
 
     # Add the sensors to the map
     add_sensors_map <- function(){
+      browser()
       # Check if there is data
-      data_snsrs_col <- try(isolate(get_locations()$station_loc))
-      if(class(data_snsrs_col) == "try-error"){
+      data_snsrs_col <- get_locations_coordinates(data_stations$data)$station_loc
+      if(is.null(data_snsrs_col)){
         # clear all sensor stations from the map
         proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
@@ -205,14 +193,14 @@ show_map_server <- function(id,
           clearGroup("sensoren")
       }else{
       # Get the sensor data
-      data_snsrs_col <- isolate(get_locations()$station_loc) %>%
+      data_snsrs_col <- get_locations_coordinates(data_stations$data)$station_loc %>%
         dplyr::filter(station_type == "sensor")
 
-      if(nrow(data_snsrs_col)>0){
+
         # Update map with new markers to show selected
         proxy <- leafletProxy('map') # set up proxy map
         proxy %>% clearGroup("sensoren") # Clear sensor markers
-
+      if(nrow(data_snsrs_col)>0){
         leafletProxy("map") %>%
           addCircleMarkers(data = data_snsrs_col, ~lon, ~lat,
                            stroke = TRUE,
@@ -231,8 +219,8 @@ show_map_server <- function(id,
     # Add reference stations to the map
     add_lmls_map <- function(){
       # Check if there is data
-      data_snsrs <- try(isolate(get_locations()$station_loc), silent = T)
-      if(class(data_snsrs) == "try-error"){
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
+      if(is.null(data_snsrs)){
         # Clear all reference stations from the map
         proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
@@ -241,7 +229,7 @@ show_map_server <- function(id,
       }else{
 
       # Get the reference stations
-      data_snsrs <- isolate(get_locations()$station_loc) %>%
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc %>%
         dplyr::filter(station_type == "ref")
 
       # Update map with new markers to show selected
@@ -277,7 +265,7 @@ show_map_server <- function(id,
 
         # Get all newer data info
         # Get the reference stations
-        data_snsrs <- isolate(get_locations()$station_loc) %>%
+        data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc %>%
           dplyr::filter(station_type == "ref")
         # Put selected stations on map
         data_selected <- data_snsrs %>%
@@ -335,7 +323,7 @@ show_map_server <- function(id,
       # Zoek de sensoren in de feature
       if (!is.null(rectangular_desel)){
         # Check if there is data
-        data_snsrs <- get_locations()$station_loc_coord
+        data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc_coord
 
         shiny::validate(
           need(!is.null(data_snsrs), "Error, no data selected.")
@@ -376,7 +364,7 @@ show_map_server <- function(id,
       # Zoek de sensoren in de feature
       if (!is.null(rectangular_sel)){
         # Check if there is data
-        data_snsrs <- get_locations()$station_loc_coord
+        data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc_coord
 
         shiny::validate(
           need(!is.null(data_snsrs), "Error, no data selected.")

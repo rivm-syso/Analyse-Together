@@ -1,4 +1,4 @@
-# builds 
+# builds
 inst/doc
 
 # Rproj files
@@ -24,3 +24,7 @@ prototype.R
 # data directory
 /data
 
+# tekst and csv from tool output
+.txt
+.csv
+.pdf
