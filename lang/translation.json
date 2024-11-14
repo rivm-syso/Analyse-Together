@@ -543,9 +543,9 @@
         "en": "The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background. This can take 30 minutes. Please make another selection or wait and try again.",
         "nl": "De data wordt opgehaald van de verschillende bronhouders. Dit kan 30 minuten duren. Maak een andere selectie of wacht en probeer het later nog eens."
       },
-        {"tag" : "word_helaas",
-        "en": "Unfortunately...",
-        "nl": "Helaas..."
+        {"tag" : "word_caution",
+        "en": "Caution!",
+        "nl": "Let op!"
       },
       {"tag" : "expl_nodatayet",
         "en": "There is not (yet) data available for the choosen selection. Please make another selection or load first the data.",
