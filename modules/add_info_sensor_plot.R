@@ -37,7 +37,7 @@ info_sensor_server <- function(id,
       # Check if there is data to plot
       shiny::validate(
         need(nrow(data_plot) > 0,
-             i18n$t("expl_no_data_availables"))
+             i18n$t("expl_no_data_available"))
       )
 
       # Get the number of stations measuring pm and not NL-stations (ref stations)
