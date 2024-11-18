@@ -306,9 +306,9 @@ get_data_cache_server <- function(id,
         data_stations$data_all <- data_stations$temp_data_all
 
         # counter to trigger event to switch to Start-page
-        data_other$to_start_page <-  data_other$to_start_page + 1
+        data_other$to_explore_page <-  data_other$to_explore_page + 1
         log_trace("mod get data button:
-                  data_other$to_start_page {data_other$to_start_page}")
+                  data_other$to_explore_page {data_other$to_explore_page}")
       }
 
     })
