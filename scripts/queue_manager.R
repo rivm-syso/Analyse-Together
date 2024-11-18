@@ -82,7 +82,9 @@ while(TRUE) {
         next
     } 
     
-        joblist <- list_doc(type = "data_req", conn = pool)
+
+    joblist <- list_doc(type = "data_req", conn = pool)
+    ndr_counter <- ndr_counter + 1
     if(length(joblist) == 0) {
 
         if(ndr_counter == 12) {
@@ -92,7 +94,6 @@ while(TRUE) {
         Sys.sleep(30)
         next
     }
-    ndr_counter <- ndr_counter + 1
 
     ndr_counter <- 0
     # start queue
