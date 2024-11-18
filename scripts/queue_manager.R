@@ -82,14 +82,9 @@ while(TRUE) {
         next
     } 
     
-    sched_time <- lubridate::hm(sched_time_cfg) + today()
-    tz(sched_time) <- "Europe/Amsterdam"
-    if(check_schedule(sched_time)) {
-        run_scheduled(type = "municipality")
-        run_scheduled(type = "project")
-    }
 
     joblist <- list_doc(type = "data_req", conn = pool)
+    ndr_counter <- ndr_counter + 1
     if(length(joblist) == 0) {
 
         if(ndr_counter == 12) {
@@ -180,6 +175,15 @@ while(TRUE) {
     } else {
         log_warn("{logprefix}: queue finished without success, retrying")
     }
+
+    sched_time <- lubridate::hm(sched_time_cfg) + today()
+    tz(sched_time) <- "Europe/Amsterdam"
+    if(check_schedule(sched_time)) {
+        run_scheduled(type = "municipality")
+        run_scheduled(type = "project")
+    }
+
+
 }
 
 

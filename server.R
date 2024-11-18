@@ -36,7 +36,7 @@ shinyServer(function(global, input, output, session) {
                                                          default_group_name),
                                indu_station_index = 1,
                                missing_days = 0,
-                               to_start_page = 0,
+                               to_explore_page = 0,
                                waiting_number = 0,
                                waiting_counter = 0,
                                lang = default_lang)
@@ -363,7 +363,7 @@ shinyServer(function(global, input, output, session) {
                                             line_overload,
                                             # Default group name
                                             group_name_none,
-                                            pop_up_title = i18n$t("word_helaas"),
+                                            pop_up_title = i18n$t("word_caution"),
                                             pop_up_message = i18n$t("expl_patient")
                                             )
 
@@ -417,10 +417,10 @@ shinyServer(function(global, input, output, session) {
                      text_message = reactive(message_data$selected_sensors))
 
   # Pop up information
+  info_select_map_button_server("info_select_map",
+                         i18n$t("expl_select_map"))
   info_button_server("text_overview",
                      i18n$t("infotext_overview_expl"))
-  info_button_server("text_step1",
-                     i18n$t("infotext_step1_select_expl"))
   info_button_server("text_step2",
                      i18n$t("expl_indu_timeplot_expl"))
   info_button_server("plot_timeseries",
@@ -500,12 +500,15 @@ shinyServer(function(global, input, output, session) {
   })
 
   # Observe if there is new data selected from the caching, then move to the
-  # start-page
-
-  observeEvent(data_other$to_start_page, {
+  # explore-page
+  observeEvent(data_other$to_explore_page, {
+    if(data_other$to_explore_page > 0){
                updateTabsetPanel(inputId = "second_order_tabs" ,
-                                 selected = "Start")
+                                 selected = "Visualise data")
+    }
                })
+
+
 
   # Observe to change tabs
   observeEvent(input$to_visualise_tab,{

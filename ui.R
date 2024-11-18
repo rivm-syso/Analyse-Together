@@ -36,9 +36,7 @@ shinyUI(
       # To show a spinning wheel when shiny is busy
       shinybusy::add_busy_spinner(spin = "fading-circle"),
 
-      fluidRow(column(width = 6,
-                      # Information about waiting time for job in queu
-                      waiting_info_output("check_waiting")),
+      fluidRow(
                # Buttons to select language
                column(width = 1, offset = 10,
                       shiny.i18n::usei18n(i18n),
@@ -67,9 +65,10 @@ shinyUI(
         tabPanel( #----
           value = "Start",
           title = i18n$t("title_start"),
+          wellPanel(
 
           fluidRow(
-            wellPanel(
+
 
               # Text for the user
               div(h3(i18n$t("tool_welcome")),
@@ -94,33 +93,34 @@ shinyUI(
             )
           ),
 
+        wellPanel(
           fluidRow(
-               wellPanel(
+                 column(width = 8,
                  div(
                    h4(i18n$t("title_calendar_start"))),
-                 ),
                info_sensor_output("info_sensor")
                ),
-
-          fluidRow(
-               wellPanel(
-                 div(
-                   h4(i18n$t("title_map_start"))),
-                 show_map_no_output("map_start")
-                 )
-               )
+               column(width = 4,
+                      div(
+                        h4(i18n$t("title_map_start"))),
+                      show_map_no_output("map_start")
+                      )
+               ),
+          )
         ), # end of tabpanel "START"
 
         tabPanel( #----
           value = "Visualise data",
           title = i18n$t("title_visualisedata"),
+          wellPanel(
+            fluidRow(div(p(i18n$t("expl_explore")))),
+            fluidRow(
 
                    tabsetPanel(
                      id = "tab_figures",
                      tabPanel(
                        value = "Overview",
                        title = i18n$t("word_overview"),
-                       wellPanel(
                          fluidRow(
                          column(width = 11,
                           helpText(i18n$t("infotext_overview"))),
@@ -128,8 +128,6 @@ shinyUI(
                           info_button_output("text_overview"))),
                          fluidRow(
                         overview_timeseries_output("overview_timeseries"))
-
-                       )
                      ),
                      tabPanel(
                        value = "stap1",
@@ -174,7 +172,9 @@ shinyUI(
                               show_map_no_select_output("map_no_select_step3")
                        )
                      )
+                   )
 
+          )
           )
         ), # end of tabpanel "VISUALISE DATA"
 
@@ -196,7 +196,10 @@ shinyUI(
                          date_range_output("select_date_range"),
                          component_selection_output("select_component"),
                          p(i18n$t("tool_select_6_expl")),
-                         get_data_cache_output("get_data_dbs_button_start")
+                         get_data_cache_output("get_data_dbs_button_start"),
+
+                         # Information about waiting time for job in queu
+                         waiting_info_output("check_waiting")
 
                      )
                    )
@@ -220,6 +223,7 @@ shinyUI(
 
 
     # Text for footer ----
+
     div(p(i18n$t("expl_indicative_data"),
           actionLink(label = i18n$t("btn_link_information"),
                      inputId = "link_to_information"))),
