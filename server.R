@@ -417,10 +417,10 @@ shinyServer(function(global, input, output, session) {
                      text_message = reactive(message_data$selected_sensors))
 
   # Pop up information
+  info_select_map_button_server("info_select_map",
+                         i18n$t("expl_select_map"))
   info_button_server("text_overview",
                      i18n$t("infotext_overview_expl"))
-  info_button_server("text_step1",
-                     i18n$t("infotext_step1_select_expl"))
   info_button_server("text_step2",
                      i18n$t("expl_indu_timeplot_expl"))
   info_button_server("plot_timeseries",
