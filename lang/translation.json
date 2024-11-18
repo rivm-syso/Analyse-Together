@@ -242,12 +242,12 @@
         "nl": "Check beschikbaarheid"
       },
       {"tag" : "btn_external_data",
-        "en": "Load missing data",
-        "nl": "Haal missende data op"
+        "en": "Load more data",
+        "nl": "Meer data ophalen"
       },
       {"tag" : "btn_use_data",
-        "en": "Use available data",
-        "nl": "Gebruik beschikbare data"
+        "en": "Use directly available data",
+        "nl": "Direct beschikbare data gebruiken"
       },
 	    {"tag" : "title_time",
         "en": "Time series",
@@ -349,9 +349,13 @@
         "en": " days missing in the chosen time period.",
         "nl": " dagen in de gekozen tijdsperiode."
       },
+      {"tag" : "expl_explore",
+        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI.",
+        "nl": "In dit gedeelte kun je de metingen van de sensoren gaan ontdekken. In onderstaande stappen kun je zelf kiezen welke sensoren je wilt bekijken. Ook kun je de metingen van de sensoren combineren met de metingen van een referentiestation of met de windgegevens van het KNMI."
+      },
     {"tag" : "infotext_overview",
-        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. For every hour there one measurements per sensor. The black line shows the average measurement. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI.",
-        "nl": "Op deze pagina zie je de metingen van alle sensoren in de gekozen gemeente of project. Voor elk uur is er één meting per sensor. De zwarte lijn is de gemiddelde waarde. In de volgende stappen kun je zelf kiezen welke sensoren je wilt bekijken. Ook kun je de metingen van de sensoren combineren met de metingen van een referentiestation of met de windgegevens van het KNMI."
+        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. For every hour there one measurements per sensor. The black line shows the average measurement.",
+        "nl": "Op deze pagina zie je de metingen van alle sensoren van de gemeente of het project. Voor elk uur is er één meting per sensor. De zwarte lijn is de gemiddelde waarde."
       },
           {"tag" : "infotext_overview_expl",
         "en": "In this figure you can see the measurements of the sensors in grey and the average of the measurements in black. To create this figure, all measurements above the maximum value have been ignored. More information about the maximum value can be found at 'Step 2'. Additionally, you can see background colors in the figure. These colors give an indication which concentrations are high.",

@@ -114,13 +114,15 @@ shinyUI(
         tabPanel( #----
           value = "Visualise data",
           title = i18n$t("title_visualisedata"),
+          wellPanel(
+            fluidRow(div(p(i18n$t("expl_explore")))),
+            fluidRow(
 
                    tabsetPanel(
                      id = "tab_figures",
                      tabPanel(
                        value = "Overview",
                        title = i18n$t("word_overview"),
-                       wellPanel(
                          fluidRow(
                          column(width = 11,
                           helpText(i18n$t("infotext_overview"))),
@@ -128,8 +130,6 @@ shinyUI(
                           info_button_output("text_overview"))),
                          fluidRow(
                         overview_timeseries_output("overview_timeseries"))
-
-                       )
                      ),
                      tabPanel(
                        value = "stap1",
@@ -174,7 +174,9 @@ shinyUI(
                               show_map_no_select_output("map_no_select_step3")
                        )
                      )
+                   )
 
+          )
           )
         ), # end of tabpanel "VISUALISE DATA"
 
