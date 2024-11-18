@@ -242,12 +242,12 @@
         "nl": "Check beschikbaarheid"
       },
       {"tag" : "btn_external_data",
-        "en": "Load missing data",
-        "nl": "Haal missende data op"
+        "en": "Load more data",
+        "nl": "Meer data ophalen"
       },
       {"tag" : "btn_use_data",
-        "en": "Use available data",
-        "nl": "Gebruik beschikbare data"
+        "en": "Use directly available data",
+        "nl": "Direct beschikbare data gebruiken"
       },
 	    {"tag" : "title_time",
         "en": "Time series",
@@ -349,9 +349,13 @@
         "en": " days missing in the chosen time period.",
         "nl": " dagen in de gekozen tijdsperiode."
       },
+      {"tag" : "expl_explore",
+        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI.",
+        "nl": "In dit gedeelte kun je de metingen van de sensoren gaan ontdekken. In onderstaande stappen kun je zelf kiezen welke sensoren je wilt bekijken. Ook kun je de metingen van de sensoren combineren met de metingen van een referentiestation of met de windgegevens van het KNMI."
+      },
     {"tag" : "infotext_overview",
-        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. For every hour there one measurements per sensor. The black line shows the average measurement. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI.",
-        "nl": "Op deze pagina zie je de metingen van alle sensoren in de gekozen gemeente of project. Voor elk uur is er één meting per sensor. De zwarte lijn is de gemiddelde waarde. In de volgende stappen kun je zelf kiezen welke sensoren je wilt bekijken. Ook kun je de metingen van de sensoren combineren met de metingen van een referentiestation of met de windgegevens van het KNMI."
+        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. For every hour there one measurements per sensor. The black line shows the average measurement.",
+        "nl": "Op deze pagina zie je de metingen van alle sensoren van de gemeente of het project. Voor elk uur is er één meting per sensor. De zwarte lijn is de gemiddelde waarde."
       },
           {"tag" : "infotext_overview_expl",
         "en": "In this figure you can see the measurements of the sensors in grey and the average of the measurements in black. To create this figure, all measurements above the maximum value have been ignored. More information about the maximum value can be found at 'Step 2'. Additionally, you can see background colors in the figure. These colors give an indication which concentrations are high.",
@@ -360,10 +364,6 @@
       {"tag": "infotext_step1_select",
         "en":"Here you can choose which sensors you want to view. We advise to group multiple sensors, because a group average gives a more reliable measurement. For example, group all sensors in a neighborhood.",
         "nl": "Hier kun je zelf kiezen welke sensoren je wilt bekijken. We raden je aan om meerdere sensoren te groeperen, zo vergroot je de betrouwbaarheid van de meting. Groepeer bijvoorbeeld alle sensoren in één wijk."
-      },
-    {"tag": "infotext_step1_select_expl",
-        "en":"You can group sensors in two ways: by selecting sensors using the 'Draw a rectangle' square on the map, or by clicking on individual sensors. To make a new group, use the 'Make a new group' button. The name of the group can be changed using the 'Rename group' button. Do you want to remove a selection? Click on the thrashcan 'Delete layers', or on the individual sensors. Hit save to apply your selections.",
-        "nl": "Het maken van een groep kan op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. Om een nieuwe groep te maken, kies de knop 'Maak nieuwe groep'; de naam van de groep kun je wijzigen via de knop 'Hernoem groep'. Wil je de selectie verwijderen, dan klik je op de prullenbak 'Delete layers' of op de individuele sensoren. Druk op save om de wijziging door te voeren."
       },
       {"tag" : "expl_meta_table",
         "en": "In the table below, you can see the data availability of the sensors and stations. ",
@@ -555,6 +555,14 @@
         "tag": "expl_check_expected",
         "en" : "Please, check if this is the data expected.",
         "nl" : "Bepaal of dit de verwachte data is."
+      },
+    {"tag" : "word_select_map",
+        "en": "Select on map",
+        "nl": "Selecteer op kaart"
+      },
+      {"tag" : "expl_select_map",
+        "en":"You can group sensors in three ways: by selecting multiple sensors using the 'Draw a rectangle' square on the map, by clicking on individual sensors or by clicking the button 'Select all'",
+        "nl": "Het maken van een groep kan op drie manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle', door het klikken op individuele sensoren of door de knop 'Alles selecteren'. "
       }
     ]
 }

@@ -65,9 +65,10 @@ shinyUI(
         tabPanel( #----
           value = "Start",
           title = i18n$t("title_start"),
+          wellPanel(
 
           fluidRow(
-            wellPanel(
+
 
               # Text for the user
               div(h3(i18n$t("tool_welcome")),
@@ -92,33 +93,34 @@ shinyUI(
             )
           ),
 
+        wellPanel(
           fluidRow(
-               wellPanel(
+                 column(width = 8,
                  div(
                    h4(i18n$t("title_calendar_start"))),
-                 ),
                info_sensor_output("info_sensor")
                ),
-
-          fluidRow(
-               wellPanel(
-                 div(
-                   h4(i18n$t("title_map_start"))),
-                 show_map_no_output("map_start")
-                 )
-               )
+               column(width = 4,
+                      div(
+                        h4(i18n$t("title_map_start"))),
+                      show_map_no_output("map_start")
+                      )
+               ),
+          )
         ), # end of tabpanel "START"
 
         tabPanel( #----
           value = "Visualise data",
           title = i18n$t("title_visualisedata"),
+          wellPanel(
+            fluidRow(div(p(i18n$t("expl_explore")))),
+            fluidRow(
 
                    tabsetPanel(
                      id = "tab_figures",
                      tabPanel(
                        value = "Overview",
                        title = i18n$t("word_overview"),
-                       wellPanel(
                          fluidRow(
                          column(width = 11,
                           helpText(i18n$t("infotext_overview"))),
@@ -126,8 +128,6 @@ shinyUI(
                           info_button_output("text_overview"))),
                          fluidRow(
                         overview_timeseries_output("overview_timeseries"))
-
-                       )
                      ),
                      tabPanel(
                        value = "stap1",
@@ -172,7 +172,9 @@ shinyUI(
                               show_map_no_select_output("map_no_select_step3")
                        )
                      )
+                   )
 
+          )
           )
         ), # end of tabpanel "VISUALISE DATA"
 

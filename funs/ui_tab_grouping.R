@@ -11,10 +11,12 @@ tpGrouping <- function(){
         style = "margin-left: 20px;",
         column(width = 10,helpText(i18n$t("infotext_step1_select"))
               ),
-        column(width = 2,
-          info_button_output("text_step1" )
-        ),
       ),
+      fluidRow(
+        style = "margin-left: 20px;",
+        info_select_map_button_output("info_select_map")
+      ),
+      br(),
       fluidRow(
         style = "margin-left: 20px;",
         select_all_button_output("select_all")
