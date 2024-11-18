@@ -36,7 +36,7 @@ shinyServer(function(global, input, output, session) {
                                                          default_group_name),
                                indu_station_index = 1,
                                missing_days = 0,
-                               to_start_page = 0,
+                               to_explore_page = 0,
                                waiting_number = 0,
                                waiting_counter = 0,
                                lang = default_lang)
@@ -500,12 +500,15 @@ shinyServer(function(global, input, output, session) {
   })
 
   # Observe if there is new data selected from the caching, then move to the
-  # start-page
-
-  observeEvent(data_other$to_start_page, {
+  # explore-page
+  observeEvent(data_other$to_explore_page, {
+    if(data_other$to_explore_page > 0){
                updateTabsetPanel(inputId = "second_order_tabs" ,
-                                 selected = "Start")
+                                 selected = "Visualise data")
+    }
                })
+
+
 
   # Observe to change tabs
   observeEvent(input$to_visualise_tab,{
