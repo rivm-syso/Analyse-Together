@@ -36,9 +36,7 @@ shinyUI(
       # To show a spinning wheel when shiny is busy
       shinybusy::add_busy_spinner(spin = "fading-circle"),
 
-      fluidRow(column(width = 6,
-                      # Information about waiting time for job in queu
-                      waiting_info_output("check_waiting")),
+      fluidRow(
                # Buttons to select language
                column(width = 1, offset = 10,
                       shiny.i18n::usei18n(i18n),
@@ -196,7 +194,10 @@ shinyUI(
                          date_range_output("select_date_range"),
                          component_selection_output("select_component"),
                          p(i18n$t("tool_select_6_expl")),
-                         get_data_cache_output("get_data_dbs_button_start")
+                         get_data_cache_output("get_data_dbs_button_start"),
+
+                         # Information about waiting time for job in queu
+                         waiting_info_output("check_waiting")
 
                      )
                    )
@@ -220,6 +221,7 @@ shinyUI(
 
 
     # Text for footer ----
+
     div(p(i18n$t("expl_indicative_data"),
           actionLink(label = i18n$t("btn_link_information"),
                      inputId = "link_to_information"))),
