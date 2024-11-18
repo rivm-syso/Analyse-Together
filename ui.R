@@ -67,9 +67,10 @@ shinyUI(
         tabPanel( #----
           value = "Start",
           title = i18n$t("title_start"),
+          wellPanel(
 
           fluidRow(
-            wellPanel(
+
 
               # Text for the user
               div(h3(i18n$t("tool_welcome")),
@@ -94,21 +95,20 @@ shinyUI(
             )
           ),
 
+        wellPanel(
           fluidRow(
-               wellPanel(
+                 column(width = 8,
                  div(
                    h4(i18n$t("title_calendar_start"))),
-                 ),
                info_sensor_output("info_sensor")
                ),
-
-          fluidRow(
-               wellPanel(
-                 div(
-                   h4(i18n$t("title_map_start"))),
-                 show_map_no_output("map_start")
-                 )
-               )
+               column(width = 4,
+                      div(
+                        h4(i18n$t("title_map_start"))),
+                      show_map_no_output("map_start")
+                      )
+               ),
+          )
         ), # end of tabpanel "START"
 
         tabPanel( #----
