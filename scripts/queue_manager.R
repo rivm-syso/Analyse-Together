@@ -85,18 +85,27 @@ while(TRUE) {
 
     joblist <- list_doc(type = "data_req", conn = pool)
     ndr_counter <- ndr_counter + 1
-    if(length(joblist) == 0) {
+    sched_time <- lubridate::hm(sched_time_cfg) + today()
+    tz(sched_time) <- "Europe/Amsterdam"
 
+    if(length(joblist) == 0) {
+        # There are no new jobs
         if(ndr_counter == 12) {
+            # only prent message each 12th job
             log_trace("{logprefix} no data requests")
             ndr_counter <- 0
+            # check if we should run schedule?
+            if(check_schedule(sched_time)) {
+                run_scheduled(type = "municipality")
+                run_scheduled(type = "project")
+            }
         }
         Sys.sleep(30)
         next
     }
 
     ndr_counter <- 0
-    # start queue
+    # there are jobs found, so start queue
     que <- task_q$new()
 
     # get job
@@ -174,13 +183,6 @@ while(TRUE) {
         ATdatabase::add_doc(type = "data_req_done", ref = job_id, doc = j_done, conn = pool)
     } else {
         log_warn("{logprefix}: queue finished without success, retrying")
-    }
-
-    sched_time <- lubridate::hm(sched_time_cfg) + today()
-    tz(sched_time) <- "Europe/Amsterdam"
-    if(check_schedule(sched_time)) {
-        run_scheduled(type = "municipality")
-        run_scheduled(type = "project")
     }
 
 
