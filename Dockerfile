@@ -19,6 +19,7 @@ RUN apt-get update \
     libssl-dev \
     rsync \
     wget \
+    sqlite3 \
     && rm -rf /var/lib/apt/lists/*
 
 # install R pkgs
