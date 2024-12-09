@@ -81,8 +81,8 @@
 	    "nl" : "Filteren op maximale waarde"},
 	    {
 	      "tag" : "tool_maximum_value_1_expl",
-	      "en" : "Every measurement reported by the sensor can provide information about the air quality at its location. However, if the sensor is dirty or damaged, then the measurement may not be representative of the air quality. This will often result in high measurement, for example 300 μg/m³. For the analysis you want to estimate the air quality, without distortions due to such outliers. To that end you can use a filter to remove measurements above a maximum value. By default, this filter is set to 90% percentile of the sensor measurements. You can adjust this filter yourself, so you can retain high measurement if needed. Set the maximum value to 1000 μg/m³, for instance, and look at the sensors one at a time.",
-	      "nl": "Elke meetwaarde die de sensor doorgeeft kan informatie geven over de luchtkwaliteit van die plek. Echter, wanneer de sensor vies of beschadigd is, is de meetwaarde niet representatief voor de luchtkwaliteit. Vaak zijn dat dan hoge waardes van bijvoorbeeld 300. Voor de analyse wil je graag de luchtkwaliteit bekijken, zonder dat deze verstoord wordt door deze hoge waardes. Daarvoor kun je een filter zetten die de meetwaardes boven de maximale waarde niet tonen. Standaard staat de maximale waarde op het 90% percentiel van de sensormetingen. Je kunt ook zelf het filter instellen, zo kun je ook de hoge waardes van een sensor bekijken. Zet de maximale dan bijvoorbeeld op 1000 en bekijk de sensoren één voor één."
+	      "en" : "Every measurement reported by the sensor can provide information about the air quality at its location. However, if the sensor is dirty or damaged, then the measurement may not be representative of the air quality. This will often result in high measurement, for example 300 μg/m³. For the analysis you want to estimate the air quality, without distortions due to such outliers. To that end you can use a filter to remove measurements above a maximum value. By default, this filter is set to 100 μg/m³. You can adjust this filter yourself, so you can retain high measurement if needed. Set the maximum value to 1000 μg/m³, for instance, and look at the sensors one at a time.",
+	      "nl": "Elke meetwaarde die de sensor doorgeeft kan informatie geven over de luchtkwaliteit van die plek. Echter, wanneer de sensor vies of beschadigd is, is de meetwaarde niet representatief voor de luchtkwaliteit. Vaak zijn dat dan hoge waardes van bijvoorbeeld 300. Voor de analyse wil je graag de luchtkwaliteit bekijken, zonder dat deze verstoord wordt door deze hoge waardes. Daarvoor kun je een filter zetten, de waarde lager dan deze waarde worden niet meegenomen voor de rest van de analyse. Standaard staat de maximale waarde 100 μg/m³. Je kunt ook zelf het filter instellen, zo kun je ook de hoge waardes van een sensor bekijken. Zet de maximale dan bijvoorbeeld op 1000 μg/m³ en bekijk de sensoren één voor één."
 	    },
       {"tag" : "tool_intro_data_expl",
 	      "en": " The sensor data is sourced from the Measure Together database. The displayed values provide an indication of the particulate matter concentration at a specific location. The data is not suitable for comparing against European threshold values. Each sensor can be compared to a measurement station of the Air Quality Monitoring Network (Luchtmeetnet). The wind data used to calculate the wind rose comes from a weather station of the Royal Netherlands Meteorological Institute (KNMI). The locations of the utilized Luchtmeetnet and weather stations are shown on the map with icons. In the 'Select Data' tab, you can load data from sensors of a project or municipality, measurement stations of the Luchtmeetnet, and measurement stations of the KNMI. These data are retrieved through APIs from the respective parties. The retrieval and fetching of data may take some time. The data is stored in the tool, so subsequent downloads are faster after the initial download. The data is readily available for subsequent uses and other users.",
@@ -218,8 +218,8 @@
         "nl": "Selecteer visualisatie:"
       },
       {"tag" : "sel_cutoff",
-        "en": "Select maximum value to use in the analysis:",
-        "nl": "Selecteer de maximale waarde (ug/m3) voor de analyse:"
+        "en": "Use for the analysis only values lower than:",
+        "nl": "Gebruik voor de analyse alleen de meetwaardes lager dan:"
       },
       {"tag" : "btn_figures",
         "en": "Figures",
@@ -350,8 +350,8 @@
         "nl": " dagen in de gekozen tijdsperiode."
       },
       {"tag" : "expl_explore",
-        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI.",
-        "nl": "In dit gedeelte kun je de metingen van de sensoren gaan ontdekken. In onderstaande stappen kun je zelf kiezen welke sensoren je wilt bekijken. Ook kun je de metingen van de sensoren combineren met de metingen van een referentiestation of met de windgegevens van het KNMI."
+        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI. The reference stations are shown in the colour black and the names start with 'NL'.",
+        "nl": "In dit gedeelte kun je de metingen van de sensoren gaan ontdekken. In onderstaande stappen kun je zelf kiezen welke sensoren je wilt bekijken. Ook kun je de metingen van de sensoren combineren met de metingen van een referentiestation of met de windgegevens van het KNMI. De referentiestations zijn in de grafieken aangegeven in het zwart en hebben een naam beginnende met 'NL'."
       },
     {"tag" : "infotext_overview",
         "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. For every hour there one measurements per sensor. The black line shows the average measurement.",
