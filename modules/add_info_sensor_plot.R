@@ -37,7 +37,7 @@ info_sensor_server <- function(id,
       # Check if there is data to plot
       shiny::validate(
         need(nrow(data_plot) > 0,
-             'Geen data beschikbaar')
+             i18n$t("expl_no_data_available"))
       )
 
       # Get the number of stations measuring pm and not NL-stations (ref stations)
@@ -49,16 +49,24 @@ info_sensor_server <- function(id,
         dplyr::summarise(count_stations = n()) %>%
         dplyr::ungroup()
 
+      # Check if there are sensorsdata to plot
+      shiny::validate(
+        need(nrow(data_calender) > 0,
+             i18n$t("expl_no_sensor_data"))
+      )
+
       # Set the breaks
       max_n_stations <- max(data_calender$count_stations)
-      breaks_values <- seq(from = 0, to = max_n_stations, length.out = 5) %>% round(0)
+      breaks_values <- seq(from = 1, to = max_n_stations, length.out = 5) %>%
+        round(0)
       breaks_labels <- paste0(breaks_values[1:4], "-", breaks_values[2:5])
 
       # If there are too few sensors for 5 categories, create less breaks
       if(T %in% duplicated(breaks_values)){
-        breaks_values <- seq(from = 0, to = max_n_stations, by = 1)
+        breaks_values <- seq(from = 1, to = max_n_stations, by = 1)
         nr_labels <- length(breaks_values)
-        breaks_labels <- paste0(breaks_values[1:nr_labels-1], "-", breaks_values[2:nr_labels])
+        breaks_labels <- paste0(breaks_values[1:nr_labels-1], "-",
+                                breaks_values[2:nr_labels])
       }
 
 

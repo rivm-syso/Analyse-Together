@@ -41,7 +41,7 @@ individual_timeseries_server <- function(id,
       # Check if there is any data available
       shiny::validate(
         need(!purrr::is_null(data_measurements()),
-             'Geen sensordata beschikbaar.')
+             i18n$t("expl_no_sensor_data"))
       )
 
       # Get the unique station names
@@ -54,7 +54,8 @@ individual_timeseries_server <- function(id,
     output$sensor_indu <- renderUI({
       # Check if stations are selected
       if (is.null(get_station_select()) == FALSE){
-        # Get the names of the selected stations for the choices of the pickerinput
+        # Get the names of the selected stations for the choices of
+        # the pickerinput
         stations_select <- get_station_select()
 
        # Create picker with the station names
@@ -81,7 +82,8 @@ individual_timeseries_server <- function(id,
       shiny::validate(need(!is.null(indu_station_name), "Please select station."))
 
       # Get the measurements of the station
-      measurements <- data_measurements() %>% dplyr::filter(station == indu_station_name)
+      measurements <- data_measurements() %>%
+        dplyr::filter(station == indu_station_name)
       # Create timeseries plot
       timeseries_server("individual_timeseries_plot",
                         data_measurements = reactive(measurements),

@@ -48,23 +48,6 @@ individual_timeseries_map_server <- function(id,
 
     ns <- session$ns
 
-    # Get the locations from the stations and convert to spatialcoordinates ----
-    get_locations <- reactive({
-      # Check if there is data
-      shiny::validate(need(!is.null(data_stations$data), "Error, no data yet."))
-
-      # Get the location of the stations
-      station_loc <- data_stations$data %>%
-        dplyr::distinct(station, .keep_all = T) %>%
-        dplyr::filter(lon > 0 & lat > 0)
-
-      # Convert to spatialploints
-      station_loc_coord <- SpatialPointsDataFrame(station_loc[,c('lon','lat')],station_loc)
-
-      return(list(station_loc = station_loc, station_loc_coord = station_loc_coord))
-
-    })
-
     # Generate base map ----
     output$map <- renderLeaflet({
 
@@ -100,10 +83,10 @@ individual_timeseries_map_server <- function(id,
     # Change view to centre stations ----
     set_view_stations <- function(){
       # Check if there is data
-      data_snsrs_col <- try(isolate(get_locations()$station_loc))
+      data_snsrs_col <- get_locations_coordinates(data_stations$data)$station_loc
 
       # If there are stations then zoom to them
-      if(class(data_snsrs_col) != "try-error" ){
+      if(!is.null(data_snsrs_col) ){
         # calculate mean location
         mean_lat <- mean(data_snsrs_col$lat)
         mean_lon <- mean(data_snsrs_col$lon)
@@ -124,8 +107,8 @@ individual_timeseries_map_server <- function(id,
     # Add the sensors to the map ----
     add_sensors_map <- function(){
       # # Check if there is data
-      data_snsrs <- try(isolate(get_locations()$station_loc))
-      if(class(data_snsrs) == "try-error"){
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
+      if(is.null(data_snsrs)){
         #Clear all sensors from the map
         proxy <- leafletProxy('map') # set up proxy map
         proxy %>%
@@ -165,6 +148,10 @@ individual_timeseries_map_server <- function(id,
 
     # Reactive to change stroke sensor ----
     set_stroke_sensor <- reactive({
+      # Check if there is any data selected etc.
+      shiny::validate(need(nrow(data_stations$data) > 0,
+                           i18n$t("expl_no_sensor_data")))
+
       # Get the name of the station
       # NB from the selected stations
       selected_station <- data_stations$data %>%
@@ -172,12 +159,13 @@ individual_timeseries_map_server <- function(id,
       indu_station_name <- selected_station$station[data_other$indu_station_index]
 
       # Change stroke colour for selected station
-      data_snsrs <- try(isolate(get_locations()$station_loc))
+      data_snsrs <- get_locations_coordinates(data_stations$data)$station_loc
       data_snsrs <- data_snsrs %>%
         dplyr::mutate(stroke = ifelse(station == indu_station_name, "black", col))
 
       # Set the updated data from the stations in the reactiveValues
       data_stations$data <- data_snsrs
+
     })
 
     # reactive to draw figure ----
@@ -212,13 +200,19 @@ individual_timeseries_map_server <- function(id,
       # Set value for the y-ax
       max_yvalue <- data_other$cutoff
 
+      # Set min and max for x-as
+      zoom_in = list(
+        start_slider_zoom = reactive(data_other$start_date %>% as.POSIXct()),
+        end_slider_zoom = reactive(data_other$end_date %>%  as.POSIXct()))
+
       # Create timeseries plot
       timeseries_server("individual_timeseries_plot",
                         data_measurements = reactive(measurements),
                         parameter = parameter,
                         overview_component = overview_component,
                         theme_plots = theme_plots,
-                        manual_ylim = c(0, max_yvalue))
+                        manual_ylim = c(0, max_yvalue),
+                        zoom_in = zoom_in)
     })
 
 
@@ -231,7 +225,7 @@ individual_timeseries_map_server <- function(id,
       indu_station_name <- selected_station$station[data_other$indu_station_index]
 
       # Check if a sensor is selected
-      shiny::validate(need(!is.na(indu_station_name), "No station selected. Please go back to step 1."))
+      shiny::validate(need(!is.na(indu_station_name), i18n$t("expl_no_station_selected")))
 
       actionButton(
         ns("btn_deselect_sensor"),

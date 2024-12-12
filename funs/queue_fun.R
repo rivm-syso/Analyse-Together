@@ -23,7 +23,7 @@ create_data_request <- function(kits, time_start, time_end, conn, max_requests =
     # conn: database connection object
     # max_request: max jobs on queue for each request
     #
-    # Return value: a list with data requests
+    # Return value: a list with data requests and last item is the job_id
 
     add_req <- function(x,y) {
         dl_req <- data.frame()
@@ -38,17 +38,17 @@ create_data_request <- function(kits, time_start, time_end, conn, max_requests =
 
 
     job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
-    kits_req <- tibble(station = kits, time_start = time_start, time_end = time_end) %>% 
+    kits_req <- tibble(station = kits, time_start = time_start, time_end = time_end) %>%
         rowid_to_column("id") %>%
-        mutate(set = ceiling(id / max_requests)) %>% 
+        mutate(set = ceiling(id / max_requests)) %>%
         group_by(set)
-           
+
     res <- kits_req  %>% group_map(add_req)
-        
+
     job_id <- sprintf("id%010.0f", round(runif(1, 1, 2^32), digits = 0))
     for(i in 1:length(res)) {
         job_id_seq <- sprintf("%s_%04i", job_id, i)
-           
+
         if(!doc_exists(type = "data_req", ref = job_id_seq, conn = pool)) {
             log_trace("create_data_request: data request {job_id_seq} stored")
             add_doc(type = "data_req", ref = job_id_seq,
@@ -56,6 +56,9 @@ create_data_request <- function(kits, time_start, time_end, conn, max_requests =
                     overwrite = TRUE)
         }
     }
+
+    # Add job_id to return
+    res <- c(res, job_id)
     invisible(res)
 
 }
@@ -172,7 +175,7 @@ task_q <- R6::R6Class(
                                                         private$tasks$worker[[i]]$call(private$tasks$fun[[i]],
                                                                                        private$tasks$args[[i]])
                                                     }
-                                                          
+
                                         })
 
                                          duplicates <- which(private$tasks$state == "duplicate")
@@ -190,7 +193,7 @@ task_q <- R6::R6Class(
                                                      private$tasks$id[i] <- id
                                                      private$tasks$state[i] <- "waiting"
                                                  }
-                                                 
+
                                              }
                                          }
 

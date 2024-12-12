@@ -81,8 +81,8 @@
 	    "nl" : "Filteren op maximale waarde"},
 	    {
 	      "tag" : "tool_maximum_value_1_expl",
-	      "en" : "Every measurement reported by the sensor can provide information about the air quality at its location. However, if the sensor is dirty or damaged, then the measurement may not be representative of the air quality. This will often result in high measurement, for example 300 μg/m³. For the analysis you want to estimate the air quality, without distortions due to such outliers. To that end you can use a filter to remove measurements above a maximum value. By default, this filter is set to 90% percentile of the sensor measurements. You can adjust this filter yourself, so you can retain high measurement if needed. Set the maximum value to 1000 μg/m³, for instance, and look at the sensors one at a time.",
-	      "nl": "Elke meetwaarde die de sensor doorgeeft kan informatie geven over de luchtkwaliteit van die plek. Echter, wanneer de sensor vies of beschadigd is, is de meetwaarde niet representatief voor de luchtkwaliteit. Vaak zijn dat dan hoge waardes van bijvoorbeeld 300. Voor de analyse wil je graag de luchtkwaliteit bekijken, zonder dat deze verstoord wordt door deze hoge waardes. Daarvoor kun je een filter zetten die de meetwaardes boven de maximale waarde niet tonen. Standaard staat de maximale waarde op het 90% percentiel van de sensormetingen. Je kunt ook zelf het filter instellen, zo kun je ook de hoge waardes van een sensor bekijken. Zet de maximale dan bijvoorbeeld op 1000 en bekijk de sensoren één voor één."
+	      "en" : "Every measurement reported by the sensor can provide information about the air quality at its location. However, if the sensor is dirty or damaged, then the measurement may not be representative of the air quality. This will often result in high measurement, for example 300 μg/m³. For the analysis you want to estimate the air quality, without distortions due to such outliers. To that end you can use a filter to remove measurements above a maximum value. By default, this filter is set to 100 μg/m³. You can adjust this filter yourself, so you can retain high measurement if needed. Set the maximum value to 1000 μg/m³, for instance, and look at the sensors one at a time.",
+	      "nl": "Elke meetwaarde die de sensor doorgeeft kan informatie geven over de luchtkwaliteit van die plek. Echter, wanneer de sensor vies of beschadigd is, is de meetwaarde niet representatief voor de luchtkwaliteit. Vaak zijn dat dan hoge waardes van bijvoorbeeld 300. Voor de analyse wil je graag de luchtkwaliteit bekijken, zonder dat deze verstoord wordt door deze hoge waardes. Daarvoor kun je een filter zetten, de waarde lager dan deze waarde worden niet meegenomen voor de rest van de analyse. Standaard staat de maximale waarde 100 μg/m³. Je kunt ook zelf het filter instellen, zo kun je ook de hoge waardes van een sensor bekijken. Zet de maximale dan bijvoorbeeld op 1000 μg/m³ en bekijk de sensoren één voor één."
 	    },
       {"tag" : "tool_intro_data_expl",
 	      "en": " The sensor data is sourced from the Measure Together database. The displayed values provide an indication of the particulate matter concentration at a specific location. The data is not suitable for comparing against European threshold values. Each sensor can be compared to a measurement station of the Air Quality Monitoring Network (Luchtmeetnet). The wind data used to calculate the wind rose comes from a weather station of the Royal Netherlands Meteorological Institute (KNMI). The locations of the utilized Luchtmeetnet and weather stations are shown on the map with icons. In the 'Select Data' tab, you can load data from sensors of a project or municipality, measurement stations of the Luchtmeetnet, and measurement stations of the KNMI. These data are retrieved through APIs from the respective parties. The retrieval and fetching of data may take some time. The data is stored in the tool, so subsequent downloads are faster after the initial download. The data is readily available for subsequent uses and other users.",
@@ -153,8 +153,8 @@
 		  "nl": "In deze tool kun je de metingen van de luchtkwaliteitssensoren onderzoeken. Zo is het mogelijk verschillende sensoren te vergelijken met een referentiestation, de sensoren te groeperen en gemiddeldes per dag/week te maken."
 		},
     {"tag" : "tool_welcome_2_expl",
-    "en" : "We already made a selection for you to explore the tool right away. In the calender you can see how many sensors were available during this period. On the map you see which sensors are ready for use. Click on 'Explore' to start your analysis.",
-    "nl" : "We hebben al een selectie voor je klaargezet om daarmee de tool meteen te ontdekken. In de kalender zie je hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart zie je met welke sensoren je aan de slag kunt gaan. Klik op 'Ontdekken' om te beginnen."
+    "en" : "We already made a selection for you to explore the tool right away. In the calender below you can see how many sensors were available during this period. On the map you see which sensors are ready for use. Click on 'Explore' to start your analysis.",
+    "nl" : "We hebben al een selectie voor je klaargezet om daarmee de tool meteen te ontdekken. Hieronder zie je In de kalender hoeveel sensoren er gedurende deze periode beschikbaar zijn. Op de kaart zie je met welke sensoren je aan de slag kunt gaan. Klik op 'Ontdekken' om te beginnen."
     },
     {"tag" : "tool_welcome_3_expl",
     "en" : "Do want to choose the measurements, the municipality, or the project yourself? Go yo 'Choose' en return here to explore your data selection. ",
@@ -190,14 +190,9 @@
 	      "nl": "4. Geef aan in welke component je wilt bekijken. "
 	  },
 	 {"tag" : "tool_select_6_expl",
-	      "en": "5. Click on the data button. The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background.",
-	      "nl": "5. Klik op de 'Data ophalen van externe bron'-button. De gegevens worden dan op de achtergrond opgehaald van Samen Meten, het Luchtmeetnet en het KNMI. "
+	      "en": "5. Click on the 'Check availability' button. We will look up whether the data is immediately available.",
+	      "nl": "5. Klik op de 'Check beschikbaarheid'-button. Er wordt opgezocht of de data direct beschikbaar is. "
 	  },
-	  {"tag" : "tool_select_7_expl",
-	      "en": "6. Load the retrieved data in this tool and continue on to Start.",
-	      "nl": "6. Laad de opgehaalde data in deze tool en ga verder naar Start."
-	  },
-
       {"tag" : "sel_knmi",
 	    	"en": "Show KNMI stations",
 	      "nl": "Toon KNMI-stations"
@@ -223,16 +218,36 @@
         "nl": "Selecteer visualisatie:"
       },
       {"tag" : "sel_cutoff",
-        "en": "Select maximum value to use in the analysis:",
-        "nl": "Selecteer de maximale waarde (ug/m3) voor de analyse:"
+        "en": "Use for the analysis only values lower than:",
+        "nl": "Gebruik voor de analyse alleen de meetwaardes lager dan:"
       },
       {"tag" : "btn_figures",
         "en": "Figures",
         "nl": "Plaatjes"
       },
+      {"tag" : "btn_select_all",
+        "en": "Select all",
+        "nl": "Alles selecteren"
+      },
+      {"tag" : "btn_deselect_all",
+        "en": "Reset all selected",
+        "nl": "Alles deselecteren"
+      },
       {"tag" : "btn_own_data",
         "en": "Other data",
         "nl": "Andere data"
+      },
+      {"tag" : "btn_get_data",
+        "en": "Check availability",
+        "nl": "Check beschikbaarheid"
+      },
+      {"tag" : "btn_external_data",
+        "en": "Load more data",
+        "nl": "Meer data ophalen"
+      },
+      {"tag" : "btn_use_data",
+        "en": "Use directly available data",
+        "nl": "Direct beschikbare data gebruiken"
       },
 	    {"tag" : "title_time",
         "en": "Time series",
@@ -262,10 +277,6 @@
         "en": "This tool was build for citizens. The code is open-source.",
         "nl": "Deze tool is ontwikkeld voor burgers. De code is open-source."
       },
-      {"tag" : "btn_get_data",
-        "en": "Check data availability",
-        "nl": "Check de beschikbaarheid"
-      },
     {"tag" : "btn_start_get_data",
         "en": "Start",
         "nl": "Start"
@@ -281,6 +292,14 @@
       {"tag" : "btn_rename_group",
         "en": "Rename group",
         "nl": "Hernoem groep"
+      },
+      {"tag" : "word_present",
+        "en": "Present",
+        "nl": "Aanwezig"
+      },
+      {"tag" : "word_absent",
+        "en": "Absent",
+        "nl": "Afwezig"
       },
       {"tag" : "word_table",
         "en": "Table for",
@@ -318,14 +337,25 @@
         "en": "Step 3: View",
         "nl": "Stap 3: Kijken"
       },
-
     {"tag" : "word_tableplot",
         "en": "Table",
         "nl": "Tabel"
       },
+    {"tag" : "infotext_missing_days_1",
+        "en": "There are still ",
+        "nl": "Er missen nog "
+      },
+    {"tag" : "infotext_missing_days_2",
+        "en": " days missing in the chosen time period.",
+        "nl": " dagen in de gekozen tijdsperiode."
+      },
+      {"tag" : "expl_explore",
+        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI. The reference stations are shown in the colour black and the names start with 'NL'.",
+        "nl": "In dit gedeelte kun je de metingen van de sensoren gaan ontdekken. In onderstaande stappen kun je zelf kiezen welke sensoren je wilt bekijken. Ook kun je de metingen van de sensoren combineren met de metingen van een referentiestation of met de windgegevens van het KNMI. De referentiestations zijn in de grafieken aangegeven in het zwart en hebben een naam beginnende met 'NL'."
+      },
     {"tag" : "infotext_overview",
-        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. For every hour there one measurements per sensor. The black line shows the average measurement. In the following steps you can choose which sensor you want to view. You can also combine the measurements of the sensors with measurements of the reference stations or with wind data of the KNMI.",
-        "nl": "Op deze pagina zie je de metingen van alle sensoren in de gekozen gemeente of project. Voor elk uur is er één meting per sensor. De zwarte lijn is de gemiddelde waarde. In de volgende stappen kun je zelf kiezen welke sensoren je wilt bekijken. Ook kun je de metingen van de sensoren combineren met de metingen van een referentiestation of met de windgegevens van het KNMI."
+        "en": "On this page you can see the measurements of all sensors in the chosen municipality or project. For every hour there one measurements per sensor. The black line shows the average measurement.",
+        "nl": "Op deze pagina zie je de metingen van alle sensoren van de gemeente of het project. Voor elk uur is er één meting per sensor. De zwarte lijn is de gemiddelde waarde."
       },
           {"tag" : "infotext_overview_expl",
         "en": "In this figure you can see the measurements of the sensors in grey and the average of the measurements in black. To create this figure, all measurements above the maximum value have been ignored. More information about the maximum value can be found at 'Step 2'. Additionally, you can see background colors in the figure. These colors give an indication which concentrations are high.",
@@ -334,10 +364,6 @@
       {"tag": "infotext_step1_select",
         "en":"Here you can choose which sensors you want to view. We advise to group multiple sensors, because a group average gives a more reliable measurement. For example, group all sensors in a neighborhood.",
         "nl": "Hier kun je zelf kiezen welke sensoren je wilt bekijken. We raden je aan om meerdere sensoren te groeperen, zo vergroot je de betrouwbaarheid van de meting. Groepeer bijvoorbeeld alle sensoren in één wijk."
-      },
-    {"tag": "infotext_step1_select_expl",
-        "en":"You can group sensors in two ways: by selecting sensors using the 'Draw a rectangle' square on the map, or by clicking on individual sensors. To make a new group, use the 'Make a new group' button. The name of the group can be changed using the 'Rename group' button. Do you want to remove a selection? Click on the thrashcan 'Delete layers', or on the individual sensors. Hit save to apply your selections.",
-        "nl": "Het maken van een groep kan op twee manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle' of door het klikken op individuele sensoren. Om een nieuwe groep te maken, kies de knop 'Maak nieuwe groep'; de naam van de groep kun je wijzigen via de knop 'Hernoem groep'. Wil je de selectie verwijderen, dan klik je op de prullenbak 'Delete layers' of op de individuele sensoren. Druk op save om de wijziging door te voeren."
       },
       {"tag" : "expl_meta_table",
         "en": "In the table below, you can see the data availability of the sensors and stations. ",
@@ -455,6 +481,14 @@
         "en": "No weather data available.",
         "nl": "Geen weerdata beschikbaar."
       },
+      {"tag" : "expl_no_sensor_data",
+        "en": "No sensor data available.",
+        "nl": "Geen sensordata beschikbaar."
+      },
+      {"tag" : "expl_no_station_selected",
+        "en": "There are no stations selected. Please, select stations in step 1",
+        "nl": "Er zijn nog geen stations geselecteerd. Selecteer stations in stap 1."
+      },
       {"tag" : "expl_download_to_pc",
         "en" : "Download data to pc",
         "nl" : "Download data naar pc"
@@ -479,26 +513,56 @@
       "en": "Read more about the data.",
       "nl": "Lees hier meer over de data."
       },
-      	  {
-	    "tag" : "expl_waiting_start",
+      {"tag" : "expl_waiting_starttool",
+	    "en" : "Please wait a moment, data is being loaded to the tool... ",
+	    "nl" : "Even geduld, gegevens worden geladen..."
+	  },
+      {"tag" : "expl_waiting_start",
 	    "en" : "Please wait a moment, the data is being loaded to the tool. In a moment you will be forwarded back to start.",
 	    "nl" : "Even geduld, de gegevens worden geladen, je gaat zo vanzelf weer naar Start."
 	  },
-            {"tag" : "word_patient",
+	  {"tag" : "expl_waiting_check_cache",
+	    "en" : "Please wait a moment, the availability is being searched.",
+	    "nl" : "Even geduld, de beschikbaarheid wordt opgezocht."
+	  },
+      {"tag" : "expl_waiting_number",
+        "en" : "See Dutch",
+        "nl" : "De data wordt bij elkaar gezocht van Samen Meten, het Luchtmeetnet en het KNMI. Het nummer in de wachtrij is: "      },
+      {"tag" : "expl_waiting_success",
+        "en" : "See Dutch",
+        "nl" : "Data is voor je opgehaald, ga naar kiezen om de data in de tool te laden."      },
+      {"tag" : "word_ready",
+        "en": "Ready!",
+        "nl": "Klaar!"
+      },
+      {"tag" : "word_patient",
         "en": "Be patient, please!",
         "nl": "Even geduld"
       },
-            {"tag" : "infotext_patient",
-        "en": "The data is gathered from the different sources. This can take 30 minutes. You can close the tool now. Please continue later or start with exploring the example data.",
-        "nl": "De data wordt opgehaald van de verschillende bronhouders. Dit kan 30 minuten duren. Je kunt de tool afsluiten. Als je de tool eerst al wilt uitproberen, herstart de tool en ontdek deze met de al ingeladen data."
+            {"tag" : "expl_patient",
+        "en": "The data will then be fetched from Measure Together, the Air Quality Monitoring Network, and the KNMI in the background. This can take 30 minutes. Please make another selection or wait and try again.",
+        "nl": "De data wordt opgehaald van de verschillende bronhouders. Dit kan 30 minuten duren. Maak een andere selectie of wacht en probeer het later nog eens."
       },
-        {"tag" : "word_helaas",
-        "en": "Unfortunately...",
-        "nl": "Helaas..."
+        {"tag" : "word_caution",
+        "en": "Caution!",
+        "nl": "Let op!"
       },
-            {"tag" : "infotext_nodatayet",
-        "en": "There is not (yet) data available for the choosen selection. Please make another selection or press the button: 'Get the data from external source'. ",
-        "nl": "Voor de gekozen selectie zijn (nog) geen metingen beschikbaar. Maak een andere selectie of klik eerst op de knop 'Data ophalen van externe bron'."
+      {"tag" : "expl_nodatayet",
+        "en": "There is not (yet) data available for the choosen selection. Please make another selection or load first the data.",
+        "nl": "Voor de gekozen selectie zijn (nog) geen metingen beschikbaar. Maak een andere selectie of haal eerst de data op."
+      },
+      {
+        "tag": "expl_check_expected",
+        "en" : "Please, check if this is the data expected.",
+        "nl" : "Bepaal of dit de verwachte data is."
+      },
+    {"tag" : "word_select_map",
+        "en": "Select on map",
+        "nl": "Selecteer op kaart"
+      },
+      {"tag" : "expl_select_map",
+        "en":"You can group sensors in three ways: by selecting multiple sensors using the 'Draw a rectangle' square on the map, by clicking on individual sensors or by clicking the button 'Select all'",
+        "nl": "Het maken van een groep kan op drie manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle', door het klikken op individuele sensoren of door de knop 'Alles selecteren'. "
       }
     ]
 }

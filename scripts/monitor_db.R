@@ -47,18 +47,26 @@ pool <- dbPool(
 measurements_con <- tbl(pool, "measurements")
 stations_con <- tbl(pool, "location")
 cache_con <- tbl(pool, "cache")
+meta_con <- tbl(pool, "meta")
 
 repeat{
 
-    n_m <- nrow(measurements_con%>%collect())
+    n_m <- measurements_con |> 
+        count(parameter) |> 
+        filter(parameter %in% c("pm10", "pm25"))
     n_s <- nrow(stations_con%>%collect())
     n_c <- nrow(cache_con%>%collect())
+    n_dr <- meta_con |>
+        count(type)
+
     print(now())
-    cat("Measurements:\t", n_m, "\n")
+    cat("Measurements:\n")
+    print(as.data.frame(n_m))
+    cat("data_req:\n")
+    print(as.data.frame(n_dr))
     cat("Stations:\t", n_s, "\n")
     cat("Cache:\t\t", n_c, "\n")
     cat("\n\n")
-    Sys.sleep(5)
-
+    Sys.sleep(10)
 
 }

@@ -4,7 +4,7 @@
 # that the application uses, and the sourcing of custom functions.
 
 # Define the version of your application                                    ====
-application_version <- "2.0.5"
+application_version <- "3.0.0"
 
 install_github <- FALSE # we run into API rate limits
 
@@ -33,10 +33,6 @@ library("shinybusy")
 # For the translation
 library(shiny.i18n)
 
-# File with translations
-i18n <- Translator$new(translation_json_path = "./lang/translation.json")
-i18n$set_translation_language("nl") # here you select the default translation to display
-
 # Databases (essential)
 library(RSQLite)
 library(pool)
@@ -49,6 +45,7 @@ library(sp)              # For maps
 library(DT)              # For tables
 library(latex2exp)       # For titles in graphs
 library(openair)         # For openair-plots
+library(colorBlindness)  # For colours
 
 # Geo
 library(sf)
@@ -72,32 +69,34 @@ source("funs/download_fun.R")
 source("funs/data_to_tool_fun.R")
 source("funs/logging_fun.R")
 source("funs/ui_create_plots_funs.R")
+source("funs/ui_tab_info.R")
 source("funs/get_data_caching_funs.R")
 source("funs/set_state_station_data_stations.R")
-set_loglevel()
+source("funs/select_filter_functions.R")
+source("funs/get_locations_coordinates.R")
+
+set_loglevel(level = "TRACE")
+# set_loglevel(level = "INFO")
 
 # check if database must be renewed or created
 db_script <- here::here("scripts","container_data_prep.R")
 system2("Rscript", db_script, wait = TRUE)
 
 # launch queue manager
-
-lockfile <- file.path(get_database_dirname(), "lock")
-lfres <- lock(lockfile, timeout = 1000)
-
-if(!is.null(lfres)) {
-    log_info("Starting queue manager")
-    qm_script <- here::here("scripts","queue_manager.R")
-    system2("Rscript", qm_script, wait = FALSE)
-} else {
-    log_info("Queue manager not started")
-}
+log_info("Starting queue manager")
+qm_script <- here::here("scripts","queue_manager.R")
+system2("Rscript", qm_script, wait = FALSE)
 
 
 # Set language and date options                                             ====
 options(encoding = "UTF-8")                  # Standard UTF-8 encoding
 Sys.setlocale("LC_TIME", 'dutch')            # Dutch date format
 Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
+
+# File with translations
+default_lang <- "nl"
+i18n <- Translator$new(translation_json_path = "./lang/translation.json")
+i18n$set_translation_language(default_lang) # here you select the default translation to display
 
 # Set theme for plots                                                       ====
 theme_plots <- theme_bw(base_size = 18) +
@@ -123,12 +122,11 @@ pool <- dbPool(
 )
 pool::dbExecute(pool, "PRAGMA busy_timeout = 60000")
 
-
 ## Initiate some variables                                                  ====
 # Default start and end time for the date picker
-# default_time <- list(start_time = lubridate::today() - days(65),
-#                      end_time = lubridate::today())
-default_time <- list(start_time = lubridate::ymd("20230901"),
+default_time <- list(start_time = lubridate::today() - lubridate::days(30),
+                     end_time = lubridate::today())
+default_time_demo <- list(start_time = lubridate::ymd("20230901"),
                      end_time = lubridate::ymd("20231201"))
 
 # store lists with projects and municipalities
@@ -189,7 +187,7 @@ uc_min_pm25 <- 5.3
 
 # default parameter to cutoff the values
 # used to set outlier limit
-default_cutoff <- 9999
+default_cutoff <- 100
 
 # default parameter
 default_parameter <- "pm25_kal"
@@ -226,36 +224,12 @@ plot_choices <- data.frame('plot' = c("barplot", "timeplot", "timevariation_week
                                      "Pollution rose plot", "Table"))
 plot_choices = setNames(plot_choices$plot, plot_choices$label)
 
-
-# Get start data set
-stations_name <- get_stations_from_selection(default_munproj_name,
-                                             default_munproj,
-                                             conn = pool)
-
-measurements_all <- get_measurements_cleaned(measurements_con,
-                                             stations_name,
-                                             start_time = default_time$start_time,
-                                             end_time = default_time$end_time)
-
-data_stations_list <- get_stations_cleaned(stations_con,
-                                      stations_name,
-                                      measurements_all,
-                                      col_default,
-                                      line_default,
-                                      group_name_none,
-                                      line_overload)
-
-
 ### APP SPECIFIC SETTINGS                                                   ====
 
 # Source module for the communication
-source("modules/communication_module.R")
 source("modules/info_popup.R")
+source("modules/info_select_map_button.R")
 
-# Source module for the date range selection
-source("modules/select_date_range.R")
-# Source module for the component selection
-source("modules/select_component.R")
 # source moduel to choose the plot visualisation
 source("modules/select_plot.R")
 source("modules/show_plot.R")
@@ -273,11 +247,14 @@ source("modules/choose_mun_or_proj.R")
 source("modules/select_outlier_cutoff.R")
 source("modules/select_slider_zoom.R")
 source("modules/select_group_name_switch.R")
+source("modules/select_all_stations.R")
+source("modules/select_deselect_all_stations.R")
 
 # Source modules for metadata
 source("modules/add_metadata_param_tables.R")
 source("modules/add_single_text_message.R")
 source("modules/add_info_sensor_plot.R")
+source("modules/add_waiting_info.R")
 
 # Source modules visualisation
 source("modules/add_bar_plot.R")
@@ -297,7 +274,6 @@ source("funs/ui_tab_grouping.R")
 # Source buttons
 source("modules/set_groupname_button.R")
 source("modules/set_rename_group_button.R")
-source("modules/download_api_button.R")
 source("modules/get_data_button.R")
 source("modules/download_to_pc.R")
 
