@@ -4,7 +4,7 @@
 # that the application uses, and the sourcing of custom functions.
 
 # Define the version of your application                                    ====
-application_version <- "2.2.0"
+application_version <- "3.0.0"
 
 install_github <- FALSE # we run into API rate limits
 
