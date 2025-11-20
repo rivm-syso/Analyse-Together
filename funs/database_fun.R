@@ -303,29 +303,72 @@ download_data_samenmeten <- function(x, station, conn ) {
     return(d)
 }
 
-
-download_data_knmi <- function(x, station, conn) {
-
-  ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
-  te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
-
+download_data_knmi_edr <- function(x, station, conn, token){
+  # Set the start and end date in formar
+  ts_api <- strftime(as_datetime(x[1]), format="%Y-%m-%d")
+  te_api <- strftime(as_datetime(x[2]), format="%Y-%m-%d")
+  
+  # Extract the single number of the station name
   station_nr <- gsub(".*_", "", station)
-
-  log_debug("downloading data for station {station_nr} for time range {ts_api} -  {te_api}")
-
-  knmi_all <- samanapir::GetKNMIAPI(station_nr, ts_api, te_api)
-
-  knmi_measurements <- knmi_all$data %>% as.data.frame() %>% select(-c('YYYYMMDD', 'HH')) %>%
-    rename("station" = "STNS", "wd" = "DD", "ws" = "FF", "temp" = "TEMP", "rh" = "U", "timestamp" = "tijd")
-
-  knmi_measurements$station <- paste0("KNMI_", knmi_measurements$station)
-
-  knmi_measurements <- knmi_measurements %>% pivot_longer(cols = c("wd", "ws", "temp", "rh"), names_to = "parameter", values_to = "value") %>%
-    drop_na() %>% mutate(aggregation = 3600)
-
-  return(knmi_measurements)
-
+  
+  # log_debug("downloading data for station {station_nr} for time range {ts_api} -  {te_api}")
+  e <- simpleError("test error")
+  # Get the data from the EDR API
+  knmi_all <- tryCatch(samanapir::GetKNMIAPIEDR(location_id = station_nr,
+                                       date_start = ts_api, 
+                                       date_end = te_api,
+                                       parameter = "wind",
+                                       data_result = "hourly",
+                                       token = token),
+                       error = stop() # Hoe werkt dit, wat willen we doorgeven, 
+                       # in ieder geval moet de functie stoppen wanneer er een 
+                       # error in de GetKNMIAPIEDR terugkomt.
+                       # Hoe gaat dat dan verder waar de functie gebruikt wordt...
+                       
+                       
+  )
+  
+  # TODO hier wat inbouwen voor de error afvanging.
+  
+  # Format the data with the column names for further use
+  knmi_all <- knmi_all |> dplyr::mutate(station = id_nr, 
+                                        value = values,
+                                        timestamp = date_time,
+                                        parameter = ifelse(parameter_name == "dd", "wd",  
+                                                           ifelse(parameter_name == "ffs", "ws", 
+                                                                  parameter_name)),
+                                        aggregation = 3600
+  ) |> 
+    dplyr::select(c(station, timestamp, parameter, value, aggregation))
+  
+  # Return data
+  return(knmi_all)
+  
 }
+
+# Old one, not used anymore after november 2025
+# download_data_knmi <- function(x, station, conn) {
+# 
+#   ts_api <- strftime(as_datetime(x[1]), format="%Y%m%d")
+#   te_api <- strftime(as_datetime(x[2]), format="%Y%m%d")
+# 
+#   station_nr <- gsub(".*_", "", station)
+# 
+#   log_debug("downloading data for station {station_nr} for time range {ts_api} -  {te_api}")
+# 
+#   knmi_all <- samanapir::GetKNMIAPI(station_nr, ts_api, te_api)
+# 
+#   knmi_measurements <- knmi_all$data %>% as.data.frame() %>% select(-c('YYYYMMDD', 'HH')) %>%
+#     rename("station" = "STNS", "wd" = "DD", "ws" = "FF", "temp" = "TEMP", "rh" = "U", "timestamp" = "tijd")
+# 
+#   knmi_measurements$station <- paste0("KNMI_", knmi_measurements$station)
+# 
+#   knmi_measurements <- knmi_measurements %>% pivot_longer(cols = c("wd", "ws", "temp", "rh"), names_to = "parameter", values_to = "value") %>%
+#     drop_na() %>% mutate(aggregation = 3600)
+# 
+#   return(knmi_measurements)
+# 
+# }
 
 
 download_locations_knmi <- function(knmi_stations, time_start, time_end) {

@@ -54,7 +54,11 @@ library(sf)
 library(logger)
 #log_threshold(loglevel)
 
+# API connectie
+library(httr2)
+
 # AT libraries
+devtools::install_github("https://github.com/rivm-syso/samanapir", ref="issue9")
 library(samanapir)
 library(ATdatabase)
 
@@ -75,8 +79,8 @@ source("funs/set_state_station_data_stations.R")
 source("funs/select_filter_functions.R")
 source("funs/get_locations_coordinates.R")
 
-set_loglevel(level = "TRACE")
-# set_loglevel(level = "INFO")
+# set_loglevel(level = "TRACE")
+set_loglevel(level = "DEBUG")
 
 # check if database must be renewed or created
 db_script <- here::here("scripts","container_data_prep.R")
@@ -97,6 +101,9 @@ Sys.setlocale('LC_CTYPE', 'en_US.UTF-8')     # Dutch CTYPE format
 default_lang <- "nl"
 i18n <- Translator$new(translation_json_path = "./lang/translation.json")
 i18n$set_translation_language(default_lang) # here you select the default translation to display
+
+#Token for knmi edr API -> MOVE TO SECRET!!!
+token <- ""
 
 # Set theme for plots                                                       ====
 theme_plots <- theme_bw(base_size = 18) +

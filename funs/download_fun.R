@@ -55,7 +55,8 @@ dl_station <- function(id, time_start, time_end) {
         mutate(knmi_id = str_replace(knmicode, "knmi_06", "KNMI_")) %>%
         pull(knmi_id)
     d <- ATdatabase::download_data(knmistation, Tstart = time_start, Tend = time_end,
-                       fun = "download_data_knmi",
+                                   token = token,
+                       fun = "download_data_knmi_edr",
                        conn = conn)
     log_trace("dl_station: got {nrow(d)} of KNMI measurements {id}")
     log_trace("dl_station: checking location for KNMI station {id}")
