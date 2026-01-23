@@ -100,7 +100,7 @@ timevar_weekly_server <- function(id,
                           )) +
         #expand_limits(y=0) +
         theme_plots +
-        theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),
+        theme(legend.text = element_text(size = (16-log(n_stat_in_plot)*2)),
               axis.text.x = element_text(color = "black", size = 16, angle = 0,
                                          hjust = 0.5, vjust = 0),
               legend.position="top")  +

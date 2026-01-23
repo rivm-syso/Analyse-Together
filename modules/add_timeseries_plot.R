@@ -36,6 +36,7 @@ timeseries_server <- function(id,
 
          # Create time plot with ggplot
          output$timeseries_plot <- renderPlot({
+          
          # Get the data to plot
          data_plot <- data_measurements()
 
@@ -63,8 +64,8 @@ timeseries_server <- function(id,
          # Calculate stats for the axis
          if(!is.list(zoom_in)){ # Check if the functionality of the zoom is used
            max_time <- max(data_timeseries$date)
-           min_time <- min(data_timeseries$date)}
-         else{ # Use the min/max of the zoom input
+           min_time <- min(data_timeseries$date)
+         }else{ # Use the min/max of the zoom input
            max_time <- zoom_in$end_slider_zoom()
            min_time <- zoom_in$start_slider_zoom()
            # Extra check, somehow the reactive wil be available a moment later
@@ -148,7 +149,7 @@ timeseries_server <- function(id,
                                    " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
                                    )) +
                theme_plots +
-           theme(legend.text=element_text(size = paste0(16-log(n_stat_in_plot)*2)),
+           theme(legend.text=element_text(size = (16-log(n_stat_in_plot)*2) ),
                  legend.position="top",
                  legend.title=element_blank())
 
