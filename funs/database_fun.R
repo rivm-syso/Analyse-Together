@@ -70,7 +70,7 @@ api_get_project_info <- function(project, conn) {
     #   conn: db connection object
 
     log_debug(paste0("getting project info for ", project))
-    projectinfo <- samanapir::GetSamenMetenAPIinfoProject(project)
+    projectinfo <- samanapir::GetSamenMetenAPIinfoProject2(project)
     add_doc("project", project, projectinfo,
             conn = conn, overwrite = TRUE)
     return(projectinfo)
@@ -90,7 +90,7 @@ api_get_municipality_info <- function(municipality, conn) {
           as.character()
 
     log_debug(paste0("getting municipality info for ", municipality))
-    muni_info <- samanapir::GetSamenMetenAPIinfoMuni(gemid)
+    muni_info <- samanapir::GetSamenMetenAPIinfoMuni2(gemid)
     add_doc("municipality", municipality, muni_info,
             conn = conn, overwrite = TRUE)
     return(muni_info)
@@ -280,7 +280,7 @@ download_data_samenmeten <- function(x, station, conn ) {
             pull(kit_id_ext)
         log_trace("getting stream {i} {m}")
 
-        res <- try(obs <- GetSamenMetenAPIobs(as.character(i),
+        res <- try(obs <- samanapir::GetSamenMetenAPIobs2(as.character(i),
                                    station, ts_api, te_api))
         if(!class(res) == "try-error") {
             if(nrow(res) > 9 ) {
@@ -303,8 +303,10 @@ download_data_samenmeten <- function(x, station, conn ) {
     return(d)
 }
 
-download_data_knmi_edr <- function(x, station, conn, token){
-  # Set the start and end date in formar
+download_data_knmi_edr <- function(x, station, conn){
+  browser()
+  token <- Sys.getenv("token_knmi")
+  # Set the start and end date in format
   ts_api <- strftime(as_datetime(x[1]), format="%Y-%m-%d")
   te_api <- strftime(as_datetime(x[2]), format="%Y-%m-%d")
   
@@ -314,21 +316,20 @@ download_data_knmi_edr <- function(x, station, conn, token){
   # log_debug("downloading data for station {station_nr} for time range {ts_api} -  {te_api}")
   e <- simpleError("test error")
   # Get the data from the EDR API
-  knmi_all <- tryCatch(samanapir::GetKNMIAPIEDR(location_id = station_nr,
+  log_info("start download knmi {station}...", station_nr)
+  knmi_all <- try(samanapir::GetKNMIAPIEDR(location_id = station_nr,
                                        date_start = ts_api, 
                                        date_end = te_api,
                                        parameter = "wind",
                                        data_result = "hourly",
-                                       token = token),
-                       error = stop() # Hoe werkt dit, wat willen we doorgeven, 
-                       # in ieder geval moet de functie stoppen wanneer er een 
-                       # error in de GetKNMIAPIEDR terugkomt.
-                       # Hoe gaat dat dan verder waar de functie gebruikt wordt...
-                       
-                       
-  )
-  
-  # TODO hier wat inbouwen voor de error afvanging.
+                                       token = token))
+
+  # If error, retun NULL, then it wont be stored in the dbs 
+  if(TRUE %in% (class(knmi_all) == "try-error")){
+    log_warn("Error from edr api {station}...", station)
+    
+    return(NULL)
+  }
   
   # Format the data with the column names for further use
   knmi_all <- knmi_all |> dplyr::mutate(station = id_nr, 
@@ -398,7 +399,7 @@ download_data_lml <- function(x, station, conn) {
 
   log_debug("downloading data for station {station} for time range {ts_api} -  {te_api}")
 
-  lml_data <- samanapir::GetLMLstatdataAPI(station, ts_api, te_api)
+  lml_data <- samanapir::GetLMLstatdataAPI2(station, ts_api, te_api)
 
   if (length(lml_data) == 0){
     # Return empty dataframe if station returns no data
@@ -418,7 +419,7 @@ download_data_lml <- function(x, station, conn) {
 
 download_locations_lml <- function(stations) {
 
-  lml_locations <- samanapir::GetLMLstatinfoAPI(stations)
+  lml_locations <- samanapir::GetLMLstatinfoAPI2(stations)
 
   lml_locations <- lml_locations %>%
     select(c("station_number", "lat", "lon")) %>%
