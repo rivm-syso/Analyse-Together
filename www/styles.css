@@ -5,6 +5,15 @@
   --donkergeel_tint_2: #fff4dc;
 }
 
+/* Accessibility fix: shinyalert default colors do not meet the 4.5:1 contrast ratio */
+.sweet-alert p {
+	color: #000000 !important;
+}
+
+.sweet-alert button.confirm {
+	color: #000000 !important;
+}
+
 @font-face {
     font-family: RO Sans;
     font-weight: 400;
