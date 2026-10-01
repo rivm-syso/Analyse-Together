@@ -86,6 +86,13 @@ body {
 	font-size: 16px;
 }
 
+/* Bootstrap's default #777777 link color has insufficient contrast on the yellow navbar background */
+.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+	color: #01689b;
+}
+
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:focus,
 .navbar-default .navbar-nav > .active > a:hover {
