@@ -185,6 +185,14 @@
 	      "en": "3. Define the time period.",
 	      "nl": "3. Kies de tijdsperiode waarin je geinteresseerd bent. "
 	  },
+	  {"tag" : "sel_date_start",
+	      "en": "Start date",
+	      "nl": "Startdatum"
+	  },
+	  {"tag" : "sel_date_end",
+	      "en": "End date",
+	      "nl": "Einddatum"
+	  },
 	  {"tag" : "sel_comp",
 	      "en": "4. Choose in which component you are interested.",
 	      "nl": "4. Geef aan in welke component je wilt bekijken. "
