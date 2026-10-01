@@ -135,4 +135,31 @@ a:visited {
 .leaflet-top, .leaflet-bottom {
     z-index: unset !important;
   }
-  
+
+/* Controls are moved first in the DOM for tab order; since .leaflet-top/.leaflet-bottom
+   no longer have their own z-index above, give the container a stacking context so it
+   still paints above the map panes instead of relying on (now reversed) DOM order.
+   Position must stay absolute+stretched (Leaflet's default) so .leaflet-bottom still
+   anchors to the real bottom edge instead of collapsing to the top. */
+.leaflet-control-container {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+}
+
+/* Visible focus outline for keyboard-navigable map markers */
+.leaflet-marker-icon.a11y-marker:focus,
+path.a11y-marker:focus {
+	outline: 3px solid #000 !important;
+	outline-offset: 2px;
+}
+
+/* Visible focus outline for the zoom, draw-toolbar and other map controls */
+.a11y-control:focus {
+	outline: 3px solid #000 !important;
+	outline-offset: 2px;
+}
+
