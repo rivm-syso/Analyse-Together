@@ -18,8 +18,9 @@ shinyUI(
                tags$style(HTML("h1 {margin-bottom: -15px;")),
 
                tags$h1("Samen Analyseren"),
-               tags$h4(paste("Version", application_version),
-                       style = "margin-bottom: -10px"),
+               tags$p(class = "version-label",
+                      paste("Version", application_version),
+                      style = "margin-bottom: -10px"),
                tags$p("")
       )
     ), # end of tags$head
