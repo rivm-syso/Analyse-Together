@@ -9,6 +9,9 @@ shinyUI(
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
 
+      # Accessibility fix: prevent non-interactive tab-pane containers from receiving tab focus
+      tags$script(src = "tab_accessibility.js"),
+
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
 
