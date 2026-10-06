@@ -9,6 +9,9 @@ shinyUI(
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
 
+      # Keep <html lang> in sync with the i18n language selector (accessibility)
+      tags$script(src = "lang_attribute.js"),
+
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
 
