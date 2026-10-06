@@ -62,6 +62,14 @@ body {
     color: black;
 }
 
+/* Looks like an h4 but is not a real heading, so it doesn't break the page's heading structure */
+.version-label {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.1;
+    margin-top: 10px;
+}
+
 /* Styling of the well panels */
 .well {
 	border-width: 0px;
