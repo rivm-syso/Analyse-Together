@@ -113,17 +113,58 @@ body {
 }
 
 
-/* Styling links */
+/* Styling links: underline so links don't rely on color alone (accessibility) */
 a:link {
 	color: #01689b;
+	text-decoration: underline;
 }
 
 a:hover {
 	color: #01689b;
+	text-decoration: underline;
 }
 
 a:visited {
 	color: #01689b;
+	text-decoration: underline;
+}
+
+/* RIVM icons font, used for the external link icon */
+@font-face {
+	font-family: 'icons';
+	src: url('fonts/icons.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+
+/* Visually hidden but announced by screen readers */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* External link icon, shown in addition to the color/underline so the link type isn't color-only */
+span.ext {
+	background: none;
+	padding-left: 3px;
+}
+
+span.ext:before {
+	content: '\e98e';
+	color: inherit;
+	display: inline-block;
+	font-family: icons;
+	line-height: 1;
+	position: relative;
+	top: 3px;
 }
 
 /* Leaflet styling */

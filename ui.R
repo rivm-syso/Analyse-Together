@@ -191,9 +191,8 @@ shinyUI(
                    wellPanel(
                      div(h3(i18n$t("tool_select")),
                          p(i18n$t("tool_select_1_expl"),
-                         a("samenmeten.rivm.nl",
-                           href ='https://samenmeten.rivm.nl/dataportaal/',
-                           target = 'blank')),
+                         ext_link("samenmeten.rivm.nl",
+                           href = 'https://samenmeten.rivm.nl/dataportaal/')),
                          project_or_mun_selection_output("proj_or_mun_select"),
                          choice_selection_output("choice_select"),
                          date_range_output("select_date_range"),
