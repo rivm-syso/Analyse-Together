@@ -32,21 +32,27 @@ outlier_cutoff_server <- function(id,
 
     output$outlier_cutoff <- renderUI({
       # Create the component picker with a list of possible choices
-      tagList(
-
-        numericInput(
-          ns("outlier_cutoff"),
-          label  = i18n$t("sel_cutoff"),
-          value  = default_cutoff,
-          width = "500px",
-          min = 0.1
-        )
+      # input id differs from the uiOutput id to avoid duplicate DOM ids
+      cutoff_input <- numericInput(
+        ns("outlier_cutoff_input"),
+        label  = i18n$t("sel_cutoff"),
+        value  = default_cutoff,
+        width = "500px",
+        min = 0.1
       )
+
+      # add autocomplete attribute to the actual <input> for accessibility
+      cutoff_input <- htmltools::tagQuery(cutoff_input)$
+        find("input")$
+        addAttrs(autocomplete = "off")$
+        allTags()
+
+      tagList(cutoff_input)
     })
 
-    observeEvent(input$outlier_cutoff,{
+    observeEvent(input$outlier_cutoff_input,{
 
-      data_other$cutoff <- input$outlier_cutoff
+      data_other$cutoff <- input$outlier_cutoff_input
 
     })
   })
