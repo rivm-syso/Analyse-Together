@@ -12,6 +12,9 @@ shinyUI(
       # Accessibility fix: prevent non-interactive tab-pane containers from receiving tab focus
       tags$script(src = "tab_accessibility.js"),
 
+      # Keep <html lang> in sync with the i18n language selector (accessibility)
+      tags$script(src = "lang_attribute.js"),
+
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
 
