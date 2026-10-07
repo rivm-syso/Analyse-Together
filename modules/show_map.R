@@ -63,15 +63,8 @@ show_map_server <- function(id,
 
       leaflet() %>%
         setView(5.384214, 52.153708 , zoom = 7) %>%
-        # addTiles() %>%
-        addProviderTiles(
-                         'Esri.WorldGrayCanvas' # option 1
-                         #'Esri.WorldTopoMap'   # option 2
-
-       ) %>%
-        addProviderTiles(
-          'CartoDB.PositronOnlyLabels' # option 1
-        ) %>%
+        # standard OpenStreetMap tiles - covers the whole world, no API key required
+        addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
         addDrawToolbar(
           targetGroup = 'Selected',
           polylineOptions = FALSE,
