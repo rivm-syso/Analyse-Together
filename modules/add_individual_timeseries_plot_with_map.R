@@ -54,8 +54,12 @@ individual_timeseries_map_server <- function(id,
       ns("map")
 
       leaflet() %>%
-        # standard OpenStreetMap tiles - covers the whole world, no API key required
-        addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
+        # PDOK standaard achtergrondkaart (Dutch labels), forced to grayscale for land/water contrast
+        addTiles(
+          urlTemplate = "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
+          attribution = "Kadaster",
+          options = tileOptions(className = "grayscale-tiles")
+        ) %>%
         addDrawToolbar(
           targetGroup = 'Selected',
           polylineOptions = FALSE,

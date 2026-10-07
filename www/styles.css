@@ -136,3 +136,8 @@ a:visited {
     z-index: unset !important;
   }
   
+
+/* Force the PDOK "standaard" basemap tiles to grayscale, preserving light/dark contrast between land and water */
+.leaflet-tile-pane .grayscale-tiles {
+	filter: grayscale(100%) contrast(1.1);
+}
