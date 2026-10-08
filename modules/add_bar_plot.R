@@ -71,7 +71,24 @@ barplot_server <- function(id,
             theme_plots
         )
 
-    })
+    }, alt = reactive({
+          data_plot <- data_measurements()
+          parameter_label <- overview_component %>%
+            dplyr::filter(component == parameter()) %>%
+            dplyr::pull(label)
+          group_names_vec <- unique(data_plot$label)
+          group_names <- if (length(group_names_vec) > 1) {
+            paste0(paste(group_names_vec[-length(group_names_vec)], collapse = ', '),
+                   ', ', i18n$t("word_and"), ' ', group_names_vec[length(group_names_vec)])
+          } else {
+            group_names_vec
+          }
+          paste0(i18n$t("plot_alt_barplot_prefix"), ' ', parameter_label,
+                 ' ', i18n$t("plot_alt_per_station_period"), ' ',
+                 min(data_plot$date) %>% format("%d/%b/%Y"),
+                 ' - ', max(data_plot$date) %>% format("%d/%b/%Y"),
+                 ', ', i18n$t("plot_alt_for_groups"), ': ', group_names)
+        }))
 
   })
 

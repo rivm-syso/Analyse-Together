@@ -563,6 +563,78 @@
       {"tag" : "expl_select_map",
         "en":"You can group sensors in three ways: by selecting multiple sensors using the 'Draw a rectangle' square on the map, by clicking on individual sensors or by clicking the button 'Select all'",
         "nl": "Het maken van een groep kan op drie manieren: door het selecteren van een groep sensoren via het vierkantje op de kaart 'Draw a rectangle', door het klikken op individuele sensoren of door de knop 'Alles selecteren'. "
+      },
+      {"tag" : "plot_alt_timeseries_prefix",
+        "en": "Time series of",
+        "nl": "Tijdreeks van"
+      },
+      {"tag" : "plot_alt_for_period",
+        "en": "for the period",
+        "nl": "voor de periode"
+      },
+      {"tag" : "plot_alt_for_groups",
+        "en": "for groups/stations",
+        "nl": "voor groepen/stations"
+      },
+      {"tag" : "plot_alt_barplot_prefix",
+        "en": "Bar chart with the average concentration of",
+        "nl": "Staafdiagram met de gemiddelde concentratie van"
+      },
+      {"tag" : "plot_alt_per_station_period",
+        "en": "per station, period",
+        "nl": "per station, periode"
+      },
+      {"tag" : "plot_alt_dailypattern_prefix",
+        "en": "Daily pattern of",
+        "nl": "Dagpatroon van"
+      },
+      {"tag" : "plot_alt_per_hour_period",
+        "en": "per hour of the day, period",
+        "nl": "per uur van de dag, periode"
+      },
+      {"tag" : "plot_alt_weeklypattern_prefix",
+        "en": "Weekly pattern of",
+        "nl": "Weekpatroon van"
+      },
+      {"tag" : "plot_alt_per_day_hour_period",
+        "en": "per day and hour, period",
+        "nl": "per dag en uur, periode"
+      },
+      {"tag" : "plot_alt_calendar_prefix",
+        "en": "Calendar with the daily concentration of",
+        "nl": "Kalender met de dagelijkse concentratie van"
+      },
+      {"tag" : "plot_alt_per_day_period",
+        "en": "per day, period",
+        "nl": "per dag, periode"
+      },
+      {"tag" : "plot_alt_pollrose_prefix",
+        "en": "Pollution rose with the distribution of",
+        "nl": "Pollution rose met de verdeling van"
+      },
+      {"tag" : "plot_alt_wd_ws_period",
+        "en": "per wind direction and wind speed, period",
+        "nl": "per windrichting en windsnelheid, periode"
+      },
+      {"tag" : "plot_alt_sensor_calendar_prefix",
+        "en": "Calendar with the number of available sensors per day, from",
+        "nl": "Kalender met het aantal beschikbare sensoren per dag, van"
+      },
+      {"tag" : "plot_alt_sensor_calendar_until",
+        "en": "until",
+        "nl": "tot"
+      },
+      {"tag" : "plot_alt_sensor_calendar_between",
+        "en": "with between",
+        "nl": "met tussen de"
+      },
+      {"tag" : "plot_alt_sensor_calendar_suffix",
+        "en": "sensors per day",
+        "nl": "sensoren per dag"
+      },
+      {"tag" : "word_and",
+        "en": "and",
+        "nl": "en"
       }
     ]
 }

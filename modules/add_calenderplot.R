@@ -73,7 +73,6 @@ calender_server <- function(id,
       # Make a plot ====
       try(openair::calendarPlot(data_calender, pollutant = "value",
                                 annotate = "ws",
-                       type = 'label',
                        local.tz = "Europe/Amsterdam",
                        cols = "Oranges",
                        breaks = c(0,5,10,15,20,30,50,100, 300),
@@ -88,7 +87,16 @@ calender_server <- function(id,
                                   '20 to 30', '30 to 50', '50 to 100',
                                   '100 or more')))
 
-    })
+    }, alt = reactive({
+      data_plot <- data_measurements()
+      parameter_label <- overview_component %>%
+        dplyr::filter(component == parameter()) %>%
+        dplyr::pull(label)
+      paste0(i18n$t("plot_alt_calendar_prefix"), ' ', parameter_label,
+             ' ', i18n$t("plot_alt_per_day_period"), ' ',
+             min(data_plot$date) %>% format("%d/%b/%Y"),
+             ' - ', max(data_plot$date) %>% format("%d/%b/%Y"))
+    }))
 
   })
 
