@@ -76,7 +76,122 @@ individual_timeseries_map_server <- function(id,
         addEasyButton(easyButton(
           icon="fa-globe", title="Back to default view",
           onClick=JS("function(btn, map){ map.setView([52.153708, 5.384214], 7)}"))) %>%
-        addScaleBar(position = "bottomleft")
+        addScaleBar(position = "bottomleft") %>%
+        # Make the markers and controls reachable and operable with the keyboard (tab to
+        # the first point, space to move to the next, enter to select it; tab to the
+        # zoom/draw-toolbar/easyButton controls, which are moved first for tab order)
+        htmlwidgets::onRender(r"(
+          function(el, x) {
+            var map = this;
+
+            // Only one marker sits in the tab order at a time (roving tabindex):
+            // tab reaches the first point, space moves to the next, enter (de)selects it.
+            // Selecting a point redraws all markers from scratch, so focus is tracked
+            // by station id (not DOM node) and restored after the redraw.
+            var markerList = []; // {icon, id}
+            var focusedId = null;
+
+            function updateRovingTabindex() {
+              var activeIdx = markerList.findIndex(function(m) { return m.id === focusedId; });
+              if (activeIdx === -1) activeIdx = 0;
+              markerList.forEach(function(m, i) {
+                m.icon.setAttribute('tabindex', i === activeIdx ? '0' : '-1');
+              });
+            }
+
+            function makeMarkerAccessible(layer) {
+              if (!(layer instanceof L.Marker) && !(layer instanceof L.CircleMarker)) return;
+
+              var icon = layer._icon || layer._path;
+              if (!icon || icon.dataset.a11yBound) return;
+
+              var id = layer.options && layer.options.layerId;
+              icon.setAttribute('role', 'button');
+              if (id) {
+                icon.setAttribute('aria-label', String(id));
+              }
+              icon.classList.add('a11y-marker');
+              icon.dataset.a11yBound = 'true';
+
+              // Leaflet nulls layer._icon/_path before firing 'layerremove', so keep
+              // our own reference to find this icon again when the layer is removed
+              layer._a11yIcon = icon;
+              markerList.push({icon: icon, id: id});
+              updateRovingTabindex();
+
+              // Restore focus to the same point after it got recreated by a redraw
+              if (id && id === focusedId && document.activeElement !== icon) {
+                icon.focus();
+              }
+
+              icon.addEventListener('focus', function() { focusedId = id; });
+
+              icon.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  layer.fire('click', {latlng: layer.getLatLng()});
+                } else if (e.key === ' ' || e.key === 'Spacebar') {
+                  e.preventDefault();
+                  var idx = markerList.findIndex(function(m) { return m.icon === icon; });
+                  if (idx === -1) return;
+                  var next = markerList[(idx + 1) % markerList.length];
+                  focusedId = next.id;
+                  updateRovingTabindex();
+                  next.icon.focus();
+                }
+              });
+            }
+
+            function removeMarkerFromList(layer) {
+              var icon = layer._a11yIcon;
+              if (!icon) return;
+              delete layer._a11yIcon;
+              var idx = markerList.findIndex(function(m) { return m.icon === icon; });
+              if (idx !== -1) {
+                markerList.splice(idx, 1);
+                updateRovingTabindex();
+              }
+            }
+
+            // Leaflet's zoom, draw-toolbar and other controls have a title but
+            // their visible '+'/'-' text otherwise overrides it as accessible name
+            function makeControlAccessible(ctrl) {
+              if (ctrl.dataset.a11yBound) return;
+              ctrl.classList.add('a11y-control');
+              ctrl.dataset.a11yBound = 'true';
+              var title = ctrl.getAttribute('title');
+              if (title && !ctrl.getAttribute('aria-label')) {
+                ctrl.setAttribute('aria-label', title);
+              }
+              if (!ctrl.hasAttribute('tabindex')) {
+                ctrl.setAttribute('tabindex', '0');
+              }
+              if (!ctrl.getAttribute('role')) {
+                ctrl.setAttribute('role', 'button');
+              }
+              ctrl.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                  e.preventDefault();
+                  ctrl.click();
+                }
+              });
+            }
+
+            function makeControlsAccessible() {
+              el.querySelectorAll('.leaflet-control a, .leaflet-control button').forEach(makeControlAccessible);
+            }
+
+            map.eachLayer(makeMarkerAccessible);
+            map.on('layeradd', function(e) { makeMarkerAccessible(e.layer); });
+            map.on('layerremove', function(e) { removeMarkerFromList(e.layer); });
+
+            makeControlsAccessible();
+            // Draw-toolbar sub-buttons are only inserted into the DOM once the
+            // toolbar is expanded, so keep watching for newly added controls
+            new MutationObserver(makeControlsAccessible)
+              .observe(el.querySelector('.leaflet-control-container'), {childList: true, subtree: true});
+          }
+        )")
     })
 
 
