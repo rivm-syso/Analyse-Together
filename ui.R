@@ -27,7 +27,27 @@ shinyUI(
       )
     ), # end of tags$head
 
-
+    # Hidden live region present from page load, so screen readers announce
+    # showNotification messages (mirrored into it via JS below)
+    header = tagList(
+      tags$div(id = "sr-announcer", role = "status", `aria-live` = "polite",
+               style = "position:absolute; width:1px; height:1px; overflow:hidden;
+                        clip:rect(0,0,0,0); white-space:nowrap;"),
+      tags$script(HTML(
+        "function syncAnnouncer() {
+          var panel = document.getElementById('shiny-notification-panel');
+          var announcer = document.getElementById('sr-announcer');
+          if (!announcer) return;
+          var text = panel ? panel.textContent.trim() : '';
+          if (announcer.textContent === text) return;
+          observer.disconnect();
+          announcer.textContent = text;
+          observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+        }
+        var observer = new MutationObserver(syncAnnouncer);
+        observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });"
+      ))
+    ),
 
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
