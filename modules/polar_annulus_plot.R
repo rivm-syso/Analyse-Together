@@ -66,7 +66,15 @@ polarann_server <- function(id, data_measurements_stations) {
           verbatimTextOutput("Selecteer een sensor.")
       }
         
-    })
+    }, alt = reactive({
+      parameter_sel <- data_measurements()$parameter
+      if (length(parameter_sel) > 0) {
+        parameter_label <- str_replace(toupper(parameter_sel[1]), '_', ' - ')
+        paste0('Polar annulus plot van ', parameter_label, ' per uur van de dag')
+      } else {
+        "Geen sensor geselecteerd"
+      }
+    }))
     
   })
   
