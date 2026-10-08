@@ -9,6 +9,9 @@ shinyUI(
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
 
+      # Fix keyboard focus order for tabs (accessibility)
+      tags$script(src = "tab-accessibility.js"),
+
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
 
