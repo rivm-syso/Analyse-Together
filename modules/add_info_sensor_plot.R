@@ -24,7 +24,8 @@ info_sensor_output <- function(id) {
 ######################################################################
 
 info_sensor_server <- function(id,
-                            data_measurements) {
+                            data_measurements,
+                            data_other = NULL) {
 
   moduleServer(id, function(input, output, session) {
 
@@ -72,7 +73,6 @@ info_sensor_server <- function(id,
 
       # Make a plot ====
       try(openair::calendarPlot(data_calender, pollutant = "count_stations",
-                       type = 'label',
                        local.tz = "Europe/Amsterdam",
                        cols = c("#fff4dc","#ffe9b7","#ffb612","#c58800"),
                        breaks = breaks_values,
@@ -84,7 +84,22 @@ info_sensor_server <- function(id,
                        )
                        )
 
-    })
+    }, alt = reactive({
+      if (!is.null(data_other)) data_other$lang # re-run alt text when the language is switched
+      data_plot <- data_measurements()
+      data_calender <- data_plot %>%
+        dplyr::filter(grepl("pm", parameter) & !grepl("NL", station)) %>%
+        dplyr::select(c(station, date)) %>%
+        unique() %>%
+        dplyr::group_by(date) %>%
+        dplyr::summarise(count_stations = n()) %>%
+        dplyr::ungroup()
+      paste0(i18n$t("plot_alt_sensor_calendar_prefix"), ' ',
+             min(data_calender$date) %>% format("%d/%b/%Y"),
+             ' ', i18n$t("plot_alt_sensor_calendar_until"), ' ', max(data_calender$date) %>% format("%d/%b/%Y"),
+             ', ', i18n$t("plot_alt_sensor_calendar_between"), ' ', min(data_calender$count_stations),
+             ' ', i18n$t("word_and"), ' ', max(data_calender$count_stations), ' ', i18n$t("plot_alt_sensor_calendar_suffix"))
+    }))
 
   })
 

@@ -31,6 +31,10 @@ plot_selection_server <- function(id,
 
 
     output$plot_select <- renderUI({
+      # Keep the current selection on re-render (e.g. language switch),
+      # fall back to the default on first render
+      selected_plot <- if (!is.null(input$plot_select)) input$plot_select else default_plot
+
       # Create the plot picker with a list of possible choices
       tagList(
 
@@ -38,7 +42,7 @@ plot_selection_server <- function(id,
           ns("plot_select"),
           label    = i18n$t("sel_plot"),
           choices  = plot_choices,
-          selected = default_plot,
+          selected = selected_plot,
           multiple = FALSE,
           options = pickerOptions(maxOptions = 1),
           width = "200px"
