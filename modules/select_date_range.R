@@ -47,7 +47,27 @@ date_range_server <- function(id,
                      separator = " - ",
                      startview = "year",
                      language = data_other$lang
-                   )
+                   ),
+
+                   # Hidden text appended to the start/end inputs' accessible
+                   # name, so screen readers announce which field is which
+                   # (both share the same visible label otherwise).
+                   tags$span(id = ns("date_range_start_label"), class = "sr-only", i18n$t("sel_date_start")),
+                   tags$span(id = ns("date_range_end_label"), class = "sr-only", i18n$t("sel_date_end")),
+                   tags$script(HTML(sprintf(
+                     "(function() {
+                        var inputs = document.querySelectorAll('#%s .input-daterange input');
+                        if (inputs.length === 2) {
+                          [['%s'], ['%s']].forEach(function(ids, i) {
+                            var current = inputs[i].getAttribute('aria-labelledby') || '';
+                            inputs[i].setAttribute('aria-labelledby', (current + ' ' + ids[0]).trim());
+                          });
+                        }
+                      })();",
+                     ns("date_range"),
+                     ns("date_range_start_label"),
+                     ns("date_range_end_label")
+                   )))
 
               )})
 

@@ -264,7 +264,8 @@ shinyServer(function(global, input, output, session) {
   # Info about the sensor plot on start page ----
   info_sensor <- info_sensor_server("info_sensor",
                                     data_measurements =
-                                      reactive(data_measurements$data_all))
+                                      reactive(data_measurements$data_all),
+                                    data_other = data_other)
 
    # The map on the show page ----
   show_map_no_select_server("map_no_select_step3",
