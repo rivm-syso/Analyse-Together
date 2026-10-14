@@ -7,6 +7,10 @@
 	      "en": "Information about the tool",
 	      "nl": "Informatie over de tool"
 	  },
+	  {"tag" : "txt_external_link",
+	      "en": "(external link)",
+	      "nl": "(externe link)"
+	  },
 	  {"tag" : "title_start",
 	      "en": "Start",
 	      "nl": "Start"
