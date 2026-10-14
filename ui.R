@@ -9,6 +9,12 @@ shinyUI(
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
 
+      # Accessibility fix: prevent non-interactive tab-pane containers from receiving tab focus
+      tags$script(src = "tab_accessibility.js"),
+
+      # Keep <html lang> in sync with the i18n language selector (accessibility)
+      tags$script(src = "lang_attribute.js"),
+
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
 
@@ -18,13 +24,34 @@ shinyUI(
                tags$style(HTML("h1 {margin-bottom: -15px;")),
 
                tags$h1("Samen Analyseren"),
-               tags$h4(paste("Version", application_version),
-                       style = "margin-bottom: -10px"),
+               tags$p(class = "version-label",
+                      paste("Version", application_version),
+                      style = "margin-bottom: -10px"),
                tags$p("")
       )
     ), # end of tags$head
 
-
+    # Hidden live region present from page load, so screen readers announce
+    # showNotification messages (mirrored into it via JS below)
+    header = tagList(
+      tags$div(id = "sr-announcer", role = "status", `aria-live` = "polite",
+               style = "position:absolute; width:1px; height:1px; overflow:hidden;
+                        clip:rect(0,0,0,0); white-space:nowrap;"),
+      tags$script(HTML(
+        "function syncAnnouncer() {
+          var panel = document.getElementById('shiny-notification-panel');
+          var announcer = document.getElementById('sr-announcer');
+          if (!announcer) return;
+          var text = panel ? panel.textContent.trim() : '';
+          if (announcer.textContent === text) return;
+          observer.disconnect();
+          announcer.textContent = text;
+          observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+        }
+        var observer = new MutationObserver(syncAnnouncer);
+        observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });"
+      ))
+    ),
 
     id          = "navbar",
     windowTitle = "Samen Analyseren Tool",
@@ -188,9 +215,8 @@ shinyUI(
                    wellPanel(
                      div(h3(i18n$t("tool_select")),
                          p(i18n$t("tool_select_1_expl"),
-                         a("samenmeten.rivm.nl",
-                           href ='https://samenmeten.rivm.nl/dataportaal/',
-                           target = 'blank')),
+                         ext_link("samenmeten.rivm.nl",
+                           href = 'https://samenmeten.rivm.nl/dataportaal/')),
                          project_or_mun_selection_output("proj_or_mun_select"),
                          choice_selection_output("choice_select"),
                          date_range_output("select_date_range"),
