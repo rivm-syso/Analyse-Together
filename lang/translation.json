@@ -7,6 +7,10 @@
 	      "en": "Information about the tool",
 	      "nl": "Informatie over de tool"
 	  },
+	  {"tag" : "txt_external_link",
+	      "en": "(external link)",
+	      "nl": "(externe link)"
+	  },
 	  {"tag" : "title_start",
 	      "en": "Start",
 	      "nl": "Start"
@@ -184,6 +188,14 @@
     {"tag" : "sel_date",
 	      "en": "3. Define the time period.",
 	      "nl": "3. Kies de tijdsperiode waarin je geinteresseerd bent. "
+	  },
+	  {"tag" : "sel_date_start",
+	      "en": "Start date",
+	      "nl": "Startdatum"
+	  },
+	  {"tag" : "sel_date_end",
+	      "en": "End date",
+	      "nl": "Einddatum"
 	  },
 	  {"tag" : "sel_comp",
 	      "en": "4. Choose in which component you are interested.",

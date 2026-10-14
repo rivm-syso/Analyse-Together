@@ -9,6 +9,9 @@ shinyUI(
       # Read in the styles.css file
       tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
 
+      # Keep <html lang> in sync with the i18n language selector (accessibility)
+      tags$script(src = "lang_attribute.js"),
+
       # Background set to a neutral grey
       setBackgroundColor(color = "#f3f3f3"),
 
@@ -18,8 +21,9 @@ shinyUI(
                tags$style(HTML("h1 {margin-bottom: -15px;")),
 
                tags$h1("Samen Analyseren"),
-               tags$h4(paste("Version", application_version),
-                       style = "margin-bottom: -10px"),
+               tags$p(class = "version-label",
+                      paste("Version", application_version),
+                      style = "margin-bottom: -10px"),
                tags$p("")
       )
     ), # end of tags$head
@@ -187,9 +191,8 @@ shinyUI(
                    wellPanel(
                      div(h3(i18n$t("tool_select")),
                          p(i18n$t("tool_select_1_expl"),
-                         a("samenmeten.rivm.nl",
-                           href ='https://samenmeten.rivm.nl/dataportaal/',
-                           target = 'blank')),
+                         ext_link("samenmeten.rivm.nl",
+                           href = 'https://samenmeten.rivm.nl/dataportaal/')),
                          project_or_mun_selection_output("proj_or_mun_select"),
                          choice_selection_output("choice_select"),
                          date_range_output("select_date_range"),
