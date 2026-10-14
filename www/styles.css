@@ -200,6 +200,12 @@ span.ext:before {
 .leaflet-top, .leaflet-bottom {
     z-index: unset !important;
   }
+  
+
+/* Force the PDOK "standaard" basemap tiles to grayscale, preserving light/dark contrast between land and water */
+.leaflet-tile-pane .grayscale-tiles {
+	filter: grayscale(100%) contrast(1.1);
+}
 
 /* Controls are moved first in the DOM for tab order; since .leaflet-top/.leaflet-bottom
    no longer have their own z-index above, give the container a stacking context so it

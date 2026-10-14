@@ -54,14 +54,11 @@ individual_timeseries_map_server <- function(id,
       ns("map")
 
       leaflet() %>%
-        # addTiles() %>%
-        addProviderTiles(
-          'Esri.WorldGrayCanvas' # option 1
-          #'Esri.WorldTopoMap'   # option 2
-
-        ) %>%
-        addProviderTiles(
-          'CartoDB.PositronOnlyLabels' # option 1
+        # PDOK standaard achtergrondkaart (Dutch labels), forced to grayscale for land/water contrast
+        addTiles(
+          urlTemplate = "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
+          attribution = "Kadaster",
+          options = tileOptions(className = "grayscale-tiles")
         ) %>%
         addDrawToolbar(
           targetGroup = 'Selected',
