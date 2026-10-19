@@ -26,6 +26,7 @@ log_threshold(TRACE)
 
 remotes::install_github('rivm-syso/samanapir', ref = 'main')
 library(samanapir)
+remotes::install_github('rivm-syso/ATdatabase', ref = 'main')
 library(ATdatabase)
 
 # set working directory to root of repo
