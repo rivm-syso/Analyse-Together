@@ -35,15 +35,15 @@ source(here::here("scripts","test_functions.R"))
 
 # setup logging
 pid <- Sys.getpid()
-logfile <- file.path(get_database_dirname(),paste0("queue.log"))
+logfile <- file.path(ATfun::get_database_dirname(),paste0("queue.log"))
 log_appender(appender_file(logfile))
 log_info("schedule started")
-set_loglevel(level = TRACE)
+ATfun::set_loglevel(level = TRACE)
 
 
 
 # Connect to database
-fname_db <- get_database_path()
+fname_db <- ATfun::get_database_path()
 pool <- dbPool(
                drv = SQLite(synchronous = "off"),
                dbname = fname_db

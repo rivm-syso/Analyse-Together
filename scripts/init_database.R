@@ -14,7 +14,7 @@ library(logger)
 source(here::here("funs","database_fun.R"))
 
 
-db.path <- get_database_path()
+db.path <- ATfun::get_database_path()
 
 if(file.exists(db.path)) {
     unlink(db.path)

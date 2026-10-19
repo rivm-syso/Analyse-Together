@@ -43,14 +43,14 @@ source(here::here("scripts","test_functions.R"))
 pid <- Sys.getpid()
 hostname <- Sys.info()[["nodename"]]
 logprefix <- paste("[queue_man]", hostname, pid, ":")
-logfile <- file.path(get_database_dirname(),paste0("queue.log"))
+logfile <- file.path(ATfun::get_database_dirname(),paste0("queue.log"))
 log_appender(appender_file(logfile))
 log_info(glue("{logprefix} started"))
-set_loglevel()
+ATfun::set_loglevel()
     
 # Connect with the database using pool, store data, read table              ====
 
-fname_db <- get_database_path()
+fname_db <- ATfun::get_database_path()
 pool <- dbPool(
                drv = SQLite(synchronous = "off"),
                dbname = fname_db
@@ -70,7 +70,7 @@ add_doc(type = "schedule", ref = "daily",
 # Set time to run scheduled tasks
 sched_time_cfg <-  "02:00"
 
-lockfile <- file.path(get_database_dirname(), "lock")
+lockfile <- file.path(ATfun::get_database_dirname(), "lock")
 ndr_counter <- 0 # no data request counter, if 12 print msg in log
 
 while(TRUE) {
@@ -83,7 +83,7 @@ while(TRUE) {
     } 
     
 
-    joblist <- list_doc(type = "data_req", conn = pool)
+    joblist <- ATfun::list_doc(type = "data_req", conn = pool)
     ndr_counter <- ndr_counter + 1
     sched_time <- lubridate::hm(sched_time_cfg) + today()
     tz(sched_time) <- "Europe/Amsterdam"

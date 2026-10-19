@@ -19,7 +19,7 @@ setwd(here::here())
 source(here::here("funs","database_fun.R"))
 
 # Connect with the database using pool, store data, read table            ====
-fname_db <- get_database_path()
+fname_db <- ATfun::get_database_path()
 pool <- dbPool(
 
   drv = SQLite(),

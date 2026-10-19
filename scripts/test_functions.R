@@ -52,7 +52,7 @@ get_rnd_station <- function(dbtables) {
 
     time_start <- last_day
     time_end <- last_day + days(round(runif(1, min = 1, max = 5)))
-    time_range <- round_to_days(time_start, time_end)
+    time_range <- ATfun::round_to_days(time_start, time_end)
     time_range
     res <- list(station = s,
                 first_day = first_day,

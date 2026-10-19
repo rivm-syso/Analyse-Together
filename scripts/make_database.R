@@ -67,7 +67,7 @@ source(here::here("scripts","init_database.R"))
 
 # Connect with the database using pool, store data, read table              ====
     
-fname_db <- get_database_path()
+fname_db <- ATfun::get_database_path()
 pool <- dbPool(
 
                drv = SQLite(),
@@ -77,8 +77,8 @@ pool <- dbPool(
 
 # # Get all kits
 for (i in download_municipalities) {
-    download_sensor_meta(i, type = "municipality")
-    kits <- get_stations_from_selection(i, type = "municipality")
+    ATfun::download_sensor_meta(i, type = "municipality")
+    kits <- ATfun::get_stations_from_selection(i, type = "municipality")
 
     create_data_request(kits = kits,
                         time_start = time_start_default,
@@ -95,8 +95,8 @@ for (i in download_municipalities) {
 
 
 for (i in download_projects) {
-    download_sensor_meta(i, type = "project")
-    kits <- get_stations_from_selection(i, type = "project")
+    ATfun::download_sensor_meta(i, type = "project")
+    kits <- ATfun::get_stations_from_selection(i, type = "project")
 
     create_data_request(kits = kits,
                         time_start = time_start_default,

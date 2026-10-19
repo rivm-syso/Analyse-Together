@@ -12,17 +12,18 @@ dl_station <- function(id, time_start, time_end) {
     library(here)
     library(samanapir)
     library(ATdatabase)
+    library(ATfun)
 
     #load functions
     source(here("funs","database_fun.R"))
     source(here("funs","logging_fun.R"))
 
     pid <- Sys.getpid()
-    logfile <- file.path(get_database_dirname(),paste0("download.log"))
+    logfile <- file.path(ATfun::get_database_dirname(),paste0("download.log"))
     log_appender(appender_file(logfile))
-    set_loglevel()
+    ATfun::set_loglevel()
 
-    fname_db <- get_database_path()
+    fname_db <- ATfun::get_database_path()
     conn <- DBI::dbConnect(drv = SQLite(synchronous = "off"), dbname = fname_db)
 
     sqliteSetBusyHandler(conn, 120000) # time out in ms in case db is locked
@@ -31,7 +32,7 @@ dl_station <- function(id, time_start, time_end) {
 
     # Download data
     log_debug("dl_station: downloading measurements for station {id}")
-    date_range <- round_to_days(time_start, time_end)
+    date_range <- ATfun::round_to_days(time_start, time_end)
     d <- ATdatabase::download_data(id, Tstart = time_start, Tend = time_end,
                        fun = "download_data_samenmeten",
                        conn = conn)
@@ -49,17 +50,17 @@ dl_station <- function(id, time_start, time_end) {
 
     # Download meteo station data
     log_debug("dl_station downloading measurements for meteo station {id}")
-    date_range <- round_to_days(time_start, time_end)
+    date_range <- ATfun::round_to_days(time_start, time_end)
     knmistation <- kitmeta %>%
         select(knmicode)  %>%
         mutate(knmi_id = str_replace(knmicode, "knmi_06", "KNMI_")) %>%
         pull(knmi_id)
     d <- ATdatabase::download_data(knmistation, Tstart = time_start, Tend = time_end,
-                       fun = "download_data_knmi",
+                       fun = "ATfun::download_data_knmi",
                        conn = conn)
     log_trace("dl_station: got {nrow(d)} of KNMI measurements {id}")
     log_trace("dl_station: checking location for KNMI station {id}")
-    if(!station_exists(knmistation, conn = conn)) {
+    if(!ATfun::station_exists(knmistation, conn = conn)) {
         log_trace("dl_station: download and store location for KNMI station  {knmistation} {id}")
         loc <- download_locations_knmi(knmistation, time_start, time_end)
         ATdatabase::insert_location_info(station = loc[1, 1],
@@ -76,13 +77,13 @@ dl_station <- function(id, time_start, time_end) {
     for(j in unique(lmlstation)) {
         log_trace("dl_station: downloading for LML station  {j} {id}")
         d <- ATdatabase::download_data(j, Tstart = time_start, Tend = time_end,
-                           fun = "download_data_lml",
+                           fun = "ATfun::download_data_lml",
                            conn = conn)
 
     
         log_trace("dl_station: got {nrow(d)} of LML measurements {id}")
         log_trace("dl_station: checking location for LML station  {j} {id}")
-        if(!station_exists(j, conn = conn)) {
+        if(!ATfun::station_exists(j, conn = conn)) {
             log_trace("dl_station: download an store  location for LML station  {j} {id}")
             loc <- download_locations_lml(j)
             ATdatabase::insert_location_info(station = loc[1, 1],

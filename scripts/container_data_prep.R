@@ -24,6 +24,7 @@ setwd(here::here())
 library(logger)
 log_threshold(TRACE)
 
+library(ATfun)
 library(samanapir)
 library(ATdatabase)
 
@@ -52,7 +53,7 @@ city <- "Almere"
 
 create_db <- FALSE
 
-db.path <- get_database_path()
+db.path <- ATfun::get_database_path()
 
 if(!file.exists(db.path)) {
     cat("DATAPREP: no database found\n")
@@ -73,14 +74,14 @@ if(create_db) {
     source(here::here("scripts","init_database.R"))
     
     # Connect with the database using pool, store data, read table  
-    fname_db <- get_database_path()
+    fname_db <- ATfun::get_database_path()
     pool <- dbPool( drv = SQLite(), dbname = fname_db)
 
 
-    download_sensor_meta(city, type = "municipality")
-    kits <- get_stations_from_selection(city, type = "municipality")
+    ATfun::download_sensor_meta(name = city, type = "municipality")
+    kits <- ATfun::get_stations_from_selection(name = city, type = "municipality")
 
-    kitsample <- sample(kits, 10)
+    kitsample <- sample(kits, 2)
     for(i in kitsample) {
         log_trace(glue("downloading sample data for  kit {i}"))
         dl_station(i, as_datetime(time_start_default), 

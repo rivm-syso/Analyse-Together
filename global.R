@@ -6,7 +6,7 @@
 # Define the version of your application                                    ====
 application_version <- "3.0.0"
 
-install_github <- FALSE # we run into API rate limits
+install_github_bool <- FALSE # we run into API rate limits
 
 # Read in the necessary libraries                                           ====
 # Tidyverse (essential)
@@ -17,7 +17,6 @@ library(lubridate)
 
 # datawizard
 library(datawizard)
-
 
 # Shiny (essential)
 library(shiny)
@@ -55,6 +54,13 @@ library(logger)
 #log_threshold(loglevel)
 
 # AT libraries
+if(install_github_bool){
+  devtools::install_github("https://github.com/rivm-syso/samanapir", ref='develop')
+  devtools::install_github("https://github.com/rivm-syso/ATdatabase", ref="develop")
+  devtools::install_github("https://github.com/jspijker/ATfun", ref="develop")
+  }
+
+library(ATfun)
 library(samanapir)
 library(ATdatabase)
 
@@ -79,8 +85,8 @@ source("funs/set_state_station_data_stations.R")
 source("funs/select_filter_functions.R")
 source("funs/get_locations_coordinates.R")
 
-set_loglevel(level = "TRACE")
-# set_loglevel(level = "INFO")
+ATfun::set_loglevel(level = "TRACE")
+# ATfun::set_loglevel(level = "INFO")
 
 # check if database must be renewed or created
 db_script <- here::here("scripts","container_data_prep.R")
@@ -118,7 +124,7 @@ theme_plots <- theme_bw(base_size = 18) +
   )
 
 # Connect with the database using pool, store data, read table              ====
-db_path <- get_database_path()
+db_path <- ATfun::get_database_path()
 log_info("opening database {db_path}")
 pool <- dbPool(
                drv = SQLite(synchronous = "off"),

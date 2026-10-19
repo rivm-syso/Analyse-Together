@@ -52,8 +52,8 @@ run_scheduled <- function(type = "municipality", ref = "daily") {
         sched_time_end <- lubridate::today()
         sched_time_start <- sched_time_end - lubridate::days(sdays)
 
-        download_sensor_meta(sname, type)
-        kits <- get_stations_from_selection(sname, type)
+        ATfun::download_sensor_meta(sname, type)
+        kits <- ATfun::get_stations_from_selection(sname, type)
 
         create_data_request(kits = kits,
                             time_start = sched_time_start,

@@ -114,7 +114,7 @@ shinyServer(function(global, input, output, session) {
               {start_time}, {end_time}")
 
     # Get the station names in the selected Municipality/project
-    stations_name <- get_stations_from_selection(name_choice,
+    stations_name <- ATfun::get_stations_from_selection(name_choice,
                                                  type_choice,
                                                  conn = pool)
 

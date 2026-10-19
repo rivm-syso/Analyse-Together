@@ -97,7 +97,7 @@ get_data_cache_server <- function(id,
 
       # Load the data from the caching database
       # Get the station names in the selected Municipality/project
-      stations_name <- get_stations_from_selection(name_choice,
+      stations_name <- ATfun::get_stations_from_selection(name_choice,
                                                    type_choice,
                                                    conn = pool)
 
@@ -240,10 +240,10 @@ get_data_cache_server <- function(id,
                    confirmButtonCol = "#ffb612")
 
         # Download the metadata
-        download_sensor_meta(name, type = type)
+        ATfun::download_sensor_meta(name, type = type)
 
         # Get the overview of the sensors
-        kits <- get_stations_from_selection(name, type = type)
+        kits <- ATfun::get_stations_from_selection(name, type = type)
         log_trace("mod get button data actions: Overview kits opgehaald")
 
         data_reqs <- create_data_request(kits = kits,
