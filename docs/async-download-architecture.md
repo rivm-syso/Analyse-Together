@@ -309,27 +309,29 @@ queue state. `scripts/test_functions.R::simple_task_list()` and
 ## 5. What one worker actually does: `dl_station()`
 
 This is the part developers find hardest to follow, because one `dl_station()`
-call fans out through **three layers of functions** before any HTTP request is
+call fans out through **four layers of functions** before any HTTP request is
 made, and the data flows back down through those same layers into the database.
 This section walks the whole chain top to bottom.
 
-### 5.1 The three layers
+### 5.1 The four layers
 
 `dl_station()` itself contains almost no download logic. It is an **orchestrator**
 that decides *which* stations to fetch and delegates the actual work to the
-`ATdatabase` package, which in turn calls back into *download handler* functions
-that live in the AT app. Keep these three layers separate in your mind:
+`ATdatabase` package, which calls back into *download handler* functions in the AT
+app, which in turn call the `samanapir` package to do the real network I/O. Keep
+these four layers separate in your mind:
 
 | Layer | Where it lives | Responsibility |
 |-------|----------------|----------------|
 | **1. Orchestrator** | `funs/download_fun.R` → `dl_station()` | One sensor "kit". Opens the DB connection, reads the kit's metadata, and figures out the 3 related stations (the sensor itself, its KNMI weather station, its LML reference stations). Calls layer 2 once per station. |
 | **2. Caching engine** | `ATdatabase::download_data()` (pkg `rivm-syso/ATdatabase`) | Source-agnostic. For a given station + time range it (a) asks the DB which sub-ranges are **missing**, (b) calls the handler to fetch *only* those, (c) writes the results and records the newly-cached ranges. Never talks to an API itself. |
-| **3. Download handlers** | `funs/database_fun.R` → `download_data_samenmeten` / `download_data_knmi` / `download_data_lml` | Source-specific. Translate a time range into API calls (via the `samanapir` package), reshape the response into the canonical `measurements` column layout, and return a data frame. |
+| **3. Download handlers** | `funs/database_fun.R` → `download_data_samenmeten` / `download_data_knmi` / `download_data_lml` | Source-specific. Translate a time range into calls to `samanapir`, reshape the response into the canonical `measurements` column layout, and return a data frame. No networking of their own. |
+| **4. HTTP / API layer** | `samanapir` package (pkg `rivm-syso/samanapir`) → `GetSamenMetenAPIobs` / `GetKNMIAPI` / `GetLMLstatdataAPI` + `GetAPIDataframe` | The only code that touches the network. Builds URLs, performs the actual `httr::GET` / `wget` request, retries, and parses the raw response (JSON or text) into a data frame. Detailed in §5.6. |
 
 The crucial decoupling is between layer 2 and layer 3: `download_data()` is passed
 the handler **by name** (`fun = "download_data_samenmeten"`) and invokes it with
 `eval(fun)`. So the same caching/missing-range machinery is reused for all three
-data sources — only the handler changes.
+data sources — only the handler (and the `samanapir` function it wraps) changes.
 
 ### 5.2 Call tree
 
@@ -474,7 +476,85 @@ The location back-fill functions (`download_locations_knmi` via `GetKNMIAPI`'s
 `info` block, `download_locations_lml` via `GetLMLstatinfoAPI`) are separate,
 one-off lookups used only the first time a reference station is seen.
 
-### 5.6 Where the data ends up
+### 5.6 Inside `samanapir` — the HTTP layer (where the network actually happens)
+
+The handlers in §5.5 contain **no networking code of their own**. Every byte that
+crosses the network is fetched by the `rivm-syso/samanapir` package. This is the
+bottom of the call stack — the only place that opens sockets — and the three data
+sources use three *different* retrieval mechanisms, which is the main reason the
+code looks inconsistent:
+
+```mermaid
+flowchart TD
+    subgraph H["handlers (funs/database_fun.R)"]
+        H1["download_data_samenmeten"]
+        H2["download_data_knmi"]
+        H3["download_data_lml"]
+    end
+    subgraph S["samanapir package"]
+        SO["GetSamenMetenAPIobs()"]
+        SK["GetKNMIAPI()"]
+        SL["GetLMLstatdataAPI()"]
+        GAD["GetAPIDataframe(url)<br/><i>httr::GET + JSON + retry</i>"]
+    end
+    SM[("api-samenmeten.rivm.nl<br/>OGC SensorThings REST")]
+    KN[("daggegevens.knmi.nl<br/>text over wget POST")]
+    LM[("api.luchtmeetnet.nl<br/>open_api REST")]
+
+    H1 --> SO --> GAD --> SM
+    H2 --> SK -->|"system('wget …')"| KN
+    H3 --> SL --> GAD --> LM
+```
+
+**`GetAPIDataframe(url)` — the shared REST fetcher.** Both Samen Meten and
+Luchtmeetnet go through this one helper. It performs an `httr::GET`, and if the
+status code is not `200` it **retries up to 10 times** (server hiccups are
+common) before giving up and returning a string `"Error: <code>"`. On success it
+converts the body with `jsonlite::fromJSON` and returns the parsed object, or an
+`"Error: …"` string if the JSON payload is empty. Callers therefore check
+`is.character(result)` / `length(result)` to distinguish data from an error —
+there are no exceptions thrown at this level.
+
+**Samen Meten — `GetSamenMetenAPIobs(datastream_id, kit_id, from, to)`.** Uses the
+OGC **SensorThings API** at `https://api-samenmeten.rivm.nl/v1.0/`. It makes two
+calls per datastream: `Datastreams(<id>)/ObservedProperty` to learn the parameter
+name, then `Datastreams(<id>)/Observations?$filter=phenomenonTime gt … lt …` for
+the values. SensorThings **paginates**, so it loops on the `@iot.nextLink`
+(`content_obs[[1]]`) until the last page. Each call is additionally wrapped in a
+`tryCatch` with a 3 s back-off retry on top of `GetAPIDataframe`'s own retry.
+Returns a long-format frame: `kit_id, parameter, timestamp (UTC), value`.
+
+**KNMI — `GetKNMIAPI(stations, from, to)`.** The odd one out: it does **not** use
+`GetAPIDataframe`. Instead it shells out with `system("wget … --post-data=… https://www.daggegevens.knmi.nl/klimatologie/uurgegevens")`
+(`vars=DD:FF:T:U`) and parses the `#`-commented plain-text response by hand,
+splitting it into a header row, the data block, and a station-info block. It also
+applies **unit conversions** — temperature `0.1 °C → °C` and wind speed
+`0.1 m/s → m/s` (both `/10`) — and builds the `tijd` timestamp from `YYYYMMDD + H`.
+Returns a named list `list(info = station coords/names, data = measurements)`;
+`download_data_knmi` uses `$data`, while `download_locations_knmi` uses `$info`.
+
+**Luchtmeetnet / LML — `GetLMLstatdataAPI(station, from, to)`.** REST at
+`https://api.luchtmeetnet.nl/open_api/measurements`. This API only serves **one
+week per request**, so the function slices the requested period into weeks
+(`cut(…, "weeks")`), loops, and `rbind`s the parts, then filters back to the exact
+window. Weeks that error (e.g. a `502`) or return no data are silently skipped
+(`next`). Station coordinates come from a separate endpoint,
+`open_api/stations/<id>`, via `GetLMLstatinfoAPI()`.
+
+| Source | samanapir entry point | Endpoint / transport | Notable mechanics |
+|--------|----------------------|----------------------|-------------------|
+| Samen Meten (sensors) | `GetSamenMetenAPIobs` | `api-samenmeten.rivm.nl/v1.0` — SensorThings REST via `GetAPIDataframe` (`httr`) | 2 calls/stream (property + observations); `@iot.nextLink` pagination; 3 s back-off retry |
+| KNMI (weather) | `GetKNMIAPI` | `daggegevens.knmi.nl/…/uurgegevens` — **wget POST**, plain-text reply | manual text parsing; unit conversions (÷10); returns `info` + `data` |
+| Luchtmeetnet (LML reference) | `GetLMLstatdataAPI` / `GetLMLstatinfoAPI` | `api.luchtmeetnet.nl/open_api` REST via `GetAPIDataframe` (`httr`) | **weekly chunking**; skips empty/erroring weeks |
+
+**Resilience is layered.** Retries exist at several levels: `GetAPIDataframe`
+(10× on HTTP ≠ 200), the Samen Meten handler (3 s back-off `tryCatch`), the
+AT-side `download_data_samenmeten` (per-stream `try()` so one bad stream doesn't
+kill the kit), and finally the `task_q` worker isolation (a crashed session is
+captured as `{error: …}` and the station is simply retried on a later queue run).
+This is why a flaky upstream API degrades gracefully instead of corrupting a run.
+
+### 5.7 Where the data ends up
 
 A single `dl_station()` call therefore writes to **three tables**, all through
 the ATdatabase helpers, never with raw SQL from the AT app:
