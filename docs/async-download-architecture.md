@@ -75,6 +75,15 @@ system2("Rscript", qm_script, wait = FALSE)   # queue_manager.R        (backgrou
   also makes the Shiny application **more stable**, and moving queue management out
   of the (single-threaded) Shiny process **reduces CPU load** inside the app so the
   UI stays responsive.
+- **Why SQLite (not a client-server DB).** SQLite was chosen for **operational
+  simplicity and portability**. Analyse Together is open source and must run
+  **independently of RIVM's own IT infrastructure** — for example straight from
+  RStudio on a user's desktop — so depending on a separate database *service*
+  (PostgreSQL, etc.) was undesirable. A single file also lets the project ship and
+  share **pre-prepared databases**. SQLite specifically (over alternatives such as
+  DuckDB) was the option **best supported on the deployment infrastructure** when
+  the project started. The trade-off — SQLite's single-writer locking — is exactly
+  what the filelock and single-queue-manager design work around.
 - **File lock = single queue manager.** With several containers potentially
   running the same code against the same database, the `filelock` ensures that
   **only one container actually manages/drains the queue** at a time. The others
@@ -99,6 +108,12 @@ A job is created by `create_data_request()` (`funs/queue_fun.R`) and stored via
 - Each chunk is stored as a document with ref `id<random>_<seq>`, e.g.
   `id0123456789_0001`. The document body is a data frame of
   `station, time_start, time_end`.
+
+> **Why chunk, and why 100?** Chunking keeps each job to a bounded size so that
+> (a) a failure or stall affects only one ~100-station job and can be **retried at
+> that granularity** rather than restarting the whole request, and (b) a single
+> job's working set stays **within container memory limits**. The exact value 100
+> is a pragmatic round number rather than a precisely tuned figure.
 
 ```mermaid
 flowchart TB
@@ -151,11 +166,16 @@ Key points:
   (up to 100) stations, then loops. Multiple job docs are handled sequentially
   across iterations.
 - **A fresh `task_q` is created per job** and destroyed (`rm; gc()`) afterward —
-  the 4 worker sessions are not kept alive between jobs.
+  the 4 worker sessions are not kept alive between jobs. This is a deliberate
+  **robustness** choice: tearing the sessions down each job avoids gradual
+  **memory growth and leaked state** that can accumulate in long-lived `callr`
+  background sessions.
 - **`filelock`** (`data/lock`) guarantees only one downloader runs at a time even
   if several processes/containers point at the same DB. A process that cannot get
   the lock backs off 60–120 s. This is deliberate: the app is deployed as
-  **multiple containers**, and only one of them should manage/drain the queue.
+  **multiple containers**, and only one of them should manage/drain the queue. The
+  back-off interval is **randomized on purpose** — the jitter keeps multiple
+  containers from repeatedly colliding on the lock in lock-step.
 - **The `> 4` magic number** equals `concurrency` (4 idle worker rows always
   remain in the task table; see §4). So `nrow(tasks) > 4` means "real tasks still
   pending", and `njobs = nrow - 4`.
@@ -166,7 +186,15 @@ Key points:
   past the configured `02:00` and has not run today (`check_schedule`),
   `run_scheduled()` reads `prepped_data/schedule.csv` and enqueues fresh daily
   data requests for the listed municipalities/projects. See
-  `funs/scheduler_fun.R`.
+  `funs/scheduler_fun.R`. The purpose is to keep a **fixed set of
+  municipalities/projects continuously up to date** regardless of whether anyone
+  has browsed them that day, so that data is already present when it is needed.
+
+> **On the timing constants.** Apart from the randomized lock back-off (which is
+> intentional jitter, see above), the interval values — 30 s idle poll, 5 s drain
+> sleep, the ~12-empty-poll scheduler trigger and the watchdog thresholds — are
+> **reasonable defaults, not carefully tuned numbers**. Treat them as safe to
+> adjust if operational experience warrants.
 
 ---
 
