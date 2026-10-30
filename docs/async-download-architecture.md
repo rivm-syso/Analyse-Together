@@ -67,6 +67,25 @@ system2("Rscript", qm_script, wait = FALSE)   # queue_manager.R        (backgrou
 > inside the `queue_manager.R` process. Do not be misled by the app-side
 > references.
 
+### 1.1 Design rationale (why it is built this way)
+
+- **Separate OS process + database as the queue.** The application is deployed as
+  **multiple containers**, so a shared database (rather than in-process state) was
+  preferred as the coordination point. Running the downloader as its own process
+  also makes the Shiny application **more stable**, and moving queue management out
+  of the (single-threaded) Shiny process **reduces CPU load** inside the app so the
+  UI stays responsive.
+- **File lock = single queue manager.** With several containers potentially
+  running the same code against the same database, the `filelock` ensures that
+  **only one container actually manages/drains the queue** at a time. The others
+  back off until the lock is free.
+- **Concurrency of 4.** Chosen for a balance of **limited container size** and
+  **API politeness**. Experience showed 4 to be a good mix of download speed while
+  keeping both the container and the upstream APIs performing well.
+- **Duplicate-station deferral.** Added specifically to fix a **data-corruption
+  bug** that occurred when the same station was downloaded concurrently (see
+  §4.5a).
+
 ---
 
 ## 2. The unit of work: a "data request" job document
@@ -135,7 +154,8 @@ Key points:
   the 4 worker sessions are not kept alive between jobs.
 - **`filelock`** (`data/lock`) guarantees only one downloader runs at a time even
   if several processes/containers point at the same DB. A process that cannot get
-  the lock backs off 60–120 s.
+  the lock backs off 60–120 s. This is deliberate: the app is deployed as
+  **multiple containers**, and only one of them should manage/drain the queue.
 - **The `> 4` magic number** equals `concurrency` (4 idle worker rows always
   remain in the task table; see §4). So `nrow(tasks) > 4` means "real tasks still
   pending", and `njobs = nrow - 4`.
@@ -268,7 +288,8 @@ table, the new row is marked `state = "duplicate"` and its id becomes
 duplicates block strips the id back to the bare station and, **only if that
 station is no longer present**, flips the row to `waiting` so it can run. This
 **serializes downloads for the same station**, avoiding two workers hitting the
-same station / DB rows concurrently.
+same station / DB rows concurrently. It was added specifically to fix a
+**data-corruption bug** caused by concurrent downloads of the same station.
 
 **(b) Done-task renaming.** When a real task reaches `done`, if its id does not
 start with `.` it is renamed to `"<seq> <station>"`. This separates the *logical
@@ -323,6 +344,9 @@ The `cache` table records which `(station, start, end)` ranges have been fetched
   `funs/logging_fun.R`).
 - **Concurrency** is the `task_q$new(concurrency = 4L)` argument;
   `queue_manager.R` uses the default 4 and the drain loop's `> 4` must match it.
+  The value 4 is a deliberate balance of limited container size and API
+  politeness — experience showed it to be a good mix of download speed and
+  keeping both the container and the upstream APIs healthy.
 - **Logs:** `data/queue.log` (manager), `data/download.log` (workers).
 - **Helper scripts:** `scripts/create_data_request.R` (enqueue test jobs),
   `scripts/queue_test.R` (interactive task_q experimentation),
