@@ -11,6 +11,7 @@ install_github <- FALSE # we run into API rate limits
 # Read in the necessary libraries                                           ====
 # Tidyverse (essential)
 library(tidyverse)
+library(plyr)
 
 # Lubridate (essential)
 library(lubridate)
