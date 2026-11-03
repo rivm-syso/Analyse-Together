@@ -219,6 +219,8 @@ span.ext:before {
 	bottom: 0;
 	left: 0;
 	z-index: 1000;
+	/* stretched to cover the map for tab order, so must not swallow clicks meant for markers */
+	pointer-events: none;
 }
 
 /* Visible focus outline for keyboard-navigable map markers */

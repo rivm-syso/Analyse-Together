@@ -521,7 +521,7 @@ show_map_server <- function(id,
       log_trace("map module: click id {selected_snsr}")
 
       # Check if there is clicked
-      if (!is.null(click)){
+      if (!is.null(selected_snsr)){
         selected <- check_state(selected_snsr)
         # If stations is already selected -> deselect
         if (selected == T){
