@@ -232,8 +232,8 @@ path.a11y-marker:focus {
 .a11y-control:focus {
 	outline: 3px solid #000 !important;
 	outline-offset: 2px;
+}
 
-  
 /* Language switch: native radio buttons styled to look like a button group.
    Using <label><input><span></label> (instead of shinyWidgets::radioGroupButtons,
    which nests an <input> inside a <button>) keeps keyboard/screen reader focus correct. */
