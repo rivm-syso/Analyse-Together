@@ -71,8 +71,8 @@ metadata_param_server <- function(id,
                                           origin='1970-01-01') %>%
                         format(., "%d %b %Y")) %>%
         # Summarise the data
-        dplyr::summarise(first_m = first_m,
-                         last_m = last_m,
+        dplyr::summarise(first_m = dplyr::first(first_m),
+                         last_m = dplyr::first(last_m),
                          n_obs = sum(!is.na(value)),
                          max_obs = as.numeric(timerange),
                          per_obs = round(n_obs/max_obs*100) ) %>%
