@@ -206,6 +206,8 @@ show_map_server <- function(id,
           }
         )")
     })
+    # Render the map even while its tab is hidden, so leafletProxy() calls elsewhere always have a widget to target .
+    outputOptions(output, "map", suspendWhenHidden = FALSE)
 
     # Functions ----
     # Check the state of the station (selected or not)
