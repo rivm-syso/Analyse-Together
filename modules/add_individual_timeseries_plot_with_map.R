@@ -190,6 +190,9 @@ individual_timeseries_map_server <- function(id,
           }
         )")
     })
+    # Render the map even while its tab is hidden, so leafletProxy() calls
+    # elsewhere always have a widget to target.
+    outputOptions(output, "map", suspendWhenHidden = FALSE)
 
 
     # Change view to centre stations ----
