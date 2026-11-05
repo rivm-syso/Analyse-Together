@@ -67,6 +67,9 @@ show_map_no_select_server <- function(id,
         addScaleBar(position = "bottomleft")
 
     })
+    # Render the map even while its tab is hidden, so leafletProxy() calls
+    # elsewhere always have a widget to target.
+    outputOptions(output, "map_select", suspendWhenHidden = FALSE)
 
 
     # Change view to centre stations
