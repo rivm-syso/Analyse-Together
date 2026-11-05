@@ -434,17 +434,6 @@ show_map_server <- function(id,
       }
     })
 
-    # Observe if the station data changes while already on stap1 -> redraw markers
-    # especially needed when it is the first time you visit the map
-    observe({
-      data_stations$data
-      tab_info <- isolate(tab_choice())
-      if(!purrr::is_null(tab_info) && tab_info == "stap1"){
-        add_lmls_map()
-        add_sensors_map()
-        add_knmi_map()
-      }
-    })
 
     # Observe if a sensor is in de square selection -> deselect
     observeEvent({input$map_draw_deleted_features},{
