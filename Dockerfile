@@ -37,7 +37,6 @@ RUN install2.r --error --skipinstalled --ncpus -1 \
      sf \
      DT \
      latex2exp \
-     openair \
      logger \
      remotes \
      plyr \
@@ -66,6 +65,10 @@ COPY . .
 ## install remotes packages
 RUN R -e "remotes::install_github('rivm-syso/samanapir', ref = 'main')"  && \
  R -e "remotes::install_github('rivm-syso/ATdatabase', ref = 'main', build_opts ='')"
+
+## pin openair to 2.11 
+RUN R -e "remotes::install_version('openair', version = '2.11', repos = 'https://cloud.r-project.org', upgrade = 'never')" \
+    && rm -rf /tmp/downloaded_packages
 
 ## expose app
 EXPOSE 3838
