@@ -148,7 +148,7 @@ timeseries_server <- function(id,
                                    " - ",  max(data_plot$date) %>% format("%d/%b/%Y")
                                    )) +
                theme_plots +
-           theme(legend.text=element_text(size = paste0(16-log(n_stat_in_plot)*2)),
+           theme(legend.text=element_text(size = 16-log(n_stat_in_plot)*2),
                  legend.position="top",
                  legend.title=element_blank())
 
@@ -164,7 +164,38 @@ timeseries_server <- function(id,
 
          plot_timeseries
 
-     })
+     }, alt = reactive({
+         data_plot <- data_measurements()
+         parameter_label <- overview_component %>%
+           dplyr::filter(component == parameter()) %>%
+           dplyr::pull(label)
+         if(!is.list(zoom_in)){
+           max_time <- max(data_plot$date)
+           min_time <- min(data_plot$date)
+         } else {
+           max_time <- zoom_in$end_slider_zoom()
+           min_time <- zoom_in$start_slider_zoom()
+         }
+         group_names_vec <- unique(data_plot$label)
+         group_names <- if (length(group_names_vec) > 1) {
+           paste0(paste(group_names_vec[-length(group_names_vec)], collapse = ', '),
+                  ', ', i18n$t("word_and"), ' ', group_names_vec[length(group_names_vec)])
+         } else {
+           group_names_vec
+         }
+         if (remove_legend) {
+           paste0(i18n$t("plot_alt_timeseries_prefix"), ' ', parameter_label,
+                  ' ', i18n$t("plot_alt_for_period"), ' ',
+                  min_time %>% format("%d/%b/%Y"),
+                  ' - ', max_time %>% format("%d/%b/%Y"))
+         } else {
+           paste0(i18n$t("plot_alt_timeseries_prefix"), ' ', parameter_label,
+                  ' ', i18n$t("plot_alt_for_period"), ' ',
+                  min_time %>% format("%d/%b/%Y"),
+                  ' - ', max_time %>% format("%d/%b/%Y"),
+                  ', ', i18n$t("plot_alt_for_groups"), ': ', group_names)
+         }
+     }))
 
    })
 

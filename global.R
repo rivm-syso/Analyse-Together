@@ -4,13 +4,14 @@
 # that the application uses, and the sourcing of custom functions.
 
 # Define the version of your application                                    ====
-application_version <- "3.0.0"
+application_version <- "3.0.1"
 
 install_github <- FALSE # we run into API rate limits
 
 # Read in the necessary libraries                                           ====
 # Tidyverse (essential)
 library(tidyverse)
+library(plyr)
 
 # Lubridate (essential)
 library(lubridate)
@@ -58,6 +59,9 @@ library(logger)
 library(samanapir)
 library(ATdatabase)
 
+# Download the RIVM icons font (used for the external link icon), only once
+shiny::addResourcePath("fonts", normalizePath("www/fonts"))
+
 # Source functions
 library(here)
 source("funs/assign_color_stations.R")
@@ -70,6 +74,7 @@ source("funs/data_to_tool_fun.R")
 source("funs/logging_fun.R")
 source("funs/ui_create_plots_funs.R")
 source("funs/ui_tab_info.R")
+source("funs/ext_link_fun.R")
 source("funs/get_data_caching_funs.R")
 source("funs/set_state_station_data_stations.R")
 source("funs/select_filter_functions.R")

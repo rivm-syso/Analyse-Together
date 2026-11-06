@@ -95,7 +95,7 @@ timevar_daily_server <- function(id,
                               )) +
             expand_limits(y=0) +
             theme_plots +
-            theme(legend.text = element_text(size = paste0(16-log(n_stat_in_plot)*2)),
+            theme(legend.text = element_text(size = 16-log(n_stat_in_plot)*2),
                   axis.text.x = element_text(color = "black", size = 16, angle = 0,
                                              hjust = 0.5, vjust = 0),
                   legend.position="top")  +
@@ -106,7 +106,24 @@ timevar_daily_server <- function(id,
 
 
 
-    })
+    }, alt = reactive({
+      data_plot <- data_measurements()
+      parameter_label <- overview_component %>%
+        dplyr::filter(component == parameter()) %>%
+        dplyr::pull(label)
+      group_names_vec <- unique(data_plot$label)
+      group_names <- if (length(group_names_vec) > 1) {
+        paste0(paste(group_names_vec[-length(group_names_vec)], collapse = ', '),
+               ', ', i18n$t("word_and"), ' ', group_names_vec[length(group_names_vec)])
+      } else {
+        group_names_vec
+      }
+      paste0(i18n$t("plot_alt_dailypattern_prefix"), ' ', parameter_label,
+             ' ', i18n$t("plot_alt_per_hour_period"), ' ',
+             min(data_plot$date) %>% format("%d/%b/%Y"),
+             ' - ', max(data_plot$date) %>% format("%d/%b/%Y"),
+             ', ', i18n$t("plot_alt_for_groups"), ': ', group_names)
+    }))
 
   })
 

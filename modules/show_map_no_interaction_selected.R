@@ -48,14 +48,11 @@ show_map_no_select_server <- function(id,
 
       ns("map_select")
       leaflet() %>%
-        # addTiles() %>%
-        addProviderTiles(
-          'Esri.WorldGrayCanvas' # option 1
-          #'Esri.WorldTopoMap'   # option 2
-
-        ) %>%
-        addProviderTiles(
-          'CartoDB.PositronOnlyLabels' # option 1
+        # PDOK standaard achtergrondkaart (Dutch labels), forced to grayscale for land/water contrast
+        addTiles(
+          urlTemplate = "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
+          attribution = "Kadaster",
+          options = tileOptions(className = "grayscale-tiles")
         ) %>%
         addDrawToolbar(
           targetGroup = 'Selected',
@@ -70,6 +67,9 @@ show_map_no_select_server <- function(id,
         addScaleBar(position = "bottomleft")
 
     })
+    # Render the map even while its tab is hidden, so leafletProxy() calls
+    # elsewhere always have a widget to target.
+    outputOptions(output, "map_select", suspendWhenHidden = FALSE)
 
 
     # Change view to centre stations
